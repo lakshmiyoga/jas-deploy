@@ -110,85 +110,98 @@ const Cart = () => {
         // </Fragment>
 
         <Fragment>
-            
+
             {items && items.length === 0 ?
-            
-                <h2 className="mt-5">Your Cart is Empty</h2> :
+
+                <h2 className="mt-5" style={{display:'flex',alignItems:'center', justifyContent:'center'}}>Your Cart is Empty</h2> :
                 <Fragment>
-                   
+                    <div className="products_heading">Cart</div>
+
                     <div className="container mt-5">
-                    <div className="table-responsive ">
-                    <h2 className="mt-5">Your Cart: <b>{items.length}</b></h2>
-                        <table className="table table-bordered">
-                            <thead>
-                                <tr>
-                                    <th>S.No</th>
-                                    <th>Name</th>
-                                    <th>Price</th>
-                                    <th>Weight</th>
-                                    <th>Total</th>
-                                    <th>Actions</th>
-                                </tr>
-                            </thead>
-                            <tbody>
-                                {items.map((item, index) => (
-                                   
-                                    <tr key={item.product}>
-                                        <td>
-                                            {/* <img src={item.image} alt={item.name} height="90" width="115" /> */}
-                                            {index + 1}
-                                        </td>
-                                        <td>
-                                            {/* <Link to={`/product/${item.product}`}>{item.name}</Link> */}
-                                            {item.name}
-                                        
-                                        </td>
-                                        <td>RS.{item.price}(per Kg)</td>
-                                        <td>{item.productWeight}
-                                            {/* <div className="d-flex align-items-center">
+                        <div className="table-responsive ">
+                            <h2 className="mt-5">Your Cart: <b>{items.length}</b></h2>
+                            <table className="table table-bordered">
+                                <thead>
+                                    <tr>
+                                        <th>S.No</th>
+                                        <th>Name</th>
+                                        <th>Price</th>
+                                        <th>Weight</th>
+                                        <th>Total</th>
+                                        <th>Actions</th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    {items.map((item, index) => (
+
+                                        <tr key={item.product}>
+                                            <td>
+                                                {/* <img src={item.image} alt={item.name} height="90" width="115" /> */}
+                                                {index + 1}
+                                            </td>
+                                            <td>
+                                                {/* <Link to={`/product/${item.product}`}>{item.name}</Link> */}
+                                                {item.name}
+
+                                            </td>
+                                            <td>RS.{item.price}(per Kg)</td>
+                                            <td>{item.productWeight}
+                                                {/* <div className="d-flex align-items-center">
                                             <button className="btn btn-sm btn-outline-danger" onClick={() => decreaseQty(item)}>-</button>
                                             <span className="mx-2">{item.quantity}</span>
                                             <button className="btn btn-sm btn-outline-primary" onClick={() => increaseQty(item)}>+</button>
                                         </div> */}
-                                        </td>
-                                        <td>Rs.{(item.price * item.productWeight).toFixed(2)}</td>
-                                        <td>
-                                            {/* <button className="btn btn-sm btn-danger" onClick={() => dispatch(removeItemFromCart(item.product))}>Remove</button> */}
-                                            <i id="delete_cart_item" className="fa fa-trash btn btn-danger" onClick={() => dispatch(removeItemFromCart(item.product))}></i>
+                                            </td>
+                                            <td>Rs.{(item.price * item.productWeight).toFixed(2)}</td>
+                                            <td>
+                                                {/* <button className="btn btn-sm btn-danger" onClick={() => dispatch(removeItemFromCart(item.product))}>Remove</button> */}
+                                                <i id="delete_cart_item" className="fa fa-trash btn btn-danger" onClick={() => dispatch(removeItemFromCart(item.product))}></i>
 
-                                        </td>
-                                    </tr>
-                                ))}
-                            </tbody>
-                        </table>
-                        {/* </div> */}
+                                            </td>
+                                        </tr>
+                                    ))}
+                                </tbody>
+                            </table>
+                            {/* </div> */}
 
-                        {/* <div className="mt-4">
+                            {/* <div className="mt-4">
                         <h4>Order Summary</h4>
                         <hr />
                         <p>Subtotal: <span>Rs. {subtotal}</span></p>
                         <p>Shipping Charge:<span>Rs. {shippingCharge.toFixed(2)}</span></p>
                         <p>Total:<span>Rs. {total}</span></p>
                         <button className="btn btn-primary " onClick={checkOutHandler}>Check out</button>
-                    </div> */}
+                      </div> */}
+                            <div className="row d-flex justify-content-center">
+                                <div className="col-12 col-lg-8 my-4 float-left" >
+                                    <div id="order_summary">
+                                        <h4> Delivery Offers<span><i className='fa fa-truck' style={{paddingLeft:'20px'}}></i></span></h4>
+                                        <hr />
+                                        <p> 50% discount on delivery for all orders above Rs.500</p>
+                                        <hr />
+                                        <p>Free delivery for all orders above Rs.1000</p>
+                                    </div>
+                                </div>
 
-                        <div className="col-12 col-lg-3 my-4 float-right" >
-                            <div id="order_summary">
-                                <h4>Cart Totals</h4>
-                                <hr />
-                                <p>Subtotal:  <span className="order-summary-values">Rs.{subtotal}</span></p>
-                                <p>Shipping: <span className="order-summary-values">Rs.{shippingCharge.toFixed(2)}</span></p>
+
+                                <div className="col-12 col-lg-4 my-4 float-right" >
+                                    <div id="order_summary">
+                                        <h4>Cart Totals</h4>
+                                        <hr />
+                                        <p>Subtotal:  <span className="order-summary-values">Rs.{subtotal}</span></p>
+                                        <p>Shipping: <span className="order-summary-values">Rs.{shippingCharge.toFixed(2)}</span></p>
 
 
-                                <hr />
+                                        <hr />
 
-                                <p>Total: <span className="order-summary-values">Rs.{total}</span></p>
+                                        <p>Total: <span className="order-summary-values">Rs.{total}</span></p>
 
-                                <hr />
-                                <button id="checkout_btn" className="btn btn-primary btn-block" onClick={checkOutHandler}>Proceed to Payment</button>
+                                        <hr />
+                                        <button id="checkout_btn" className="btn btn-block" onClick={checkOutHandler}>Proceed to Payment</button>
+                                    </div>
+                                </div>
                             </div>
                         </div>
-                    </div>
                     </div>
                 </Fragment>
             }

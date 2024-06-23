@@ -36,7 +36,7 @@ const LandingPage = () => {
             <div className="row d-flex justify-content-center">
               <div className="col-sm-12 col-md-6 col-lg-3 my-3">
                 <div className="card p-3 rounded" >
-                  <Link to="/vegetables">
+                  <Link to="/vegetables" state={{ category: 'Vegetables' }}>
                     <div className="d-flex justify-content-center align-items-center">
                       <img
                         className="card-img-top mx-auto"
@@ -55,7 +55,7 @@ const LandingPage = () => {
 
               <div className="col-sm-12 col-md-6 col-lg-3 my-3">
                 <div className="card p-3 rounded">
-                  <Link to="/fruits">
+                  <Link to="/fruits" state={{ category: 'Fruits' }}>
                     <div className="d-flex justify-content-center align-items-center">
                       <img
                         className="card-img-top mx-auto"
@@ -74,12 +74,14 @@ const LandingPage = () => {
 
               <div className="col-sm-12 col-md-6 col-lg-3 my-3">
                 <div className="card p-3 rounded">
-                <Link to="/keerai">
+                <Link to="/keerai" state={{ category: 'Keerai' }}>
+                <div className="d-flex justify-content-center align-items-center">
                   <img
                     className="card-img-top mx-auto"
-                    src="../images/celeries.jpg"
+                    src="../images/products/arai_keerai.jpg"
                     alt="celeries"
                   />
+                  </div>
                   </Link>
                   <div className="card-body d-flex flex-column">
                     <h5 className="card-title">

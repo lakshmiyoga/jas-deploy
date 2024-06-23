@@ -18,6 +18,7 @@ const cartSlice = createSlice({
         addCartItemSuccess (state, action){
 
             const item = action.payload;
+            console.log(item);
             const IsItemExist = state.items.find(i=>i.product === item.product)
             // if(IsItemExist){
             //    state={
@@ -38,11 +39,14 @@ const cartSlice = createSlice({
             // return state
             if (IsItemExist) {
                 state.items = state.items.map((i) =>
-                  i.product === item.product._id ? { ...i, quantity: item.quantity } : i
+                  i.product === item.product ? { ...i, productWeight: item.productWeight } : i
+                  
                 );
+                
               } else {
                 state.items.push(item);
               }
+              
         
               state.loading = false;
               localStorage.setItem('cartItems', JSON.stringify(state.items));
@@ -86,6 +90,16 @@ const cartSlice = createSlice({
                 shippingInfo: action.payload
             }
         },
+        orderCompleted(state, action) {
+            localStorage.removeItem('shippingInfo');
+            localStorage.removeItem('cartItems');
+            sessionStorage.removeItem('orderInfo');
+            return {
+                items: [],
+                loading: false,
+                shippingInfo: {}
+            }
+        }
         
     }
 
@@ -93,6 +107,6 @@ const cartSlice = createSlice({
 
 const {actions, reducer} = cartSlice;
 
-export const {addCartItemRequest,addCartItemSuccess, increaseCartItemQty, decreaseCartItemQty, removeItemFromCart, saveShippingInfo } = actions;
+export const {addCartItemRequest,addCartItemSuccess, increaseCartItemQty, decreaseCartItemQty, removeItemFromCart, saveShippingInfo, orderCompleted } = actions;
 
 export default reducer;

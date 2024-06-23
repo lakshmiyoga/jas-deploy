@@ -6,6 +6,7 @@ import authReducer from "./slices/authSlice";
 import cartReducer from "./slices/cartSlice";
 import enquiryReducer from "./slices/enquirySlice";
 import userReducer from "./slices/userSlice"
+import orderReducer from "./slices/orderSlice"
 
 
 
@@ -15,7 +16,8 @@ const reducer = combineReducers({
     authState: authReducer, 
     cartState: cartReducer, 
     enquiryState: enquiryReducer,
-    userState: userReducer
+    userState: userReducer, 
+    orderState: orderReducer
 
 })
 

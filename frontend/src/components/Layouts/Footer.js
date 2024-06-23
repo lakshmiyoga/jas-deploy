@@ -78,10 +78,10 @@ const Footer = () => {
       </div>
       <div className="footer-bottom">
         <p>© 2023 Copyright JAS Fruits and Vegetables. All Rights Reserved</p>
-        <p>Design and Developed by Chennai Notes</p>
+        {/* <p>Design and Developed by Chennai Notes</p> */}
       </div>
-      <img src="https://craftingagreenworld.com/wp-content/uploads/2023/09/fun-mixed-fruit-basket-coloring-pages-4.png" alt="Fruit" className="footer-fruit-image-right" />
-      <img src="https://www.indiaparenting.com/coloring-pages/uploads/600004fdc3956.jpg" alt="Fruit" className="footer-fruit-image-left" />
+      <img src="../images/fruitbasket.png" alt="Fruit" className="footer-fruit-image-right" />
+      <img src="../images/emoji.jpg" alt="emoji" className="footer-fruit-image-left" />
     </footer>
   );
 };

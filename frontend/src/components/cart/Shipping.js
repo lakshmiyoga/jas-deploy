@@ -60,10 +60,11 @@ console.log(address,city, phoneNo, postalCode, country, state)
 console.log(shippingInfo)
     return (
         <Fragment>
+            <div className="products_heading">Shipping</div>
            <StepsCheckOut shipping/>
             <div className="row wrapper">
             <div className="col-10 col-lg-5">
-                <form onSubmit={submitHandler} className="shadow-lg">
+                <form onSubmit={submitHandler} className="shadow-lg mt-0">
                     <h1 className="mb-4">Shipping Info</h1>
                     <div className="form-group">
                         <label htmlFor="address_field">Address</label>

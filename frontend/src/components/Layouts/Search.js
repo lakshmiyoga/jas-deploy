@@ -25,7 +25,6 @@ const Search = ({keyword, setKeyword}) => {
     return (
         <form onSubmit={searchHandler} className="search-form">
             <div className="input-group">
-
                 <input
                     type="text"
                     id="search_field"
@@ -42,6 +41,7 @@ const Search = ({keyword, setKeyword}) => {
 
             </div>
         </form>
+        
     )
 }
 

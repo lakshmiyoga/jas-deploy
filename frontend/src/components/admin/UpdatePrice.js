@@ -8,7 +8,7 @@ const UpdatePrice = () => {
     const [items, setItems] = useState([]);
     const [file, setFile] = useState(null);
     const [loading, setloading] = useState(false);
- 
+
     const handleFileChange = (e) => {
         setFile(e.target.files[0]);
     };
@@ -65,6 +65,7 @@ const UpdatePrice = () => {
             .catch(error => console.error('Error downloading CSV:', error));
         setloading(false);
     };
+
     return (
         <div className="container-fluid" style={{ height: 'auto' }}>
             <div className="row">
@@ -72,26 +73,30 @@ const UpdatePrice = () => {
                     <Sidebar />
                 </div>
                 <div className="col-12 col-md-10">
-                    <h1 className="my-4">Product Price Upload</h1>
+                    <h3 className="my-4">Product Price Upload</h3>
                     <Fragment>
                         {
                             loading ? <Loader /> : (
-                                <div style={{ width: '100%', height: '100%' }}>
-                                    {/* <div className="card"> */}
-                                    <div style={{ position: 'relative', display: 'flex', flexDirection: 'row', justifyContent: 'space-around', top: '20%', margin: '0 auto', width: 'fit-content' }}>
-                                        <div style={{ border: 'solid 0.5px gray', padding: '50px' }}>
-                                            <h5 className="card-title">Import Product Details Info</h5>
-                                            <div className="mb-10" style={{ position: 'relative', display: 'flex', flexDirection: 'column', justifyContent: 'center', alignItems: 'center' }}>
-                                                <input type="file" onChange={handleFileChange} className="form-control" />
-                                                <button className="btn btn-success mb-3" style={{ maxWidth: '50%', marginTop: '5%' }} onClick={handleUpload}>Upload Price</button>
+                                <div className="row" style={{marginTop:'10%'}}>
+                                    <div className="col-12 col-md-6 mb-4 ">
+                                        <div className="card update_price h-100" >
+                                            <div className="card-body">
+                                                <h5 className="card-title ml-3">Import Product Details Info</h5>
+                                                <div className="mb-3 d-flex flex-column align-items-center ml-3">
+                                                    <input type="file" onChange={handleFileChange} className="form-control mb-2" />
+                                                    <button className="btn btn-success" onClick={handleUpload}>Upload Price</button>
+                                                </div>
                                             </div>
                                         </div>
-                                        <div style={{ border: 'solid 0.5px gray',borderLeft:'0PX', padding: '50px',position: 'relative', display: 'flex', flexDirection: 'column', justifyContent: 'center', alignItems: 'center' }}>
-                                            <h5 className="card-title">Export Product Details</h5>
-                                            <button className="btn btn-primary" onClick={downloadCSV}>Download Price</button>
+                                    </div>
+                                    <div className="col-12 col-md-6 mb-4">
+                                        <div className="card update_price h-100">
+                                            <div className="card-body">
+                                                <h5 className="card-title ml-3">Export Product Details</h5>
+                                                <button className="btn btn-primary ml-3" onClick={downloadCSV}>Download Price</button>
+                                            </div>
                                         </div>
                                     </div>
-
                                 </div>
                             )
                         }

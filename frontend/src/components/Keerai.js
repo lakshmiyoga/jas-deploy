@@ -7,9 +7,13 @@ import Product from './Product/Product'
 import { toast } from 'react-toastify';
 import Search from './Layouts/Search'
 import Header from './Layouts/Header'
-
+import { useLocation } from 'react-router-dom';
+import { Link } from 'react-router-dom'
+import Card from 'react-bootstrap/Card';
 
 const Keerai = () => {
+    const location = useLocation();
+  const { category } = location.state || { category: 'Keerai' };
     const { products, loading, error } = useSelector((state) => state.productsState);
     const [keyword, setKeyword] = useState("")
 
@@ -35,8 +39,24 @@ const Keerai = () => {
                 <Fragment>
                     <MetaData title={'Buy Best Products'} />
                     <div className="products_heading">Keerai</div>
-                    <div className="col-12 col-md-6 mt-2 mt-md-0">
-                        <Search keyword={keyword} setKeyword={setKeyword}/>
+                    <div className=" search-responsive col-12 col-md-6 mt-2 mt-md-0" style={{ display: 'flex', alignItems: 'center', justifyContent: 'center', position: 'relative', minWidth: '100%', height: 'auto' }}>
+                        <Search keyword={keyword} setKeyword={setKeyword} />
+                        <div style={{ display: 'flex', justifyContent: 'space-between', marginTop:'20px' }}>
+                            <Link to="/fruits">
+                                <Card style={{ width: '100px', marginRight:'15px' }}>
+                                    <Card.Img  style={{ height: '50px', width: '80px' }} src='../images/fruits.jpg' />
+                                    
+                                </Card>
+                            </Link>
+
+                            <Link to="/vegetables">
+                                <Card style={{ width: '100px' }}>
+                                    <Card.Img  style={{ height: '50px', width: '80px' }} src='../images/vegetables.jpg' />
+                                   
+                                </Card>
+                            </Link>
+                        </div>
+
                     </div>
                     {
                         filteredKeerai.length === 0 ? (
@@ -49,7 +69,7 @@ const Keerai = () => {
                                         <Product key={product._id} product={product} />
 
                                     ))} */}
-                                    <Product products={filteredKeerai} />
+                                    <Product products={filteredKeerai} category={category} />
 
                                 </div>
                             </section>

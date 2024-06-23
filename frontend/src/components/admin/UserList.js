@@ -94,23 +94,26 @@ console.log(data)
 
 
     return (
-        <div className="row">
+    // <div className="container-fluid">
+    <div className="row">
         <div className="col-12 col-md-2">
-                <Sidebar/>
+            <Sidebar />
         </div>
         <div className="col-12 col-md-10">
             <h1 className="my-4">User List</h1>
             <Fragment>
-                {loading ? <Loader/> : 
+                {loading ? <Loader /> :
                     <MDBDataTable
-                        data={setUsers()}
+                    data={setUsers()}
                         bordered
+                        noBottomColumns
                         hover
-                        className="px-3"
+                        className="px-3 product-table"
                     />
                 }
             </Fragment>
         </div>
     </div>
+// </div>
     )
 }

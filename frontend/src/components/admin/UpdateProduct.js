@@ -293,7 +293,7 @@ const UpdateProduct = () => {
             </div>
             <div className="col-12 col-md-10">
                 <Fragment>
-                    <div className="wrapper my-5">
+                    <div className="wrapper mt-0">
                         <form onSubmit={handleSubmit} className="shadow-lg" encType='multipart/form-data'>
                             <h1 className="mb-4">Update Product</h1>
 

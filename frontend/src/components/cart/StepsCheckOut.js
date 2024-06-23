@@ -32,7 +32,7 @@ const StepsCheckOut = ({shipping, confirmOrder, payment}) => {
             }
 
             
-            { payment ?
+            {/* { payment ?
             <Link to="/payment">
                 <div className="triangle2-active"></div>
                 <div className="step active-step">Payment</div>
@@ -43,7 +43,7 @@ const StepsCheckOut = ({shipping, confirmOrder, payment}) => {
                 <div className="step incomplete">Payment</div>
                 <div className="triangle-incomplete"></div>
              </Link>
-            }
+            } */}
   </div>
   )
 }

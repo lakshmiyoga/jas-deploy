@@ -46,7 +46,7 @@ export const getProducts = createAsyncThunk('get/getproducts', async (_, { dispa
   //     }
   // }
     const { data } = await axios.get(link);
-    // console.log(data)
+    console.log(data)
     dispatch(productsSuccess(data));
   } catch (error) {
     dispatch(productsFail(error.response.data.message));

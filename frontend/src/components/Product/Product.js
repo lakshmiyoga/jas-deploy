@@ -7,15 +7,15 @@ import { toast } from 'react-toastify'
 
 
 
-const Product = ({ products }) => {
-    // console.log("product", products)
+const Product = ({ products, category }) => {
+    console.log("product", products)
     // const {id} = useParams();
-
+    // console.log(category)
     const [weight, setWeight] = useState({});
     const [quantity, setQuantity] = useState(1)
     const [selectedProduct, setSelectedProduct] = useState(null);
     const dispatch = useDispatch();
-// console.log(weight)
+    // console.log(weight)
     const handleWeightChange = (productId, weight) => {
         setWeight(prevWeights => ({ ...prevWeights, [productId]: weight }));
         setSelectedProduct(productId);
@@ -28,23 +28,23 @@ const Product = ({ products }) => {
     const handleAddToCart = (product) => {
         // console.log(product)
         const productWeight = weight[product._id];
-    //   console.log(productWeight);
+        //   console.log(productWeight);
         if (selectedProduct) {
-            dispatch(addCartItem({ productId: selectedProduct, quantity ,productWeight}));
+            dispatch(addCartItem({ productId: selectedProduct, quantity, productWeight }));
             // Reset selected product and quantity
-           
-            toast('Item added succesfully!',{
-                type:'success',
-                position:"bottom-center",
-             });
-             setSelectedProduct(null);
-             setQuantity(1);
-             setWeight({})
-        }else {
-            toast('Please select weight',{
-                type:'error',
-                position:"bottom-center",
-             });
+
+            toast('Item added succesfully!', {
+                type: 'success',
+                position: "bottom-center",
+            });
+            setSelectedProduct(null);
+            setQuantity(1);
+            setWeight({})
+        } else {
+            toast('Please select weight', {
+                type: 'error',
+                position: "bottom-center",
+            });
         }
     };
 
@@ -57,11 +57,11 @@ const Product = ({ products }) => {
     };
     return (
         <div className="container mt-5">
-             <div className="table-responsive container-product">
+            <div className="table-responsive">
                 <table className="table table-bordered " >
                     <thead >
                         <tr>
-                            <th >S.No</th>
+                            <th>S.No</th>
                             <th>Products Image</th>
                             <th>Products Name</th>
                             <th>Price</th>
@@ -74,8 +74,8 @@ const Product = ({ products }) => {
                     <tbody>
                         {products && products.map((product,index) => (
                             <tr key={product._id}>
-                                <td style={{}}>{index+1}</td>
-                                <td >
+                                <td className="serial-number">{index+1}</td>
+                                <td className="Products Image" style={{width:'15rem'}}>
                                     {product.images[0] && product.images[0].image && (
                                         <img
                                             // className="img-fluid"
@@ -87,14 +87,9 @@ const Product = ({ products }) => {
                                 </td>
                                 <td className="Products Name">
                                     {capitalizeFirstLetter(product.englishName)}/{capitalizeFirstLetter(product.tamilName)}
-                                    {/* {product.englishName}/{product.tamilName} */}
+                                  
                                 </td>
-                                {/* <td>
-                                <div className="rating-outer">
-                                    <div className="rating-inner" style={{ width: `${product.ratings / 5 * 100}%` }}></div>
-                                </div>
-                            </td>
-                            <td>{product.numOfReviews}</td> */}
+                               
 
                                 <td className="Price">Rs.{product.price} 
                                 {product.category === 'Keerai'?'(per bundle)':'(per kg)'}</td>
@@ -119,17 +114,24 @@ const Product = ({ products }) => {
                                 </td>
                                 <td className="Stock">{product.stocks}</td>
                                 <td className="Add to Cart">
-                                    {/* <AddCart productId={product._id} /> */}
+                                   
                                     <button className="btn d-inline ml-4" 
                                     onClick={()=>handleAddToCart(product)}
-                                    style={{backgroundColor:" #02441E", color:"white", borderRadius:"40px"}}>Add</button>
+                                    style={{
+                                        backgroundColor:" #02441E", 
+                                        color:"white",
+                                         borderRadius:"40px",
+                                         cursor: product.stocks === 'Available' ? 'pointer' : 'not-allowed'
+                                         }}
+                                         disabled={product.stocks === 'Not Available'}
+                                         >Add</button>
                                 </td>
                             </tr>
                         ))}
                     </tbody>
                 </table>
-             </div>
-         </div>
+            </div>
+        </div>
     );
 }
 

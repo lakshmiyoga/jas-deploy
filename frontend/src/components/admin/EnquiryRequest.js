@@ -121,6 +121,7 @@ const EnquiryRequest = () => {
                         <MDBDataTable
                             data={setEnquiryDetails()}
                             bordered
+                            noBottomColumns
                             hover
                             className=" px-3 product-table"
                         />

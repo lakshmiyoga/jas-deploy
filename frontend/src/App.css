@@ -31,6 +31,9 @@ body {
   background-color: white;
   padding: 1rem 1rem;
 }
+#collapsible-nav-dropdown:hover{
+  color: #f8ce0b;
+}
 .product-dropdown:hover{
   color: #f8ce0b;
 }
@@ -48,11 +51,11 @@ body {
   max-height: 150px;
 }
 
-.navbar-brand img {
+/* .navbar-brand img {
   max-width: 100%;
   height: auto;
-  /* margin-left: 10rem; */
-}
+  
+} */
 
  .navbar-link {
   color: inherit;
@@ -60,12 +63,12 @@ body {
   margin-right: 15px;
   
 }
-.navbar-nav .nav-item{
-  /* font-family:"Trebuchet MS", Helvetica, sans-serif;  */
+ /* .navbar-nav .nav-item{
+  
   color: black;
   margin-top: 25px;
   padding-inline: 5px;
-}
+}  */
 .navbar-link:hover{
   color: #f8ce0b;
   text-decoration: none;
@@ -81,9 +84,16 @@ body {
 } */
 
 /* Responsive adjustments */
-@media (max-width: 768px) {
+/* @media (max-width: 768px) {
   .navbar-nav {
     text-align: center;
+    flex-direction: column;
+    width: 100%;
+    
+  }
+  .navbar-nav .nav-item {
+    text-align: center;
+    width: 100%;
   }
 
   .navbar-nav .nav-link {
@@ -94,7 +104,7 @@ body {
     margin-bottom: 15px;
   }
  
-}
+} */
 
 #search_btn {
   background-color: #02441E;
@@ -125,7 +135,9 @@ body {
   align-items: center;
   /* height: 100vh; */
   text-align: center;
-  margin-right: -90%;
+  width: 50%;
+  /* margin-left: 50%; */
+  /* margin-right: -90%; */
   
 }
 
@@ -173,10 +185,17 @@ body {
   cursor: pointer;
   transition: transform 0.2s ease, box-shadow 0.2s ease;
 }
+/* .update_price{
+ box-sizing: border-box;
+} */
 .card:hover {
   transform: translateY(-5px);
   box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+  
+    /* transition: none !important;
+    background: none !important; */
 }
+
 .card-title a {
   color: #2e2e2e;
 }
@@ -539,6 +558,8 @@ footer {
   margin-right: -1px;
 }
 
+
+
 /* User Profile */
 
 .avatar-profile {
@@ -554,6 +575,63 @@ footer {
 
 .user-info p {
   font-size: 1.1rem;
+}
+
+/* Button Styles */
+#edit_profile,
+#orders,
+.change_password {
+    width: 100%;
+    margin-top: 10px;
+}
+
+/* Media Queries for Responsive Layout */
+@media (max-width: 768px) {
+  .user-info {
+      text-align: center;
+  }
+
+  .user-info .col-12.col-md-3 {
+      margin-bottom: 20px;
+  }
+
+  .user-info .col-12.col-md-5 {
+      text-align: center;
+  }
+
+  .avatar-profile img {
+      width: 120px;
+      height: 120px;
+  }
+ #edit_profile{
+  width: 50%; 
+}
+
+#orders{
+    width: 50%; 
+}
+.change_password {
+    width: 50%; 
+}
+}
+
+@media (max-width: 576px) {
+  .user-info h4 {
+      font-size: 16px;
+  }
+
+  .user-info p {
+      font-size: 14px;
+  }
+
+  .avatar-profile img {
+      width: 100px;
+      height: 100px;
+  }
+
+  .products_heading {
+      font-size: 20px;
+  }
 }
 
 #edit_profile {
@@ -624,7 +702,7 @@ footer {
 
 #sidebar .sidebar-header {
   padding: 20px;
-  background: #232f3e;
+  background: #fdcc0d;;
 }
 #sidebar ul.components {
   /* margin-top: 90px; */
@@ -640,7 +718,7 @@ footer {
   text-decoration: none;
 }
 #sidebar ul li a:hover {
-  color: #232f3e;
+  color:#fdcc0d;;
   background: #fff;
 }
 
@@ -656,7 +734,7 @@ footer {
 #sidebar ul li.active > a,
 a[aria-expanded='true'] {
   color: #fff;
-  background: #232f3e;
+  /* background: #232f3e; */
 }
 a[data-toggle='collapse'] {
   position: relative;
@@ -672,7 +750,7 @@ a[data-toggle='collapse'] {
 ul ul a {
   font-size: 1rem !important;
   padding-left: 30px !important;
-  background: #232f3e;
+  /* background: #232f3e; */
 }
 
 ul.CTAs {
@@ -696,7 +774,9 @@ ul.CTAs a {
 .table{
   width: 100%;
   position: relative;
+
 }
+
 
 /* Dashboard */
 
@@ -742,11 +822,29 @@ ul.CTAs a {
   color: grey;
 }
 
-/* @media (max-width: 767.98px) {
+ @media (max-width: 767.98px) {
   .product-table {
       overflow-x: auto;
   }
-
+  .search-form {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    /* height: 100vh; */
+    text-align: center;
+    width: 90%;
+    /* margin-left: 50%; */
+    /* margin-right: -90%; */
+    
+  }
+.search-responsive{
+  display: flex;
+  position: relative;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  
+}
   .product-table table {
       width: 100%;
       min-width: 600px; 
@@ -761,30 +859,39 @@ ul.CTAs a {
 .product_container{
   min-width: 80vw;
   position: relative;
-} */
-.table th{
+} 
+
+.table  thead th{
   background-color: #FED235;
   text-align: center;
+  /* display: flex;
+  flex-direction: row;
   align-items: center;
-  /* justify-content:center; */
+  justify-content:center; */
   height: 10vh;
   font-weight: bold;
   font-size: 1.1rem;
 }
-.table td{
+.table tbody td{
   text-align: center;
-  align-items: center;
+  /* align-items: center; */
   /* justify-content:center; */
   font-size: 1.1rem;
   color: black;
  
 }
+
 @media (max-width: 767.98px) {
+
+  .table-responsive {
+    display: block;
+  }
+
   .table-responsive td,
   .table-responsive th {
     display: block;
     width: 100%;
-    text-align: right;
+    text-align: left;
   }
   
   .table-responsive td {
@@ -798,13 +905,25 @@ ul.CTAs a {
   .table-responsive td:before {
     content: attr(className);
     font-weight: bold;
-    display: none; /* Hide the label text */
+    display: block; /* Hide the label text */
+    text-align: left;
   }
   
   .table-responsive tr {
-    margin-bottom: 1rem;
+    /* margin-bottom: 1rem;
     display: block;
+    border: 1px solid #dee2e6; */
+    display: flex;
+    flex-wrap: wrap;
     border: 1px solid #dee2e6;
+    margin-bottom: 1rem;
+  }
+
+  .table-responsive tr .serial-number {
+    width: 100%;
+    text-align: center;
+    font-size: 1.2rem;
+    font-weight: bold;
   }
 
   .table-responsive thead {
@@ -921,6 +1040,8 @@ ul.CTAs a {
   width: 100%;
   margin-top: 10px;
 }
+
+
 /* Ensure dropdown menu shows on hover */
 .nav-item.dropdown:hover .dropdown-menu {
   display: block;
@@ -945,7 +1066,7 @@ ul.CTAs a {
   left: 0;
   margin: 0;
   background-color: #fff;
-  border: 1px solid rgba(0, 0, 0, 0.15); /* Default Bootstrap border */
+  border: 1px solid rgba(0, 0, 0, 0.15); 
 }
 
 #login_button, #register_button{
@@ -1063,4 +1184,88 @@ color: grey;
   }
 } */
 
+/* .header {
+  background-color:white;
+  position: sticky;
+  width: 100%;
+  top: 0;
+  margin-bottom: 20px;
+  z-index: 1000;
+  color: white;
+} */
 
+.avatar-initials {
+  width: 40px;
+  height: 40px;
+  background-color: #02441E;; /* Change this color as needed */
+  color: white;
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 20px;
+  font-weight: bold;
+}
+
+ /* Add the following CSS to your stylesheet */
+
+
+
+ .payment-confirm {
+   display: flex;
+   justify-content: center;
+   align-items: center;
+   min-height: 100vh;
+   background-color: #f9f9f9;
+ }
+ 
+ .payment-details {
+   text-align: center;
+   background-color: #fff;
+   padding: 2rem;
+   border-radius: 8px;
+   box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+ }
+ 
+ .payment-details h1 {
+   color: #28a745;
+ }
+ 
+ .payment-details img {
+   width: 48px;
+   height: 48px;
+ }
+ 
+ .payment-details table {
+   margin-top: 1rem;
+   width: 100%;
+   border-collapse: collapse;
+ }
+ 
+ .payment-details table td {
+   padding: 0.5rem 1rem;
+   border-bottom: 1px solid #ddd;
+ }
+ 
+ .payment-details table td:first-child {
+   font-weight: bold;
+   text-align: right;
+   color: #333;
+ }
+ 
+ .payment-details table td:last-child {
+   text-align: left;
+ }
+ 
+ .link-container {
+  margin-top: 2rem;
+}
+
+.orders-link {
+  color: #007bff;
+  text-decoration: none;
+}
+
+.orders-link:hover {
+  text-decoration: underline;
+}

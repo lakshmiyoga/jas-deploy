@@ -46,6 +46,13 @@ import EnquiryRequest from './components/admin/EnquiryRequest';
 import UserList from './components/admin/UserList';
 import UpdateUser from './components/admin/UpdateUser';
 import UpdatePrice from './components/admin/UpdatePrice';
+import UserOrders from './components/order/UserOrders';
+import OrderDetail from './components/order/OrderDetail';
+import PaymentConfirm from './components/order/PaymentConfirm';
+import PaymentFailed from './components/order/FailedPayment';
+import FailedPayment from './components/order/FailedPayment';
+import OrderList from './components/admin/OrderList';
+import UpdateOrder from './components/admin/UpdateOrder';
 
 function App() {
   const location = useLocation();
@@ -82,7 +89,11 @@ function App() {
           <Route path="/password/reset/:token" element={<ResetPassword />} />
           <Route path="/cart" element={<Cart />} />
           <Route path="/shipping" element={<Shipping />} />
+          <Route path="/orders" element={<ProtectedRoute><UserOrders /></ProtectedRoute>} />
+          <Route path='/order/:id' element={<ProtectedRoute><OrderDetail/></ProtectedRoute> } />
           <Route path="/order/confirm" element={<ProtectedRoute><ConfirmOrder /></ProtectedRoute>} />
+          <Route path="/payment/confirm/:id" element={<PaymentConfirm />} />
+          <Route path="/payment/failed" element={<ProtectedRoute><FailedPayment /></ProtectedRoute>} />
           <Route path="/admin/dashboard" element={<ProtectedRoute isAdmin={true}><Dashboard /></ProtectedRoute>} />
           <Route path="/admin/products" element={<ProtectedRoute isAdmin={true}><ProductList /></ProtectedRoute>} />
           <Route path="/admin/products/create" element={<ProtectedRoute isAdmin={true}><NewProduct /></ProtectedRoute>} />
@@ -91,6 +102,8 @@ function App() {
           <Route path='/admin/users' element={ <ProtectedRoute isAdmin={true}><UserList/></ProtectedRoute> } />
           <Route path='/admin/user/:id' element={ <ProtectedRoute isAdmin={true}><UpdateUser/></ProtectedRoute> } />
           <Route path='/admin/products/updateprice' element={ <ProtectedRoute isAdmin={true}><UpdatePrice/></ProtectedRoute> } />
+          <Route path='/admin/orders' element={ <ProtectedRoute isAdmin={true}><OrderList/></ProtectedRoute> } />
+          <Route path='/admin/order/:id' element={ <ProtectedRoute isAdmin={true}><UpdateOrder/></ProtectedRoute> } />
         </Routes>
         {/* {showHeaderFooter && <Footer />} */}
         <Footer/>

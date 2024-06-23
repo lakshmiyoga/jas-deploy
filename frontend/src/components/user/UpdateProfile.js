@@ -68,6 +68,7 @@ const UpdateProfile = () => {
 
   return (
     <div className="row wrapper">
+        
                 <div className="col-10 col-lg-5">
                     <form onSubmit={submitHandler} className="shadow-lg mt-0" encType='multipart/form-data'>
                         <h1 className="mt-2 mb-5">Update Profile</h1>

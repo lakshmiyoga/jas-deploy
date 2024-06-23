@@ -88,7 +88,7 @@ const NewProduct = () => {
             </div>
             <div className="col-12 col-md-10">
                 <Fragment>
-                    <div className="wrapper my-3">
+                    <div className="wrapper mt-0">
                         <form onSubmit={submitHandler}  className="shadow-lg" encType='multipart/form-data'>
                             <h1 className="mb-4">New Product</h1>
 

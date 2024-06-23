@@ -1,4 +1,4 @@
-import React from 'react'
+import React, { Fragment } from 'react'
 import {Link} from 'react-router-dom'
 import { useSelector } from 'react-redux'
 
@@ -7,7 +7,11 @@ const Profile = () => {
     const {user} = useSelector(state => state.authState);
 
   return (
+    <Fragment>
+        <div className="products_heading">Vegetables</div>
+    
     <div className="row justify-content-around mt-5 user-info">
+        
             <div className="col-12 col-md-3">
                 <figure className='avatar avatar-profile'>
                     <img className="rounded-circle img-fluid" src={user.avatar??'./images/default_avatar.png'}alt='avatar' />
@@ -27,15 +31,16 @@ const Profile = () => {
                  <h4>Joined</h4>
                  <p>{String(user.createdAt).substring(0,10)}</p>
 
-                 <a href="javascript;" className="btn btn-danger btn-block mt-5">
+                 <Link to="/orders" className="btn btn-danger btn-block mt-5" id="orders">
                     My Orders
-                </a>
+                </Link>
 
-                <Link to='/myProfile/update/password' className="btn btn-primary btn-block mt-3">
+                <Link to='/myProfile/update/password' className="btn btn-primary btn-block mt-3 change_password">
                     Change Password
                 </Link>
             </div>
         </div>
+        </Fragment>
   )
 }
 

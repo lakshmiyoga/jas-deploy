@@ -23,11 +23,6 @@ const ProductList = () => {
                     field: 's_no',
                     sort: 'asc'
                 },
-                // {
-                //     label: 'ID',
-                //     field: 'id',
-                //     sort: 'asc'
-                // },
                 {
                     label: 'Name',
                     field: 'name',
@@ -47,15 +42,16 @@ const ProductList = () => {
             rows: []
         }
 
-        products.forEach((product,index) => {
+        products.forEach((product, index) => {
             data.rows.push({
-                s_no:index+1,
-                // id: product._id,
+                s_no: index + 1,
                 name: product.englishName,
                 price: `Rs.${product.price} (per kg)`,
                 actions: (
                     <Fragment>
-                        <Link to={`/admin/product/${product._id}`} className="btn btn-primary"> <i className="fa fa-pencil"></i></Link>
+                        <Link to={`/admin/product/${product._id}`} className="btn btn-primary">
+                            <i className="fa fa-pencil"></i>
+                        </Link>
                         <Button onClick={e => deleteHandler(e, product._id)} className="btn btn-danger py-1 px-2 ml-2">
                             <i className="fa fa-trash"></i>
                         </Button>
@@ -77,7 +73,7 @@ const ProductList = () => {
             return
         }
         if (isProductDeleted) {
-            toast('Product Deleted Succesfully!', {
+            toast('Product Deleted Successfully!', {
                 type: 'success',
                 position: "bottom-center",
                 onOpen: () => dispatch(clearProductDeleted())
@@ -93,25 +89,27 @@ const ProductList = () => {
     }
 
     return (
-        <div className="row">
-            <div className="col-12 col-md-2">
-                <Sidebar />
+        // <div className="container-fluid">
+            <div className="row">
+                <div className="col-12 col-md-2">
+                    <Sidebar />
+                </div>
+                <div className="col-12 col-md-10">
+                    <h1 className="my-4">Product List</h1>
+                    <Fragment>
+                        {loading ? <Loader /> :
+                            <MDBDataTable
+                                data={setProducts()}
+                                bordered
+                                noBottomColumns
+                                hover
+                                className="px-3 product-table"
+                            />
+                        }
+                    </Fragment>
+                </div>
             </div>
-            <div className="col-12 col-md-10 col-sm-6">
-                <h1 className="my-4">Product List</h1>
-                <Fragment>
-                    {loading ? <Loader /> :
-                        <MDBDataTable
-                            data={setProducts()}
-                            bordered
-                           
-                            hover
-                            className=" px-3 product-table"
-                        />
-                    }
-                </Fragment>
-            </div>
-        </div>
+        // </div>
     )
 }
 
