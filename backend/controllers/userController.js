@@ -194,7 +194,7 @@ const changePassword = catchAsyncError(async (req, res, next) => {
 const getUserProfile = catchAsyncError(async (req, res, next) => {
   // console.log(req)
   const user = await User.findById(req.user._id)
-  console.log(user)
+  // console.log(user)
   if (user) {
     res.status(200).json({
       success: true,

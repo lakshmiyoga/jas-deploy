@@ -22,29 +22,36 @@ function generateToken(user) {
 }
 
 // Middleware for verifying JWT token
-const isAuthenticateUser = catchAsyncError(async (req, res, next)=> {
-  const {token} = req.cookies;
-// console.log(token)
+const isAuthenticateUser = catchAsyncError(async (req, res, next) => {
+  const { token } = req.cookies;
+  console.log('Token from cookies:', token); // Debugging line
+
   if (!token) {
-    return next(new ErrorHandler('Login first to handle the resource', 401))
+    return next(new ErrorHandler('Login first to handle the resource', 401));
   }
 
-  const decoded = jwt.verify(token, process.env.JWT_SECRET)
-  req.user = await User.findById(decoded.id)
-  // console.log(req.user);
-  next();
-})
+  try {
+    const decoded = jwt.verify(token, process.env.JWT_SECRET);
+    req.user = await User.findById(decoded.id);
+    console.log('Authenticated user:', req.user); // Debugging line
+    next();
+  } catch (error) {
+    return next(new ErrorHandler('Invalid token. Please log in again.', 401));
+  }
+});
 
 // Middleware for authorization based on user role
 
-const authorizeRoles = (...roles) =>{
+const authorizeRoles = (...roles) => {
   return (req, res, next) => {
-          if ( !roles.includes(req.user.role)) { // Check if user is authenticated and has required role
-            return next(new ErrorHandler(`Role ${req.user.role} is not allowed`,401))
-          }
-          next();
-        };
-}
+    console.log('User role:', req.user.role); // Debugging line
+    if (!roles.includes(req.user.role)) {
+      return next(new ErrorHandler(`Role ${req.user.role} is not allowed`, 403));
+    }
+    next();
+  };
+};
+
 
   
 

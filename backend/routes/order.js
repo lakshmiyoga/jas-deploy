@@ -11,9 +11,9 @@ router.get('/myorders',isAuthenticateUser, myOrders)
 
 //Admin Routes
 
-router.get('/orders',isAuthenticateUser,authorizeRoles('admin'), orders)
-router.put('/order/:id',isAuthenticateUser,authorizeRoles('admin'), updateOrder)
-router.delete('/order/:id',isAuthenticateUser,authorizeRoles('admin'), deleteOrder)
+router.get('/admin/orders',isAuthenticateUser,authorizeRoles('admin'), orders)
+router.put('/admin/order/:id',isAuthenticateUser,authorizeRoles('admin'), updateOrder)
+router.delete('/admin/order/:id',isAuthenticateUser,authorizeRoles('admin'), deleteOrder)
 
 
 
