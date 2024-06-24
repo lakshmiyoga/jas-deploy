@@ -53,6 +53,7 @@ import PaymentFailed from './components/order/FailedPayment';
 import FailedPayment from './components/order/FailedPayment';
 import OrderList from './components/admin/OrderList';
 import UpdateOrder from './components/admin/UpdateOrder';
+import Refund from './components/order/Refund';
 
 function App() {
   const location = useLocation();
@@ -89,6 +90,7 @@ function App() {
           <Route path="/password/reset/:token" element={<ResetPassword />} />
           <Route path="/cart" element={<Cart />} />
           <Route path="/shipping" element={<Shipping />} />
+          <Route path="/refund" element={<Refund />} />
           <Route path="/orders" element={<ProtectedRoute><UserOrders /></ProtectedRoute>} />
           <Route path='/order/:id' element={<ProtectedRoute><OrderDetail/></ProtectedRoute> } />
           <Route path="/order/confirm" element={<ProtectedRoute><ConfirmOrder /></ProtectedRoute>} />

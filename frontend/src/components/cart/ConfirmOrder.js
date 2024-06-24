@@ -24,6 +24,8 @@ const ConfirmOrder = () => {
     const total = (parseFloat(subtotal) + shippingCharge).toFixed(2);
     // console.log(total)
 
+  
+
     const initPayment = async (data) => {
         // try {
         //     const response = await axios.post('http://localhost:5000/initiateJuspayPayment');
@@ -48,6 +50,7 @@ const ConfirmOrder = () => {
                 }
     };
 
+  
     const processPayment = async () => {
         setLoading(true);
         const reqdata = {
@@ -59,6 +62,9 @@ const ConfirmOrder = () => {
         };
         console.log(reqdata);
         sessionStorage.setItem('orderInfo', JSON.stringify(reqdata));
+
+       
+
         try {
             const orderUrl = '/api/v1/payment/orders';
             const {data} = await axios.post(orderUrl, reqdata, { withCredentials: true });
