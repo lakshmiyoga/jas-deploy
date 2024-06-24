@@ -248,7 +248,7 @@ const paymentPageClientId = config.PAYMENT_PAGE_CLIENT_ID; // used in orderSessi
 
 const juspay = new Juspay({
 	merchantId: config.MERCHANT_ID,
-	baseUrl: PRODUCTION_BASE_URL, // Using sandbox base URL for testing
+	baseUrl: SANDBOX_BASE_URL, // Using sandbox base URL for testing
 	jweAuth: {
 		keyId: config.KEY_UUID,
 		publicKey,
@@ -264,6 +264,8 @@ const payment = catchAsyncError(async (req, res) => {
 	const amount = parseFloat(total).toFixed(2) ;
 	console.log(amount)
 
+
+
 	// Create return URL
 	let BASE_URL = process.env.BACKEND_URL;
 	if (process.env.NODE_ENV === "production") {
@@ -278,8 +280,8 @@ const payment = catchAsyncError(async (req, res) => {
 			amount: amount,
 			payment_page_client_id: paymentPageClientId,
 			customer_id: user._id,
-			email:user.email,
-			customerPhone:shippingInfo.phoneNo,
+			customer_email:user.email,
+			customer_phone:shippingInfo.phoneNo,
 			action: 'paymentPage',
 			return_url: returnUrl,
 			currency: 'INR',
@@ -444,5 +446,33 @@ const paymentFailed = catchAsyncError((req, res) => {
 	res.send('There was an issue with your payment. Please try again.');
 });
 
+//Refund order
 
-module.exports = { payment, paymentSuccess, orderConfirmation, paymentFailed, handleResponse};
+const orderRefund = catchAsyncError( async (req, res) => {
+    const { orderId, amount } = req.body;
+
+    try {
+        // Initiate refund
+        const refundPayload = {
+            unique_request_id: 'refund_'+ Date.now(),
+            order_id: orderId,
+            amount: amount,
+        };
+        console.log(refundPayload)
+        const refundResponse = await juspay.order.refund(orderId, refundPayload);
+
+        // Return refund response
+        return res.json(makeJuspayResponse(refundResponse));
+    } catch (error) {
+        if (error instanceof APIError) {
+            // Handle errors coming from Juspay's API
+            return res.json(makeError(error.message));
+        }
+        // Handle other errors
+        return res.json(makeError());
+    }
+});
+
+
+
+module.exports = { payment, paymentSuccess, orderConfirmation, paymentFailed, handleResponse, orderRefund};
