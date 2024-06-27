@@ -22,6 +22,8 @@ import {
   userOrdersRequest,
   userOrdersSuccess,
   userOrdersFail,
+  orderSummaryRequest,
+  orderSummarySuccess,
 } from '../slices/orderSlice';
 
 
@@ -98,5 +100,17 @@ export const updateOrder = createAsyncThunk('order/update', async ({ id, orderDa
     dispatch(updateOrderSuccess(data));
   } catch (error) {
     dispatch(updateOrderFail(error.response.data.message));
+  }
+});
+
+export const fetchOrderSummary = createAsyncThunk ('order/update', async (date,{dispatch}) => {
+  try {
+    dispatch(orderSummaryRequest());
+
+    const  {data}  = await axios.get(`/api/v1/admin/orders-summary?date=${date}`,{ withCredentials: true });
+    // console.log('Order Summary Data:', data.orderSummary); 
+    dispatch(orderSummarySuccess(data.orderSummary));
+  } catch (error) {
+    dispatch(orderSummarySuccess());
   }
 });

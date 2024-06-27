@@ -10,10 +10,8 @@ import Sidebar from "../admin/Sidebar";
 import { clearError } from '../../slices/productsSlice';
 import { clearOrderDeleted } from "../../slices/orderSlice";
 
-const OrderList = () => {
+const PaymentList = () => {
     const { adminOrders: orders = [], loading = true, error, isOrderDeleted }  = useSelector(state => state.orderState);
-    console.log(orders);
-    
     const dispatch = useDispatch();
 
     const setOrders = () => {
@@ -30,21 +28,6 @@ const OrderList = () => {
                     sort: 'asc'
                 },
                 {
-                    label: 'Name',
-                    field: 'name',
-                    sort: 'asc'
-                },
-                {
-                    label: 'Phone.No',
-                    field: 'phone_no',
-                    sort: 'asc'
-                },
-                {
-                    label: 'Email',
-                    field: 'email',
-                    sort: 'asc'
-                },
-                {
                     label: 'Number of Items',
                     field: 'noOfItems',
                     sort: 'asc'
@@ -52,11 +35,6 @@ const OrderList = () => {
                 {
                     label: 'Amount',
                     field: 'amount',
-                    sort: 'asc'
-                },
-                {
-                    label: 'OrderStatus',
-                    field: 'orderstatus',
                     sort: 'asc'
                 },
                 {
@@ -73,42 +51,38 @@ const OrderList = () => {
             rows: []
         };
 
-        orders.filter(order => order.paymentStatus === 'CHARGED').forEach((order, index) => {
+        orders.forEach((order,index) => {
             data.rows.push({
                 s_no: index + 1,
-                id: order.order_id,
-                name:order.user.name,
-                phone_no:order.shippingInfo.phoneNo,
-                email:order.user.email,
+                id:order.order_id,
                 noOfItems: order.orderItems.length,
                 amount: `Rs.${order.totalPrice}`,
-                orderstatus: (
-                    <p className={order.orderStatus && order.orderStatus.includes('Delivered') ? 'greenColor' : 'redColor' } ><p>{order.orderStatus}</p></p>
-                ),
                 paymentstatus: (
-                    <p className='greenColor'><p>{order.paymentStatus}</p></p>
+                <p className={order && order.paymentStatus  && order.paymentStatus === 'CHARGED'? 'greenColor' : 'redColor' } ><p>{order ? order.paymentStatus : 'Processing'}</p></p>
                 ),
-                actions: (
-                    <Fragment>
-                        <Link to={`/admin/order/${order.order_id}`} className="btn btn-primary">
-                            <i className="fa fa-pencil"></i>
-                        </Link>
-                        {/* <Button onClick={e => deleteHandler(e, order._id)} className="btn btn-danger py-1 px-2 ml-2">
-                            <i className="fa fa-trash"></i>
-                        </Button> */}
-                    </Fragment>
-                )
+                // actions: (
+                //     <Fragment>
+                //         <Link to={`/admin/order/${order.order_id}`} className="btn btn-primary">
+                //             <i className="fa fa-pencil"></i>
+                //         </Link>
+                //         <Button onClick={e => deleteHandler(e, order._id)} className="btn btn-danger py-1 px-2 ml-2">
+                //             <i className="fa fa-trash"></i>
+                //         </Button>
+                //     </Fragment>
+                // )
+                actions: <Link to={`/order/${order.order_id}`} className="btn btn-primary" >
+                    <i className='fa fa-eye'></i>
+                </Link>
             });
         });
 
         return data;
     };
 
-
-    // const deleteHandler = (e, id) => {
-    //     e.target.disabled = true;
-    //     dispatch(deleteOrder(id));
-    // };
+    const deleteHandler = (e, id) => {
+        e.target.disabled = true;
+        dispatch(deleteOrder(id));
+    };
 
     useEffect(() => {
         if (error) {
@@ -137,7 +111,7 @@ const OrderList = () => {
                 <Sidebar />
             </div>
             <div className="col-12 col-md-10">
-                <h1 className="my-4">Order List</h1>
+                <h1 className="my-4">Payment List</h1>
                 <Fragment>
                     {loading ? <Loader /> :
                         <MDBDataTable
@@ -154,4 +128,4 @@ const OrderList = () => {
     );
 };
 
-export default OrderList;
+export default PaymentList;

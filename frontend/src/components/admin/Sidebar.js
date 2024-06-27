@@ -23,14 +23,22 @@ const Sidebar = () => {
                     </li>
 
                     <li>
-                        <Link to='/admin/orders'><i className='fa fa-shopping-basket'></i> Orders</Link>
+                        <NavDropdown title={<i className='fa fa-shopping-basket'> Orders</i>}>
+                            <NavDropdown.Item onClick={() => navigate('/admin/orders')}> <i className='fa fa-shopping-basket product-dropdown'> Order List</i></NavDropdown.Item>
+                            <NavDropdown.Item onClick={() => navigate('/admin/order-summary')}> <i className='fa fa-plus product-dropdown'> Order Summary </i></NavDropdown.Item>
+                            
+                        </NavDropdown>
                     </li>
+
+                    {/* <li>
+                        <Link to='/admin/orders'><i className='fa fa-shopping-basket'></i> Orders</Link>
+                    </li> */}
 
                     <li>
                         <Link to='/admin/users'><i className='fa fa-users'></i> Users</Link>
                     </li>
                     <li>
-                        <Link to="/admin/reviews"><i className='fa fa-users'></i> Reviews</Link>
+                        <Link to="/admin/payments"><i class="fa fa-credit-card"></i> Paymnents</Link>
                     </li>
                 </ul>
             </nav>
