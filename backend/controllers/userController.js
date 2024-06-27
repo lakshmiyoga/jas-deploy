@@ -6,6 +6,7 @@ const catchAsyncError = require('../middleware/catchAsyncError');
 const ErrorHandler = require('../utils/errorHandler');
 const sendEmail = require("../utils/email");
 const crypto = require('crypto');
+const nodemailer = require('nodemailer')
 
 
 
@@ -13,19 +14,19 @@ const crypto = require('crypto');
 
 const userRegister = catchAsyncError(async (req, res, next) => {
   const { name, email, password } = req.body;
-    
+
   if (!name || !email || !password) {
-      return next(new ErrorHandler('Please provide all required fields: name, email, and password' , 400));
+    return next(new ErrorHandler('Please provide all required fields: name, email, and password', 400));
   }
 
   let avatar;
 
   let BASE_URL = process.env.BACKEND_URL;
 
-  if(process.env.NODE_ENV === "production"){
+  if (process.env.NODE_ENV === "production") {
     BASE_URL = `${req.protocol}://${req.get('host')}`
   }
-  
+
 
   if (req.file) {
     avatar = `${BASE_URL}/uploads/user/${req.file.originalname}`;
@@ -34,7 +35,7 @@ const userRegister = catchAsyncError(async (req, res, next) => {
   try {
     let user = await User.findOne({ email }).select('+password');
     if (user) {
-      return next(new ErrorHandler('Email already exists' , 400));
+      return next(new ErrorHandler('Email already exists', 400));
     }
 
     const salt = await bcrypt.genSalt(10);
@@ -50,8 +51,8 @@ const userRegister = catchAsyncError(async (req, res, next) => {
     await regUser.save();
     sendToken(regUser, 201, res);
   } catch (error) {
-    return next(new ErrorHandler('Internal Server Error' , 500));
-    
+    return next(new ErrorHandler('Internal Server Error', 500));
+
   }
 });
 
@@ -60,7 +61,7 @@ const userRegister = catchAsyncError(async (req, res, next) => {
 
 const userLogin = catchAsyncError(async (req, res, next) => {
   const { email, password } = req.body;
-// console.log(email, password )
+  // console.log(email, password )
   let user = await User.findOne({ email }).select('+password');
   // console.log(user)
   if (!user) {
@@ -69,7 +70,7 @@ const userLogin = catchAsyncError(async (req, res, next) => {
   // console.log(password, user.password)
 
   const isMatch = await bcrypt.compare(password, user.password);
-  
+
   if (!isMatch) {
     return next(new ErrorHandler('Invalid credentials', 401));
   }
@@ -116,25 +117,53 @@ const requestPasswordReset = async (req, res, next) => {
 
     // Send email with reset link including the token
 
-    
-  let BASE_URL = process.env.FRONTEND_URL;
 
-  if(process.env.NODE_ENV === "production"){
-    BASE_URL = `${req.protocol}://${req.get('host')}`
-  }
+    let BASE_URL = process.env.FRONTEND_URL;
+
+    if (process.env.NODE_ENV === "production") {
+      BASE_URL = `${req.protocol}://${req.get('host')}`
+    }
 
     const resetUrl = `${BASE_URL}/password/reset/${user.resetPasswordToken}`
     const message = `Your password reset url is as follows \n\n ${resetUrl} \n\n If you have not request this email, then ignore it.`
-
+console.log("message",message)
     // Code to send email goes here
-    sendEmail({
-      email: user.email,
-      subject: "password Recovery",
-      message
+    // sendEmail({
+    //   email: user.email,
+    //   subject: "password Recovery",
+    //   message
 
-    })
+    // })
 
-    res.status(200).json({ success: true, message: `email send to ${user.email}` });
+     // Send link via email
+  const transporter = nodemailer.createTransport({
+    service: 'gmail',
+    auth: {
+      user: process.env.SEND_MAIL, // Your Gmail email address
+      pass: process.env.MAIL_PASS // Your Gmail password
+    }
+  });
+    // Configure mail options
+    const mailOptions = {
+      from: process.env.SEND_MAIL,
+      to: user.email,
+      subject: 'Password Recovery',
+      text: message // Use 'text' instead of 'message'
+    };
+  console.log("mailOptions",mailOptions)
+
+  transporter.sendMail(mailOptions, (error, info) => {
+    if (error) {
+      console.error('Error sending email:', error); // Log the error for debugging
+      return next(new ErrorHandler("Failed to send mail", 500))
+    } else {
+      console.log('Email sent: ' + info.response);
+      res.status(200).json({ success: true, message: `email send to ${user.email}` });
+    }
+  });
+  
+
+    // res.status(200).json({ success: true, message: `email send to ${user.email}` });
   } catch (error) {
     next(error);
   }
@@ -219,7 +248,7 @@ const updateUserProfile = catchAsyncError(async (req, res, next) => {
 
   let BASE_URL = process.env.BACKEND_URL;
 
-  if(process.env.NODE_ENV === "production"){
+  if (process.env.NODE_ENV === "production") {
     BASE_URL = `${req.protocol}://${req.get('host')}`
   }
 
@@ -230,13 +259,13 @@ const updateUserProfile = catchAsyncError(async (req, res, next) => {
 
   const user = await User.findByIdAndUpdate(
     req.user._id,
-    
-    {$set:newUserData},
+
+    { $set: newUserData },
     { new: true }
   ).select
-  ('-password');
+    ('-password');
   await user.save();
-  console.log("user",user);
+  console.log("user", user);
   // console.log("req",req)
 
   if (!user) {
@@ -253,56 +282,56 @@ const updateUserProfile = catchAsyncError(async (req, res, next) => {
 const getAllUsers = catchAsyncError(async (req, res, next) => {
   const users = await User.find();
   res.status(200).json({
-       success: true,
-       users
+    success: true,
+    users
   })
 })
 
 //Admin: Get Specific User - api/v1/admin/user/:id
 const getUser = catchAsyncError(async (req, res, next) => {
-   const user = await User.findById(req.params.id);
-   if(!user) {
-       return next(new ErrorHandler(`User not found with this id ${req.params.id}`))
-   }
-   res.status(200).json({
-       success: true,
-       user
+  const user = await User.findById(req.params.id);
+  if (!user) {
+    return next(new ErrorHandler(`User not found with this id ${req.params.id}`))
+  }
+  res.status(200).json({
+    success: true,
+    user
   })
 });
 
 //Admin: Update User - api/v1/admin/user/:id
 const updateUser = catchAsyncError(async (req, res, next) => {
   console.log(req.body)
-   const newUserData = {
-       name: req.body.name,
-       email: req.body.email,
-       role: req.body.role
-   }
+  const newUserData = {
+    name: req.body.name,
+    email: req.body.email,
+    role: req.body.role
+  }
 
-   const user = await User.findByIdAndUpdate(req.params.id, newUserData, {
-       new: true,
-       runValidators: true,
-   })
+  const user = await User.findByIdAndUpdate(req.params.id, newUserData, {
+    new: true,
+    runValidators: true,
+  })
 
-   res.status(200).json({
-       success: true,
-       user
-   })
+  res.status(200).json({
+    success: true,
+    user
+  })
 })
 
 //Admin: Delete User - api/v1/admin/user/:id
 const deleteUser = catchAsyncError(async (req, res, next) => {
-   const user = await User.findById(req.params.id);
-   if(!user) {
-       return next(new ErrorHandler(`User not found with this id ${req.params.id}`))
-   }
-   await user.remove();
-   res.status(200).json({
-       success: true,
-   })
+  const user = await User.findById(req.params.id);
+  if (!user) {
+    return next(new ErrorHandler(`User not found with this id ${req.params.id}`))
+  }
+  await user.remove();
+  res.status(200).json({
+    success: true,
+  })
 })
 
 
 
 
-module.exports = { userRegister, userLogin, logoutUser, requestPasswordReset, resetPassword, getUserProfile, updateUserProfile, changePassword,getAllUsers,getUser,updateUser,deleteUser };
+module.exports = { userRegister, userLogin, logoutUser, requestPasswordReset, resetPassword, getUserProfile, updateUserProfile, changePassword, getAllUsers, getUser, updateUser, deleteUser };

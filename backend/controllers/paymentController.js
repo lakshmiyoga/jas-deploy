@@ -408,9 +408,9 @@ const paymentSuccess = catchAsyncError(async (req, res) => {
 		return res.json(makeError('order_id not present or cannot be empty'));
 	}
 	let BASE_URL = process.env.FRONTEND_URL;
-	if (process.env.NODE_ENV === "production") {
-		BASE_URL = `${req.protocol}://${req.get('host')}`
-	}
+	// if (process.env.NODE_ENV === "production") {
+	// 	BASE_URL = `${req.protocol}://${req.get('host')}`
+	// }
 	try {
 		const statusResponse = await juspay.order.status(orderId);
 		// console.log(statusResponse)

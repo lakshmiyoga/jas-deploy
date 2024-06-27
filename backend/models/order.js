@@ -129,6 +129,10 @@ orderItems: [{
         type: Number,
         required: true
     },
+    productWeight: {
+        type: Number,
+        required: true
+    },
     image: {
         type: String,
         required: true
