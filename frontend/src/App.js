@@ -49,8 +49,8 @@ import UpdatePrice from './components/admin/UpdatePrice';
 import UserOrders from './components/order/UserOrders';
 import OrderDetail from './components/order/OrderDetail';
 import PaymentConfirm from './components/order/PaymentConfirm';
-import PaymentFailed from './components/order/FailedPayment';
-import FailedPayment from './components/order/FailedPayment';
+// import PaymentFailed from './components/order/FailedPayment';
+// import FailedPayment from './components/order/FailedPayment';
 import OrderList from './components/admin/OrderList';
 import UpdateOrder from './components/admin/UpdateOrder';
 import Refund from './components/order/Refund';
@@ -100,7 +100,7 @@ function App() {
           <Route path="/order/confirm" element={<ProtectedRoute><ConfirmOrder /></ProtectedRoute>} />
           <Route path="/payment/confirm/:id" element={<PaymentConfirm />} />
          
-          <Route path="/payment/failed" element={<ProtectedRoute><FailedPayment /></ProtectedRoute>} />
+          {/* <Route path="/payment/failed" element={<ProtectedRoute><FailedPayment /></ProtectedRoute>} /> */}
           <Route path="/admin/dashboard" element={<ProtectedRoute isAdmin={true}><Dashboard /></ProtectedRoute>} />
           <Route path="/admin/products" element={<ProtectedRoute isAdmin={true}><ProductList /></ProtectedRoute>} />
           <Route path="/admin/products/create" element={<ProtectedRoute isAdmin={true}><NewProduct /></ProtectedRoute>} />

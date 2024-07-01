@@ -83,9 +83,11 @@ const PaymentConfirm = () => {
     switch (status) {
       case 'CHARGED':
         return 'Transaction Successful!';
-      case 'PENDING':
+      case 'PENDING_VBV':
         return 'Transaction Pending';
-      case 'FAILED':
+      case 'AUTHORIZATION_FAILED':
+        return 'Transaction Failed';
+        case 'AUTHENTICATION_FAILED':
         return 'Transaction Failed';
       default:
         return 'Transaction Status';
@@ -99,6 +101,8 @@ const PaymentConfirm = () => {
       case 'PENDING_VBV':
         return 'https://img.icons8.com/color/48/000000/hourglass-sand-bottom.png';
       case 'AUTHORIZATION_FAILED':
+        return 'https://img.icons8.com/color/48/000000/cancel.png';
+        case 'AUTHENTICATION_FAILED':
         return 'https://img.icons8.com/color/48/000000/cancel.png';
       default:
         return '';

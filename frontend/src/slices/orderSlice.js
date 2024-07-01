@@ -192,6 +192,7 @@ const orderSlice = createSlice({
             return { ...state,
                   loading: false,
                   orderSummary: action.payload 
+                  
                 };
         },
         orderSummaryFail(state, action) {

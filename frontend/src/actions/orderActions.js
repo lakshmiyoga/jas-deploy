@@ -44,7 +44,7 @@ export const createOrder = createAsyncThunk('order/create', async (order, { disp
   try {
     dispatch(createOrderRequest());
     const { data } = await axios.post('/api/v1/order/new', order);
-    // console.log(data)
+    console.log(data)
     dispatch(createOrderSuccess(data));
   } catch (error) {
     dispatch(createOrderFail(error.response.data.message));
@@ -66,7 +66,9 @@ export const orderDetail = createAsyncThunk('order/orderDetail', async (id, { di
   try {
     dispatch(orderDetailRequest());
     const { data } = await axios.get(`/api/v1/order/${id}`);
+    console.log(data)
     dispatch(orderDetailSuccess(data));
+   
   } catch (error) {
     dispatch(orderDetailFail(error.response.data.message));
   }
@@ -76,6 +78,7 @@ export const adminOrders = createAsyncThunk('order/adminOrders', async (_, { dis
   try {
     dispatch(adminOrdersRequest());
     const { data } = await axios.get('/api/v1/admin/orders',{ withCredentials: true })
+    console.log(data)
     dispatch(adminOrdersSuccess(data));
   } catch (error) {
     dispatch(adminOrdersFail(error.response.data.message));
@@ -108,7 +111,7 @@ export const fetchOrderSummary = createAsyncThunk ('order/update', async (date,{
     dispatch(orderSummaryRequest());
 
     const  {data}  = await axios.get(`/api/v1/admin/orders-summary?date=${date}`,{ withCredentials: true });
-    // console.log('Order Summary Data:', data.orderSummary); 
+    console.log('Order Summary Data:', data.orderSummary); 
     dispatch(orderSummarySuccess(data.orderSummary));
   } catch (error) {
     dispatch(orderSummarySuccess());

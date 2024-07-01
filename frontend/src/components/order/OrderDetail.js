@@ -11,7 +11,7 @@ export default function OrderDetail () {
     const dispatch = useDispatch();
     const {id } = useParams();
     const [payment,setPayment] = useState(null)
-    console.log(orderDetail)
+    // console.log(orderDetail)
        
     useEffect(() => {
         dispatch(orderDetailAction(id));
@@ -59,8 +59,8 @@ export default function OrderDetail () {
     
                             <hr />
                             <div className="cart-item my-1">
-                                {orderItems && orderItems.map(item => (
-                                    <div className="row my-5">
+                                {orderItems && orderItems.map((item,index) => (
+                                    <div className="row my-5" key={index}>
                                         <div className="col-4 col-lg-2">
                                             <img src={item.image} alt={item.name} height="45" width="65" />
                                         </div>

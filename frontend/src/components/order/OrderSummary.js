@@ -9,6 +9,7 @@ const OrderSummary = () => {
     const { loading, orderSummary, error } = useSelector((state) => state.orderState);
     console.log('Order Summary:', orderSummary);
     const [date, setDate] = useState('');
+    console.log(date)
 
     useEffect(() => {
         if (date) {

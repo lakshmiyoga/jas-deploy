@@ -44,11 +44,11 @@ const OrderList = () => {
                     field: 'email',
                     sort: 'asc'
                 },
-                {
-                    label: 'Number of Items',
-                    field: 'noOfItems',
-                    sort: 'asc'
-                },
+                // {
+                //     label: 'Number of Items',
+                //     field: 'noOfItems',
+                //     sort: 'asc'
+                // },
                 {
                     label: 'Amount',
                     field: 'amount',
@@ -80,7 +80,7 @@ const OrderList = () => {
                 name:order.user.name,
                 phone_no:order.shippingInfo.phoneNo,
                 email:order.user.email,
-                noOfItems: order.orderItems.length,
+                // noOfItems: order.orderItems.length,
                 amount: `Rs.${order.totalPrice}`,
                 orderstatus: (
                     <p className={order.orderStatus && order.orderStatus.includes('Delivered') ? 'greenColor' : 'redColor' } ><p>{order.orderStatus}</p></p>

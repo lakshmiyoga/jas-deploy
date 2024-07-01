@@ -16,7 +16,6 @@ const ConfirmOrder = () => {
     const { shippingInfo, items: cartItems } = useSelector(state => state.cartState);
     const { user } = useSelector(state => state.authState);
     const navigate = useNavigate();
-
     const [loading, setLoading] = useState(false);
 
     const shippingCharge = 30.0;
@@ -42,8 +41,8 @@ const ConfirmOrder = () => {
         // }
 
         if (data && data.payment_links && data.payment_links.web) {
-                    // window.open(data.payment_links.web, '_blank');
-                    window.location.href = data.payment_links.web;
+                    window.open(data.payment_links.web, '_blank');
+                    // window.location.href = data.payment_links.web;
 
                 } else {
                     alert('Failed to initiate payment: ' + (data.message || 'Unknown error'));
