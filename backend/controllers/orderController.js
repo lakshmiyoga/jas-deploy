@@ -23,8 +23,7 @@ const newOrder = catchAsyncError(async(req, res, next)=>{
         totalPrice,
         paymentStatus,
     } = req.body;
-    console.log("cartItems",cartItems)
-
+    
     const newOrder = new Order({
         order_id,
         user_id,
@@ -37,6 +36,7 @@ const newOrder = catchAsyncError(async(req, res, next)=>{
         totalPrice,
         paymentStatus,
     });
+    // console.log("neworder",newOrder)
 
     await newOrder.save();
     res.status(201).json({ success: true, order: newOrder });
@@ -50,6 +50,7 @@ const getSingleOrder = catchAsyncError(async(req, res, next)=>{
     const {id} = req.params
     // console.log(id)
     const order = await Order.findOne({'order_id':id}).populate('user', 'name email');
+    // console.log(order)
     if(!order) {
         return next(new ErrorHandler(`Order not found with this id: ${req.params.id}`, 404))
     }
@@ -79,11 +80,10 @@ const orders = catchAsyncError(async (req, res, next) => {
     const orders = await Order.find();
 
     let totalAmount = 0;
-
+    // console.log("this is sample response",JSON.stringify(orders, null, 2));
     orders.forEach(order => {
         totalAmount += order.totalPrice
     })
-
     res.status(200).json({
         success: true,
         totalAmount,
@@ -134,42 +134,63 @@ const deleteOrder = catchAsyncError(async (req, res, next) => {
 const getOrderSummaryByDate = catchAsyncError(async (req, res) => {
     try {
         const { date } = req.query;
-        console.log("ordersummarydate",date)
+        console.log("ordersummarydate", date);
+
         // Assuming date is in YYYY-MM-DD format
         const startDate = new Date(date);
         const endDate = new Date(date);
         endDate.setDate(endDate.getDate() + 1);
+        console.log("startDate",startDate)
+        console.log("endDate",endDate)
 
+        // Fetch orders within the date range, explicitly selecting fields
+        // const orders = await Order.find({
+        //     createdAt: { $gte: startDate, $lt: endDate },
+        //     paymentStatus: 'CHARGED',
+        // }).select('orderItems shippingInfo user user_id itemsPrice taxPrice shippingPrice totalPrice order_id paymentStatus orderStatus createdAt').exec();
         const orders = await Order.find({
             createdAt: { $gte: startDate, $lt: endDate },
             paymentStatus: 'CHARGED',
-        });
+        })
+        console.log("Fetched orders:", orders);
 
         const orderSummary = [];
 
         orders.forEach(order => {
             order.orderItems.forEach(item => {
+                // Log the item to check if productWeight is present
+                console.log("Processing item:", item);
+
+                const productWeight = item.productWeight;
+                if (productWeight === undefined) {
+                    console.warn(`productWeight is undefined for item: ${item.name}`);
+                }
+
                 const existingItem = orderSummary.find(summary => summary.productName === item.name);
                 if (existingItem) {
-                    existingItem.totalWeight += item.productWeight;
-                    existingItem.totalPrice += item.productWeight * item.price;
+                    existingItem.totalWeight += productWeight;
+                    existingItem.totalPrice += productWeight * item.price;
                 } else {
                     orderSummary.push({
                         productName: item.name,
-                        totalWeight: item.productWeight,
-                        totalPrice: item.productWeight * item.price,
+                        totalWeight: productWeight,
+                        totalPrice: productWeight * item.price,
                     });
-                   
                 }
             });
         });
 
+        console.log("Order summary:", JSON.stringify(orderSummary, null, 2));
         res.status(200).json({ orderSummary });
-        console.log(orderSummary)
     } catch (error) {
+        console.error("Error fetching order summary:", error);
         res.status(500).json({ message: 'Server Error' });
     }
 });
+
+
+
+
 // Function to send email
 const sendEmaildata = async (orderSummary) => {
     let transporter = nodemailer.createTransport({

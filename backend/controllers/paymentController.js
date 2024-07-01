@@ -449,28 +449,51 @@ const paymentFailed = catchAsyncError((req, res) => {
 //Refund order
 
 const orderRefund = catchAsyncError( async (req, res) => {
-    const { orderId, amount } = req.body;
+	const { orderId, amount } = req.body;
 
-    try {
-        // Initiate refund
-        const refundPayload = {
-            unique_request_id: 'refund_'+ Date.now(),
-            order_id: orderId,
-            amount: amount,
-        };
-        console.log(refundPayload)
-        const refundResponse = await juspay.order.refund(orderId, refundPayload);
-
-        // Return refund response
-        return res.json(makeJuspayResponse(refundResponse));
-    } catch (error) {
-        if (error instanceof APIError) {
-            // Handle errors coming from Juspay's API
-            return res.json(makeError(error.message));
-        }
-        // Handle other errors
-        return res.json(makeError());
-    }
+	const refundAmount = Number(amount);
+  console.log(refundAmount); 
+  
+	  // Log the incoming request payload
+	  console.log('Incoming request payload:', req.body);
+  
+	  if (!orderId || !refundAmount) {
+		  return res.status(400).json(makeError('orderId and amount are required'));
+	  }
+  
+	  // Validate data types
+	  console.log('orderId type:', typeof orderId);
+	  console.log('amount type:', typeof refundAmount);
+  
+	  if (typeof orderId !== 'string' || typeof refundAmount !== 'number') {
+		  return res.status(400).json(makeError('Invalid data types: orderId should be a string and amount should be a number'));
+	  }
+  
+	try {
+		// Initiate refund
+		const refundPayload = {
+			unique_request_id: 'refund_test_' + Date.now(),
+			order_id: orderId,
+			amount: refundAmount,
+		};
+		console.log(refundPayload);
+		
+		const refundResponse = await juspay.order.refund(orderId, refundPayload);
+		console.log("refundResponse",refundResponse)
+  
+		// Return refund response
+		// return res.json(makeJuspayResponse(refundResponse));
+		return res.json({ success: true, refundResponse });
+	} catch (error) {
+	  console.error('Error during refund:', error);
+		if (error instanceof APIError) {
+			// Handle errors coming from Juspay's API
+			return res.json(makeError(error.message));
+		}
+		// Handle other errors
+		// return res.json(makeError(error.message || 'An error occurred'));
+		return res.status(500).json({ message: error.message || 'An error occurred' });
+	}
 });
 
 

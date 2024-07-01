@@ -8,7 +8,7 @@ const router = express.Router();
 router.post('/order/new',isAuthenticateUser, newOrder)
 router.get('/order/:id',isAuthenticateUser, getSingleOrder)
 router.get('/myorders',isAuthenticateUser, myOrders)
-router.get('orders/summary', getOrderSummaryByDate);
+
 
 //Admin Routes
 

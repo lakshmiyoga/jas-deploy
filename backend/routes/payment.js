@@ -15,7 +15,7 @@
 
 const express =require('express');
 const { isAuthenticateUser, authorizeRoles } = require('../middleware/authmiddleware');
-const {payment,handleResponse, paymentSuccess, orderConfirmation, paymentFailed, orderRefund,validateAmount} = require("../controllers/paymentController");
+const {payment,handleResponse, paymentSuccess, orderConfirmation, paymentFailed, orderRefund} = require("../controllers/paymentController");
 const router = express.Router();
 
 
