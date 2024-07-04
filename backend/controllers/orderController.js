@@ -3,7 +3,7 @@ const ErrorHandler = require('../utils/errorHandler');
 const Order = require("../models/order")
 const nodeCron = require('node-cron');
 const nodemailer = require('nodemailer');
-
+const path = require('path');
 // const fetch = require('node-fetch');
 
 
@@ -129,7 +129,7 @@ const deleteOrder = catchAsyncError(async (req, res, next) => {
     })
 })
 
-
+// get ordersummary
 
 const getOrderSummaryByDate = catchAsyncError(async (req, res) => {
     try {
@@ -228,14 +228,22 @@ const sendEmaildata = async (orderSummary) => {
 };
 
 // Schedule task to run at 10 PM every day
-nodeCron.schedule('30 16 * * *', async () => {
+nodeCron.schedule('00 21 * * *', async () => {
     const date = new Date();
     const formattedDate = date.toISOString().split('T')[0]; // Get YYYY-MM-DD format
     // console.log(formattedDate);
+
+   
+	let BASE_URL;
+    if (process.env.NODE_ENV === 'production') {
+        BASE_URL = process.env.BACKEND_URL_PROD; // Use production URL
+    } else {
+        BASE_URL = process.env.BACKEND_URL_DEV; // Use development URL
+    }
     
     try {
         const fetch = (await import('node-fetch')).default; // Dynamic import of node-fetch
-        const response = await fetch(`http://localhost:8000/api/v1/admin/orders-summary/sendmail/jasadmin/orderreport?date=${formattedDate}`, {
+        const response = await fetch(`${BASE_URL}/api/v1/admin/orders-summary/sendmail/jasadmin/orderreport?date=${formattedDate}`, {
             headers: {
                 'Content-Type': 'application/json',
                 // Add any other headers as needed
@@ -257,4 +265,182 @@ nodeCron.schedule('30 16 * * *', async () => {
     }
 });
 
-module.exports = {newOrder, getSingleOrder,myOrders, orders, updateOrder,deleteOrder,getOrderSummaryByDate};
+// Get user summary
+const getUserSummaryByDate = catchAsyncError(async (req, res) => {
+    try {
+        const { date } = req.query;
+        console.log("usersummarydate", date);
+
+        // Assuming date is in YYYY-MM-DD format
+        const startDate = new Date(date);
+        const endDate = new Date(date);
+        endDate.setDate(endDate.getDate() + 1);
+        console.log("startDate", startDate)
+        console.log("endDate", endDate)
+
+        // Fetch orders within the date range
+        const orders = await Order.find({
+            createdAt: { $gte: startDate, $lt: endDate },
+            paymentStatus: 'CHARGED',
+        });
+
+        console.log("Fetched users:", orders);
+
+        const userSummary = [];
+
+        orders.forEach(order => {
+            const totalWeight = order.orderItems.reduce((sum, item) => sum + item.productWeight, 0);
+            const totalPrice = order.orderItems.reduce((sum, item) => sum + (item.productWeight * item.price), 0);
+            const products = order.orderItems.map(item => ({
+                name: item.name,
+                weight: item.productWeight,
+                price: parseFloat(item.price * item.productWeight).toFixed(2)
+            }));
+
+            userSummary.push({
+                user: {
+                    name: order.user?.name || 'N/A',
+                    email: order.user?.email || 'N/A',
+                },
+                shippingInfo: {
+                    phoneNo: order.shippingInfo?.phoneNo || 'N/A',
+                    address: order.shippingInfo?.address || 'N/A',
+                    city: order.shippingInfo?.city || 'N/A',
+                    country: order.shippingInfo?.country || 'N/A',
+                    postalCode: order.shippingInfo?.postalCode || 'N/A',
+                },
+                products,
+                totalAmount: totalPrice,
+                totalWeight
+            });
+            
+        });
+
+        console.log("user summary:", JSON.stringify(userSummary, null, 2));
+        res.status(200).json({ userSummary });
+    } catch (error) {
+        console.error("Error fetching user summary:", error);
+        res.status(500).json({ message: 'Server Error' });
+    }
+});
+
+
+
+
+// Function to send email
+
+const sendEmail = async (userSummary) => {
+    let transporter = nodemailer.createTransport({
+        service: 'gmail',
+        auth: {
+            user: process.env.SEND_MAIL, // Your Gmail email address
+            pass: process.env.MAIL_PASS // replace with your email password or app-specific password
+        },
+    });
+
+    let summaryHtml = '<h1>User Summary for Today</h1>';
+    summaryHtml += '<table border="1" style="border-collapse: collapse; width: 100%;">';
+    summaryHtml += `
+        <thead>
+            <tr>
+                <th>User Name</th>
+                <th>User Email</th>
+                <th>Phone No</th>
+                <th>Address</th>
+                <th>Product Name</th>
+                <th>Product Weight (kg)</th>
+                <th>Product Price (Rs.)</th>
+            </tr>
+        </thead>
+        <tbody>`;
+
+    let totalWeight = 0;
+    let totalAmount = 0;
+
+    userSummary.forEach(summary => {
+        summary.products.forEach(product => {
+            summaryHtml += `
+                <tr>
+                    <td>${summary.user.name}</td>
+                    <td>${summary.user.email}</td>
+                    <td>${summary.shippingInfo.phoneNo}</td>
+                    <td>${summary.shippingInfo.address}, ${summary.shippingInfo.city}, ${summary.shippingInfo.country}, ${summary.shippingInfo.postalCode}</td>
+                    <td>${product.name}</td>
+                    <td>${product.weight.toFixed(2)}</td>
+                    <td>${parseFloat(product.price).toFixed(2)}</td>
+                </tr>`;
+
+            totalWeight += product.weight;
+            totalAmount += parseFloat(product.price);
+        });
+    });
+
+    summaryHtml += '</tbody></table>';
+
+    // Add total weight and total amount row at the end of the table
+    summaryHtml += `
+        <table border="1" style="border-collapse: collapse; width: 100%;">
+            
+                <tr>
+                    <td colspan="5"><strong>Total </strong></td>
+                    <td colspan="1"><strong>${totalWeight.toFixed(2)}</strong></td>
+                    <td colspan="1"><strong>Rs. ${totalAmount.toFixed(2)}</strong></td>
+                </tr>
+            
+        </table>`;
+
+    let info = await transporter.sendMail({
+        from: process.env.SEND_MAIL,
+        to: 'jasfruitsandvegetables@gmail.com',
+        subject: 'User Summary for Today',
+        html: summaryHtml,
+    });
+
+    console.log('Message sent: %s', info.messageId);
+};
+
+
+
+// Schedule task to run at 10 PM every day
+nodeCron.schedule('00 21 * * *', async () => {
+    const date = new Date();
+    const formattedDate = date.toISOString().split('T')[0]; // Get YYYY-MM-DD format
+    console.log(formattedDate);
+
+    let BASE_URL;
+    if (process.env.NODE_ENV === 'production') {
+        BASE_URL = process.env.BACKEND_URL_PROD; // Use production URL
+    } else {
+        BASE_URL = process.env.BACKEND_URL_DEV; // Use development URL
+    }
+    
+    console.log(BASE_URL)
+    try {
+        const fetch = (await import('node-fetch')).default; // Dynamic import of node-fetch
+        const response = await fetch(`${BASE_URL}/api/v1/admin/user-summary/sendmail/jasadmin/userreport?date=${formattedDate}`, {
+            headers: {
+                'Content-Type': 'application/json',
+                // Add any other headers as needed
+                // You may need to include authentication headers or tokens here
+            },
+            credentials: 'include', // Send cookies with the request if needed
+        });
+        console.log(response)
+        const data = await response.json();
+        console.log("Fetched data:", data);
+
+        if (!response.ok) {
+            throw new Error(`HTTP error! Status: ${response.status}`);
+        }
+       
+
+        if (data.userSummary) {
+            await sendEmail(data.userSummary);
+        }
+    } catch (error) {
+        console.error('Error fetching user summary or sending email:', error);
+    }
+});
+
+
+module.exports = {newOrder, getSingleOrder,myOrders, orders, updateOrder,deleteOrder,getOrderSummaryByDate,getUserSummaryByDate};
