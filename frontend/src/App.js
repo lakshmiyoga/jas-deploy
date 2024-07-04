@@ -57,6 +57,8 @@ import Refund from './components/order/Refund';
 import PaymentList from './components/admin/PaymentList';
 import PaymentDetails from './components/order/PaymentDetails';
 import OrderSummary from './components/order/OrderSummary';
+import UserSummary from './components/admin/SummaryUser';
+import SummaryUser from './components/admin/SummaryUser';
 
 function App() {
   const location = useLocation();
@@ -113,6 +115,7 @@ function App() {
           <Route path='/admin/orders' element={ <ProtectedRoute isAdmin={true}><OrderList/></ProtectedRoute> } />
           <Route path='/admin/order/:id' element={ <ProtectedRoute isAdmin={true}><UpdateOrder/></ProtectedRoute> } />
           <Route path='/admin/order-summary' element={ <ProtectedRoute isAdmin={true}><OrderSummary/></ProtectedRoute> } />
+          <Route path='/admin/user-summary' element={ <ProtectedRoute isAdmin={true}><SummaryUser/></ProtectedRoute> } />
         </Routes>
         {/* {showHeaderFooter && <Footer />} */}
         <Footer/>

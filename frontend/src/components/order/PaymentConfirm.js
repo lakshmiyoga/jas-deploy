@@ -4,14 +4,14 @@ import { Link, useParams } from 'react-router-dom';
 import { loadUser } from '../../actions/userActions';
 import { getProducts } from '../../actions/productsActions';
 import { orderCompleted } from "../../slices/cartSlice";
-import {useDispatch} from 'react-redux';
+import { useDispatch } from 'react-redux';
 import axios from 'axios';
 
 const PaymentConfirm = () => {
   const { id } = useParams();
   const [paymentStatus, setPaymentStatus] = useState('LOADING');
   const [paymentDetails, setPaymentDetails] = useState({});
-  const dispatch =useDispatch();
+  const dispatch = useDispatch();
 
   useEffect(() => {
     store.dispatch(loadUser());
@@ -39,7 +39,7 @@ const PaymentConfirm = () => {
   }, [id]);
 
   const renderPaymentDetails = () => {
-    const { amount, payment_method, order_id,txn_id, date_created } = paymentDetails;
+    const { amount, payment_method, order_id, txn_id, date_created } = paymentDetails;
     return (
       <div className="payment-details">
         <h1>{getTitle(paymentStatus)}</h1>
@@ -52,7 +52,7 @@ const PaymentConfirm = () => {
             </tr>
             <tr>
               <td>Payment method</td>
-              <td>{payment_method}</td>
+              <td>{(payment_method ? payment_method : 'N/A')}</td>
             </tr>
             <tr>
               <td>Status</td>
@@ -64,7 +64,7 @@ const PaymentConfirm = () => {
             </tr>
             <tr>
               <td>Transaction_id</td>
-              <td>{txn_id}</td>
+              <td>{(txn_id ? txn_id : 'N/A')}</td>
             </tr>
             <tr>
               <td>Date</td>
@@ -83,12 +83,16 @@ const PaymentConfirm = () => {
     switch (status) {
       case 'CHARGED':
         return 'Transaction Successful!';
+      case 'PENDING':
+        return 'Transaction Pending';
       case 'PENDING_VBV':
         return 'Transaction Pending';
       case 'AUTHORIZATION_FAILED':
         return 'Transaction Failed';
-        case 'AUTHENTICATION_FAILED':
+      case 'AUTHENTICATION_FAILED':
         return 'Transaction Failed';
+      case 'NEW':
+        return 'Transaction Cancelled';
       default:
         return 'Transaction Status';
     }
@@ -98,11 +102,15 @@ const PaymentConfirm = () => {
     switch (status) {
       case 'CHARGED':
         return 'https://img.icons8.com/color/48/000000/checkmark.png';
+      case 'PENDING':
+        return 'https://img.icons8.com/color/48/000000/hourglass-sand-bottom.png';
       case 'PENDING_VBV':
         return 'https://img.icons8.com/color/48/000000/hourglass-sand-bottom.png';
       case 'AUTHORIZATION_FAILED':
         return 'https://img.icons8.com/color/48/000000/cancel.png';
-        case 'AUTHENTICATION_FAILED':
+      case 'AUTHENTICATION_FAILED':
+        return 'https://img.icons8.com/color/48/000000/cancel.png';
+      case 'NEW':
         return 'https://img.icons8.com/color/48/000000/cancel.png';
       default:
         return '';
@@ -113,10 +121,16 @@ const PaymentConfirm = () => {
     switch (status) {
       case 'CHARGED':
         return '✔️ Successful';
+      case 'PENDING':
+        return '⌛ Pending';
       case 'PENDING_VBV':
         return '⌛ Pending';
       case 'AUTHORIZATION_FAILED':
         return '❌ Failed';
+      case 'AUTHENTICATION_FAILED':
+        return '❌ Failed';
+      case 'NEW':
+        return '❌ Cancelled';
       default:
         return '❓ Unknown';
     }
@@ -124,12 +138,12 @@ const PaymentConfirm = () => {
 
   return (
     <div className="payment-confirm">
-    
+
       {paymentStatus === 'LOADING' && <p>Loading...</p>}
       {paymentStatus !== 'LOADING' && renderPaymentDetails()}
-      
-      
-      
+
+
+
     </div>
   );
 };

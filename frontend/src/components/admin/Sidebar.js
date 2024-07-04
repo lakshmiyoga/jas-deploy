@@ -35,7 +35,13 @@ const Sidebar = () => {
                     </li> */}
 
                     <li>
-                        <Link to='/admin/users'><i className='fa fa-users'></i> Users</Link>
+                        {/* <Link to='/admin/users'><i className='fa fa-users'></i> Users</Link> */}
+
+                        <NavDropdown title={<i className='fa fa-shopping-basket'> Users</i>}>
+                            <NavDropdown.Item onClick={() => navigate('/admin/users')}> <i className='fa fa-shopping-basket product-dropdown'> User List</i></NavDropdown.Item>
+                            <NavDropdown.Item onClick={() => navigate('/admin/user-summary')}> <i className='fa fa-plus product-dropdown'> User Summary </i></NavDropdown.Item>
+                            
+                        </NavDropdown>
                     </li>
                     <li>
                         <Link to="/admin/payments"><i class="fa fa-credit-card"></i> Paymnents</Link>

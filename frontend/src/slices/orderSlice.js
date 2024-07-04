@@ -13,6 +13,7 @@ const orderSlice = createSlice({
         isOrderDeleted: false,
         isOrderUpdated: false,
         orderSummary: [],
+        userSummary: [],
         error: null,
     },
     reducers: {
@@ -201,6 +202,27 @@ const orderSlice = createSlice({
                   error: action.payload 
                 };
         },
+        userSummaryRequest(state, action) {
+            return { 
+                ...state, 
+                loading: true,
+                 error: null 
+                };
+        },
+
+        userSummarySuccess(state, action) {
+            return { ...state,
+                  loading: false,
+                  userSummary: action.payload 
+                  
+                };
+        },
+        userSummaryFail(state, action) {
+            return { ...state,
+                 loading: false,
+                  error: action.payload 
+                };
+        },
         
 
     }
@@ -235,7 +257,10 @@ export const {
     clearOrderUpdated,
     orderSummaryRequest,
     orderSummarySuccess,
-    orderSummaryFail
+    orderSummaryFail,
+    userSummaryRequest,
+    userSummarySuccess,
+    userSummaryFail
  } = actions;
 
 export default reducer;

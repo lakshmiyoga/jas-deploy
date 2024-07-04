@@ -23,7 +23,7 @@ const ConfirmOrder = () => {
     const total = (parseFloat(subtotal) + shippingCharge).toFixed(2);
     // console.log(total)
 
-  
+
 
     const initPayment = async (data) => {
         // try {
@@ -41,34 +41,36 @@ const ConfirmOrder = () => {
         // }
 
         if (data && data.payment_links && data.payment_links.web) {
-                    window.open(data.payment_links.web, '_blank');
-                    // window.location.href = data.payment_links.web;
+            // window.open(data.payment_links.web, '_blank');
+            window.location.href = data.payment_links.web;
 
-                } else {
-                    alert('Failed to initiate payment: ' + (data.message || 'Unknown error'));
-                }
+        } else {
+            alert('Failed to initiate payment: ' + (data.message || 'Unknown error'));
+        }
     };
 
-  
+
     const processPayment = async () => {
         setLoading(true);
         const reqdata = {
-            subtotal,
-            shippingCharge,
             total,
             shippingInfo,
-            user
+            user,
+            user_id: user._id,
+            cartItems,
+            itemsPrice: parseFloat(subtotal),
+            taxPrice: 0.0,
+            shippingPrice: parseFloat(shippingCharge),
+            totalPrice: parseFloat(total),
+
         };
         console.log(reqdata);
         sessionStorage.setItem('orderInfo', JSON.stringify(reqdata));
-
-       
-
         try {
             const orderUrl = '/api/v1/payment/orders';
-            const {data} = await axios.post(orderUrl, reqdata, { withCredentials: true });
-            console.log(data)
-            if (data && data.sessionResponse && data.sessionResponse.id) {
+            const { data } = await axios.post(orderUrl, reqdata, { withCredentials: true });
+            console.log("session response",data)
+            if (data && data.sessionResponse ) {
                 const order = {
                     order_id: data.sessionResponse.order_id,
                     user_id: user._id,
@@ -79,7 +81,7 @@ const ConfirmOrder = () => {
                     taxPrice: 0.0,
                     shippingPrice: parseFloat(shippingCharge),
                     totalPrice: parseFloat(total),
-                    paymentStatus:data.sessionResponse.status
+                    paymentStatus: data.sessionResponse.status
                 };
                 dispatch(createOrder(order));
             } else {

@@ -64,7 +64,7 @@ const OrderSummary = () => {
                                         return (
                                             <tr key={productName}>
                                                 <td>{productName}</td>
-                                                <td>{totalWeight}</td>
+                                                <td>{totalWeight} kg</td>
                                                 <td>{totalPrice != null ? `Rs. ${totalPrice.toFixed(2)}` : '-'}</td>
                                             </tr>
                                         );
@@ -73,7 +73,7 @@ const OrderSummary = () => {
                                      {/* Add the row for totals */}
                                      <tr>
                                         <td><strong>Total</strong></td>
-                                        <td><strong>{totalWeight.toFixed(2)}</strong></td>
+                                        <td><strong>{totalWeight.toFixed(2)} kg</strong></td>
                                         <td><strong>Rs.{totalPrice.toFixed(2)}</strong></td>
                                     </tr>
                                 </tbody>
