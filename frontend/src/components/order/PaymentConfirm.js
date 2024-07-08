@@ -23,9 +23,10 @@ const PaymentConfirm = () => {
       try {
         const url = `/api/v1/handleJuspayResponse/${id}`;
         const { data } = await axios.get(url, { withCredentials: true });
-        if (data && data.statusResponse) {
-          setPaymentStatus(data.statusResponse.status);
-          setPaymentDetails(data.statusResponse);
+        console.log("data",data)
+        if (data && data.sessionResponse) {
+          setPaymentStatus(data.sessionResponse.status);
+          setPaymentDetails(data.sessionResponse);
         } else {
           setPaymentStatus('UNKNOWN');
         }

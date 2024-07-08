@@ -9,6 +9,7 @@ import Loader from '../Layouts/Loader'; // Ensure this path is correct based on 
 import { createOrder } from '../../actions/orderActions';
 import { useDispatch, useSelector } from 'react-redux';
 import { orderCompleted } from '../../slices/cartSlice';
+import { useLocation } from 'react-router-dom';
 
 const ConfirmOrder = () => {
     const dispatch = useDispatch();
@@ -17,6 +18,9 @@ const ConfirmOrder = () => {
     const { user } = useSelector(state => state.authState);
     const navigate = useNavigate();
     const [loading, setLoading] = useState(false);
+    const location = useLocation();
+    const queryParams = new URLSearchParams(location.search);
+    const message = queryParams.get('message');
 
     const shippingCharge = 30.0;
     const subtotal = cartItems.reduce((acc, item) => acc + item.price * item.productWeight, 0).toFixed(2);
@@ -69,8 +73,8 @@ const ConfirmOrder = () => {
         try {
             const orderUrl = '/api/v1/payment/orders';
             const { data } = await axios.post(orderUrl, reqdata, { withCredentials: true });
-            console.log("session response",data)
-            if (data && data.sessionResponse ) {
+            console.log("session response", data)
+            if (data && data.sessionResponse) {
                 const order = {
                     order_id: data.sessionResponse.order_id,
                     user_id: user._id,
@@ -102,9 +106,13 @@ const ConfirmOrder = () => {
             validateShipping(shippingInfo, navigate);
         }
         if (error) {
-            toast.error(error);
+            return toast.error(error);
         }
-    }, [shippingInfo, navigate, error]);
+        if (message) {
+            // toast.error(message);
+            return toast.error(message, { position: "bottom-center" });
+        }
+    }, [shippingInfo, navigate, error,message]);
 
     return (
         <Fragment>

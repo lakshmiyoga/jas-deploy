@@ -75,6 +75,7 @@ function App() {
         {/* {showHeaderFooter && <Header />} */}
         <Header/>
         <Routes>
+        <Route path="/*" element={<Login />} />
           <Route path="/login" element={<Login />} />
           <Route path="/register" element={<Register />} />
           <Route path="/" element={<LandingPage />} />
@@ -83,6 +84,7 @@ function App() {
           <Route path="/keerai" element={<Keerai />} />
           <Route path="/about" element={<About />} />
           <Route path="/enquiry" element={<Enquiry />} />
+          {/* <Route path="/error" element={<Error />} /> */}
           <Route path="/termsAndConditions" element={<TermsAndConditions />} />
           <Route path="/privacyPolicy" element={<PrivacyPolicy />} />
           <Route path="/refundPolicy" element={<RefundPolicy />} />
