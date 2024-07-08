@@ -90,8 +90,13 @@ const paymentSchema = mongoose.Schema({
     paymentStatus: {
         type: String,
         required: true,
-        enum: ['initiated', 'paid', 'failed'],
+        enum: ['initiated', 'CHARGED', 'PENDING','PENDING_VBV', 'AUTHORIZATION_FAILED', 'AUTHENTICATION_FAILED', 'NEW'],
         default: 'initiated'
+    },
+    statusResponse: {
+        type: mongoose.Schema.Types.Mixed,
+        default: {},
+        required: true,  
     },
     paidAt: {
         type: Date,

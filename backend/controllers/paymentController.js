@@ -64,22 +64,23 @@ const payment = catchAsyncError(async (req, res) => {
 
 	try {
 		const payment = new Payment({
-            order_id: orderId,
-            user_id: user_id,
-            user,
-            orderItems: cartItems,
-            shippingInfo,
-            itemsPrice,
-            taxPrice,
-            shippingPrice,
-            totalPrice,
-            paymentStatus: 'initiated'
-        });
+			order_id: orderId,
+			user_id: user_id,
+			user,
+			orderItems: cartItems,
+			shippingInfo,
+			itemsPrice,
+			taxPrice,
+			shippingPrice,
+			totalPrice,
+			paymentStatus: 'initiated',
+			// statusResponse: {},
+		});
 
-        await payment.save();
+		await payment.save();
 
 		const createdOrder = await Payment.findOne({ order_id: orderId });
-		if(createdOrder){
+		if (createdOrder) {
 			const sessionResponse = await juspay.orderSession.create({
 				order_id: orderId,
 				amount: amount,
@@ -142,22 +143,26 @@ const payment = catchAsyncError(async (req, res) => {
 				}
 			});
 			return res.status(200).json({ sessionResponse })
-		}		
-        else{
-			return res.json(makeError('order not Created'))
 		}
-        // res.status(200).json({ payment });
+		else {
+			// return res.json(makeError('order not Created'))
+			return next(new ErrorHandler('order not Created', 400));
+		}
+		// res.status(200).json({ payment });
 		// return res.json(makeJuspayResponse(sessionResponse));
 		//  res.status(200).json({ sessionResponse })
-		
-		
+
+
 
 		// return res.status(200).json({ message: 'Payment processed successfully', responceData: response.data ,sessionResponse });
 	} catch (error) {
-		if (error instanceof APIError) {
-			return res.json(makeError(error.message));
-		}
-		return res.json(makeError());
+		// if (error instanceof APIError) {
+		// 	return res.json(makeError(error.message));
+		// }
+		// return res.json(makeError());
+		// res.redirect(`${BASE_URL}/order/confirm?message=${encodeURIComponent('Something went wrong')}`);
+		// return res.status(500).json({ message: 'Something went wrong' });
+		return next(new ErrorHandler('Something went wrong', 400));
 	}
 });
 
@@ -166,12 +171,18 @@ const handleResponse = catchAsyncError(async (req, res) => {
 	const orderId = req.params.id || req.params.orderId || req.params.order_id;
 	// console.log("orderId",orderId)
 	if (!orderId) {
-		return res.json(makeError('order_id not present or cannot be empty'));
+		// return res.json(makeError('order_id not present or cannot be empty'));
+		// res.redirect(`${BASE_URL}/order/confirm?message=${encodeURIComponent('Something went wrong')}`);
+		return next(new ErrorHandler('order_id not present or cannot be empty', 400));
 	}
 
 	try {
-		const statusResponse = await juspay.order.status(orderId);
-		return res.status(200).json({ statusResponse })
+		const statusResponse = await Payment.findOne({order_id: orderId});
+		const sessionResponse = statusResponse.statusResponse;
+		// console.log("sessionResponse",sessionResponse)
+		// res.redirect(`${BASE_URL}/order/confirm?message=${encodeURIComponent('Something went wrong')}`);
+		return res.status(200).json({ sessionResponse })
+		
 		const orderStatus = statusResponse.status;
 		let message = '';
 
@@ -196,61 +207,39 @@ const handleResponse = catchAsyncError(async (req, res) => {
 
 		return res.send(makeJuspayResponse(statusResponse));
 	} catch (error) {
-		if (error instanceof APIError) {
-			return res.json(makeError(error.message));
-		}
-		return res.json(makeError());
+		// if (error instanceof APIError) {
+		// 	return res.json(makeError(error.message));
+		// }
+		// return res.json(makeError());
+		// res.redirect(`${BASE_URL}/order/confirm?message=${encodeURIComponent('Something went wrong')}`);
+		return next(new ErrorHandler('Something went wrong', 400));
 	}
 });
 
 
 
-function makeError(message) {
-	return {
-		message: message || 'Something went wrong'
-	};
-}
+// function makeError(message) {
+// 	return {
+// 		message: message || 'Something went wrong'
+// 	};
+// }
 
-function makeJuspayResponse(successRspFromJuspay) {
-	if (!successRspFromJuspay) return successRspFromJuspay;
-	if (successRspFromJuspay.http) delete successRspFromJuspay.http;
-	return successRspFromJuspay;
-}
+// function makeJuspayResponse(successRspFromJuspay) {
+// 	if (!successRspFromJuspay) return successRspFromJuspay;
+// 	if (successRspFromJuspay.http) delete successRspFromJuspay.http;
+// 	return successRspFromJuspay;
+// }
 
 
 // In your backend (e.g., Express.js)
 const paymentSuccess = catchAsyncError(async (req, res) => {
-	// const{order_id,
-	// 	user_id,
-	// 	user,
-	// 	cartItems,
-	// 	shippingInfo,
-	// 	itemsPrice,
-	// 	taxPrice,
-	// 	shippingPrice,
-	// 	totalPrice,
-	// 	sessionResponse} = req.body;
-
-	// console.log("payment responsennnnnnnnnnnnnnnnnnn",req.body)
-
-	// const paymentResponse = new Payment({
-	// 	order_id,
-	// 	user_id,
-	// 	user,
-	// 	cartItems,
-	// 	shippingInfo,
-	// 	itemsPrice,
-	// 	taxPrice,
-	// 	shippingPrice,
-	// 	totalPrice,
-	// 	sessionResponse
-	// })
-	// await paymentResponse.save();
-	// res.status(201).json({ success: true, paymentResponse });
 
 	const orderId = req.params.id || req.params.orderId || req.params.order_id;
 	if (!orderId) {
-		return res.json(makeError('order_id not present or cannot be empty'));
+		
+		// return res.json(makeError('order_id not present or cannot be empty'));
+		// res.redirect(`${BASE_URL}/order/confirm?message=${encodeURIComponent('Something went wrong')}`);
+		return next(new ErrorHandler('order_id not present or cannot be empty', 400));
 	}
 	let BASE_URL = process.env.FRONTEND_URL;
 	if (process.env.NODE_ENV === "production") {
@@ -260,56 +249,53 @@ const paymentSuccess = catchAsyncError(async (req, res) => {
 		const statusResponse = await juspay.order.status(orderId);
 		// console.log(statusResponse)
 		if (statusResponse) {
-			const response = new responseModel({statusResponse});
+			const response = new responseModel({ statusResponse });
 			// console.log(response)
 			await response.save();
-			
 			// return res.status(200).json({response})
 			// Update order status to 'paid'
 			const onepayments = await Payment.findOne({ order_id: orderId });
-			if(onepayments){
-				const paymentstatus = await Payment.findOneAndUpdate({ order_id: orderId }, { paymentStatus: statusResponse.status },
+			if (onepayments) {
+				const paymentstatus = await Payment.findOneAndUpdate({ order_id: orderId },
+					{
+						paymentStatus: statusResponse.status,
+						$set: { statusResponse: statusResponse }
+					 },
 					{ new: true });
 			}
-			else{
-				return res.json(makeError('order_id not present or cannot be empty'));
+			else {
+				// return res.json(makeError('order_id not present or cannot be empty'));
+				// res.redirect(`${BASE_URL}/order/confirm?message=${encodeURIComponent('Something went wrong')}`);
+				return next(new ErrorHandler('order_id not present or cannot be empty', 400));
 			}
-			const oneorders = await Order.findOne({ order_id: orderId });
-			if(oneorders){
-				const orderstatus = await Order.findOneAndUpdate({ order_id: orderId }, { paymentStatus: statusResponse.status },
-					{ new: true });
-			}
-			else{
-				return res.json(makeError('order_id not present or cannot be empty'));
-			}
-			
+			// const oneorders = await Order.findOne({ order_id: orderId });
+			// if(oneorders){
+			// 	const orderstatus = await Order.findOneAndUpdate({ order_id: orderId }, { paymentStatus: statusResponse.status },
+			// 		{ new: true });
+			// }
+			// else{
+			// 	return res.json(makeError('order_id not present or cannot be empty'));
+			// }
 			res.redirect(`${BASE_URL}/payment/confirm/${orderId}`);
 			return res.status(200).json({ orderstatus });
 		} else {
 			// Handle payment failure
-			res.redirect(`${BASE_URL}/payment/failed`);
-			console.log("error ")
+			// res.redirect(`${BASE_URL}/payment/failed`);
+			// res.redirect(`${BASE_URL}/order/confirm?message=${encodeURIComponent('Something went wrong')}`);
+			return next(new ErrorHandler('order_id not present or cannot be empty', 400));
 		}
 	}
 	catch (error) {
-		if (error instanceof APIError) {
-			return res.json(makeError(error.message));
-		}
-		return res.json(makeError());
+		// if (error instanceof APIError) {
+		// 	return res.json(makeError(error.message));
+		// }
+		// return res.json(makeError());
+		// res.redirect(`${BASE_URL}/order/confirm?message=${encodeURIComponent('Something went wrong')}`);
+		return next(new ErrorHandler('Something went wrong', 400));
 	}
 	// Verify the payment status and update the order accordingly
-
 });
 
-// Route for order confirmation page
-const orderConfirmation = catchAsyncError((req, res) => {
-	res.send('Your order has been successfully placed!');
-});
-
-// Route for payment failed page
-const paymentFailed = catchAsyncError((req, res) => {
-	res.send('There was an issue with your payment. Please try again.');
-});
 
 //Refund order
 
@@ -363,4 +349,4 @@ const orderRefund = catchAsyncError(async (req, res) => {
 
 
 
-module.exports = { payment, paymentSuccess, orderConfirmation, paymentFailed, handleResponse, orderRefund };
+module.exports = { payment, paymentSuccess, handleResponse, orderRefund };

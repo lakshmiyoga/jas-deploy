@@ -15,7 +15,7 @@
 
 const express =require('express');
 const { isAuthenticateUser, authorizeRoles } = require('../middleware/authmiddleware');
-const {payment,handleResponse, paymentSuccess, orderConfirmation, paymentFailed, orderRefund} = require("../controllers/paymentController");
+const {payment,handleResponse, paymentSuccess, orderRefund} = require("../controllers/paymentController");
 const router = express.Router();
 
 
@@ -28,8 +28,8 @@ router.post('/refund',orderRefund);
 // router.get('/all/payments',getAllPayments );
 // router.get('/payment/order/all',getOrder );
 router.post('/paymentsuccess/:orderId',paymentSuccess);
-router.get('/payment/confirm',isAuthenticateUser, orderConfirmation)
-router.get('/payment-failed',isAuthenticateUser, paymentFailed )
+// router.get('/payment/confirm',isAuthenticateUser, orderConfirmation)
+// router.get('/payment-failed',isAuthenticateUser, paymentFailed )
 
 
 

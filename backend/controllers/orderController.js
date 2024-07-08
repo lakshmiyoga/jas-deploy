@@ -1,6 +1,7 @@
 const catchAsyncError = require("../middleware/catchAsyncError");
 const ErrorHandler = require('../utils/errorHandler');
 const Order = require("../models/order")
+const Payment = require("../models/paymentModel")
 const nodeCron = require('node-cron');
 const nodemailer = require('nodemailer');
 const path = require('path');
@@ -10,7 +11,7 @@ const path = require('path');
 
 //create new order
 
-const newOrder = catchAsyncError(async(req, res, next)=>{
+const newOrder = catchAsyncError(async (req, res, next) => {
     const {
         order_id,
         user_id,
@@ -23,7 +24,7 @@ const newOrder = catchAsyncError(async(req, res, next)=>{
         totalPrice,
         paymentStatus,
     } = req.body;
-    
+
     const newOrder = new Order({
         order_id,
         user_id,
@@ -45,13 +46,13 @@ const newOrder = catchAsyncError(async(req, res, next)=>{
 
 //get single order for user 
 
-const getSingleOrder = catchAsyncError(async(req, res, next)=>{
+const getSingleOrder = catchAsyncError(async (req, res, next) => {
     //    console.log(req.params)
-    const {id} = req.params
+    const { id } = req.params
     // console.log(id)
-    const order = await Order.findOne({'order_id':id}).populate('user', 'name email');
+    const order = await Payment.findOne({ 'order_id': id }).populate('user', 'name email');
     // console.log(order)
-    if(!order) {
+    if (!order) {
         return next(new ErrorHandler(`Order not found with this id: ${req.params.id}`, 404))
     }
     res.status(200).json({
@@ -65,9 +66,9 @@ const getSingleOrder = catchAsyncError(async(req, res, next)=>{
 
 const myOrders = catchAsyncError(async (req, res, next) => {
     // console.log(req)
-    const orders = await Order.find({'user_id': req.user.id});
+    const orders = await Payment.find({ 'user_id': req.user.id });
     // const orders = await Order.find();
-// console.log(orders)
+    // console.log(orders)
     res.status(200).json({
         success: true,
         orders
@@ -77,7 +78,7 @@ const myOrders = catchAsyncError(async (req, res, next) => {
 //Admin: Get All Orders - api/v1/admin/orders
 
 const orders = catchAsyncError(async (req, res, next) => {
-    const orders = await Order.find();
+    const orders = await Payment.find();
 
     let totalAmount = 0;
     // console.log("this is sample response",JSON.stringify(orders, null, 2));
@@ -95,7 +96,7 @@ const orders = catchAsyncError(async (req, res, next) => {
 
 const updateOrder = catchAsyncError(async (req, res, next) => {
     // Find the order using the custom order_id field
-    const order = await Order.findOne({ order_id: req.params.id });
+    const order = await Payment.findOne({ order_id: req.params.id });
 
     if (!order) {
         return next(new ErrorHandler('Order not found', 404));
@@ -118,8 +119,8 @@ const updateOrder = catchAsyncError(async (req, res, next) => {
 //Admin: Delete Order - api/v1/order/:id
 
 const deleteOrder = catchAsyncError(async (req, res, next) => {
-    const order = await Order.findByIdAndDelete(req.params.id);
-    if(!order) {
+    const order = await Payment.findByIdAndDelete(req.params.id);
+    if (!order) {
         return next(new ErrorHandler(`Order not found with this id: ${req.params.id}`, 404))
     }
 
@@ -140,15 +141,15 @@ const getOrderSummaryByDate = catchAsyncError(async (req, res) => {
         const startDate = new Date(date);
         const endDate = new Date(date);
         endDate.setDate(endDate.getDate() + 1);
-        console.log("startDate",startDate)
-        console.log("endDate",endDate)
+        console.log("startDate", startDate)
+        console.log("endDate", endDate)
 
         // Fetch orders within the date range, explicitly selecting fields
         // const orders = await Order.find({
         //     createdAt: { $gte: startDate, $lt: endDate },
         //     paymentStatus: 'CHARGED',
         // }).select('orderItems shippingInfo user user_id itemsPrice taxPrice shippingPrice totalPrice order_id paymentStatus orderStatus createdAt').exec();
-        const orders = await Order.find({
+        const orders = await Payment.find({
             createdAt: { $gte: startDate, $lt: endDate },
             paymentStatus: 'CHARGED',
         })
@@ -233,14 +234,14 @@ nodeCron.schedule('00 21 * * *', async () => {
     const formattedDate = date.toISOString().split('T')[0]; // Get YYYY-MM-DD format
     // console.log(formattedDate);
 
-   
-	let BASE_URL;
+
+    let BASE_URL;
     if (process.env.NODE_ENV === 'production') {
         BASE_URL = process.env.BACKEND_URL_PROD; // Use production URL
     } else {
         BASE_URL = process.env.BACKEND_URL_DEV; // Use development URL
     }
-    
+
     try {
         const fetch = (await import('node-fetch')).default; // Dynamic import of node-fetch
         const response = await fetch(`${BASE_URL}/api/v1/admin/orders-summary/sendmail/jasadmin/orderreport?date=${formattedDate}`, {
@@ -279,7 +280,7 @@ const getUserSummaryByDate = catchAsyncError(async (req, res) => {
         console.log("endDate", endDate)
 
         // Fetch orders within the date range
-        const orders = await Order.find({
+        const orders = await Payment.find({
             createdAt: { $gte: startDate, $lt: endDate },
             paymentStatus: 'CHARGED',
         });
@@ -313,7 +314,7 @@ const getUserSummaryByDate = catchAsyncError(async (req, res) => {
                 totalAmount: totalPrice,
                 totalWeight
             });
-            
+
         });
 
         console.log("user summary:", JSON.stringify(userSummary, null, 2));
@@ -413,7 +414,7 @@ nodeCron.schedule('00 21 * * *', async () => {
     } else {
         BASE_URL = process.env.BACKEND_URL_DEV; // Use development URL
     }
-    
+
     console.log(BASE_URL)
     try {
         const fetch = (await import('node-fetch')).default; // Dynamic import of node-fetch
@@ -432,7 +433,7 @@ nodeCron.schedule('00 21 * * *', async () => {
         if (!response.ok) {
             throw new Error(`HTTP error! Status: ${response.status}`);
         }
-       
+
 
         if (data.userSummary) {
             await sendEmail(data.userSummary);
@@ -443,4 +444,4 @@ nodeCron.schedule('00 21 * * *', async () => {
 });
 
 
-module.exports = {newOrder, getSingleOrder,myOrders, orders, updateOrder,deleteOrder,getOrderSummaryByDate,getUserSummaryByDate};
+module.exports = { newOrder, getSingleOrder, myOrders, orders, updateOrder, deleteOrder, getOrderSummaryByDate, getUserSummaryByDate };
