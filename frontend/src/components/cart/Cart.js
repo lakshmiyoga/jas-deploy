@@ -1,4 +1,4 @@
-import React, { Fragment } from 'react'
+import React, { Fragment, useEffect } from 'react'
 import { useSelector, useDispatch } from 'react-redux'
 import { useNavigate } from 'react-router-dom'
 import { Link } from 'react-router-dom'
@@ -40,6 +40,10 @@ const Cart = () => {
         }
 
     }
+
+    // useEffect(()=>{
+
+    // },[])
 
     return (
         // <Fragment>
@@ -189,12 +193,12 @@ const Cart = () => {
                                         <h4>Cart Totals</h4>
                                         <hr />
                                         <p>Subtotal:  <span className="order-summary-values">Rs.{subtotal}</span></p>
-                                        <p>Shipping: <span className="order-summary-values">Rs.{shippingCharge.toFixed(2)}</span></p>
+                                        {/* <p>Shipping: <span className="order-summary-values">Rs.{shippingCharge.toFixed(2)}</span></p> */}
 
 
-                                        <hr />
+                                        {/* <hr /> */}
 
-                                        <p>Total: <span className="order-summary-values">Rs.{total}</span></p>
+                                        {/* <p>Total: <span className="order-summary-values">Rs.{total}</span></p> */}
 
                                         <hr />
                                         <button id="checkout_btn" className="btn btn-block" onClick={checkOutHandler}>Proceed to Payment</button>

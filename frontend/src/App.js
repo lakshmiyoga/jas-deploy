@@ -2,12 +2,7 @@ import './App.css';
 import Footer from './components/Layouts/Footer';
 import Header from './components/Layouts/Header';
 import Home from './components/Home';
-import {
-  BrowserRouter as Router,
-  Route,
-  Routes,
-  useLocation,
-} from "react-router-dom";
+import { BrowserRouter as Router, Route, Routes, useLocation } from "react-router-dom";
 import { HelmetProvider } from "react-helmet-async";
 import { ToastContainer } from "react-toastify";
 import 'react-toastify/dist/ReactToastify.css';
@@ -61,78 +56,72 @@ import UserSummary from './components/admin/SummaryUser';
 import SummaryUser from './components/admin/SummaryUser';
 
 function App() {
-  const location = useLocation();
-  // const showHeaderFooter = location.pathname !== '/login' && location.pathname !== '/register';
+    const location = useLocation();
 
-  useEffect(() => {
-    store.dispatch(loadUser());
-    store.dispatch(getProducts());
-  }, [])
+    useEffect(() => {
+        store.dispatch(loadUser());
+        store.dispatch(getProducts());
+    }, []);
 
-  return (
-    <div className="App">
-      <HelmetProvider>
-        {/* {showHeaderFooter && <Header />} */}
-        <Header/>
-        <Routes>
-        <Route path="/*" element={<Login />} />
-          <Route path="/login" element={<Login />} />
-          <Route path="/register" element={<Register />} />
-          <Route path="/" element={<LandingPage />} />
-          <Route path="/vegetables" element={<Vegetables />} />
-          <Route path="/fruits" element={<Fruits />} />
-          <Route path="/keerai" element={<Keerai />} />
-          <Route path="/about" element={<About />} />
-          <Route path="/enquiry" element={<Enquiry />} />
-          {/* <Route path="/error" element={<Error />} /> */}
-          <Route path="/termsAndConditions" element={<TermsAndConditions />} />
-          <Route path="/privacyPolicy" element={<PrivacyPolicy />} />
-          <Route path="/refundPolicy" element={<RefundPolicy />} />
-          <Route path="/search/:keyword" element={<ProductSearch />} />
-          <Route path="/product/:id" element={<ProductDetail />} />
-          <Route path="/myProfile" element={<ProtectedRoute><Profile /></ProtectedRoute>} />
-          <Route path="/myProfile/update" element={<ProtectedRoute><UpdateProfile /></ProtectedRoute>} />
-          <Route path="/myProfile/update/password" element={<ProtectedRoute><UpdatePassword /></ProtectedRoute>} />
-          <Route path="/password/forgot" element={<ForgotPassword />} />
-          <Route path="/password/reset/:token" element={<ResetPassword />} />
-          <Route path="/cart" element={<Cart />} />
-          <Route path="/shipping" element={<Shipping />} />
-          <Route path="/refund" element={<Refund />} />
-          <Route path="/orders" element={<ProtectedRoute><UserOrders /></ProtectedRoute>} />
-          <Route path='/order/:id' element={<ProtectedRoute><OrderDetail/></ProtectedRoute> } />
-          <Route path='/payment/:id' element={<ProtectedRoute><PaymentDetails/></ProtectedRoute> } />
-          <Route path="/order/confirm" element={<ProtectedRoute><ConfirmOrder /></ProtectedRoute>} />
-          <Route path="/payment/confirm/:id" element={<PaymentConfirm />} />
-         
-          {/* <Route path="/payment/failed" element={<ProtectedRoute><FailedPayment /></ProtectedRoute>} /> */}
-          <Route path="/admin/dashboard" element={<ProtectedRoute isAdmin={true}><Dashboard /></ProtectedRoute>} />
-          <Route path="/admin/products" element={<ProtectedRoute isAdmin={true}><ProductList /></ProtectedRoute>} />
-          <Route path="/admin/products/create" element={<ProtectedRoute isAdmin={true}><NewProduct /></ProtectedRoute>} />
-          <Route path="/admin/product/:id" element={<ProtectedRoute isAdmin={true}><UpdateProduct /></ProtectedRoute>} />
-          <Route path="/getenquiry" element={<ProtectedRoute isAdmin={true}><EnquiryRequest /></ProtectedRoute>} />
-          <Route path='/admin/users' element={ <ProtectedRoute isAdmin={true}><UserList/></ProtectedRoute> } />
-          <Route path='/admin/payments' element={ <ProtectedRoute isAdmin={true}><PaymentList/></ProtectedRoute> } />
-          <Route path='/admin/user/:id' element={ <ProtectedRoute isAdmin={true}><UpdateUser/></ProtectedRoute> } />
-          <Route path='/admin/products/updateprice' element={ <ProtectedRoute isAdmin={true}><UpdatePrice/></ProtectedRoute> } />
-          <Route path='/admin/orders' element={ <ProtectedRoute isAdmin={true}><OrderList/></ProtectedRoute> } />
-          <Route path='/admin/order/:id' element={ <ProtectedRoute isAdmin={true}><UpdateOrder/></ProtectedRoute> } />
-          <Route path='/admin/order-summary' element={ <ProtectedRoute isAdmin={true}><OrderSummary/></ProtectedRoute> } />
-          <Route path='/admin/user-summary' element={ <ProtectedRoute isAdmin={true}><SummaryUser/></ProtectedRoute> } />
-        </Routes>
-        {/* {showHeaderFooter && <Footer />} */}
-        <Footer/>
-        <ToastContainer theme="dark" />
-      </HelmetProvider>
-    </div>
-  );
+    return (
+        <div className="App">
+            <HelmetProvider>
+                <Header />
+                <Routes>
+                    {/* <Route path="/*" element={<Login />} /> */}
+                    <Route path="/login" element={<Login />} />
+                    <Route path="/register" element={<Register />} />
+                    <Route path="/" element={<LandingPage />} />
+                    <Route path="/vegetables" element={<Vegetables />} />
+                    <Route path="/fruits" element={<Fruits />} />
+                    <Route path="/keerai" element={<Keerai />} />
+                    <Route path="/about" element={<About />} />
+                    <Route path="/enquiry" element={<Enquiry />} />
+                    <Route path="/termsAndConditions" element={<TermsAndConditions />} />
+                    <Route path="/privacyPolicy" element={<PrivacyPolicy />} />
+                    <Route path="/refundPolicy" element={<RefundPolicy />} />
+                    <Route path="/search/:keyword" element={<ProductSearch />} />
+                    <Route path="/product/:id" element={<ProductDetail />} />
+                    <Route path="/myProfile" element={<ProtectedRoute><Profile /></ProtectedRoute>} />
+                    <Route path="/myProfile/update" element={<ProtectedRoute><UpdateProfile /></ProtectedRoute>} />
+                    <Route path="/myProfile/update/password" element={<ProtectedRoute><UpdatePassword /></ProtectedRoute>} />
+                    <Route path="/password/forgot" element={<ForgotPassword />} />
+                    <Route path="/password/reset/:token" element={<ResetPassword />} />
+                    <Route path="/cart" element={<Cart />} />
+                    <Route path="/shipping" element={<Shipping />} />
+                    <Route path="/refund" element={<Refund />} />
+                    <Route path="/orders" element={<ProtectedRoute><UserOrders /></ProtectedRoute>} />
+                    <Route path='/order/:id' element={<ProtectedRoute><OrderDetail /></ProtectedRoute>} />
+                    <Route path='/payment/:id' element={<ProtectedRoute><PaymentDetails /></ProtectedRoute>} />
+                    <Route path="/order/confirm" element={<ConfirmOrder />} />
+                    <Route path="/payment/confirm/:id" element={<PaymentConfirm />} />
+                    <Route path="/admin/dashboard" element={<ProtectedRoute isAdmin={true}><Dashboard /></ProtectedRoute>} />
+                    <Route path="/admin/products" element={<ProtectedRoute isAdmin={true}><ProductList /></ProtectedRoute>} />
+                    <Route path="/admin/products/create" element={<ProtectedRoute isAdmin={true}><NewProduct /></ProtectedRoute>} />
+                    <Route path="/admin/product/:id" element={<ProtectedRoute isAdmin={true}><UpdateProduct /></ProtectedRoute>} />
+                    <Route path="/getenquiry" element={<ProtectedRoute isAdmin={true}><EnquiryRequest /></ProtectedRoute>} />
+                    <Route path='/admin/users' element={<ProtectedRoute isAdmin={true}><UserList /></ProtectedRoute>} />
+                    <Route path='/admin/payments' element={<ProtectedRoute isAdmin={true}><PaymentList /></ProtectedRoute>} />
+                    <Route path='/admin/user/:id' element={<ProtectedRoute isAdmin={true}><UpdateUser /></ProtectedRoute>} />
+                    <Route path='/admin/products/updateprice' element={<ProtectedRoute isAdmin={true}><UpdatePrice /></ProtectedRoute>} />
+                    <Route path='/admin/orders' element={<ProtectedRoute isAdmin={true}><OrderList /></ProtectedRoute>} />
+                    <Route path='/admin/order/:id' element={<ProtectedRoute isAdmin={true}><UpdateOrder /></ProtectedRoute>} />
+                    <Route path='/admin/order-summary' element={<ProtectedRoute isAdmin={true}><OrderSummary /></ProtectedRoute>} />
+                    <Route path='/admin/user-summary' element={<ProtectedRoute isAdmin={true}><SummaryUser /></ProtectedRoute>} />
+                </Routes>
+                <Footer />
+                <ToastContainer theme="dark" />
+            </HelmetProvider>
+        </div>
+    );
 }
 
 function RootApp() {
-  return (
-    <Router>
-      <App />
-    </Router>
-  );
+    return (
+        <Router>
+            <App />
+        </Router>
+    );
 }
 
 export default RootApp;

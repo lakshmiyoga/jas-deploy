@@ -18,6 +18,7 @@ const PaymentConfirm = () => {
     store.dispatch(getProducts());
   }, []);
 
+  console.log("id",id)
   useEffect(() => {
     async function fetchData() {
       try {
