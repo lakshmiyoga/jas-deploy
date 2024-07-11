@@ -203,7 +203,7 @@ const Shipping = () => {
     // const [country, setCountry] = useState("India")
     const [state, setState] = useState(shippingInfo.state);
     // const [state, setState] = useState("TamilNadu");
-    const [allowed,setAllowed] = useState(false);
+    const [allowed,setAllowed] = useState(true);
     const [latitude, setLatitude] = useState('13.0736691');
     const [longitude, setLongitude] = useState('80.2662705');
     const navigate = useNavigate();
