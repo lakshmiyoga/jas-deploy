@@ -90,7 +90,7 @@ const payment = catchAsyncError(async (req, res, next) => {
     }
 
 
-
+	// const returnUrl = `${BASE_URL}/api/v1/paymentsuccess/${orderId}`;
     const returnUrl = `${BASE_URL}/api/v1/paymentsuccess/${encodeURIComponent(encryptedOrderId)}`; // Adjust this URL as needed
 
     try {
@@ -303,7 +303,11 @@ const payment = catchAsyncError(async (req, res, next) => {
 // });
 
 const handleResponse = catchAsyncError(async (req, res,next) => {
+	console.log(req.params)
 	const encryptedOrderId = req.params.id || req.params.orderId || req.params.order_id;
+
+	console.log("handleResponseencryptedOrderId",encryptedOrderId)
+
     let BASE_URL = process.env.FRONTEND_URL;
 	if (process.env.NODE_ENV === "production") {
 		BASE_URL = `${req.protocol}://${req.get('host')}`
@@ -316,7 +320,7 @@ const handleResponse = catchAsyncError(async (req, res,next) => {
     // Decrypt orderId
     const orderId = decryptData(encryptedOrderId);
 
-	// console.log("params",req.params)
+	// console.log("decryptorderId",orderId)
 	// const orderId = req.params.id || req.params.orderId || req.params.order_id;
 	// console.log("orderId",orderId)
 	// let BASE_URL = process.env.BACKEND_URL;
@@ -333,8 +337,8 @@ const handleResponse = catchAsyncError(async (req, res,next) => {
 		const statusResponse = await Payment.findOne({order_id: orderId});
 		const sessionResponse = statusResponse.statusResponse;
 		// console.log("sessionResponse",sessionResponse)
-		res.status(200).json({ sessionResponse })
-		return res.redirect(`${BASE_URL}/order/confirm?message=${encodeURIComponent('Something went wrong')}`);
+		return res.status(200).json({ sessionResponse })
+		// return res.redirect(`${BASE_URL}/order/confirm?message=${encodeURIComponent('Something went wrong')}`);
 		// return res.status(200).json({ sessionResponse })
 		
 		const orderStatus = statusResponse.status;
@@ -431,6 +435,17 @@ const paymentSuccess = catchAsyncError(async (req, res,next) => {
 						$set: { statusResponse: statusResponse }
 					 },
 					{ new: true });
+					if(paymentstatus){
+						console.log("paymentstatus",paymentstatus)
+						// const encryptedOrderId = encryptData(orderId);
+
+						console.log("paymentSuccessencryptedOrderId",encryptedOrderId)
+						return res.redirect(`${BASE_URL}/payment/confirm/${encodeURIComponent(encryptedOrderId)}`);
+						// return res.redirect(`${BASE_URL}/payment/confirm/${orderId}`);
+					}
+					else{
+						return	res.redirect(`${BASE_URL}/order/confirm?message=${encodeURIComponent('The data is not stored in db')}`);
+					}
 			}
 			else {
 				// return res.json(makeError('order_id not present or cannot be empty'));
@@ -445,10 +460,10 @@ const paymentSuccess = catchAsyncError(async (req, res,next) => {
 			// else{
 			// 	return res.json(makeError('order_id not present or cannot be empty'));
 			// }
-			const encryptedOrderId = encryptData(orderId);
+			// const encryptedOrderId = encryptData(orderId);
 
-			res.redirect(`${BASE_URL}/payment/confirm/${encryptedOrderId}`);
-			return res.status(200).json({ orderstatus });
+			// return res.redirect(`${BASE_URL}/payment/confirm/${encryptedOrderId}`);
+			// return res.status(200).json({ orderstatus });
 		} else {
 			// Handle payment failure
 			// res.redirect(`${BASE_URL}/payment/failed`);
