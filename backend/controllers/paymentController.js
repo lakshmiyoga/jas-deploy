@@ -1,7 +1,6 @@
 
 const catchAsyncError = require("../middleware/catchAsyncError");
 const ErrorHandler = require('../utils/errorHandler');
-const Razorpay = require("razorpay");
 const crypto = require("crypto");
 const fs = require('fs');
 const path = require('path');
@@ -10,6 +9,8 @@ const config = require('../config/config.json');
 const Order = require('../models/order');
 const Payment = require('../models/paymentModel');
 const responseModel = require('../models/responseModel');
+const CryptoJS = require('crypto-js');
+
 
 
 const SANDBOX_BASE_URL = "https://smartgatewayuat.hdfcbank.com"
@@ -34,154 +35,307 @@ const juspay = new Juspay({
 });
 
 // Create orders
-const payment = catchAsyncError(async (req, res) => {
 
-	const { total,
-		user,
-		shippingInfo,
-		cartItems,
-		user_id,
-		itemsPrice,
-		taxPrice,
-		shippingPrice,
-		totalPrice } = req.body;
+const encryptionKey = 'Jas@12345#';
 
-	// console.log(req.body);
+const encryptData = (data) => {
+    return CryptoJS.AES.encrypt(data.toString(), encryptionKey).toString();
+};
 
-	const orderId = `order_${Date.now()}`;
-	const amount = parseFloat(total).toFixed(2);
-	// console.log(amount)
+const decryptData = (encryptedData) => {
+    const bytes = CryptoJS.AES.decrypt(encryptedData, encryptionKey);
+    return bytes.toString(CryptoJS.enc.Utf8);
+};
+
+const payment = catchAsyncError(async (req, res, next) => {
+    const {
+        user,
+        shippingInfo,
+        cartItems,
+        user_id,
+        itemsPrice: encryptedItemsPrice,
+        taxPrice,
+        shippingPrice: encryptedShippingPrice,
+        totalPrice: encryptedTotalPrice,
+    } = req.body;
+
+	console.log("req.body",req.body)
+
+    // Decrypt prices
+    const itemsPrice = decryptData(encryptedItemsPrice);
+    const shippingPrice = decryptData(encryptedShippingPrice);
+    const totalPrice = decryptData(encryptedTotalPrice);
+
+	console.log("decrypy data",itemsPrice,shippingPrice,totalPrice)
+
+    const orderId = `order_${Date.now()}`;
+    const amount = parseFloat(totalPrice).toFixed(2);
+
+    // Validate total price
+    const calculatedTotalPrice = (parseFloat(itemsPrice) + parseFloat(shippingPrice)).toFixed(2);
+    if (calculatedTotalPrice !== amount) {
+		console.log("calculatedTotalPrice",calculatedTotalPrice,amount)
+        return next(new ErrorHandler('Price validation failed', 400));
+		
+    }
+	console.log("calculatedTotalPrice",calculatedTotalPrice,amount)
+
+	 // Encrypt orderId
+	 const encryptedOrderId = encryptData(orderId);
+
+    // Create return URL
+    let BASE_URL = process.env.BACKEND_URL;
+    if (process.env.NODE_ENV === "production") {
+        BASE_URL = `${req.protocol}://${req.get('host')}`;
+    }
 
 
 
-	// Create return URL
-	let BASE_URL = process.env.BACKEND_URL;
+    const returnUrl = `${BASE_URL}/api/v1/paymentsuccess/${encodeURIComponent(encryptedOrderId)}`; // Adjust this URL as needed
+
+    try {
+        const payment = new Payment({
+            order_id: orderId,
+            user_id: user_id,
+            user,
+            orderItems: cartItems,
+            shippingInfo,
+            itemsPrice,
+            taxPrice,
+            shippingPrice,
+            totalPrice: amount,
+            paymentStatus: 'initiated',
+        });
+
+        await payment.save();
+
+        const createdOrder = await Payment.findOne({ order_id: orderId });
+        if (createdOrder) {
+            const sessionResponse = await juspay.orderSession.create({
+                order_id: orderId,
+                amount: amount,
+                payment_page_client_id: paymentPageClientId,
+                customer_id: user._id,
+                customer_email: user.email,
+                customer_phone: shippingInfo.phoneNo,
+                action: 'paymentPage',
+                shipping_info: shippingInfo,
+                cart_Items: cartItems,
+                user: user,
+                return_url: returnUrl,
+                currency: 'INR',
+                payment_filter: {
+                    allowDefaultOptions: false,
+                    options: [
+                        { paymentMethodType: "NB", enable: true },
+                        { paymentMethodType: "UPI", enable: true },
+                        { paymentMethodType: "CARD", enable: true },
+                        { paymentMethodType: "WALLET", enable: true }
+                    ]
+                },
+                options: {
+                    create_mandate: "OPTIONAL",
+                    mandate: {
+                        max_amount: "40000.00",
+                        start_date: "1699368604",
+                        end_date: "1763971322",
+                        frequency: "MONTHLY"
+                    },
+                    metadata: {
+                        expiryInMins: "15",
+                        "JUSPAY:gatewayReferenceId": "payu_test"
+                    },
+                    source_object: "PAYMENT_LINK",
+                    udf1: "udf1-dummy",
+                    udf2: "udf2-dummy",
+                    udf3: "udf3-dummy",
+                    udf4: "udf4-dummy",
+                    udf6: "udf6-dummy",
+                    udf5: "udf5-dummy",
+                    udf7: "udf7-dummy",
+                    udf8: "udf8-dummy",
+                    udf9: "udf9-dummy",
+                    udf10: "udf10-dummy",
+                    send_mail: true,
+                    send_sms: true
+                }
+            });
+            return res.status(200).json({ sessionResponse });
+        } else {
+            return next(new ErrorHandler('Order not Created', 400));
+        }
+    } catch (error) {
+        return res.redirect(`${BASE_URL}/order/confirm?message=${encodeURIComponent('Something went wrong')}`);
+    }
+});
+
+// const payment = catchAsyncError(async (req, res,next) => {
+
+// 	const { 
+// 		user,
+// 		shippingInfo,
+// 		cartItems,
+// 		user_id,
+// 		itemsPrice,
+// 		taxPrice,
+// 		shippingPrice,
+// 		totalPrice } = req.body;
+
+// 	// console.log(req.body);
+
+// 	const orderId = `order_${Date.now()}`;
+// 	const amount = parseFloat(totalPrice).toFixed(2);
+// 	// console.log(amount)
+
+
+
+// 	// Create return URL
+// 	let BASE_URL = process.env.BACKEND_URL;
+// 	if (process.env.NODE_ENV === "production") {
+// 		BASE_URL = `${req.protocol}://${req.get('host')}`
+// 	}
+
+// 	const returnUrl = `${BASE_URL}/api/v1/paymentsuccess/${orderId}`; // Adjust this URL as needed
+
+// 	try {
+// 		const payment = new Payment({
+// 			order_id: orderId,
+// 			user_id: user_id,
+// 			user,
+// 			orderItems: cartItems,
+// 			shippingInfo,
+// 			itemsPrice,
+// 			taxPrice,
+// 			shippingPrice,
+// 			totalPrice:amount,
+// 			paymentStatus: 'initiated',
+// 			// statusResponse: {},
+// 		});
+
+// 		await payment.save();
+
+// 		const createdOrder = await Payment.findOne({ order_id: orderId });
+// 		if (createdOrder) {
+// 			const sessionResponse = await juspay.orderSession.create({
+// 				order_id: orderId,
+// 				amount: amount,
+// 				payment_page_client_id: paymentPageClientId,
+// 				customer_id: user._id,
+// 				customer_email: user.email,
+// 				customer_phone: shippingInfo.phoneNo,
+// 				action: 'paymentPage',
+// 				shipping_info: shippingInfo,
+// 				cart_Items: cartItems,
+// 				user: user,
+// 				return_url: returnUrl,
+// 				currency: 'INR',
+// 				payment_filter: {
+// 					allowDefaultOptions: false,
+// 					options: [
+// 						{
+// 							paymentMethodType: "NB",
+// 							enable: true
+// 						},
+// 						{
+// 							paymentMethodType: "UPI",
+// 							enable: true
+// 						},
+// 						{
+// 							paymentMethodType: "CARD",
+// 							enable: true
+// 						},
+// 						{
+// 							paymentMethodType: "WALLET",
+// 							enable: true
+// 						}
+// 					]
+// 				},
+// 				options: {
+// 					create_mandate: "OPTIONAL",
+// 					mandate: {
+// 						max_amount: "40000.00",
+// 						start_date: "1699368604",
+// 						end_date: "1763971322",
+// 						frequency: "MONTHLY"
+// 					},
+// 					metadata: {
+// 						expiryInMins: "15",
+// 						"JUSPAY:gatewayReferenceId": "payu_test"
+// 					},
+// 					source_object: "PAYMENT_LINK",
+// 					udf1: "udf1-dummy",
+// 					udf2: "udf2-dummy",
+// 					udf3: "udf3-dummy",
+// 					udf4: "udf4-dummy",
+// 					udf6: "udf6-dummy",
+// 					udf5: "udf5-dummy",
+// 					udf7: "udf7-dummy",
+// 					udf8: "udf8-dummy",
+// 					udf9: "udf9-dummy",
+// 					udf10: "udf10-dummy",
+// 					send_mail: true,
+// 					send_sms: true
+// 				}
+// 			});
+// 			return res.status(200).json({ sessionResponse })
+// 		}
+// 		else {
+// 			// return res.json(makeError('order not Created'))
+// 			return next(new ErrorHandler('order not Created', 400));
+// 		}
+// 		// res.status(200).json({ payment });
+// 		// return res.json(makeJuspayResponse(sessionResponse));
+// 		//  res.status(200).json({ sessionResponse })
+
+
+
+// 		// return res.status(200).json({ message: 'Payment processed successfully', responceData: response.data ,sessionResponse });
+// 	} catch (error) {
+// 		// if (error instanceof APIError) {
+// 		// 	return res.json(makeError(error.message));
+// 		// }
+// 		// return res.json(makeError());
+// 		// return next(new ErrorHandler('Something went wrong', 400));
+// 		return res.redirect(`${BASE_URL}/order/confirm?message=${encodeURIComponent('Something went wrong')}`);
+// 		// return res.status(500).json({ message: 'Something went wrong' });
+// 		// return next(new ErrorHandler('Something went wrong', 400));
+// 	}
+// });
+
+const handleResponse = catchAsyncError(async (req, res,next) => {
+	const encryptedOrderId = req.params.id || req.params.orderId || req.params.order_id;
+    let BASE_URL = process.env.FRONTEND_URL;
 	if (process.env.NODE_ENV === "production") {
 		BASE_URL = `${req.protocol}://${req.get('host')}`
 	}
 
-	const returnUrl = `${BASE_URL}/api/v1/paymentsuccess/${orderId}`; // Adjust this URL as needed
+    if (!encryptedOrderId) {
+        return res.redirect(`${BASE_URL}/order/confirm?message=${encodeURIComponent('Something went wrong in orderid')}`);
+    }
 
-	try {
-		const payment = new Payment({
-			order_id: orderId,
-			user_id: user_id,
-			user,
-			orderItems: cartItems,
-			shippingInfo,
-			itemsPrice,
-			taxPrice,
-			shippingPrice,
-			totalPrice,
-			paymentStatus: 'initiated',
-			// statusResponse: {},
-		});
+    // Decrypt orderId
+    const orderId = decryptData(encryptedOrderId);
 
-		await payment.save();
-
-		const createdOrder = await Payment.findOne({ order_id: orderId });
-		if (createdOrder) {
-			const sessionResponse = await juspay.orderSession.create({
-				order_id: orderId,
-				amount: amount,
-				payment_page_client_id: paymentPageClientId,
-				customer_id: user._id,
-				customer_email: user.email,
-				customer_phone: shippingInfo.phoneNo,
-				action: 'paymentPage',
-				shipping_info: shippingInfo,
-				cart_Items: cartItems,
-				user: user,
-				return_url: returnUrl,
-				currency: 'INR',
-				payment_filter: {
-					allowDefaultOptions: false,
-					options: [
-						{
-							paymentMethodType: "NB",
-							enable: true
-						},
-						{
-							paymentMethodType: "UPI",
-							enable: true
-						},
-						{
-							paymentMethodType: "CARD",
-							enable: true
-						},
-						{
-							paymentMethodType: "WALLET",
-							enable: true
-						}
-					]
-				},
-				options: {
-					create_mandate: "OPTIONAL",
-					mandate: {
-						max_amount: "40000.00",
-						start_date: "1699368604",
-						end_date: "1763971322",
-						frequency: "MONTHLY"
-					},
-					metadata: {
-						expiryInMins: "15",
-						"JUSPAY:gatewayReferenceId": "payu_test"
-					},
-					source_object: "PAYMENT_LINK",
-					udf1: "udf1-dummy",
-					udf2: "udf2-dummy",
-					udf3: "udf3-dummy",
-					udf4: "udf4-dummy",
-					udf6: "udf6-dummy",
-					udf5: "udf5-dummy",
-					udf7: "udf7-dummy",
-					udf8: "udf8-dummy",
-					udf9: "udf9-dummy",
-					udf10: "udf10-dummy",
-					send_mail: true,
-					send_sms: true
-				}
-			});
-			return res.status(200).json({ sessionResponse })
-		}
-		else {
-			// return res.json(makeError('order not Created'))
-			return next(new ErrorHandler('order not Created', 400));
-		}
-		// res.status(200).json({ payment });
-		// return res.json(makeJuspayResponse(sessionResponse));
-		//  res.status(200).json({ sessionResponse })
-
-
-
-		// return res.status(200).json({ message: 'Payment processed successfully', responceData: response.data ,sessionResponse });
-	} catch (error) {
-		// if (error instanceof APIError) {
-		// 	return res.json(makeError(error.message));
-		// }
-		// return res.json(makeError());
-		// res.redirect(`${BASE_URL}/order/confirm?message=${encodeURIComponent('Something went wrong')}`);
-		// return res.status(500).json({ message: 'Something went wrong' });
-		return next(new ErrorHandler('Something went wrong', 400));
-	}
-});
-
-const handleResponse = catchAsyncError(async (req, res) => {
 	// console.log("params",req.params)
-	const orderId = req.params.id || req.params.orderId || req.params.order_id;
+	// const orderId = req.params.id || req.params.orderId || req.params.order_id;
 	// console.log("orderId",orderId)
+	// let BASE_URL = process.env.BACKEND_URL;
+    // if (process.env.NODE_ENV === "production") {
+    //     BASE_URL = `${req.protocol}://${req.get('host')}`;
+    // }
 	if (!orderId) {
 		// return res.json(makeError('order_id not present or cannot be empty'));
-		// res.redirect(`${BASE_URL}/order/confirm?message=${encodeURIComponent('Something went wrong')}`);
-		return next(new ErrorHandler('order_id not present or cannot be empty', 400));
+		return res.redirect(`${BASE_URL}/order/confirm?message=${encodeURIComponent('Something went wrong')}`);
+		// return next(new ErrorHandler('order_id not present or cannot be empty', 400));
 	}
 
 	try {
 		const statusResponse = await Payment.findOne({order_id: orderId});
 		const sessionResponse = statusResponse.statusResponse;
 		// console.log("sessionResponse",sessionResponse)
-		// res.redirect(`${BASE_URL}/order/confirm?message=${encodeURIComponent('Something went wrong')}`);
-		return res.status(200).json({ sessionResponse })
+		res.status(200).json({ sessionResponse })
+		return res.redirect(`${BASE_URL}/order/confirm?message=${encodeURIComponent('Something went wrong')}`);
+		// return res.status(200).json({ sessionResponse })
 		
 		const orderStatus = statusResponse.status;
 		let message = '';
@@ -211,8 +365,8 @@ const handleResponse = catchAsyncError(async (req, res) => {
 		// 	return res.json(makeError(error.message));
 		// }
 		// return res.json(makeError());
-		// res.redirect(`${BASE_URL}/order/confirm?message=${encodeURIComponent('Something went wrong')}`);
-		return next(new ErrorHandler('Something went wrong', 400));
+		return res.redirect(`${BASE_URL}/order/confirm?message=${encodeURIComponent('Something went wrong')}`);
+		// return next(new ErrorHandler('Something wrong in handelresponse', 400));
 	}
 });
 
@@ -232,19 +386,34 @@ const handleResponse = catchAsyncError(async (req, res) => {
 
 
 // In your backend (e.g., Express.js)
-const paymentSuccess = catchAsyncError(async (req, res) => {
+const paymentSuccess = catchAsyncError(async (req, res,next) => {
 
-	const orderId = req.params.id || req.params.orderId || req.params.order_id;
-	if (!orderId) {
-		
-		// return res.json(makeError('order_id not present or cannot be empty'));
-		// res.redirect(`${BASE_URL}/order/confirm?message=${encodeURIComponent('Something went wrong')}`);
-		return next(new ErrorHandler('order_id not present or cannot be empty', 400));
-	}
-	let BASE_URL = process.env.FRONTEND_URL;
+	const encryptedOrderId = req.params.orderId;
+    let BASE_URL = process.env.FRONTEND_URL;
 	if (process.env.NODE_ENV === "production") {
 		BASE_URL = `${req.protocol}://${req.get('host')}`
 	}
+
+    if (!encryptedOrderId) {
+        return res.redirect(`${BASE_URL}/order/confirm?message=${encodeURIComponent('Something went wrong in orderid')}`);
+    }
+
+    // Decrypt orderId
+    const orderId = decryptData(encryptedOrderId);
+
+
+	// const orderId = req.params.id || req.params.orderId || req.params.order_id;
+	// let BASE_URL = process.env.FRONTEND_URL;
+	// if (process.env.NODE_ENV === "production") {
+	// 	BASE_URL = `${req.protocol}://${req.get('host')}`
+	// }
+	if (!orderId) {
+		
+		// return res.json(makeError('order_id not present or cannot be empty'));
+		return res.redirect(`${BASE_URL}/order/confirm?message=${encodeURIComponent('Something went wrong in orderid')}`);
+		// return next(new ErrorHandler('order_id not present or cannot be empty', 400));
+	}
+	
 	try {
 		const statusResponse = await juspay.order.status(orderId);
 		// console.log(statusResponse)
@@ -265,8 +434,8 @@ const paymentSuccess = catchAsyncError(async (req, res) => {
 			}
 			else {
 				// return res.json(makeError('order_id not present or cannot be empty'));
-				// res.redirect(`${BASE_URL}/order/confirm?message=${encodeURIComponent('Something went wrong')}`);
-				return next(new ErrorHandler('order_id not present or cannot be empty', 400));
+			 return	res.redirect(`${BASE_URL}/order/confirm?message=${encodeURIComponent('Something went wrong in update')}`);
+				// return next(new ErrorHandler('order_id not present or cannot be empty', 400));
 			}
 			// const oneorders = await Order.findOne({ order_id: orderId });
 			// if(oneorders){
@@ -276,13 +445,15 @@ const paymentSuccess = catchAsyncError(async (req, res) => {
 			// else{
 			// 	return res.json(makeError('order_id not present or cannot be empty'));
 			// }
-			res.redirect(`${BASE_URL}/payment/confirm/${orderId}`);
+			const encryptedOrderId = encryptData(orderId);
+
+			res.redirect(`${BASE_URL}/payment/confirm/${encryptedOrderId}`);
 			return res.status(200).json({ orderstatus });
 		} else {
 			// Handle payment failure
 			// res.redirect(`${BASE_URL}/payment/failed`);
-			// res.redirect(`${BASE_URL}/order/confirm?message=${encodeURIComponent('Something went wrong')}`);
-			return next(new ErrorHandler('order_id not present or cannot be empty', 400));
+			return res.redirect(`${BASE_URL}/order/confirm?message=${encodeURIComponent('Something went wrong in get id')}`);
+			// return next(new ErrorHandler('order_id not present or cannot be empty', 400));
 		}
 	}
 	catch (error) {
@@ -290,8 +461,8 @@ const paymentSuccess = catchAsyncError(async (req, res) => {
 		// 	return res.json(makeError(error.message));
 		// }
 		// return res.json(makeError());
-		// res.redirect(`${BASE_URL}/order/confirm?message=${encodeURIComponent('Something went wrong')}`);
-		return next(new ErrorHandler('Something went wrong', 400));
+		return res.redirect(`${BASE_URL}/order/confirm?message=${encodeURIComponent('Something went wrong in payment success')}`);
+		// return next(new ErrorHandler('Something went wrong', 400));
 	}
 	// Verify the payment status and update the order accordingly
 });

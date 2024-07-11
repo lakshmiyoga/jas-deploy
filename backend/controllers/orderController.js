@@ -5,6 +5,7 @@ const Payment = require("../models/paymentModel")
 const nodeCron = require('node-cron');
 const nodemailer = require('nodemailer');
 const path = require('path');
+const axios = require('axios');
 // const fetch = require('node-fetch');
 
 
@@ -59,6 +60,36 @@ const getSingleOrder = catchAsyncError(async (req, res, next) => {
         success: true,
         order
     })
+
+})
+
+//get Quote
+const getQuote = catchAsyncError(async (req, res, next) => {
+    //    console.log(req.params)
+    const { pickup_details, drop_details, customer } = req.body;
+    const apiEndpoint = 'https://pfe-apigw-uat.porter.in/v1/get_quote';
+    // const apiKey = 'fdbe7c47-25ce-4b15-90c7-ccce2027841d';
+//    console.log(req.body)
+    try {
+      const requestData = {
+        pickup_details,
+        drop_details,
+        customer
+      };
+  console.log(requestData)
+
+      const response = await axios.post(apiEndpoint, requestData, {
+        headers: {
+          'X-API-KEY': process.env.PORTER_API_KEY,
+          'Content-Type': 'application/json'
+        }
+      });
+    console.log(response)
+      return res.json(response.data);
+    } catch (error) {
+        return next(new ErrorHandler('Error for getQuote', 500));
+    //   return res.status(500).json({ message: 'Error sending data', error });
+    }
 
 })
 
@@ -444,4 +475,4 @@ nodeCron.schedule('00 21 * * *', async () => {
 });
 
 
-module.exports = { newOrder, getSingleOrder, myOrders, orders, updateOrder, deleteOrder, getOrderSummaryByDate, getUserSummaryByDate };
+module.exports = { newOrder, getSingleOrder,getQuote, myOrders, orders, updateOrder, deleteOrder, getOrderSummaryByDate, getUserSummaryByDate };

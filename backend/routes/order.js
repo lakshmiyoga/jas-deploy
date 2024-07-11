@@ -1,6 +1,6 @@
 const express =require('express');
 const { isAuthenticateUser, authorizeRoles } = require('../middleware/authmiddleware');
-const {newOrder, getSingleOrder, myOrders, orders, updateOrder, deleteOrder,getOrderSummaryByDate,getUserSummaryByDate} = require("../controllers/orderController");
+const {newOrder, getSingleOrder, myOrders, orders, updateOrder, deleteOrder,getOrderSummaryByDate,getUserSummaryByDate,getQuote} = require("../controllers/orderController");
 const router = express.Router();
 
 
@@ -8,6 +8,7 @@ const router = express.Router();
 router.post('/order/new',isAuthenticateUser, newOrder)
 router.get('/order/:id',isAuthenticateUser, getSingleOrder)
 router.get('/myorders',isAuthenticateUser, myOrders)
+router.post('/get-quote',isAuthenticateUser, getQuote)
 
 
 //Admin Routes
