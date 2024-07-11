@@ -204,8 +204,8 @@ const Shipping = () => {
     const [state, setState] = useState(shippingInfo.state);
     // const [state, setState] = useState("TamilNadu");
     const [allowed,setAllowed] = useState(false);
-    const [latitude, setLatitude] = useState('');
-    const [longitude, setLongitude] = useState('');
+    const [latitude, setLatitude] = useState('13.0736691');
+    const [longitude, setLongitude] = useState('80.2662705');
     const navigate = useNavigate();
     const dispatch = useDispatch();
 
@@ -291,35 +291,31 @@ const Shipping = () => {
         fetchLocationDetails();
     }, [postalCode]);
 
-    useEffect(()=>{
-             
-    },[])
+    // useEffect(() => {
+    //     const fetchGeolocation = () => {
+    //         if (navigator.geolocation) {
+    //             navigator.geolocation.getCurrentPosition(
+    //                 position => {
+    //                     const { latitude, longitude } = position.coords;
+    //                     setLatitude(latitude);
+    //                     setLongitude(longitude);
+    //                     setAllowed(true);
+    //                 },
+    //                 error => {
+    //                     if (error.code === error.PERMISSION_DENIED) {
+    //                         toast.error("Location access is required to proceed.");
+    //                        setAllowed(false);
+    //                     }
+    //                 }
+    //             );
+    //         } else  {
+    //             toast.error('Geolocation is not supported by this browser.');
+    //             setAllowed(false);
+    //         }
+    //     };
 
-    useEffect(() => {
-        const fetchGeolocation = () => {
-            if (navigator.geolocation) {
-                navigator.geolocation.getCurrentPosition(
-                    position => {
-                        const { latitude, longitude } = position.coords;
-                        setLatitude(latitude);
-                        setLongitude(longitude);
-                        setAllowed(true);
-                    },
-                    error => {
-                        if (error.code === error.PERMISSION_DENIED) {
-                            toast.error("Location access is required to proceed.");
-                           setAllowed(false);
-                        }
-                    }
-                );
-            } else  {
-                toast.error('Geolocation is not supported by this browser.');
-                setAllowed(false);
-            }
-        };
-
-        fetchGeolocation();
-    }, [navigate]);
+    //     fetchGeolocation();
+    // }, [navigate]);
 
 
     const submitHandler = (e) => {
