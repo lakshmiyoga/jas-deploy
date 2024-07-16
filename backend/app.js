@@ -43,6 +43,7 @@ app.use(cors(corsOptions));
 const products = require('./routes/product')
 const user = require('./routes/user');
 const order = require('./routes/order');
+const porter = require('./routes/porter');
 const  payment  = require("./routes/payment");
 const itemsRouter = require('./routes/item');
 const  enquiry  = require("./routes/enquiry");
@@ -53,6 +54,7 @@ app.use('/api/v1',order);
 app.use('/api/v1',payment);
 app.use('/api/v1', itemsRouter);
 app.use('/api/v1',enquiry);
+app.use('/api/v1',porter);
 
 
 if(process.env.NODE_ENV === "production") {

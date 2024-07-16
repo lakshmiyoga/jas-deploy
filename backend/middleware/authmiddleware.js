@@ -24,7 +24,7 @@ function generateToken(user) {
 // Middleware for verifying JWT token
 const isAuthenticateUser = catchAsyncError(async (req, res, next) => {
   const { token } = req.cookies;
-  console.log('Token from cookies:', token); // Debugging line
+  // console.log('Token from cookies:', token); // Debugging line
 
   if (!token) {
     return next(new ErrorHandler('Login first to handle the resource', 401));
@@ -33,7 +33,7 @@ const isAuthenticateUser = catchAsyncError(async (req, res, next) => {
   try {
     const decoded = jwt.verify(token, process.env.JWT_SECRET);
     req.user = await User.findById(decoded.id);
-    console.log('Authenticated user:', req.user); // Debugging line
+    // console.log('Authenticated user:', req.user); // Debugging line
     next();
   } catch (error) {
     return next(new ErrorHandler('Invalid token. Please log in again.', 401));
@@ -44,7 +44,7 @@ const isAuthenticateUser = catchAsyncError(async (req, res, next) => {
 
 const authorizeRoles = (...roles) => {
   return (req, res, next) => {
-    console.log('User role:', req.user.role); // Debugging line
+    // console.log('User role:', req.user.role); // Debugging line
     if (!roles.includes(req.user.role)) {
       return next(new ErrorHandler(`Role ${req.user.role} is not allowed`, 403));
     }

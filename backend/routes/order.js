@@ -1,6 +1,6 @@
 const express =require('express');
 const { isAuthenticateUser, authorizeRoles } = require('../middleware/authmiddleware');
-const {newOrder, getSingleOrder, myOrders, orders, updateOrder, deleteOrder,getOrderSummaryByDate,getUserSummaryByDate,getQuote} = require("../controllers/orderController");
+const {newOrder, getSingleOrder, myOrders, orders, updateOrder, deleteOrder,getOrderSummaryByDate,getUserSummaryByDate,getQuote,porterOrder} = require("../controllers/orderController");
 const router = express.Router();
 
 
@@ -14,6 +14,7 @@ router.post('/get-quote',isAuthenticateUser, getQuote)
 //Admin Routes
 
 router.get('/admin/orders',isAuthenticateUser,authorizeRoles('admin'), orders)
+router.post('/admin/porter/create/orders',isAuthenticateUser,authorizeRoles('admin'), porterOrder)
 router.put('/admin/order/:id',isAuthenticateUser,authorizeRoles('admin'), updateOrder)
 router.delete('/admin/order/:id',isAuthenticateUser,authorizeRoles('admin'), deleteOrder)
 router.get('/admin/orders-summary',isAuthenticateUser,authorizeRoles('admin'), getOrderSummaryByDate);

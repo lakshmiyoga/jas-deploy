@@ -6,6 +6,7 @@ const nodeCron = require('node-cron');
 const nodemailer = require('nodemailer');
 const path = require('path');
 const axios = require('axios');
+const PorterModel = require('../models/porterModel');
 // const fetch = require('node-fetch');
 
 
@@ -76,7 +77,7 @@ const getQuote = catchAsyncError(async (req, res, next) => {
         drop_details,
         customer
       };
-  console.log(requestData)
+//   console.log(requestData)
 
       const response = await axios.post(apiEndpoint, requestData, {
         headers: {
@@ -84,13 +85,72 @@ const getQuote = catchAsyncError(async (req, res, next) => {
           'Content-Type': 'application/json'
         }
       });
-    console.log(response)
+    // console.log(response)
       return res.json(response.data);
     } catch (error) {
-        return next(new ErrorHandler('Error for getQuote', 500));
+        return next(new ErrorHandler(error.message, 500));
     //   return res.status(500).json({ message: 'Error sending data', error });
     }
 
+})
+
+//create porter order
+const porterOrder = catchAsyncError(async (req, res, next) => {
+    //    console.log(req.params)
+    const  {order_id,request_id,user,user_id,porterData, updatedItems}  = req.body;
+    const apiEndpoint = 'https://pfe-apigw-uat.porter.in/v1/orders/create';
+    // const apiKey = 'fdbe7c47-25ce-4b15-90c7-ccce2027841d';
+    
+      
+            // console.log("porterData",porterData)
+            try{
+                const response = await axios.post(apiEndpoint, porterData, {
+                    headers: {
+                      'X-API-KEY': process.env.PORTER_API_KEY,
+                      'Content-Type': 'application/json'
+                    }
+                  });
+                  const porterOrder= response.data;
+                  if(order_id && request_id && user_id && porterData && porterOrder){
+                    const Data = new PorterModel({
+                        order_id:order_id,
+                        request_id:request_id,
+                        user:user,
+                        user_id :user_id ,
+                        porterData:porterData ,
+                        porterOrder:{},
+                        updatedItems:updatedItems
+                    });
+                    // console.log("Data",Data)
+                    await Data.save();
+                    if(Data){
+                        const onepayments = await PorterModel.findOne({ request_id: porterOrder && porterOrder.request_id });
+                        if (onepayments) {
+                            const porterResponse = await PorterModel.findOneAndUpdate({ request_id: porterOrder.request_id },
+                                {
+                                    $set: { porterOrder: porterOrder }
+                                 },
+                                { new: true });
+                                if(porterResponse){
+                                    return res.status(200).json({porterOrder})
+                                }     
+                        }
+                        else{
+                            return next(new ErrorHandler('Could Not find any Order', 500));
+                        }
+                }
+                else{
+                 return next(new ErrorHandler('Error for create Porter Order', 500));
+                }
+                
+                } else  {
+                    return next(new ErrorHandler('Error for create Porter Order', 500));
+                //   return res.status(500).json({ message: 'Error sending data', error });
+                }
+            }catch(error){
+                return next(new ErrorHandler(error.message, 500));
+            }   
+      
 })
 
 //Get Loggedin User Orders 
@@ -127,17 +187,20 @@ const orders = catchAsyncError(async (req, res, next) => {
 
 const updateOrder = catchAsyncError(async (req, res, next) => {
     // Find the order using the custom order_id field
-    const order = await Payment.findOne({ order_id: req.params.id });
 
+    const order = await Payment.findOne({ order_id: req.params.id });
+//  console.log("order",order)
+ console.log("req.body.orderStatus",req.body)
     if (!order) {
         return next(new ErrorHandler('Order not found', 404));
     }
 
-    if (order.orderStatus === 'Delivered') {
+    if (order.orderStatus === 'Dispatched') {
         return next(new ErrorHandler('Order has already been delivered!', 400));
     }
 
     order.orderStatus = req.body.orderStatus;
+
     order.deliveredAt = Date.now();
     await order.save();
 
@@ -475,4 +538,4 @@ nodeCron.schedule('00 21 * * *', async () => {
 });
 
 
-module.exports = { newOrder, getSingleOrder,getQuote, myOrders, orders, updateOrder, deleteOrder, getOrderSummaryByDate, getUserSummaryByDate };
+module.exports = { newOrder, getSingleOrder,getQuote,porterOrder, myOrders, orders, updateOrder, deleteOrder, getOrderSummaryByDate, getUserSummaryByDate };

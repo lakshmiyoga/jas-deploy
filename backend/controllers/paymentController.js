@@ -10,6 +10,7 @@ const Order = require('../models/order');
 const Payment = require('../models/paymentModel');
 const responseModel = require('../models/responseModel');
 const CryptoJS = require('crypto-js');
+const validator = require("validator");
 
 
 
@@ -44,7 +45,14 @@ const encryptData = (data) => {
 
 const decryptData = (encryptedData) => {
     const bytes = CryptoJS.AES.decrypt(encryptedData, encryptionKey);
-    return bytes.toString(CryptoJS.enc.Utf8);
+    return  bytes.toString(CryptoJS.enc.Utf8);
+};
+
+const verifySignature = (data,signature) => {
+    const expectedSignature = CryptoJS.HmacSHA256(data, encryptionKey).toString();
+    console.log("Expected signature:", expectedSignature);
+    console.log("Received signature:", signature);
+    return expectedSignature === signature;
 };
 
 const payment = catchAsyncError(async (req, res, next) => {
@@ -57,16 +65,16 @@ const payment = catchAsyncError(async (req, res, next) => {
         taxPrice,
         shippingPrice: encryptedShippingPrice,
         totalPrice: encryptedTotalPrice,
+		signature,
     } = req.body;
-
-	console.log("req.body",req.body)
+	// console.log("req.body",req.body)
 
     // Decrypt prices
     const itemsPrice = decryptData(encryptedItemsPrice);
     const shippingPrice = decryptData(encryptedShippingPrice);
     const totalPrice = decryptData(encryptedTotalPrice);
 
-	console.log("decrypy data",itemsPrice,shippingPrice,totalPrice)
+	// console.log("decrypy data",itemsPrice,shippingPrice,totalPrice)
 
     const orderId = `order_${Date.now()}`;
     const amount = parseFloat(totalPrice).toFixed(2);
@@ -74,12 +82,16 @@ const payment = catchAsyncError(async (req, res, next) => {
     // Validate total price
     const calculatedTotalPrice = (parseFloat(itemsPrice) + parseFloat(shippingPrice)).toFixed(2);
     if (calculatedTotalPrice !== amount) {
-		console.log("calculatedTotalPrice",calculatedTotalPrice,amount)
+		// console.log("calculatedTotalPrice",calculatedTotalPrice,amount)
         return next(new ErrorHandler('Price validation failed', 400));
 		
     }
-	console.log("calculatedTotalPrice",calculatedTotalPrice,amount)
-
+	// console.log("calculatedTotalPrice",calculatedTotalPrice,amount)
+	const isSignatureValid = verifySignature(`${itemsPrice}${shippingPrice}${totalPrice}`,signature);
+    
+    if (!isSignatureValid) {
+        return next(new ErrorHandler('Invalid signature, possible data tampering detected', 400));
+    }
 	 // Encrypt orderId
 	 const encryptedOrderId = encryptData(orderId);
 
@@ -94,76 +106,83 @@ const payment = catchAsyncError(async (req, res, next) => {
     const returnUrl = `${BASE_URL}/api/v1/paymentsuccess/${encodeURIComponent(encryptedOrderId)}`; // Adjust this URL as needed
 
     try {
-        const payment = new Payment({
-            order_id: orderId,
-            user_id: user_id,
-            user,
-            orderItems: cartItems,
-            shippingInfo,
-            itemsPrice,
-            taxPrice,
-            shippingPrice,
-            totalPrice: amount,
-            paymentStatus: 'initiated',
-        });
-
-        await payment.save();
-
-        const createdOrder = await Payment.findOne({ order_id: orderId });
-        if (createdOrder) {
-            const sessionResponse = await juspay.orderSession.create({
-                order_id: orderId,
-                amount: amount,
-                payment_page_client_id: paymentPageClientId,
-                customer_id: user._id,
-                customer_email: user.email,
-                customer_phone: shippingInfo.phoneNo,
-                action: 'paymentPage',
-                shipping_info: shippingInfo,
-                cart_Items: cartItems,
-                user: user,
-                return_url: returnUrl,
-                currency: 'INR',
-                payment_filter: {
-                    allowDefaultOptions: false,
-                    options: [
-                        { paymentMethodType: "NB", enable: true },
-                        { paymentMethodType: "UPI", enable: true },
-                        { paymentMethodType: "CARD", enable: true },
-                        { paymentMethodType: "WALLET", enable: true }
-                    ]
-                },
-                options: {
-                    create_mandate: "OPTIONAL",
-                    mandate: {
-                        max_amount: "40000.00",
-                        start_date: "1699368604",
-                        end_date: "1763971322",
-                        frequency: "MONTHLY"
-                    },
-                    metadata: {
-                        expiryInMins: "15",
-                        "JUSPAY:gatewayReferenceId": "payu_test"
-                    },
-                    source_object: "PAYMENT_LINK",
-                    udf1: "udf1-dummy",
-                    udf2: "udf2-dummy",
-                    udf3: "udf3-dummy",
-                    udf4: "udf4-dummy",
-                    udf6: "udf6-dummy",
-                    udf5: "udf5-dummy",
-                    udf7: "udf7-dummy",
-                    udf8: "udf8-dummy",
-                    udf9: "udf9-dummy",
-                    udf10: "udf10-dummy",
-                    send_mail: true,
-                    send_sms: true
-                }
-            });
-            return res.status(200).json({ sessionResponse });
-        } else {
-            return next(new ErrorHandler('Order not Created', 400));
-        }
+		const isOrderExist = await Payment.findOne({ order_id: orderId });
+		if(isOrderExist){
+			return next(new ErrorHandler('Your order is already exist Please Try Again!', 400));
+		}
+		else{
+			const payment = new Payment({
+				order_id: orderId,
+				user_id: user_id,
+				user,
+				orderItems: cartItems,
+				shippingInfo,
+				itemsPrice,
+				taxPrice,
+				shippingPrice,
+				totalPrice: amount,
+				paymentStatus: 'initiated',
+			});
+	
+			await payment.save();
+	
+			const createdOrder = await Payment.findOne({ order_id: orderId });
+			if (createdOrder) {
+				const sessionResponse = await juspay.orderSession.create({
+					order_id: orderId,
+					amount: amount,
+					payment_page_client_id: paymentPageClientId,
+					customer_id: user._id,
+					customer_email: user.email,
+					customer_phone: shippingInfo.phoneNo,
+					action: 'paymentPage',
+					shipping_info: shippingInfo,
+					cart_Items: cartItems,
+					user: user,
+					return_url: returnUrl,
+					currency: 'INR',
+					payment_filter: {
+						allowDefaultOptions: false,
+						options: [
+							{ paymentMethodType: "NB", enable: true },
+							{ paymentMethodType: "UPI", enable: true },
+							{ paymentMethodType: "CARD", enable: true },
+							{ paymentMethodType: "WALLET", enable: true }
+						]
+					},
+					options: {
+						create_mandate: "OPTIONAL",
+						mandate: {
+							max_amount: "40000.00",
+							start_date: "1699368604",
+							end_date: "1763971322",
+							frequency: "MONTHLY"
+						},
+						metadata: {
+							expiryInMins: "15",
+							"JUSPAY:gatewayReferenceId": "payu_test"
+						},
+						source_object: "PAYMENT_LINK",
+						udf1: "udf1-dummy",
+						udf2: "udf2-dummy",
+						udf3: "udf3-dummy",
+						udf4: "udf4-dummy",
+						udf6: "udf6-dummy",
+						udf5: "udf5-dummy",
+						udf7: "udf7-dummy",
+						udf8: "udf8-dummy",
+						udf9: "udf9-dummy",
+						udf10: "udf10-dummy",
+						send_mail: true,
+						send_sms: true
+					}
+				});
+				return res.status(200).json({ sessionResponse });
+			} else {
+				return next(new ErrorHandler('Order not Created', 400));
+			}
+		}
+        
     } catch (error) {
         return res.redirect(`${BASE_URL}/order/confirm?message=${encodeURIComponent('Something went wrong')}`);
     }
