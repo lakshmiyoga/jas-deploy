@@ -169,6 +169,28 @@ const orderSlice = createSlice({
             }
         },
 
+        porterOrderRequest(state, action) {
+            return {
+                ...state,
+                loading: true
+            }
+        },
+        porterOrderSuccess(state, action) {
+            return {
+                ...state,
+                loading: false,
+                porterOrderDetail:action.payload.porterOrder,
+                isOrderUpdated: true
+            }
+        },
+        porterOrderFail(state, action) {
+            return {
+                ...state,
+                loading: false,
+                error: action.payload
+            }
+        },
+
         clearOrderDeleted(state, action) {
             return {
                 ...state,
@@ -253,6 +275,9 @@ export const {
     updateOrderFail,
     updateOrderRequest,
     updateOrderSuccess,
+    porterOrderFail,
+    porterOrderRequest,
+    porterOrderSuccess,
     clearOrderDeleted,
     clearOrderUpdated,
     orderSummaryRequest,

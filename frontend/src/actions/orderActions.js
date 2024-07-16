@@ -19,6 +19,9 @@ import {
   updateOrderRequest,
   updateOrderSuccess,
   updateOrderFail,
+  porterOrderRequest,
+  porterOrderSuccess,
+  porterOrderFail,
   userOrdersRequest,
   userOrdersSuccess,
   userOrdersFail,
@@ -98,8 +101,21 @@ export const deleteOrder = createAsyncThunk('order/delete', async (id, { dispatc
   }
 });
 
-export const updateOrder = createAsyncThunk('order/update', async ({ id, orderData }, { dispatch }) => {
+export const porterOrder = createAsyncThunk('order/porter', async ({ id, reqPorterData }, { dispatch }) => {
   console.log(id)
+  try {
+    dispatch(porterOrderRequest());
+    const { data } = await axios.post(`/api/v1/admin/porter/create/orders`, reqPorterData, {withCredentials: true } );
+    console.log(data.porterOrder)
+    dispatch(porterOrderSuccess(data));
+  } catch (error) {
+    dispatch(porterOrderFail(error.response.data.message));
+  }
+});
+
+
+export const updateOrder = createAsyncThunk('order/update', async ({ id, orderData }, { dispatch }) => {
+  console.log("orderStatus",orderData)
   try {
     dispatch(updateOrderRequest());
     const { data } = await axios.put(`/api/v1/admin/order/${id}`, orderData, { withCredentials: true });

@@ -7,7 +7,7 @@ import cartReducer from "./slices/cartSlice";
 import enquiryReducer from "./slices/enquirySlice";
 import userReducer from "./slices/userSlice"
 import orderReducer from "./slices/orderSlice"
-
+import porterReducer from "./slices/porterSlice"
 
 
 const reducer = combineReducers({
@@ -17,7 +17,8 @@ const reducer = combineReducers({
     cartState: cartReducer, 
     enquiryState: enquiryReducer,
     userState: userReducer, 
-    orderState: orderReducer
+    orderState: orderReducer,
+    porterState:porterReducer,
 
 })
 

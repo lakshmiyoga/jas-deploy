@@ -84,7 +84,7 @@ const ConfirmOrder = () => {
                 //    toast.error('Response:', response.data);
                 // Handle response as needed
             } catch (error) {
-                toast.error('Error sending data:');
+                toast.error('Error sending data:', error.message);
                 // Handle error as needed
             }
         }
@@ -92,7 +92,7 @@ const ConfirmOrder = () => {
             fetchdata()
         }
 
-    }, [pickupDetails, dropDetails, customerDetails])
+    }, [pickupDetails,dropDetails,customerDetails])
 
     useEffect(() => {
         if (!shippingInfo || !cartItems.length) {
@@ -104,8 +104,10 @@ const ConfirmOrder = () => {
         if (data && data.payment_links && data.payment_links.web) {
             window.location.href = data.payment_links.web;
             // window.open(data.payment_links.web, '_blank');
+            // setLoading(false);
         } else {
             alert('Failed to initiate payment: ' + (data.message || 'Unknown error'));
+            setLoading(false);
         }
     };
 
@@ -115,14 +117,21 @@ const ConfirmOrder = () => {
     const encryptData = (data) => {
         return CryptoJS.AES.encrypt(data.toString(), encryptionKey).toString();
     };
+
+    const generateSignature = (data) => {
+        console.log("generateSignature", data)
+        return CryptoJS.HmacSHA256(data, encryptionKey).toString();
+    };
+
+
     const processPayment = async () => {
         setLoading(true);
-
         const encryptedItemsPrice = encryptData(subtotal);
         const encryptedShippingPrice = encryptData(shippingCharge);
         const encryptedTotalPrice = encryptData(total);
-
-        console.log("encrypt data",encryptedItemsPrice,encryptedShippingPrice,encryptedTotalPrice)
+        const signature = generateSignature(`${subtotal}${shippingCharge}${total}`);
+        // console.log("encrypt data",encryptedItemsPrice,encryptedShippingPrice,encryptedTotalPrice)
+        console.log("signature", signature)
 
         const reqdata = {
             shippingInfo,
@@ -133,6 +142,7 @@ const ConfirmOrder = () => {
             taxPrice: 0.0,
             shippingPrice: encryptedShippingPrice,
             totalPrice: encryptedTotalPrice,
+            signature,
         };
 
         sessionStorage.setItem('orderInfo', JSON.stringify(reqdata));
@@ -140,7 +150,7 @@ const ConfirmOrder = () => {
         try {
             const orderUrl = '/api/v1/payment/orders';
             const { data } = await axios.post(orderUrl, reqdata, { withCredentials: true });
-
+console.log("data", data)
             if (data && data.sessionResponse) {
                 const order = {
                     order_id: data.sessionResponse.order_id,
@@ -160,10 +170,13 @@ const ConfirmOrder = () => {
                 toast.error('Failed to Create the Order');
             }
 
-            setLoading(false);
-
             if (data && data.sessionResponse) {
-                initPayment(data.sessionResponse);
+                if(data && data.sessionResponse && data.sessionResponse.sdk_payload && data.sessionResponse.sdk_payload.payload && data.sessionResponse.sdk_payload.payload.amount === total){
+                    initPayment(data.sessionResponse);
+                }else{
+                    toast.error('Mismatch initial Amount, possible data tampering detected');
+                }
+                
             }
         } catch (error) {
             console.log(error);
@@ -266,13 +279,20 @@ const ConfirmOrder = () => {
                                 <h4>Order Summary</h4>
                                 <hr />
                                 <p>Subtotal: <span className="order-summary-values">Rs.{subtotal}</span></p>
-                                <p>Shipping: <span className="order-summary-values">Rs.{shippingCharge.toFixed(2)}</span></p>
+                                <p>Shipping: <span className="order-summary-values">Rs.{shippingCharge && shippingCharge.toFixed(2)}</span></p>
                                 <hr />
                                 <p>Total: <span className="order-summary-values">Rs.{total}</span></p>
                                 <hr />
-                                <button id="checkout_btn" className="btn btn-primary btn-block" onClick={processPayment} disabled={loading}>
-                                    Proceed to Payment
-                                </button>
+                                {shippingCharge ? (
+                                    <button id="checkout_btn" className="btn btn-primary btn-block" onClick={processPayment} disabled={loading}>
+                                        Proceed to Payment
+                                    </button>
+                                ) : (
+                                    <button id="checkout_btn" className="btn btn-primary btn-block" disabled>
+                                        Proceed to Payment
+                                    </button>
+                                )}
+
                             </div>
                         </div>
                     </div>

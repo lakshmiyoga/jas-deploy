@@ -276,14 +276,17 @@ const Shipping = () => {
                     const country = components.country || "";
                     // const latitude = location.geometry.lat;
                     // const longitude = location.geometry.lng;
-
+                    
                     setCity(city);
                     setState(state);
                     setCountry(country);
                     // setLatitude(latitude);
                     // setLongitude(longitude);
                 } catch (error) {
-                    console.error("Error fetching location details:", error);
+                    toast.error("Error fetching location details. Please Provide Correct Postalcode");
+                    setCity("");
+                    setState("");
+                    setCountry("");
                 }
             }
         };

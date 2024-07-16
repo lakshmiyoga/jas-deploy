@@ -80,8 +80,8 @@ const Footer = () => {
         <p>© 2023 Copyright JAS Fruits and Vegetables. All Rights Reserved</p>
         {/* <p>Design and Developed by Chennai Notes</p> */}
       </div>
-      <img src="../images/fruitbasket.png" alt="Fruit" className="footer-fruit-image-right" />
-      <img src="../images/emoji.jpg" alt="emoji" className="footer-fruit-image-left" />
+      <img src="/images/fruitbasket.png" alt="Fruit" className="footer-fruit-image-right" />
+      <img src="/images/emoji.jpg" alt="emoji" className="footer-fruit-image-left" />
     </footer>
   );
 };
