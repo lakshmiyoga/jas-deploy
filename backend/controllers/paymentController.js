@@ -43,13 +43,13 @@ const encryptData = (data) => {
     return CryptoJS.AES.encrypt(data.toString(), encryptionKey).toString();
 };
 
-const decryptData = (encryptedData) => {
-    const bytes = CryptoJS.AES.decrypt(encryptedData, encryptionKey);
+const decryptData = (encryptedData,key) => {
+    const bytes = CryptoJS.AES.decrypt(encryptedData, key);
     return  bytes.toString(CryptoJS.enc.Utf8);
 };
 
-const verifySignature = (data,signature) => {
-    const expectedSignature = CryptoJS.HmacSHA256(data, encryptionKey).toString();
+const verifySignature = (data,signature,decryptedKey) => {
+    const expectedSignature = CryptoJS.HmacSHA256(data, decryptedKey).toString();
     console.log("Expected signature:", expectedSignature);
     console.log("Received signature:", signature);
     return expectedSignature === signature;
@@ -66,13 +66,20 @@ const payment = catchAsyncError(async (req, res, next) => {
         shippingPrice: encryptedShippingPrice,
         totalPrice: encryptedTotalPrice,
 		signature,
+		plainText,
     } = req.body;
 	// console.log("req.body",req.body)
-
+	const decryptedKey = decryptData(plainText, encryptionKey);
+	// const decryptedKey = decryptedKeyBytes.toString(CryptoJS.enc.Utf8);
+     console.log("decryptedKey",decryptedKey)
+	if (!decryptedKey) {
+		// throw new Error('Failed to decrypt the key');
+		return next(new ErrorHandler('Failed to decrypt the key', 400));
+	}
     // Decrypt prices
-    const itemsPrice = decryptData(encryptedItemsPrice);
-    const shippingPrice = decryptData(encryptedShippingPrice);
-    const totalPrice = decryptData(encryptedTotalPrice);
+    const itemsPrice = decryptData(encryptedItemsPrice,decryptedKey);
+    const shippingPrice = decryptData(encryptedShippingPrice,decryptedKey);
+    const totalPrice = decryptData(encryptedTotalPrice,decryptedKey);
 
 	// console.log("decrypy data",itemsPrice,shippingPrice,totalPrice)
 
@@ -84,16 +91,18 @@ const payment = catchAsyncError(async (req, res, next) => {
     if (calculatedTotalPrice !== amount) {
 		// console.log("calculatedTotalPrice",calculatedTotalPrice,amount)
         return next(new ErrorHandler('Price validation failed', 400));
+		// return res.status(400).json({error:'Price validation failed'})
 		
     }
 	// console.log("calculatedTotalPrice",calculatedTotalPrice,amount)
-	const isSignatureValid = verifySignature(`${itemsPrice}${shippingPrice}${totalPrice}`,signature);
+	const isSignatureValid = verifySignature(`${itemsPrice}${shippingPrice}${totalPrice}`,signature,decryptedKey);
     
     if (!isSignatureValid) {
         return next(new ErrorHandler('Invalid signature, possible data tampering detected', 400));
+		// return res.status(400).json({error:'Invalid signature, possible data tampering detected'})
     }
 	 // Encrypt orderId
-	 const encryptedOrderId = encryptData(orderId);
+	 const encryptedOrderId = encryptData(orderId,encryptionKey);
 
     // Create return URL
     let BASE_URL = process.env.BACKEND_URL;
@@ -109,6 +118,7 @@ const payment = catchAsyncError(async (req, res, next) => {
 		const isOrderExist = await Payment.findOne({ order_id: orderId });
 		if(isOrderExist){
 			return next(new ErrorHandler('Your order is already exist Please Try Again!', 400));
+			// return res.status(400).json({error:'Your order is already exist Please Try Again!'})
 		}
 		else{
 			const payment = new Payment({
@@ -180,6 +190,7 @@ const payment = catchAsyncError(async (req, res, next) => {
 				return res.status(200).json({ sessionResponse });
 			} else {
 				return next(new ErrorHandler('Order not Created', 400));
+				// return res.status(400).json({error:'Order not Created'})
 			}
 		}
         
@@ -322,10 +333,10 @@ const payment = catchAsyncError(async (req, res, next) => {
 // });
 
 const handleResponse = catchAsyncError(async (req, res,next) => {
-	console.log(req.params)
+	// console.log(req.params)
 	const encryptedOrderId = req.params.id || req.params.orderId || req.params.order_id;
 
-	console.log("handleResponseencryptedOrderId",encryptedOrderId)
+	// console.log("handleResponseencryptedOrderId",encryptedOrderId)
 
     let BASE_URL = process.env.FRONTEND_URL;
 	if (process.env.NODE_ENV === "production") {
@@ -337,7 +348,7 @@ const handleResponse = catchAsyncError(async (req, res,next) => {
     }
 
     // Decrypt orderId
-    const orderId = decryptData(encryptedOrderId);
+    const orderId = decryptData(encryptedOrderId,encryptionKey);
 
 	// console.log("decryptorderId",orderId)
 	// const orderId = req.params.id || req.params.orderId || req.params.order_id;
@@ -422,7 +433,7 @@ const paymentSuccess = catchAsyncError(async (req, res,next) => {
     }
 
     // Decrypt orderId
-    const orderId = decryptData(encryptedOrderId);
+    const orderId = decryptData(encryptedOrderId,encryptionKey);
 
 
 	// const orderId = req.params.id || req.params.orderId || req.params.order_id;
@@ -455,10 +466,10 @@ const paymentSuccess = catchAsyncError(async (req, res,next) => {
 					 },
 					{ new: true });
 					if(paymentstatus){
-						console.log("paymentstatus",paymentstatus)
+						// console.log("paymentstatus",paymentstatus)
 						// const encryptedOrderId = encryptData(orderId);
 
-						console.log("paymentSuccessencryptedOrderId",encryptedOrderId)
+						// console.log("paymentSuccessencryptedOrderId",encryptedOrderId)
 						return res.redirect(`${BASE_URL}/payment/confirm/${encodeURIComponent(encryptedOrderId)}`);
 						// return res.redirect(`${BASE_URL}/payment/confirm/${orderId}`);
 					}
