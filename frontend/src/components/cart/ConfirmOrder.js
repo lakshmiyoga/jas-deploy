@@ -113,25 +113,41 @@ const ConfirmOrder = () => {
 
     // Encryption key - ensure you keep this secure and do not expose it in the frontend
     const encryptionKey = 'Jas@12345#';
-
-    const encryptData = (data) => {
-        return CryptoJS.AES.encrypt(data.toString(), encryptionKey).toString();
-    };
-
-    const generateSignature = (data) => {
-        console.log("generateSignature", data)
-        return CryptoJS.HmacSHA256(data, encryptionKey).toString();
-    };
-
+    const staticKeys = [
+        'Jas@54321#',
+        'Jas@67890#',
+        'Jas@09876#',
+        'Jas@01928#',
+        'Jas@10293#',
+        'Jas@51423#',
+        'Jas@06978#',
+        'Jas@32415#',
+        'Jas@87960#',
+        'Jas@52178#'
+    ];
+   
 
     const processPayment = async () => {
         setLoading(true);
-        const encryptedItemsPrice = encryptData(subtotal);
-        const encryptedShippingPrice = encryptData(shippingCharge);
-        const encryptedTotalPrice = encryptData(total);
-        const signature = generateSignature(`${subtotal}${shippingCharge}${total}`);
-        // console.log("encrypt data",encryptedItemsPrice,encryptedShippingPrice,encryptedTotalPrice)
+        const randomKey = staticKeys[Math.floor(Math.random() * staticKeys.length)];
+        console.log("randomKey",randomKey)
+        const encryptData = (data,randomKey) => {
+            return CryptoJS.AES.encrypt(data.toString(), randomKey).toString();
+        };
+        const generateSignature = (data,randomKey) => {
+            console.log("generateSignature", data)
+            return CryptoJS.HmacSHA256(data, randomKey).toString();
+        };
+        const encryptedItemsPrice = encryptData(subtotal,randomKey);
+        const encryptedShippingPrice = encryptData(shippingCharge,randomKey);
+        const encryptedTotalPrice = encryptData(total,randomKey);
+        const signature = generateSignature(`${subtotal}${shippingCharge}${total}`,randomKey);
+        console.log("encrypt data",encryptedItemsPrice,encryptedShippingPrice,encryptedTotalPrice)
         console.log("signature", signature)
+
+         // Encrypt the selected random key with your master encryption key
+         const plainText = CryptoJS.AES.encrypt(randomKey, encryptionKey).toString();
+         console.log("plainText", plainText)
 
         const reqdata = {
             shippingInfo,
@@ -143,6 +159,7 @@ const ConfirmOrder = () => {
             shippingPrice: encryptedShippingPrice,
             totalPrice: encryptedTotalPrice,
             signature,
+            plainText,
         };
 
         sessionStorage.setItem('orderInfo', JSON.stringify(reqdata));
@@ -150,7 +167,6 @@ const ConfirmOrder = () => {
         try {
             const orderUrl = '/api/v1/payment/orders';
             const { data } = await axios.post(orderUrl, reqdata, { withCredentials: true });
-console.log("data", data)
             if (data && data.sessionResponse) {
                 const order = {
                     order_id: data.sessionResponse.order_id,
@@ -175,11 +191,14 @@ console.log("data", data)
                     initPayment(data.sessionResponse);
                 }else{
                     toast.error('Mismatch initial Amount, possible data tampering detected');
+                    setLoading(false);
                 }
-                
             }
         } catch (error) {
-            console.log(error);
+            // console.log(error)
+            if(error && error.response && error.response.data  && error.response.data.message){
+                toast.error(error && error.response.data.message)
+             }
             setLoading(false);
         }
     };
