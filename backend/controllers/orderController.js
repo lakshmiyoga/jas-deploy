@@ -119,6 +119,7 @@ const porterOrder = catchAsyncError(async (req, res, next) => {
                         user_id :user_id ,
                         porterData:porterData ,
                         porterOrder:{},
+                        porterResponse:{},
                         updatedItems:updatedItems
                     });
                     // console.log("Data",Data)

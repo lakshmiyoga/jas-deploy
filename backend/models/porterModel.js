@@ -25,6 +25,10 @@ const responseSchema = new mongoose.Schema({
         type: mongoose.Schema.Types.Mixed,
         required: true
     },
+    porterResponse: {
+        type: mongoose.Schema.Types.Mixed,
+        required: true
+    },
     updatedItems:{
         type: mongoose.Schema.Types.Mixed,
         required: true

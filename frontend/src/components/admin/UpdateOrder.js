@@ -3,7 +3,7 @@ import Sidebar from "./Sidebar";
 import { useDispatch, useSelector } from 'react-redux';
 import { useNavigate, useParams } from "react-router-dom";
 import { orderDetail as orderDetailAction, updateOrder, porterOrder } from "../../actions/orderActions";
-import { getporterOrder } from "../../actions/porterActions";
+import { createPorterOrderResponse, getporterOrder } from "../../actions/porterActions";
 import { toast } from "react-toastify";
 import { clearOrderUpdated, clearError } from "../../slices/orderSlice";
 import { Link } from "react-router-dom";
@@ -166,6 +166,15 @@ const UpdateOrder = () => {
             toast.error(error);
         }
     }, [dispatch, id, porterOrderDetail, error]);
+
+    useEffect(() => {
+        if(porterOrderData && porterOrderData.porterOrder && porterOrderData.porterOrder.order_id  ){
+          dispatch(createPorterOrderResponse({ order_id: id, porterOrder_id: porterOrderData.porterOrder.order_id }));  
+        }
+        
+    }, [dispatch,id, porterOrderData]);
+
+    
 
     return (
         <div className="row">
