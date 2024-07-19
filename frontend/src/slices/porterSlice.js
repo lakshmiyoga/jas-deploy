@@ -5,8 +5,8 @@ import { createSlice } from "@reduxjs/toolkit";
 const orderSlice = createSlice({
     name: 'order',
     initialState: {
-        porterOrderData:{},
-        porterOrderResponse:{},
+        porterOrderData:null,
+        porterOrderResponse:null,
         loading: false,
         error: null,
     },
@@ -51,7 +51,20 @@ const orderSlice = createSlice({
                 error: action.payload
             }
         },
-
+        porterClearData(state, action) {
+            return {
+                ...state,
+                loading: false,
+                porterOrderData: null
+            }
+        },
+        porterClearResponse(state, action) {
+            return {
+                ...state,
+                loading: false,
+                porterOrderResponse: null
+            }
+        },
 
     }
 });
@@ -64,7 +77,9 @@ export const {
     porterSuccess,
     porterOrderResponseRequest,
     porterOrderResponseSuccess,
-    porterOrderResponseFail
+    porterOrderResponseFail,
+    porterClearData,
+    porterClearResponse,
  } = actions;
 
 export default reducer;
