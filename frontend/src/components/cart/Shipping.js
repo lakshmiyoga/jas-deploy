@@ -204,8 +204,8 @@ const Shipping = () => {
     const [state, setState] = useState(shippingInfo.state);
     // const [state, setState] = useState("TamilNadu");
     const [allowed,setAllowed] = useState(true);
-    const [latitude, setLatitude] = useState('13.0736691');
-    const [longitude, setLongitude] = useState('80.2662705');
+    const [latitude, setLatitude] = useState('12.947146336879577');
+    const [longitude, setLongitude] = useState('77.62102993895199');
     const navigate = useNavigate();
     const dispatch = useDispatch();
 

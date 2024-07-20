@@ -46,6 +46,8 @@ const ConfirmOrder = () => {
     const [dropDetails, setDropDetails] = useState({
         lat: shippingInfo && shippingInfo.latitude && shippingInfo.latitude,
         lng: shippingInfo && shippingInfo.longitude && shippingInfo.longitude
+        // lat: 12.947146336879577,
+        // lng: 77.62102993895199
     });
 
     const [customerDetails, setCustomerDetails] = useState({
@@ -78,13 +80,15 @@ const ConfirmOrder = () => {
             };
             console.log(requestData)
             try {
-                const response = await axios.post('/api/v1/get-quote', requestData, { withCredentials: true });
+                const response = await axios.post('/api/v1/get-quote', requestData);
                 console.log("getQuote Response", response.data)
+                if(response && response.data && response.data.vehicles[3] && response.data.vehicles[3].fare)
                 setShippingAmount(response.data.vehicles[3].fare.minor_amount)
                 //    toast.error('Response:', response.data);
                 // Handle response as needed
             } catch (error) {
-                toast.error('Error sending data:', error.message);
+                console.log(error)
+                toast.error(error.response.data.message);
                 // Handle error as needed
             }
         }
@@ -92,8 +96,8 @@ const ConfirmOrder = () => {
             fetchdata()
         }
 
-    }, [pickupDetails,dropDetails,customerDetails])
-
+    }, [])
+// console.log("total",typeof(total))
     useEffect(() => {
         if (!shippingInfo || !cartItems.length) {
             navigate('/shipping');
@@ -161,6 +165,7 @@ const ConfirmOrder = () => {
         try {
             const orderUrl = '/api/v1/payment/orders';
             const { data } = await axios.post(orderUrl, reqdata, { withCredentials: true });
+            console.log("response data",data.sessionResponse)
             if (data && data.sessionResponse) {
                 const order = {
                     order_id: data.sessionResponse.order_id,
@@ -181,9 +186,12 @@ const ConfirmOrder = () => {
             }
 
             if (data && data.sessionResponse) {
-                if(data && data.sessionResponse && data.sessionResponse.sdk_payload && data.sessionResponse.sdk_payload.payload && data.sessionResponse.sdk_payload.payload.amount === total){
+                const payloadAmount = parseFloat(data.sessionResponse.sdk_payload.payload.amount).toFixed(2);
+                const totalAmount = parseFloat(total).toFixed(2);
+            
+                if (payloadAmount === totalAmount) {
                     initPayment(data.sessionResponse);
-                }else{
+                } else {
                     toast.error('Mismatch initial Amount, possible data tampering detected');
                     setLoading(false);
                 }
