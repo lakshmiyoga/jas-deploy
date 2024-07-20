@@ -8,19 +8,24 @@ import { toast } from "react-toastify";
 import { clearOrderUpdated, clearError } from "../../slices/orderSlice";
 import { Link } from "react-router-dom";
 import { v4 as uuidv4 } from 'uuid';
+import {
+    porterClearData,
+    porterClearResponse,
+} from '../../slices/porterSlice';
 
 const UpdateOrder = () => {
     const { loading, isOrderUpdated, error, orderDetail, porterOrderDetail } = useSelector(state => state.orderState);
     const { products } = useSelector((state) => state.productsState);
-    const { porterOrderData } = useSelector((state) => state.porterState);
+    const { porterOrderData, porterOrderResponse } = useSelector((state) => state.porterState);
     const { user = {}, orderItems = [], shippingInfo = {}, totalPrice = 0, statusResponse = {} } = orderDetail;
     const [orderStatus, setOrderStatus] = useState("Processing");
     const [showDispatchModal, setShowDispatchModal] = useState(false);
     const [selectedItems, setSelectedItems] = useState([]);
     const { id } = useParams();
+    const [refreshData,setRefreshData] = useState(false)
     const navigate = useNavigate();
     const dispatch = useDispatch();
-    console.log("porterOrderData", porterOrderData)
+
 
     useEffect(() => {
         if (isOrderUpdated) {
@@ -138,15 +143,17 @@ const UpdateOrder = () => {
         };
 
         try {
-            dispatch(porterOrder({ id: orderDetail.order_id, reqPorterData }));
-            setShowDispatchModal(false)
+           await dispatch(porterOrder({ id: orderDetail.order_id, reqPorterData }));
+            setShowDispatchModal(false);
+            // dispatch(getporterOrder({ order_id: id }));
         } catch (error) {
             console.error('Error creating order:', error);
         }
 
         const orderData = { orderStatus };
         console.log("orderData", orderData)
-        dispatch(updateOrder({ id: orderDetail.order_id, orderData }))
+       await dispatch(updateOrder({ id: orderDetail.order_id, orderData }))
+        setRefreshData(true)
     };
 
     const handleCancelOrder = () => {
@@ -160,21 +167,83 @@ const UpdateOrder = () => {
     };
 
     useEffect(() => {
-        dispatch(getporterOrder({ order_id: id }));
-
-        if (error) {
-            toast.error(error);
+        dispatch(porterClearData())
+        if(!porterOrderData && !refreshData){
+            const fetchData = async () => {
+                if (!porterOrderData) {
+                    try {
+                        await dispatch(porterClearData())
+                        await dispatch(getporterOrder({ order_id: id }))
+                        await dispatch(createPorterOrderResponse({ order_id: id, porterOrder_id: porterOrderData?.porterOrder?.order_id }))
+                        await dispatch(getporterOrder({ order_id: id }))
+                        await dispatch(porterClearResponse())
+                    } catch (error) {
+                        console.error('Error in fetching porter order data:', error);
+                        toast.error("Failed to fetch porter order data.");
+                    }
+                }
+            };
+        
+            fetchData();
         }
-    }, [dispatch, id, porterOrderDetail, error]);
+        if(porterOrderData && !refreshData){
+            const fetchData = async () => {
+                if (porterOrderData) {
+                    try {
+                        // await dispatch(porterClearData()).unwrap();
+                        await dispatch(createPorterOrderResponse({ order_id: id, porterOrder_id: porterOrderData?.porterOrder?.order_id }))
+                        await dispatch(getporterOrder({ order_id: id }))
+                        await dispatch(porterClearResponse())
+                    } catch (error) {
+                        console.error('Error in fetching porter order data:', error);
+                        toast.error("Failed to fetch porter order data.");
+                    }
+                }
+            };
+        
+            fetchData();
+        }
 
-    useEffect(() => {
-        if(porterOrderData && porterOrderData.porterOrder && porterOrderData.porterOrder.order_id  ){
-          dispatch(createPorterOrderResponse({ order_id: id, porterOrder_id: porterOrderData.porterOrder.order_id }));  
+        if(refreshData){
+            const fetchData = async () => {
+                await dispatch(porterClearData())
+                await dispatch(getporterOrder({ order_id: id }))
+                await dispatch(createPorterOrderResponse({ order_id: id, porterOrder_id: porterOrderData?.porterOrder?.order_id }))
+                await dispatch(getporterOrder({ order_id: id }))
+                await dispatch(porterClearResponse())
+                setRefreshData(false);
+            }
+
+            fetchData();
         }
         
-    }, [dispatch,id, porterOrderData]);
+    }, [dispatch, id, porterOrderDetail,refreshData, error]);
 
-    
+    // useEffect(() => {
+    //     const fetchdata = async() =>{
+    //          await dispatch(getporterOrder({ order_id: id }));
+    //         if (porterOrderData && porterOrderData.porterOrder && porterOrderData.porterOrder.order_id) {
+    //             await dispatch(createPorterOrderResponse({ order_id: id, porterOrder_id: porterOrderData.porterOrder.order_id }));
+    //             setRefreshData(true);
+                
+    //         }
+    //     }
+       
+    //     fetchdata()
+    // }, [dispatch, id, porterOrderDetail]);
+
+    // useEffect(()=>{
+    //     if(porterOrderData && porterOrderData.porterOrder && porterOrderData.porterOrder.order_id ){
+    //         dispatch(createPorterOrderResponse({ order_id: id, porterOrder_id: porterOrderData.porterOrder.order_id }));
+    //         // dispatch(getporterOrder({ order_id: id }));
+    //         setRefreshData(true);
+    //     }
+
+    // },[porterOrderData])
+
+    console.log("porterOrderResponse", porterOrderResponse)
+    console.log("porterOrderData", porterOrderData)
+    console.log("porterOrderDetail", porterOrderDetail)
 
     return (
         <div className="row">
@@ -197,19 +266,77 @@ const UpdateOrder = () => {
 
                             <h4 className="my-4">Payment</h4>
                             <p className={orderDetail.paymentStatus === 'CHARGED' ? 'greenColor' : 'redColor'}><b>{orderDetail.paymentStatus || 'Pending'}</b></p>
-
+                            <hr />
                             <h4 className="my-4">Order Status:</h4>
                             <p className={orderStatus.includes('Delivered') ? 'greenColor' : 'redColor'}><b>{orderStatus}</b></p>
+                            
+                            {porterOrderData && porterOrderData.porterResponse && (
+                                <Fragment>
+                                    <hr />
+                                    <h4 className="my-4">Delivery Details:</h4>
+                                    <div className="delivery-details">
+                                        <div className="detail-column">
+                                            <div className="detail-row">
+                                                <h6>Order ID:</h6>
+                                                <p>{porterOrderData.porterResponse.order_id && porterOrderData.porterResponse.order_id}</p>
+                                            </div>
+                                            <div className="detail-row">
+                                                <h6>Fare Details:</h6>
+                                                <p>Currency: {porterOrderData.porterResponse.fare_details && porterOrderData.porterResponse.fare_details.actual_fare_details && porterOrderData.porterResponse.fare_details.actual_fare_details.currency && porterOrderData.porterResponse.fare_details.actual_fare_details.currency || "INR"}</p>
+                                                <p>Minor Amount: {porterOrderData.porterResponse.fare_details && porterOrderData.porterResponse.fare_details.actual_fare_details && porterOrderData.porterResponse.fare_details.actual_fare_details.minor_amount && porterOrderData.porterResponse.fare_details.actual_fare_details.minor_amount || "N/A"}</p>
+                                            </div>
+                                            {
+                                                porterOrderData.porterResponse.partner_info && (
+                                                    <div className="detail-row">
+                                                        <h5>Delivery Partner:</h5>
+                                                        <h6>Name:</h6>
+                                                        <p>{porterOrderData.porterResponse.partner_info.name}</p>
+                                                        <h6>Mobile:</h6>
+                                                        <p>{porterOrderData.porterResponse.partner_info.mobile.country_code} {porterOrderData.porterResponse.partner_info.mobile.mobile_number}</p>
+                                                        {porterOrderData.porterResponse.partner_info.partner_secondary_mobile && (
+                                                            <>
+                                                                <h6>Secondary Mobile:</h6>
+                                                                <p>{porterOrderData.porterResponse.partner_info.partner_secondary_mobile.country_code} {porterOrderData.porterResponse.partner_info.partner_secondary_mobile.mobile_number}</p>
+                                                            </>
+                                                        )
+                                                        }
+                                                        <h6>Vehicle Number:</h6>
+                                                        <p>{porterOrderData.porterResponse.partner_info.vehicle_number}</p>
+                                                        <h6>Vehicle Type:</h6>
+                                                        <p>{porterOrderData.porterResponse.partner_info.vehicle_type}</p>
+                                                        {/* <h6>Location:</h6> */}
+                                                        {/* <p>Lat: {porterOrderData.porterResponse.partner_info.location.lat}, Long: {porterOrderData.porterResponse.partner_info.location.long}</p> */}
+                                                    </div>
+                                                )
+                                            }
 
-                            <h4 className="my-4">Order Items:</h4>
+                                        </div>
+                                        <div className="detail-column">
+                                            <div className="detail-row">
+                                                <h6>Delivery Status:</h6>
+                                                <p>{porterOrderData.porterResponse.status}</p>
+                                            </div>
+                                            <div className="detail-row">
+                                                <h6>Order Timings:</h6>
+                                                <p>Order Accepted Time: {new Date(porterOrderData.porterResponse.order_timings.order_accepted_time * 1000).toLocaleString()}</p>
+                                                <p>Order Started Time: {new Date(porterOrderData.porterResponse.order_timings.order_started_time * 1000).toLocaleString()}</p>
+                                                <p>Order Ended Time: {new Date(porterOrderData.porterResponse.order_timings.order_ended_time * 1000).toLocaleString()}</p>
+                                                <p>Pickup Time: {new Date(porterOrderData.porterResponse.order_timings.pickup_time * 1000).toLocaleString()}</p>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </Fragment>
+                            )}
+
 
                             <hr />
+                            <h4 className="my-4">Order Items:</h4>
                             <div className="cart-item my-1">
                                 {
                                     porterOrderData && porterOrderData.updatedItems ? (
                                         porterOrderData && porterOrderData.updatedItems && porterOrderData.updatedItems.map((item, index) => {
                                             console.log("item", item)
-                                            const product = products.find(product => product.englishName === item.name);
+                                            const product = products && products.find(product => product.englishName === item.name);
                                             if (!product) {
                                                 return null;
                                             }
@@ -319,7 +446,7 @@ const UpdateOrder = () => {
                         <div className="modal-content">
                             <div className="modal-header">
                                 <h5 className="modal-title">Select Items for Dispatch</h5>
-                                <button type="button" className="close" onClick={() => {setShowDispatchModal(false); setOrderStatus("Processing");}}>
+                                <button type="button" className="close" onClick={() => { setShowDispatchModal(false); setOrderStatus("Processing"); }}>
                                     <span aria-hidden="true">&times;</span>
                                 </button>
                             </div>
@@ -340,7 +467,7 @@ const UpdateOrder = () => {
                                 ))}
                             </div>
                             <div className="modal-footer">
-                                <button type="button" className="btn btn-secondary" onClick={() => {setShowDispatchModal(false); setOrderStatus("Processing");}}>Close</button>
+                                <button type="button" className="btn btn-secondary" onClick={() => { setShowDispatchModal(false); setOrderStatus("Processing"); }}>Close</button>
                                 <button type="button" className="btn btn-primary" onClick={submitHandler}>Dispatch</button>
                             </div>
                         </div>

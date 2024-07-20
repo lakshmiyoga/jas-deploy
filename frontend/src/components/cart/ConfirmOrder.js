@@ -130,24 +130,18 @@ const ConfirmOrder = () => {
     const processPayment = async () => {
         setLoading(true);
         const randomKey = staticKeys[Math.floor(Math.random() * staticKeys.length)];
-        console.log("randomKey",randomKey)
         const encryptData = (data,randomKey) => {
             return CryptoJS.AES.encrypt(data.toString(), randomKey).toString();
         };
         const generateSignature = (data,randomKey) => {
-            console.log("generateSignature", data)
             return CryptoJS.HmacSHA256(data, randomKey).toString();
         };
         const encryptedItemsPrice = encryptData(subtotal,randomKey);
         const encryptedShippingPrice = encryptData(shippingCharge,randomKey);
         const encryptedTotalPrice = encryptData(total,randomKey);
         const signature = generateSignature(`${subtotal}${shippingCharge}${total}`,randomKey);
-        console.log("encrypt data",encryptedItemsPrice,encryptedShippingPrice,encryptedTotalPrice)
-        console.log("signature", signature)
-
          // Encrypt the selected random key with your master encryption key
          const plainText = CryptoJS.AES.encrypt(randomKey, encryptionKey).toString();
-         console.log("plainText", plainText)
 
         const reqdata = {
             shippingInfo,
