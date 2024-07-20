@@ -85,10 +85,12 @@ const getQuote = catchAsyncError(async (req, res, next) => {
           'Content-Type': 'application/json'
         }
       });
-    // console.log(response)
+    // console.log(response.data)
       return res.json(response.data);
     } catch (error) {
-        return next(new ErrorHandler(error.message, 500));
+        // console.log(error.response.status)
+        // console.log(error.response.data.message)
+        return next(new ErrorHandler(error.response.data.message, error.response.status));
     //   return res.status(500).json({ message: 'Error sending data', error });
     }
 
@@ -149,6 +151,7 @@ const porterOrder = catchAsyncError(async (req, res, next) => {
                 //   return res.status(500).json({ message: 'Error sending data', error });
                 }
             }catch(error){
+                // console.log(error)
                 return next(new ErrorHandler(error.message, 500));
             }   
       
