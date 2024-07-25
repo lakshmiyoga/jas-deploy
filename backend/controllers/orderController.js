@@ -102,73 +102,65 @@ const porterOrder = catchAsyncError(async (req, res, next) => {
     //    console.log(req.params)
     const  {order_id,request_id,user,user_id,porterData, updatedItems}  = req.body;
     const apiEndpoint = 'https://pfe-apigw-uat.porter.in/v1/orders/create';
-    // const apiKey = 'fdbe7c47-25ce-4b15-90c7-ccce2027841d';
-    
-      
-            // console.log("porterData",porterData)
-            try{
-                const response = await axios.post(apiEndpoint, porterData, {
-                    headers: {
-                      'X-API-KEY': process.env.PORTER_API_KEY,
-                      'Content-Type': 'application/json'
-                    }
-                  });
-                  const porterOrder= response.data;
-                  if(order_id && request_id && user_id && porterData && porterOrder){
-                    const Data = new PorterModel({
-                        order_id:order_id,
-                        request_id:request_id,
-                        user:user,
-                        user_id :user_id ,
-                        porterData:porterData ,
-                        porterOrder:{},
-                        porterResponse:{},
-                        updatedItems:updatedItems
-                    });
-                    // console.log("Data",Data)
-                    await Data.save();
-                    if(Data){
-                        const onepayments = await PorterModel.findOne({ request_id: porterOrder && porterOrder.request_id });
-                        if (onepayments) {
-                            const porterResponse = await PorterModel.findOneAndUpdate({ request_id: porterOrder.request_id },
-                                {
-                                    $set: { porterOrder: porterOrder }
-                                 },
-                                { new: true });
-                                if(porterResponse){
-                                    return res.status(200).json({porterOrder})
-                                }     
-                        }
-                        else{
-                            return next(new ErrorHandler('Could Not find any Order', 500));
-                        }
-                }
-                else{
-                 return next(new ErrorHandler('Error for create Porter Order', 500));
-                }
-                
-                } else  {
-                    return next(new ErrorHandler('Error for create Porter Order', 500));
-                //   return res.status(500).json({ message: 'Error sending data', error });
-                }
-            }catch(error){
-                // console.log(error.response.data.message)
-                // if(!order_id){
-                //     return next(new ErrorHandler(`Some thing Went Wrong !`, 500));
-                // }
-                // const paymentOrder = await Payment.findOne({ order_id });
-                // if(!paymentOrder){
-                //     return next(new ErrorHandler(`Order Not Found With this Id :${order_id}`, 500));
-                // }
-                // const PaymentResponse = await Payment.findOneAndUpdate({ order_id },
-                //     {
-                //     orderStatus: "Processing"
-                //      },
-                //     { new: true });
-                //     console.log("PaymentResponse",PaymentResponse)
 
-                return next(new ErrorHandler(error.response.data.message, error.response.status));
-            }   
+    const porterOrderExist = await PorterModel.findOne({order_id});
+
+    if (porterOrderExist) {
+        const porterOrderExist = await PorterModel.deleteOne({order_id});
+        console.log("porterOrderExist",porterOrderExist)
+        console.log("orderdeleted successfully")
+    }
+    if(!porterOrderExist){
+        try{
+            const response = await axios.post(apiEndpoint, porterData, {
+                headers: {
+                  'X-API-KEY': process.env.PORTER_API_KEY,
+                  'Content-Type': 'application/json'
+                }
+              });
+              const porterOrder= response.data;
+              if(order_id && request_id && user_id && porterData && porterOrder){
+                const Data = new PorterModel({
+                    order_id:order_id,
+                    request_id:request_id,
+                    user:user,
+                    user_id :user_id ,
+                    porterData:porterData ,
+                    porterOrder:{},
+                    porterResponse:{},
+                    updatedItems:updatedItems
+                });
+                // console.log("Data",Data)
+                await Data.save();
+                if(Data){
+                    const onepayments = await PorterModel.findOne({ request_id: porterOrder && porterOrder.request_id });
+                    if (onepayments) {
+                        const porterResponse = await PorterModel.findOneAndUpdate({ request_id: porterOrder.request_id },
+                            {
+                                $set: { porterOrder: porterOrder }
+                             },
+                            { new: true });
+                            if(porterResponse){
+                                return res.status(200).json({porterOrder})
+                            }     
+                    }
+                    else{
+                        return next(new ErrorHandler('Could Not find any Order', 500));
+                    }
+            }
+            else{
+             return next(new ErrorHandler('Error for create Porter Order', 500));
+            }
+            
+            } else  {
+                return next(new ErrorHandler('Error for create Porter Order', 500));
+            //   return res.status(500).json({ message: 'Error sending data', error });
+            }
+        }catch(error){
+           return next(new ErrorHandler(error.response.data.message, error.response.status));
+        }   
+    }
+          
       
 })
 

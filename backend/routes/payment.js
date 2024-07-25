@@ -23,7 +23,7 @@ const router = express.Router();
 router.post('/payment/orders',isAuthenticateUser,payment )
 // router.post('/payment/verify',isAuthenticateUser, verifyPayment )
 router.get('/handleJuspayResponse/:id',isAuthenticateUser, handleResponse )
-router.post('/refund',orderRefund);
+// router.post('/refund',orderRefund);
 // router.get('/order/payments/:id',getOrderpayments);
 // router.get('/all/payments',getAllPayments );
 // router.get('/payment/order/all',getOrder );
