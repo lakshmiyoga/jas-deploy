@@ -8,24 +8,18 @@ import { useDispatch } from 'react-redux';
 import axios from 'axios';
 
 const PaymentConfirm = () => {
-  // useEffect(() => {
-  //   store.dispatch(loadUser());
-  //   store.dispatch(getProducts());
-  // }, []);
-
+  
   const { id } = useParams();
   const [paymentStatus, setPaymentStatus] = useState('LOADING');
   const [paymentDetails, setPaymentDetails] = useState({});
   const dispatch = useDispatch();
 
  
-  console.log("PaymentConfirm",id)
   useEffect(() => {
     async function fetchData() {
       try {
         const url = `/api/v1/handleJuspayResponse/${encodeURIComponent(id)}`;
         const { data } = await axios.get(url, { withCredentials: true });
-        console.log("data",data)
         if (data && data.sessionResponse) {
           setPaymentStatus(data.sessionResponse.status);
           setPaymentDetails(data.sessionResponse);

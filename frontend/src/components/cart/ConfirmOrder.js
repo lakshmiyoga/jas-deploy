@@ -32,7 +32,6 @@ const ConfirmOrder = () => {
     const queryParams = new URLSearchParams(location.search);
     const message = queryParams.get('message');
 
-    // console.log("shippingAmount",shippingAmount)
     const shippingCharge = shippingAmount / 100;
     console.log("shippingCharge", shippingCharge)
     const subtotal = cartItems.reduce((acc, item) => acc + item.price * item.productWeight, 0).toFixed(2);
@@ -97,7 +96,6 @@ const ConfirmOrder = () => {
         }
 
     }, [])
-// console.log("total",typeof(total))
     useEffect(() => {
         if (!shippingInfo || !cartItems.length) {
             navigate('/shipping');
@@ -108,7 +106,6 @@ const ConfirmOrder = () => {
         if (data && data.payment_links && data.payment_links.web) {
             window.location.href = data.payment_links.web;
             // window.open(data.payment_links.web, '_blank');
-            // setLoading(false);
         } else {
             alert('Failed to initiate payment: ' + (data.message || 'Unknown error'));
             setLoading(false);
@@ -116,20 +113,20 @@ const ConfirmOrder = () => {
     };
 
     // Encryption key - ensure you keep this secure and do not expose it in the frontend
-    const encryptionKey = 'Jas@12345#';
+    const encryptionKey = process.env.REACT_APP_ENCRYPTION_KEY;
     const staticKeys = [
-        'Jas@54321#',
-        'Jas@67890#',
-        'Jas@09876#',
-        'Jas@01928#',
-        'Jas@10293#',
-        'Jas@51423#',
-        'Jas@06978#',
-        'Jas@32415#',
-        'Jas@87960#',
-        'Jas@52178#'
+        process.env.REACT_APP_ENCRYPTION_KEY_1,
+        process.env.REACT_APP_ENCRYPTION_KEY_2,
+        process.env.REACT_APP_ENCRYPTION_KEY_3,
+        process.env.REACT_APP_ENCRYPTION_KEY_4,
+        process.env.REACT_APP_ENCRYPTION_KEY_5,
+        process.env.REACT_APP_ENCRYPTION_KEY_6,
+        process.env.REACT_APP_ENCRYPTION_KEY_7,
+        process.env.REACT_APP_ENCRYPTION_KEY_8,
+        process.env.REACT_APP_ENCRYPTION_KEY_9,
+        process.env.REACT_APP_ENCRYPTION_KEY_10
     ];
-   
+
 
     const processPayment = async () => {
         setLoading(true);
@@ -205,49 +202,7 @@ const ConfirmOrder = () => {
         }
     };
 
-    // const processPayment = async () => {
-    //     setLoading(true);
-    //     const reqdata = {
-    //         shippingInfo,
-    //         user,
-    //         user_id: user._id,
-    //         cartItems,
-    //         itemsPrice: parseFloat(subtotal),
-    //         taxPrice: 0.0,
-    //         shippingPrice: parseFloat(shippingCharge),
-    //         totalPrice: parseFloat(total),
-    //     };
-    //     sessionStorage.setItem('orderInfo', JSON.stringify(reqdata));
-    //     try {
-    //         const orderUrl = '/api/v1/payment/orders';
-    //         const { data } = await axios.post(orderUrl, reqdata, { withCredentials: true });
-    //         if (data && data.sessionResponse) {
-    //             const order = {
-    //                 order_id: data.sessionResponse.order_id,
-    //                 user_id: user._id,
-    //                 user: user,
-    //                 cartItems,
-    //                 shippingInfo,
-    //                 itemsPrice: parseFloat(subtotal),
-    //                 taxPrice: 0.0,
-    //                 shippingPrice: parseFloat(shippingCharge),
-    //                 totalPrice: parseFloat(total),
-    //                 paymentStatus: data.sessionResponse.status
-    //             };
-    //             dispatch(createOrder(order));
-    //         } else {
-    //             toast.error('Failed to Create the Order');
-    //         }
-    //         setLoading(false);
-    //         if (data && data.sessionResponse) {
-    //             initPayment(data.sessionResponse);
-    //         }
-    //     } catch (error) {
-    //         console.log(error);
-    //         setLoading(false);
-    //     }
-    // };
-
+    
     useEffect(() => {
         if (shippingInfo) {
             validateShipping(shippingInfo, navigate);
