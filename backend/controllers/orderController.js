@@ -7,6 +7,7 @@ const nodemailer = require('nodemailer');
 const path = require('path');
 const axios = require('axios');
 const PorterModel = require('../models/porterModel');
+
 // const fetch = require('node-fetch');
 
 
@@ -151,8 +152,22 @@ const porterOrder = catchAsyncError(async (req, res, next) => {
                 //   return res.status(500).json({ message: 'Error sending data', error });
                 }
             }catch(error){
-                // console.log(error)
-                return next(new ErrorHandler(error.message, 500));
+                // console.log(error.response.data.message)
+                // if(!order_id){
+                //     return next(new ErrorHandler(`Some thing Went Wrong !`, 500));
+                // }
+                // const paymentOrder = await Payment.findOne({ order_id });
+                // if(!paymentOrder){
+                //     return next(new ErrorHandler(`Order Not Found With this Id :${order_id}`, 500));
+                // }
+                // const PaymentResponse = await Payment.findOneAndUpdate({ order_id },
+                //     {
+                //     orderStatus: "Processing"
+                //      },
+                //     { new: true });
+                //     console.log("PaymentResponse",PaymentResponse)
+
+                return next(new ErrorHandler(error.response.data.message, error.response.status));
             }   
       
 })
@@ -194,13 +209,17 @@ const updateOrder = catchAsyncError(async (req, res, next) => {
 
     const order = await Payment.findOne({ order_id: req.params.id });
 //  console.log("order",order)
- console.log("req.body.orderStatus",req.body)
+//  console.log("req.body.orderStatus",req.body)
     if (!order) {
         return next(new ErrorHandler('Order not found', 404));
     }
 
-    if (order.orderStatus === 'Dispatched') {
+    if (order.orderStatus === 'Delivered') {
         return next(new ErrorHandler('Order has already been delivered!', 400));
+    }
+
+    if (order.orderStatus === 'Cancelled') {
+        return next(new ErrorHandler('Order has been already cancelled!', 400));
     }
 
     order.orderStatus = req.body.orderStatus;

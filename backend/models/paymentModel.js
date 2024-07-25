@@ -107,7 +107,7 @@ const paymentSchema = mongoose.Schema({
     orderStatus: {
         type: String,
         required: true,
-        enum: ['Processing','Dispatched', 'Removed', 'Cancelled'],
+        enum: ['Processing','Dispatched', 'Removed','Delivered','Cancelled'],
         default: 'Processing'
     },
     createdAt: {

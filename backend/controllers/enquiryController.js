@@ -8,13 +8,19 @@ const createEnquiry = catchAsyncError(async(req, res, next)=>{
     // console.log(req.body);
 
     try {
+
+        // Ensure all fields are provided
+        // if (!name || !email || !mobile || !message) {
+        //     return next(new ErrorHandler('All fields are required', 400));
+        // }
     
         const enquiry = new Enquiry({name, email, mobile, message,createdAt:Date.now()})
-        // console.log(enquiry)
+        console.log("enquiry",enquiry)
         await enquiry.save();
          res.status(200).json({ success: true, enquiry });
         
       } catch (error) {
+        console.log("error",error)
         return next(new ErrorHandler('Internal Server Error' , 500));
         
       }
