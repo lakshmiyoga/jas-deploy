@@ -1,7 +1,10 @@
-import React, { useState } from 'react'
+import React, { useEffect, useState } from 'react'
 import { postEnquiryDetails } from '../../actions/enquiryActions'
 import MetaData from '../Layouts/MetaData'
 import { useDispatch, useSelector } from 'react-redux'
+import {  toast } from 'react-toastify';
+import { useNavigate } from 'react-router-dom';
+import NumberInput from '../Layouts/NumberInput';
 
 const Enquiry = () => {
     const [formData, setFormData] = useState({
@@ -10,23 +13,41 @@ const Enquiry = () => {
         mobile: "",
         message: ""
     });
-
+console.log("formdata",formData)
     const dispatch = useDispatch();
-    const { loading, error } = useSelector(state => state.enquiryState);
+    const navigate = useNavigate();
+    const { loading, error,isSubmitted } = useSelector(state => state.enquiryState);
 
     const submitHandler = async(e) => {
         e.preventDefault();
         await dispatch(postEnquiryDetails(formData));
-        // console.log(formData)
+        // setFormData("");
+        console.log(formData)
     };
 
     const handleChange = (e) => {
+        // e.preventDefault();
         const { name, value } = e.target;
         setFormData(prevState => ({
             ...prevState,
             [name]: value
         }));
     };
+
+    useEffect(()=>{
+        if(isSubmitted){
+            toast.success('Submitted Successfuly')
+            navigate('/')
+            
+        } if(error){
+            toast(error, {
+                position: "bottom-center",
+                type: 'error',
+            })
+            return
+        }
+    },[isSubmitted,error])
+   
 
     return (
         <div>
@@ -62,13 +83,12 @@ const Enquiry = () => {
 
                         <div className="form-group">
                             <label htmlFor="phone_field">Mobile</label>
-                            <input
-                                type="number"
+                            <NumberInput
                                 id="mobile_field"
                                 name="mobile"
-                                className="form-control"
+                                className="no-arrow-input form-control"
                                 value={formData.mobile}
-                                onChange={handleChange}
+                                onChange={handleChange}  
                             />
                         </div>
 

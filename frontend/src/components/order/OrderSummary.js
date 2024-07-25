@@ -3,6 +3,7 @@ import { useDispatch, useSelector } from 'react-redux';
 import { fetchOrderSummary } from '../../actions/orderActions';
 import Loader from '../Layouts/Loader';
 import MetaData from '../Layouts/MetaData';
+import Sidebar from '../admin/Sidebar';
 
 const OrderSummary = () => {
     const dispatch = useDispatch();
@@ -22,24 +23,28 @@ const OrderSummary = () => {
 
      // Calculate total weight and total price
      let totalWeight = 0;
-     let totalPrice = 0;
+    //  let totalPrice = 0;
      if (isOrderSummaryArray) {
          orderSummary.forEach(({ totalWeight: weight, totalPrice: price }) => {
             totalWeight += parseFloat(weight) || 0;
-            totalPrice += parseFloat(price) || 0;
+            // totalPrice += parseFloat(price) || 0;
          });
      }
 
     return (
-        <div>
+        <div className="row">
             <MetaData title="Order Summary" />
-            <div className="container">
+            <div className="col-12 col-md-2">
+                <Sidebar />
+            </div>
+
+            <div className=" col-12 col-md-8">
                 <h1>Order Summary for a Day</h1>
                 <input
                     type="date"
                     value={date}
                     onChange={(e) => setDate(e.target.value)}
-                    className="form-control mb-3"
+                    className="form-control mb-3 date-input"
                 />
                 {loading ? (
                     <Loader />
@@ -55,7 +60,7 @@ const OrderSummary = () => {
                                     <tr>
                                         <th>Product Name</th>
                                         <th>Total Weight (kg)</th>
-                                        <th>Total Price (Rs.)</th>
+                                        {/* <th>Total Price (Rs.)</th> */}
                                     </tr>
                                 </thead>
                                 <tbody>
@@ -65,7 +70,7 @@ const OrderSummary = () => {
                                             <tr key={productName}>
                                                 <td>{productName}</td>
                                                 <td>{totalWeight} kg</td>
-                                                <td>{totalPrice != null ? `Rs. ${totalPrice.toFixed(2)}` : '-'}</td>
+                                                {/* <td>{totalPrice != null ? `Rs. ${totalPrice.toFixed(2)}` : '-'}</td> */}
                                             </tr>
                                         );
                                     })}
@@ -74,7 +79,7 @@ const OrderSummary = () => {
                                      <tr>
                                         <td><strong>Total</strong></td>
                                         <td><strong>{totalWeight.toFixed(2)} kg</strong></td>
-                                        <td><strong>Rs.{totalPrice.toFixed(2)}</strong></td>
+                                        {/* <td><strong>Rs.{totalPrice.toFixed(2)}</strong></td> */}
                                     </tr>
                                 </tbody>
                             </table>

@@ -3,6 +3,7 @@ import { useDispatch, useSelector } from 'react-redux';
 import { fetchUserSummary } from '../../actions/orderActions';
 import Loader from '../Layouts/Loader';
 import MetaData from '../Layouts/MetaData';
+import Sidebar from './Sidebar';
 
 const SummaryUser = () => {
     const dispatch = useDispatch();
@@ -25,22 +26,25 @@ const SummaryUser = () => {
     const totalAmount = userSummary.reduce((sum, order) => sum + (order.totalAmount || 0), 0);
 
     return (
-        <div>
+        <div className="row">
             <MetaData title="Order Summary" />
-            <div className="container">
+            <div className="col-12 col-md-2">
+                <Sidebar />
+            </div>
+            <div className="col-12 col-md-8">
                 <h1>User Summary for a Day</h1>
                 <input
                     type="date"
                     value={date}
                     onChange={(e) => setDate(e.target.value)}
-                    className="form-control mb-3"
+                    className="form-control mb-3 date-input"
                 />
                 {loading ? (
                     <Loader />
                 ) : error ? (
                     <p className="text-danger">{error}</p>
                 ) : (
-                    <div className="user-summary">
+                    <div className="product-table">
                         {isUserSummaryArray && userSummary.length === 0 ? (
                             <p>No user found for the selected date.</p>
                         ) : (
@@ -53,8 +57,8 @@ const SummaryUser = () => {
                                         <th>Phone No</th>
                                         <th>Address</th>
                                         <th>Products</th>
-                                        <th>Total Amount</th>
                                         <th>Total Weight</th>
+                                        <th>Total Amount</th>
                                     </tr>
                                 </thead>
                                 <tbody>
@@ -64,7 +68,7 @@ const SummaryUser = () => {
                                             <td>{order.user?.name || 'N/A'}</td>
                                             <td>{order.user?.email || 'N/A'}</td>
                                             <td>{order.shippingInfo?.phoneNo || 'N/A'}</td>
-                                            <td>
+                                            <td >
                                                 {order.shippingInfo?.address || 'N/A'},
                                                 {order.shippingInfo?.city || 'N/A'},
                                                 {order.shippingInfo?.country || 'N/A'},

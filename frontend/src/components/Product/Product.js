@@ -110,7 +110,7 @@ const Product = ({ products, category }) => {
                                     </select>
                                 </td>
                                 <td className="Rate (As Per Weight)">
-                                    {weight[product._id] ? `Rs.${calculateRate(product.price, weight[product._id])}` : 'N/A'}
+                                    {weight[product._id] ? `Rs.${calculateRate(product.price, weight[product._id])}` : 'Rs.0.00'}
                                 </td>
                                 <td className="Stock">{product.stocks}</td>
                                 <td className="Add to Cart">

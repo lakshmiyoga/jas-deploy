@@ -3,7 +3,7 @@ import Sidebar from "./Sidebar";
 import { useDispatch, useSelector } from 'react-redux';
 import { useNavigate, useParams } from "react-router-dom";
 import { orderDetail as orderDetailAction, updateOrder, porterOrder } from "../../actions/orderActions";
-import { createPorterOrderResponse, getporterOrder } from "../../actions/porterActions";
+import { CancelOrderResponse, createPorterOrderResponse, getporterOrder } from "../../actions/porterActions";
 import { toast } from "react-toastify";
 import { clearOrderUpdated, clearError } from "../../slices/orderSlice";
 import { Link } from "react-router-dom";
@@ -11,44 +11,78 @@ import { v4 as uuidv4 } from 'uuid';
 import {
     porterClearData,
     porterClearResponse,
+    porterCancelClearError,
 } from '../../slices/porterSlice';
+import Stepper from "../Layouts/Stepper";
 
 const UpdateOrder = () => {
     const { loading, isOrderUpdated, error, orderDetail, porterOrderDetail } = useSelector(state => state.orderState);
     const { products } = useSelector((state) => state.productsState);
-    const { porterOrderData, porterOrderResponse } = useSelector((state) => state.porterState);
+    const { porterOrderData, porterOrderResponse ,porterCancelResponse,porterCancelError} = useSelector((state) => state.porterState);
     const { user = {}, orderItems = [], shippingInfo = {}, totalPrice = 0, statusResponse = {} } = orderDetail;
     const [orderStatus, setOrderStatus] = useState("Processing");
     const [showDispatchModal, setShowDispatchModal] = useState(false);
     const [selectedItems, setSelectedItems] = useState([]);
     const { id } = useParams();
-    const [refreshData,setRefreshData] = useState(false)
+    const [refreshData, setRefreshData] = useState(false)
     const navigate = useNavigate();
     const dispatch = useDispatch();
-
+    console.log("error", error)
 
     useEffect(() => {
-        if (isOrderUpdated) {
-            toast('Order Updated Successfully!', {
+        const functioncall = async() =>{
+            if (isOrderUpdated) {
+                if(porterOrderDetail && !error){
+                    const orderData = { orderStatus };
+                    console.log("orderData", orderData)
+                    await dispatch(updateOrder({ id: orderDetail.order_id, orderData }))
+                   await dispatch(clearOrderUpdated())
+                   toast('Order Updated Successfully!', {
+                    type: 'success',
+                    position: "bottom-center",
+                    onOpen: () => dispatch(clearOrderUpdated())
+                });
+                  
+                }
+                if(error && !porterOrderDetail){
+                    const orderData = { orderStatus : "Processing" };
+                    console.log("orderData", orderData)
+                   await dispatch(updateOrder({ id: orderDetail.order_id, orderData }))
+                   await dispatch(clearOrderUpdated())
+                }
+              
+                return;
+            }
+    
+            if (error) {
+                toast(error, {
+                    position: "bottom-center",
+                    type: 'error',
+                    onOpen: () => { dispatch(clearError()) }
+                });
+               
+                return;
+            }
+        }
+        if(porterCancelResponse){
+            toast(porterCancelResponse.message, {
                 type: 'success',
                 position: "bottom-center",
-                onOpen: () => dispatch(clearOrderUpdated())
+                onOpen: () => { dispatch(porterCancelClearError()) }
             });
 
-            return;
         }
-
-        if (error) {
-            toast(error, {
+        if(porterCancelError){
+            toast(porterCancelError, {
                 position: "bottom-center",
                 type: 'error',
-                onOpen: () => { dispatch(clearError()) }
+                onOpen: () => { dispatch(porterCancelClearError()) }
             });
-            return;
+           
         }
-
+        functioncall()
         dispatch(orderDetailAction(id));
-    }, [isOrderUpdated, error, dispatch, id]);
+    }, [isOrderUpdated, error, dispatch, id,porterOrderResponse,porterCancelError,porterCancelResponse]);
 
     useEffect(() => {
         if (orderDetail.order_id) {
@@ -143,22 +177,20 @@ const UpdateOrder = () => {
         };
 
         try {
-           await dispatch(porterOrder({ id: orderDetail.order_id, reqPorterData }));
+            await dispatch(porterOrder({ id: orderDetail.order_id, reqPorterData }));
             setShowDispatchModal(false);
             // dispatch(getporterOrder({ order_id: id }));
         } catch (error) {
-            console.error('Error creating order:', error);
+            toast.error(error);
         }
-
-        const orderData = { orderStatus };
-        console.log("orderData", orderData)
-       await dispatch(updateOrder({ id: orderDetail.order_id, orderData }))
+       
         setRefreshData(true)
     };
 
     const handleCancelOrder = () => {
         // Implement the function to cancel the order
-        console.log('Cancel Order');
+        dispatch(CancelOrderResponse({order_id: id, porterOrder_id: porterOrderData?.porterOrder?.order_id }));
+        // console.log('Cancel Order');
     };
 
     const handleRemoveOrder = () => {
@@ -167,8 +199,8 @@ const UpdateOrder = () => {
     };
 
     useEffect(() => {
-        dispatch(porterClearData())
-        if(!porterOrderData && !refreshData){
+        // dispatch(porterClearData())
+        if (!porterOrderData && !refreshData) {
             const fetchData = async () => {
                 if (!porterOrderData) {
                     try {
@@ -183,14 +215,14 @@ const UpdateOrder = () => {
                     }
                 }
             };
-        
+
             fetchData();
         }
-        if(porterOrderData && !refreshData){
+        if (porterOrderData && !refreshData) {
             const fetchData = async () => {
                 if (porterOrderData) {
                     try {
-                        // await dispatch(porterClearData()).unwrap();
+                        await dispatch(porterClearData());
                         await dispatch(createPorterOrderResponse({ order_id: id, porterOrder_id: porterOrderData?.porterOrder?.order_id }))
                         await dispatch(getporterOrder({ order_id: id }))
                         await dispatch(porterClearResponse())
@@ -200,11 +232,11 @@ const UpdateOrder = () => {
                     }
                 }
             };
-        
+
             fetchData();
         }
 
-        if(refreshData){
+        if (refreshData) {
             const fetchData = async () => {
                 await dispatch(porterClearData())
                 await dispatch(getporterOrder({ order_id: id }))
@@ -216,8 +248,8 @@ const UpdateOrder = () => {
 
             fetchData();
         }
-        
-    }, [dispatch, id, porterOrderDetail,refreshData, error]);
+
+    }, [dispatch, id, porterOrderDetail, refreshData, error,porterCancelResponse]);
 
     // useEffect(() => {
     //     const fetchdata = async() =>{
@@ -225,10 +257,10 @@ const UpdateOrder = () => {
     //         if (porterOrderData && porterOrderData.porterOrder && porterOrderData.porterOrder.order_id) {
     //             await dispatch(createPorterOrderResponse({ order_id: id, porterOrder_id: porterOrderData.porterOrder.order_id }));
     //             setRefreshData(true);
-                
+
     //         }
     //     }
-       
+
     //     fetchdata()
     // }, [dispatch, id, porterOrderDetail]);
 
@@ -259,17 +291,17 @@ const UpdateOrder = () => {
                             <h4 className="mb-4">Shipping Info</h4>
                             <p><b>Name:</b> {user.name}</p>
                             <p><b>Phone:</b> {shippingInfo.phoneNo}</p>
-                            <p className="mb-4"><b>Address:</b> {shippingInfo.address}, {shippingInfo.city}, {shippingInfo.postalCode}, {shippingInfo.state}, {shippingInfo.country}</p>
-                            <p><b>Amount:</b> ${totalPrice}</p>
+                            <p className="mb-4"><b>Address:</b> {shippingInfo.address}, {shippingInfo.city}, {shippingInfo.postalCode}, {shippingInfo.state} {shippingInfo.country}</p>
+                            <p><b>Amount:</b> Rs.{parseFloat(totalPrice).toFixed(2)}</p>
 
                             <hr />
 
-                            <h4 className="my-4">Payment</h4>
+                            <h4 className="my-4">Payment status</h4>
                             <p className={orderDetail.paymentStatus === 'CHARGED' ? 'greenColor' : 'redColor'}><b>{orderDetail.paymentStatus || 'Pending'}</b></p>
                             <hr />
                             <h4 className="my-4">Order Status:</h4>
                             <p className={orderStatus.includes('Delivered') ? 'greenColor' : 'redColor'}><b>{orderStatus}</b></p>
-                            
+
                             {porterOrderData && porterOrderData.porterResponse && (
                                 <Fragment>
                                     <hr />
@@ -281,34 +313,41 @@ const UpdateOrder = () => {
                                                 <p>{porterOrderData.porterResponse.order_id && porterOrderData.porterResponse.order_id}</p>
                                             </div>
                                             <div className="detail-row">
-                                                <h6>Fare Details:</h6>
-                                                <p>Currency: {porterOrderData.porterResponse.fare_details && porterOrderData.porterResponse.fare_details.actual_fare_details && porterOrderData.porterResponse.fare_details.actual_fare_details.currency && porterOrderData.porterResponse.fare_details.actual_fare_details.currency || "INR"}</p>
-                                                <p>Minor Amount: {porterOrderData.porterResponse.fare_details && porterOrderData.porterResponse.fare_details.actual_fare_details && porterOrderData.porterResponse.fare_details.actual_fare_details.minor_amount && porterOrderData.porterResponse.fare_details.actual_fare_details.minor_amount || "N/A"}</p>
+                                                <h6>Estimated Fair details:</h6>
+                                                <p>Currency: {porterOrderData.porterResponse.fare_details && porterOrderData.porterResponse.fare_details.estimated_fare_details && porterOrderData.porterResponse.fare_details.estimated_fare_details.currency && porterOrderData.porterResponse.fare_details.estimated_fare_details.currency || "INR"}</p>
+                                                <p>Minor Amount: {porterOrderData.porterResponse.fare_details && porterOrderData.porterResponse.fare_details.estimated_fare_details && porterOrderData.porterResponse.fare_details.estimated_fare_details.minor_amount && porterOrderData.porterResponse.fare_details.estimated_fare_details.minor_amount || "N/A"}</p>
                                             </div>
-                                            {
-                                                porterOrderData.porterResponse.partner_info && (
-                                                    <div className="detail-row">
-                                                        <h5>Delivery Partner:</h5>
-                                                        <h6>Name:</h6>
-                                                        <p>{porterOrderData.porterResponse.partner_info.name}</p>
-                                                        <h6>Mobile:</h6>
-                                                        <p>{porterOrderData.porterResponse.partner_info.mobile.country_code} {porterOrderData.porterResponse.partner_info.mobile.mobile_number}</p>
-                                                        {porterOrderData.porterResponse.partner_info.partner_secondary_mobile && (
-                                                            <>
-                                                                <h6>Secondary Mobile:</h6>
-                                                                <p>{porterOrderData.porterResponse.partner_info.partner_secondary_mobile.country_code} {porterOrderData.porterResponse.partner_info.partner_secondary_mobile.mobile_number}</p>
-                                                            </>
-                                                        )
-                                                        }
-                                                        <h6>Vehicle Number:</h6>
-                                                        <p>{porterOrderData.porterResponse.partner_info.vehicle_number}</p>
-                                                        <h6>Vehicle Type:</h6>
-                                                        <p>{porterOrderData.porterResponse.partner_info.vehicle_type}</p>
-                                                        {/* <h6>Location:</h6> */}
-                                                        {/* <p>Lat: {porterOrderData.porterResponse.partner_info.location.lat}, Long: {porterOrderData.porterResponse.partner_info.location.long}</p> */}
-                                                    </div>
-                                                )
-                                            }
+                                            
+
+                                            <div className="detail-row">
+                                                <h6>Order Timings:</h6>
+
+                                                {  porterOrderData.porterResponse && porterOrderData.porterResponse.order_timings && porterOrderData.porterResponse.order_timings.pickup_time ? 
+                                                    (
+                                                        <p>Pickup Time:  {new Date(porterOrderData.porterResponse.order_timings.pickup_time * 1000).toLocaleString()}</p>
+                                                    ): (<p>Pickup Time:  N/A</p> )
+                                                    }
+                                                
+                                                    {  porterOrderData.porterResponse && porterOrderData.porterResponse.order_timings && porterOrderData.porterResponse.order_timings.order_accepted_time ? 
+                                                    (
+                                                        <p>Order Accepted Time:  {new Date(porterOrderData.porterResponse.order_timings.order_accepted_time * 1000).toLocaleString()}</p>
+                                                    ): (<p>Order Accepted Time:  N/A</p> )
+                                                    }
+                                                
+                                                {  porterOrderData.porterResponse && porterOrderData.porterResponse.order_timings && porterOrderData.porterResponse.order_timings.order_started_time ? 
+                                                    (
+                                                        <p>Order Started Time:  {new Date(porterOrderData.porterResponse.order_timings.order_started_time * 1000).toLocaleString()}</p>
+                                                    ): (<p>Order Started Time:  N/A</p> )
+                                                    }
+                                                 {  porterOrderData.porterResponse && porterOrderData.porterResponse.order_timings && porterOrderData.porterResponse.order_timings.order_ended_time ? 
+                                                    (
+                                                        <p>Order Ended Time:  {new Date(porterOrderData.porterResponse.order_timings.order_ended_time * 1000).toLocaleString()}</p>
+                                                    ): (<p>Order Ended Time:  N/A</p> )
+                                                    }
+                                                {/* <p>Order Ended Time: {new Date(porterOrderData.porterResponse.order_timings.order_ended_time * 1000).toLocaleString()}</p> */}
+                                                {/* <p>Pickup Time: {new Date(porterOrderData.porterResponse.order_timings.pickup_time * 1000).toLocaleString()}</p> */}
+                                            </div>
+                                            
 
                                         </div>
                                         <div className="detail-column">
@@ -316,13 +355,37 @@ const UpdateOrder = () => {
                                                 <h6>Delivery Status:</h6>
                                                 <p>{porterOrderData.porterResponse.status}</p>
                                             </div>
+
                                             <div className="detail-row">
-                                                <h6>Order Timings:</h6>
-                                                <p>Order Accepted Time: {new Date(porterOrderData.porterResponse.order_timings.order_accepted_time * 1000).toLocaleString()}</p>
-                                                <p>Order Started Time: {new Date(porterOrderData.porterResponse.order_timings.order_started_time * 1000).toLocaleString()}</p>
-                                                <p>Order Ended Time: {new Date(porterOrderData.porterResponse.order_timings.order_ended_time * 1000).toLocaleString()}</p>
-                                                <p>Pickup Time: {new Date(porterOrderData.porterResponse.order_timings.pickup_time * 1000).toLocaleString()}</p>
+                                                <h6>Actual Fare Details:</h6>
+                                                <p>Currency: {porterOrderData.porterResponse.fare_details && porterOrderData.porterResponse.fare_details.actual_fare_details && porterOrderData.porterResponse.fare_details.actual_fare_details.currency && porterOrderData.porterResponse.fare_details.actual_fare_details.currency || "INR"}</p>
+                                                <p>Minor Amount: {porterOrderData.porterResponse.fare_details && porterOrderData.porterResponse.fare_details.actual_fare_details && porterOrderData.porterResponse.fare_details.actual_fare_details.minor_amount && porterOrderData.porterResponse.fare_details.actual_fare_details.minor_amount || "N/A"}</p>
                                             </div>
+
+                                            {
+                                                porterOrderData.porterResponse.partner_info && (
+                                                    <div className="detail-row">
+                                                        <h5>Delivery Partner:</h5>
+                                                        {/* <h6>Name:</h6> */}
+                                                        <p>Name: {porterOrderData.porterResponse.partner_info.name}</p>
+                                                        {/* <h6>Mobile:</h6> */}
+                                                        <p>Mobile: {porterOrderData.porterResponse.partner_info.mobile.country_code} {porterOrderData.porterResponse.partner_info.mobile.mobile_number}</p>
+                                                        {porterOrderData.porterResponse.partner_info.partner_secondary_mobile && (
+                                                            <>
+                                                                {/* <h6>Secondary Mobile:</h6> */}
+                                                                <p>Secondary Mobile: {porterOrderData.porterResponse.partner_info.partner_secondary_mobile.country_code} {porterOrderData.porterResponse.partner_info.partner_secondary_mobile.mobile_number}</p>
+                                                            </>
+                                                        )
+                                                        }
+                                                        {/* <h6>Vehicle Number:</h6> */}
+                                                        <p>Vehicle Number: {porterOrderData.porterResponse.partner_info.vehicle_number}</p>
+                                                        {/* <h6>Vehicle Type:</h6> */}
+                                                        <p>Vehicle Type: {porterOrderData.porterResponse.partner_info.vehicle_type}</p>
+                                                        {/* <h6>Location:</h6> */}
+                                                        {/* <p>Lat: {porterOrderData.porterResponse.partner_info.location.lat}, Long: {porterOrderData.porterResponse.partner_info.location.long}</p> */}
+                                                    </div>
+                                                )
+                                            }
                                         </div>
                                     </div>
                                 </Fragment>
@@ -351,13 +414,13 @@ const UpdateOrder = () => {
                                                         <Link to={`/product/${item.product}`}>{item.name}</Link>
                                                     </div>
 
-                                                    <div className="col-4 col-lg-2 mt-4 mt-lg-0">
-                                                        <p>Rs.{item.price}</p>
+                                                    <div className="col-4 col-lg-4 mt-4 mt-lg-0">
+                                                    <p> Rs.{item.price} x {item.productWeight}  = Rs.{(item.productWeight * item.price).toFixed(2)}</p>
                                                     </div>
 
-                                                    <div className="col-4 col-lg-1 mt-4 mt-lg-0">
+                                                    {/* <div className="col-4 col-lg-1 mt-4 mt-lg-0">
                                                         <p>{item.productWeight}</p>
-                                                    </div>
+                                                    </div> */}
 
                                                     <div className="col-4 col-lg-3 mt-4 mt-lg-0">
                                                         {item.status}
@@ -382,13 +445,13 @@ const UpdateOrder = () => {
                                                         <Link to={`/product/${item.product}`}>{item.name}</Link>
                                                     </div>
 
-                                                    <div className="col-4 col-lg-2 mt-4 mt-lg-0">
-                                                        <p>Rs.{item.price}</p>
+                                                    <div className="col-4 col-lg-4 mt-4 mt-lg-0">
+                                                        <p> Rs.{item.price} x {item.productWeight}  = Rs.{(item.productWeight * item.price).toFixed(2)}</p>
                                                     </div>
 
-                                                    <div className="col-4 col-lg-1 mt-4 mt-lg-0">
+                                                    {/* <div className="col-4 col-lg-1 mt-4 mt-lg-0">
                                                         <p>{item.productWeight}</p>
-                                                    </div>
+                                                    </div> */}
 
                                                     <div className="col-4 col-lg-3 mt-4 mt-lg-0">
                                                         {product && product.stocks ? (
@@ -414,10 +477,47 @@ const UpdateOrder = () => {
                                     value={orderStatus}
                                     name="status"
                                 >
-                                    <option value="Processing">Processing</option>
-                                    <option value="Dispatched">Ready to Dispatch</option>
-                                    <option value="Removed">Remove Order</option>
-                                    <option value="Cancelled">Cancel Order</option>
+                                    {/* <option value="Processing">Processing</option>
+                                    <option value="Dispatched"> Dispatch</option>
+                                    <option value="Removed">Remove</option>
+                                    <option value="Cancelled">Cancel</option>
+                                    <option value="Porter-Cancelled">Porter Cancelled</option> */}
+                                    {orderStatus === 'Processing' && (
+                                    <>
+                                        <option value="Processing">Processing</option>
+                                        <option value="Dispatched">Dispatched</option>
+                                        <option value="Removed">Remove</option>
+                                        <option value="Cancelled">Cancel</option>
+                                    </>
+                                )}
+                                {orderStatus === 'Dispatched' && (
+                                    <>
+                                    <option value="Dispatched">Dispatch</option>
+                                    <option value="Cancelled">Cancel</option>
+                                    </>
+                                     
+                                )}
+                                 {orderStatus === 'Delivered' && (
+                                    <option value="Delivered">Delivered</option>
+                                )}
+                                 {/* {orderStatus === 'Porter-Cancelled' && (
+                                    <>
+                                     <option value="Porter-Cancelled">Porter-Cancelled</option>
+                                    </>
+                                   
+                                )} */}
+                                {orderStatus === 'Cancelled' && (
+                                    <>
+                                    <option value="Cancelled">Cancel</option>
+                                    <option value="Dispatched">Dispatched</option>
+                                    <option value="Removed">Remove</option>
+                                </>
+                                )}
+                                {orderStatus === 'Removed' && (
+                                    <>
+                                    <option value="Removed">Remove</option>
+                                </>
+                                )}
                                 </select>
                             </div>
                             <button
@@ -436,7 +536,14 @@ const UpdateOrder = () => {
                                 Update Status
                             </button>
                         </div>
+
                     </div>
+                    {
+                        porterOrderData && porterOrderData.porterResponse && (
+                            <Stepper currentStep={porterOrderData.porterResponse.status} />
+                        )
+                    }
+                   
                 </Fragment>
             </div>
 

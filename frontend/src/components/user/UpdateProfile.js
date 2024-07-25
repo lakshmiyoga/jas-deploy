@@ -3,6 +3,7 @@ import { useSelector, useDispatch } from 'react-redux';
 import { updateProfile, clearAuthError } from '../../actions/userActions';
 import {toast} from 'react-toastify'
 import { clearUpdateProfile } from '../../slices/authSlice';
+import { useNavigate } from 'react-router-dom';
 
 const UpdateProfile = () => {
 
@@ -11,6 +12,7 @@ const UpdateProfile = () => {
     const [email, setEmail] = useState("");
     const [avatar, setAvatar] = useState("");
     const [avatarPreview, setAvatarPreview] = useState("/images/default_avatar.png");
+    const navigate = useNavigate()
     const dispatch = useDispatch();
      console.log(error, user, isUpdated)
 
@@ -34,6 +36,7 @@ const UpdateProfile = () => {
         formData.append('email', email)
         formData.append('avatar', avatar);
         dispatch(updateProfile(formData))
+        
     }
 
     useEffect(() => {
@@ -50,7 +53,9 @@ const UpdateProfile = () => {
                 type: 'success',
                 position: "bottom-center",
                 onOpen: () => dispatch(clearUpdateProfile())
+                
             })
+            navigate('/myProfile')
             return;
         }
 

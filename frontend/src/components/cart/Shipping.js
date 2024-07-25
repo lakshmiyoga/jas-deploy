@@ -174,6 +174,7 @@ import { saveShippingInfo } from "../../slices/cartSlice";
 import StepsCheckOut from './StepsCheckOut';
 import { toast } from 'react-toastify';
 import axios from 'axios';
+import NumberInput from '../Layouts/NumberInput';
 
 export const validateShipping = (shippingInfo, navigate) => {
     if (
@@ -361,10 +362,10 @@ const Shipping = () => {
 
                         <div className="form-group">
                             <label htmlFor="phone_field">Phone No</label>
-                            <input
-                                type="phone"
+                            <NumberInput
+                               
                                 id="phone_field"
-                                className="form-control"
+                                className="no-arrow-input form-control"
                                 value={phoneNo}
                                 onChange={(e) => setPhoneNo(e.target.value)}
                                 required
@@ -373,13 +374,13 @@ const Shipping = () => {
 
                         <div className="form-group">
                             <label htmlFor="postal_code_field">Postal Code</label>
-                            <input
-                                type="number"
+                            <NumberInput
                                 id="postal_code_field"
-                                className="form-control"
+                                className="no-arrow-input form-control"
                                 value={postalCode}
                                 onChange={(e) => setPostalCode(e.target.value)}
                                 required
+                                // style={{width:'100%'}}
                             />
                         </div>
 

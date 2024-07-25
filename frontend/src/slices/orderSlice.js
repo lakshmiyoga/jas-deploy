@@ -187,7 +187,7 @@ const orderSlice = createSlice({
             return {
                 ...state,
                 loading: false,
-                error: action.payload
+                error: action.payload,
             }
         },
 

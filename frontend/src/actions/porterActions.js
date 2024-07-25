@@ -7,6 +7,9 @@ import {
     porterOrderResponseRequest,
     porterOrderResponseSuccess,
     porterOrderResponseFail,
+    porterCancelRequest,
+    porterCancelSuccess,
+    porterCancelFail,
 
 } from '../slices/porterSlice';
 
@@ -25,13 +28,25 @@ export const getporterOrder = createAsyncThunk('init/order/create', async ({orde
 
   export const createPorterOrderResponse = createAsyncThunk('/order/createResponse', async ({order_id,porterOrder_id}, { dispatch }) => {
     try {
-        // console.log("request_id",order_id,porterOrder_id)
+        console.log("request_id",order_id,porterOrder_id)
       dispatch(porterOrderResponseRequest());
       const { data } = await axios.post('/api/v1/admin/porter/createResponse', {order_id,porterOrder_id},{withCredentials: true });
       console.log("porterResponse",data)
       dispatch(porterOrderResponseSuccess(data));
     } catch (error) {
       dispatch(porterOrderResponseFail(error.response.data.message));
+    }
+  });
+
+  export const CancelOrderResponse = createAsyncThunk('/order/cancelResponse', async ({order_id,porterOrder_id}, { dispatch }) => {
+    try {
+        console.log("request_id",order_id,porterOrder_id)
+      dispatch(porterCancelRequest());
+      const { data } = await axios.post('/api/v1/admin/porter/cancelOrder', {order_id,porterOrder_id},{withCredentials: true });
+      console.log("cancelresponseData",data)
+      dispatch(porterCancelSuccess(data));
+    } catch (error) {
+      dispatch(porterCancelFail(error.response.data.message));
     }
   });
 

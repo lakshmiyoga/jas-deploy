@@ -67,7 +67,7 @@ const EnquiryRequest = () => {
                 name: user.name,
                 email:user.email,
                 mobile:user.mobile,
-                // message:product.message,
+                // message:user.message,
                 date: new Date(user.createdAt).toLocaleString(), 
                 actions: (
                     <Fragment>

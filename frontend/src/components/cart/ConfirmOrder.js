@@ -309,7 +309,7 @@ const ConfirmOrder = () => {
                                         Proceed to Payment
                                     </button>
                                 ) : (
-                                    <button id="checkout_btn" className="btn btn-primary btn-block" disabled>
+                                    <button id="checkout_btn" className="btn btn-block" disabled>
                                         Proceed to Payment
                                     </button>
                                 )}

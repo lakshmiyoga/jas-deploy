@@ -10,13 +10,15 @@ const enquirySlice = createSlice({
     reducers:{
         postEnquiryRequest (state, action){
             return{
-                loading:true
+                loading:true,
+                isSubmitted: false
             }
         }, 
         postEnquirySuccess (state, action){
             return{
                 loading:false,
-                enquiry: action.payload.enquiry
+                enquiry: action.payload.enquiry,
+                isSubmitted: true
             }
         }, 
         postEnquiryFail (state, action){

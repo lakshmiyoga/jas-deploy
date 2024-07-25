@@ -24,9 +24,8 @@ const Sidebar = () => {
 
                     <li>
                         <NavDropdown title={<i className='fa fa-shopping-basket'> Orders</i>}>
-                            <NavDropdown.Item onClick={() => navigate('/admin/orders')}> <i className='fa fa-shopping-basket product-dropdown'> Order List</i></NavDropdown.Item>
-                            <NavDropdown.Item onClick={() => navigate('/admin/order-summary')}> <i className='fa fa-plus product-dropdown'> Order Summary </i></NavDropdown.Item>
-                            
+                            <NavDropdown.Item onClick={() => navigate('/admin/orders')}> <i className='fa fa-list'> Order List</i></NavDropdown.Item>
+                            <NavDropdown.Item onClick={() => navigate('/admin/order-summary')}> <i className='fa fa-file-text'> Order Summary </i></NavDropdown.Item>     
                         </NavDropdown>
                     </li>
 
@@ -37,14 +36,13 @@ const Sidebar = () => {
                     <li>
                         {/* <Link to='/admin/users'><i className='fa fa-users'></i> Users</Link> */}
 
-                        <NavDropdown title={<i className='fa fa-shopping-basket'> Users</i>}>
-                            <NavDropdown.Item onClick={() => navigate('/admin/users')}> <i className='fa fa-shopping-basket product-dropdown'> User List</i></NavDropdown.Item>
-                            <NavDropdown.Item onClick={() => navigate('/admin/user-summary')}> <i className='fa fa-plus product-dropdown'> User Summary </i></NavDropdown.Item>
-                            
+                        <NavDropdown title={<i className="fa fa-users"> Users</i>}>
+                            <NavDropdown.Item onClick={() => navigate('/admin/users')}> <i className='fa fa-list'> User List</i></NavDropdown.Item>
+                            <NavDropdown.Item onClick={() => navigate('/admin/user-summary')}> <i className='fa fa-file-text'> User Summary </i></NavDropdown.Item>     
                         </NavDropdown>
                     </li>
                     <li>
-                        <Link to="/admin/payments"><i class="fa fa-credit-card"></i> Paymnents</Link>
+                        <Link to="/admin/payments"><i className="fa fa-credit-card"></i> Payments</Link>
                     </li>
                 </ul>
             </nav>

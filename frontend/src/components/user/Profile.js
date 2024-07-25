@@ -8,7 +8,7 @@ const Profile = () => {
 
   return (
     <Fragment>
-        <div className="products_heading">Vegetables</div>
+        <div className="products_heading">Profile</div>
     
     <div className="row justify-content-around mt-5 user-info">
         
@@ -22,14 +22,14 @@ const Profile = () => {
             </div>
      
             <div className="col-12 col-md-5">
-                 <h4>Full Name</h4>
-                 <p>{user.name}</p>
+                 <h4>Full Name: {user.name}</h4>
+                 {/* <p>{user.name}</p> */}
      
-                 <h4>Email Address</h4>
-                 <p>{user.email}</p>
+                 <h4>Email Address: {user.email}</h4>
+                 {/* <p>{user.email}</p> */}
 
-                 <h4>Joined</h4>
-                 <p>{String(user.createdAt).substring(0,10)}</p>
+                 <h4>Joined: {String(user.createdAt).substring(0,10)}</h4>
+                 {/* <p>{String(user.createdAt).substring(0,10)}</p> */}
 
                  <Link to="/orders" className="btn btn-danger btn-block mt-5" id="orders">
                     My Orders

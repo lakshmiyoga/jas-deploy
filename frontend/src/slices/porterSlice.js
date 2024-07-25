@@ -65,6 +65,34 @@ const orderSlice = createSlice({
                 porterOrderResponse: null
             }
         },
+        porterCancelRequest(state, action) {
+            return {
+                ...state,
+                loading: true
+            }
+        },
+        porterCancelSuccess(state, action) {
+            return {
+                ...state,
+                loading: false,
+                porterCancelResponse: action.payload.cancelresponseData
+            }
+        },
+        porterCancelFail(state, action) {
+            return {
+                ...state,
+                loading: false,
+                porterCancelError: action.payload
+            }
+        },
+        porterCancelClearError(state, action) {
+            return {
+                ...state,
+                loading: false,
+                porterCancelError:null,
+                porterCancelResponse:null
+            }
+        },
 
     }
 });
@@ -80,6 +108,10 @@ export const {
     porterOrderResponseFail,
     porterClearData,
     porterClearResponse,
+    porterCancelRequest,
+    porterCancelSuccess,
+    porterCancelFail,
+    porterCancelClearError
  } = actions;
 
 export default reducer;

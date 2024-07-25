@@ -8,7 +8,7 @@ export const postEnquiryDetails = createAsyncThunk('post/postenquiry', async (fo
     // console.log(formData)
     try {
               dispatch(postEnquiryRequest());
-            //   console.log(formData)
+              console.log(formData)
               const {data} = await axios.post(`/api/v1/enquiry`, formData);
               console.log(data)
               dispatch(postEnquirySuccess(data));

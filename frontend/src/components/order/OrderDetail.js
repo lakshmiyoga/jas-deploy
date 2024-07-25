@@ -54,10 +54,10 @@ export default function OrderDetail () {
                             <h4 className="my-4">Order Status:</h4>
                             <p className={orderStatus&&orderStatus.includes('Delivered') ? 'greenColor' : 'redColor' } ><b>{orderStatus}</b></p>
     
-    
+                            <hr />
                             <h4 className="my-4">Order Items:</h4>
     
-                            <hr />
+                           
                             <div className="cart-item my-1">
                                 {orderItems && orderItems.map((item,index) => (
                                     <div className="row my-5" key={index}>
@@ -65,18 +65,18 @@ export default function OrderDetail () {
                                             <img src={item.image} alt={item.name} height="45" width="65" />
                                         </div>
 
-                                        <div className="col-5 col-lg-5">
+                                        <div className="col-5 col-lg-2">
                                             <Link to={`/product/${item.product}`}>{item.name}</Link>
                                         </div>
 
 
-                                        <div className="col-4 col-lg-2 mt-4 mt-lg-0">
-                                            <p>Rs.{item.price}</p>
+                                        <div className="col-4 col-lg-4 mt-4 mt-lg-0">
+                                        <p> Rs.{item.price} x {item.productWeight}  = Rs.{(item.productWeight * item.price).toFixed(2)}</p>
                                         </div>
 
-                                        <div className="col-4 col-lg-3 mt-4 mt-lg-0">
+                                        {/* <div className="col-4 col-lg-3 mt-4 mt-lg-0">
                                             <p>{item.quantity}</p>
-                                        </div>
+                                        </div> */}
                                     </div>
                                 ))}
                                     
