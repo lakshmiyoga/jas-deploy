@@ -245,6 +245,35 @@ const orderSlice = createSlice({
                   error: action.payload 
                 };
         },
+
+        adminOrderRemoveRequest(state, action) {
+            return {
+                ...state,
+                loading: true
+            }
+        },
+        adminOrderRemoveSuccess(state, action) {
+            return {
+                ...state,
+                loading: false,
+                orderRemoveResponse: action.payload.removeMessage
+            }
+        },
+        adminOrderRemoveFail(state, action) {
+            return {
+                ...state,
+                loading: false,
+                orderRemoveError: action.payload
+            }
+        },
+        adminOrderRemoveClearError(state, action) {
+            return {
+                ...state,
+                loading: false,
+                orderRemoveError:null,
+                orderRemoveResponse:null
+            }
+        },
         
 
     }
@@ -285,7 +314,12 @@ export const {
     orderSummaryFail,
     userSummaryRequest,
     userSummarySuccess,
-    userSummaryFail
+    userSummaryFail,
+    adminOrderRemoveRequest,
+    adminOrderRemoveSuccess,
+    adminOrderRemoveFail,
+    adminOrderRemoveClearError
+
  } = actions;
 
 export default reducer;

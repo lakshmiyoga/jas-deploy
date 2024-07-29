@@ -92,7 +92,7 @@ const Product = ({ products, category }) => {
                                
 
                                 <td className="Price">Rs.{product.price} 
-                                {product.category === 'Keerai'?'(per bundle)':'(per kg)'}</td>
+                                {product.category === 'Keerai'?'(per piece)':'(per kg)'}</td>
                                 <td className="Weight">
                                     <select
                                         value={weight[product._id] || ''}

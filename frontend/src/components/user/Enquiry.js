@@ -1,10 +1,11 @@
-import React, { useEffect, useState } from 'react'
+import React, { useEffect, useState,useRef } from 'react'
 import { postEnquiryDetails } from '../../actions/enquiryActions'
 import MetaData from '../Layouts/MetaData'
 import { useDispatch, useSelector } from 'react-redux'
 import {  toast } from 'react-toastify';
 import { useNavigate } from 'react-router-dom';
 import NumberInput from '../Layouts/NumberInput';
+import { clearEnquiryDeleted } from '../../slices/enquirySlice';
 
 const Enquiry = () => {
     const [formData, setFormData] = useState({
@@ -16,7 +17,9 @@ const Enquiry = () => {
 console.log("formdata",formData)
     const dispatch = useDispatch();
     const navigate = useNavigate();
-    const { loading, error,isSubmitted } = useSelector(state => state.enquiryState);
+    const { loading, error,isSubmitted} = useSelector(state => state.enquiryState);
+
+    const hasShownToast = useRef(false);
 
     const submitHandler = async(e) => {
         e.preventDefault();
@@ -35,16 +38,23 @@ console.log("formdata",formData)
     };
 
     useEffect(()=>{
-        if(isSubmitted){
-            toast.success('Submitted Successfuly')
+        if(isSubmitted  && !hasShownToast.current){
+            toast('Enquiry Submitted successfully',{
+                type:'success',
+                position:"bottom-center",
+                onOpen: () => dispatch(clearEnquiryDeleted())
+              })
+              hasShownToast.current = true;
+
             navigate('/')
             
-        } if(error){
+        } if(error  && !hasShownToast.current){
             toast(error, {
                 position: "bottom-center",
                 type: 'error',
+                onOpen: () => dispatch(clearEnquiryDeleted())
             })
-            return
+            hasShownToast.current = true;
         }
     },[isSubmitted,error])
    

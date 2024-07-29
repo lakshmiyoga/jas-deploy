@@ -73,7 +73,10 @@ const OrderList = () => {
             rows: []
         };
 
-        orders.filter(order => order.paymentStatus === 'CHARGED').forEach((order, index) => {
+        // Sort orders by creation date (newest first)
+        const sortedOrders = [...orders].sort((a, b) => new Date(b.createdAt) - new Date(a.createdAt));
+
+        sortedOrders.filter(order => order.paymentStatus === 'CHARGED').forEach((order, index) => {
             data.rows.push({
                 s_no: index + 1,
                 id: order.order_id,
@@ -90,7 +93,7 @@ const OrderList = () => {
                 ),
                 actions: (
                     <Fragment>
-                        <Link to={`/admin/order/${order.order_id}`} className="btn btn-primary">
+                        <Link to={`/admin/order/${order.order_id}`} className="btn btn-primary py-1 px-2 ml-2">
                             <i className="fa fa-pencil"></i>
                         </Link>
                         {/* <Button onClick={e => deleteHandler(e, order._id)} className="btn btn-danger py-1 px-2 ml-2">

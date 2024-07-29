@@ -2,7 +2,7 @@ import React, { Fragment } from 'react';
 import Sidebar from '../admin/Sidebar';
 import { useState, useEffect } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
-import {  useParams } from "react-router-dom";
+import {  useNavigate, useParams } from "react-router-dom";
 import { updateProduct } from '../../actions/productsActions';
 import { clearProductUpdated, clearError } from '../../slices/productSlice';
 import { toast } from 'react-toastify';
@@ -190,8 +190,10 @@ import { getProduct } from '../../actions/productAction';
 // export default UpdateProduct;
 
 const UpdateProduct = () => {
+
     const [formData, setFormData] = useState({
-        name: "",
+        englishName: "",
+        tamilName:"",
         price: "",
         category: "",
         images: [],
@@ -203,12 +205,14 @@ const UpdateProduct = () => {
     const { id } = useParams();
     const { loading, isProductUpdated, error, product } = useSelector((state) => state.productState);
     const dispatch = useDispatch();
+    const navigate = useNavigate();
 
     useEffect(() => {
         if (product && product._id) {
             setFormData({
                 ...formData,
-                name: product.englishName,
+                englishName: product.englishName,
+                tamilName: product.tamilName,
                 price: product.price,
                 category: product.category,
                 imagesPreview: product.images.map(image => image.image)
@@ -257,7 +261,8 @@ const UpdateProduct = () => {
         console.log('submited');
         // const { name, price, category, images, imagesCleared } = formData;
         const formDataToSend = new FormData();
-        formDataToSend.append('name', formData.name);
+        formDataToSend.append('englishName', formData.englishName);
+        formDataToSend.append('tamilName', formData.tamilName);
         formDataToSend.append('price', formData.price);
         formDataToSend.append('category', formData.category);
         formData.images.forEach(image => formDataToSend.append('images', image));
@@ -273,6 +278,7 @@ const UpdateProduct = () => {
                 position: "bottom-center",
                 onOpen: () => dispatch(clearProductUpdated())
             });
+        navigate('/admin/products');
         }
 
         if (error) {
@@ -298,13 +304,24 @@ const UpdateProduct = () => {
                             <h1 className="mb-4">Update Product</h1>
 
                             <div className="form-group">
-                                <label htmlFor="name">Name</label>
+                                <label htmlFor="name">English Name</label>
                                 <input
                                     type="text"
-                                    id="name"
-                                    name="name"
+                                    id="englishName"
+                                    name="englishName"
                                     className="form-control"
-                                    value={formData.name}
+                                    value={formData.englishName}
+                                    onChange={handleChange}
+                                />
+                            </div>
+                            <div className="form-group">
+                                <label htmlFor="name">Tamil Name</label>
+                                <input
+                                    type="text"
+                                    id="tamilName"
+                                    name="tamilName"
+                                    className="form-control"
+                                    value={formData.tamilName}
                                     onChange={handleChange}
                                 />
                             </div>

@@ -2,10 +2,10 @@ import { Fragment, useEffect, useState } from "react";
 import Sidebar from "./Sidebar";
 import { useDispatch, useSelector } from 'react-redux';
 import { useNavigate, useParams } from "react-router-dom";
-import { orderDetail as orderDetailAction, updateOrder, porterOrder } from "../../actions/orderActions";
+import { orderDetail as orderDetailAction, updateOrder, porterOrder,RemoveOrderResponse } from "../../actions/orderActions";
 import { CancelOrderResponse, createPorterOrderResponse, getporterOrder } from "../../actions/porterActions";
 import { toast } from "react-toastify";
-import { clearOrderUpdated, clearError } from "../../slices/orderSlice";
+import { clearOrderUpdated, clearError,adminOrderRemoveClearError } from "../../slices/orderSlice";
 import { Link } from "react-router-dom";
 import { v4 as uuidv4 } from 'uuid';
 import {
@@ -14,57 +14,60 @@ import {
     porterCancelClearError,
 } from '../../slices/porterSlice';
 import Stepper from "../Layouts/Stepper";
+import Invoice from "../Layouts/Invoice";
 
 const UpdateOrder = () => {
-    const { loading, isOrderUpdated, error, orderDetail, porterOrderDetail } = useSelector(state => state.orderState);
+    const { loading, isOrderUpdated, error, orderDetail, porterOrderDetail,orderRemoveResponse, orderRemoveError } = useSelector(state => state.orderState);
     const { products } = useSelector((state) => state.productsState);
-    const { porterOrderData, porterOrderResponse ,porterCancelResponse,porterCancelError} = useSelector((state) => state.porterState);
+    const { porterOrderData, porterOrderResponse, porterCancelResponse, porterCancelError } = useSelector((state) => state.porterState);
     const { user = {}, orderItems = [], shippingInfo = {}, totalPrice = 0, statusResponse = {} } = orderDetail;
     const [orderStatus, setOrderStatus] = useState("Processing");
+    const [dropStatus, setDropStatus] = useState("");
     const [showDispatchModal, setShowDispatchModal] = useState(false);
     const [selectedItems, setSelectedItems] = useState([]);
     const { id } = useParams();
     const [refreshData, setRefreshData] = useState(false)
+    const [removalReason, setRemovalReason] = useState('');
     const navigate = useNavigate();
     const dispatch = useDispatch();
-    console.log("error", error)
+    console.log("porterOrderData", porterOrderData)
 
     useEffect(() => {
-        const functioncall = async() =>{
+        const functioncall = async () => {
             if (isOrderUpdated) {
-                if(porterOrderDetail && !error){
+                if (porterOrderDetail && !error) {
                     const orderData = { orderStatus };
+                    //     console.log("orderData", orderData)
+                    //     await dispatch(updateOrder({ id: orderDetail.order_id, orderData }))
+                    //    await dispatch(clearOrderUpdated())
+                    toast('Order Updated Successfully!', {
+                        type: 'success',
+                        position: "bottom-center",
+                        onOpen: () => dispatch(clearOrderUpdated())
+                    });
+
+                }
+                if (error && !porterOrderDetail) {
+                    const orderData = { orderStatus: "Processing" };
                     console.log("orderData", orderData)
                     await dispatch(updateOrder({ id: orderDetail.order_id, orderData }))
-                   await dispatch(clearOrderUpdated())
-                   toast('Order Updated Successfully!', {
-                    type: 'success',
-                    position: "bottom-center",
-                    onOpen: () => dispatch(clearOrderUpdated())
-                });
-                  
+                    await dispatch(clearOrderUpdated())
                 }
-                if(error && !porterOrderDetail){
-                    const orderData = { orderStatus : "Processing" };
-                    console.log("orderData", orderData)
-                   await dispatch(updateOrder({ id: orderDetail.order_id, orderData }))
-                   await dispatch(clearOrderUpdated())
-                }
-              
+
                 return;
             }
-    
+
             if (error) {
                 toast(error, {
                     position: "bottom-center",
                     type: 'error',
                     onOpen: () => { dispatch(clearError()) }
                 });
-               
+
                 return;
             }
         }
-        if(porterCancelResponse){
+        if (porterCancelResponse) {
             toast(porterCancelResponse.message, {
                 type: 'success',
                 position: "bottom-center",
@@ -72,21 +75,41 @@ const UpdateOrder = () => {
             });
 
         }
-        if(porterCancelError){
+        if (porterCancelError) {
             toast(porterCancelError, {
                 position: "bottom-center",
                 type: 'error',
                 onOpen: () => { dispatch(porterCancelClearError()) }
             });
-           
+
         }
+
+        if (orderRemoveResponse) {
+            toast(orderRemoveResponse, {
+                type: 'success',
+                position: "bottom-center",
+                onOpen: () => { dispatch(adminOrderRemoveClearError()) }
+            });
+
+        }
+        if (orderRemoveError) {
+            toast(orderRemoveError, {
+                position: "bottom-center",
+                type: 'error',
+                onOpen: () => { dispatch(adminOrderRemoveClearError()) }
+            });
+
+        }
+
+
         functioncall()
         dispatch(orderDetailAction(id));
-    }, [isOrderUpdated, error, dispatch, id,porterOrderResponse,porterCancelError,porterCancelResponse]);
+    }, [isOrderUpdated, error, dispatch, id, porterOrderResponse, porterCancelError, porterCancelResponse,orderRemoveResponse,orderRemoveError]);
 
     useEffect(() => {
         if (orderDetail.order_id) {
             setOrderStatus(orderDetail.orderStatus);
+            setDropStatus(orderDetail.orderStatus)
         }
     }, [orderDetail]);
 
@@ -94,7 +117,7 @@ const UpdateOrder = () => {
         const status = e.target.value;
         setOrderStatus(status);
 
-        if (status === 'Dispatched') {
+        if (status === 'Dispatched' || status === "Cancelled" || status === "Removed") {
             setShowDispatchModal(true);
         } else {
             setShowDispatchModal(false);
@@ -183,19 +206,22 @@ const UpdateOrder = () => {
         } catch (error) {
             toast.error(error);
         }
-       
+
         setRefreshData(true)
     };
 
     const handleCancelOrder = () => {
         // Implement the function to cancel the order
-        dispatch(CancelOrderResponse({order_id: id, porterOrder_id: porterOrderData?.porterOrder?.order_id }));
+        setShowDispatchModal(false);
+        dispatch(CancelOrderResponse({ order_id: id, porterOrder_id: porterOrderData?.porterOrder?.order_id }));
+
         // console.log('Cancel Order');
     };
 
     const handleRemoveOrder = () => {
         // Implement the function to remove the order
-        console.log('Remove Order');
+        setShowDispatchModal(false);
+        dispatch(RemoveOrderResponse({ order_id: id,removalReason}))
     };
 
     useEffect(() => {
@@ -249,7 +275,11 @@ const UpdateOrder = () => {
             fetchData();
         }
 
-    }, [dispatch, id, porterOrderDetail, refreshData, error,porterCancelResponse]);
+    }, [dispatch, id, porterOrderDetail, refreshData, error, porterCancelResponse]);
+
+    const handelDownloadInvoice = () =>{
+        
+    }
 
     // useEffect(() => {
     //     const fetchdata = async() =>{
@@ -273,9 +303,6 @@ const UpdateOrder = () => {
 
     // },[porterOrderData])
 
-    console.log("porterOrderResponse", porterOrderResponse)
-    console.log("porterOrderData", porterOrderData)
-    console.log("porterOrderDetail", porterOrderDetail)
 
     return (
         <div className="row">
@@ -300,7 +327,7 @@ const UpdateOrder = () => {
                             <p className={orderDetail.paymentStatus === 'CHARGED' ? 'greenColor' : 'redColor'}><b>{orderDetail.paymentStatus || 'Pending'}</b></p>
                             <hr />
                             <h4 className="my-4">Order Status:</h4>
-                            <p className={orderStatus.includes('Delivered') ? 'greenColor' : 'redColor'}><b>{orderStatus}</b></p>
+                            <p className={dropStatus.includes('Delivered') ? 'greenColor' : 'redColor'}><b>{dropStatus}</b></p>
 
                             {porterOrderData && porterOrderData.porterResponse && (
                                 <Fragment>
@@ -317,37 +344,37 @@ const UpdateOrder = () => {
                                                 <p>Currency: {porterOrderData.porterResponse.fare_details && porterOrderData.porterResponse.fare_details.estimated_fare_details && porterOrderData.porterResponse.fare_details.estimated_fare_details.currency && porterOrderData.porterResponse.fare_details.estimated_fare_details.currency || "INR"}</p>
                                                 <p>Minor Amount: {porterOrderData.porterResponse.fare_details && porterOrderData.porterResponse.fare_details.estimated_fare_details && porterOrderData.porterResponse.fare_details.estimated_fare_details.minor_amount && porterOrderData.porterResponse.fare_details.estimated_fare_details.minor_amount || "N/A"}</p>
                                             </div>
-                                            
+
 
                                             <div className="detail-row">
                                                 <h6>Order Timings:</h6>
 
-                                                {  porterOrderData.porterResponse && porterOrderData.porterResponse.order_timings && porterOrderData.porterResponse.order_timings.pickup_time ? 
+                                                {porterOrderData.porterResponse && porterOrderData.porterResponse.order_timings && porterOrderData.porterResponse.order_timings.pickup_time ?
                                                     (
                                                         <p>Pickup Time:  {new Date(porterOrderData.porterResponse.order_timings.pickup_time * 1000).toLocaleString()}</p>
-                                                    ): (<p>Pickup Time:  N/A</p> )
-                                                    }
-                                                
-                                                    {  porterOrderData.porterResponse && porterOrderData.porterResponse.order_timings && porterOrderData.porterResponse.order_timings.order_accepted_time ? 
+                                                    ) : (<p>Pickup Time:  N/A</p>)
+                                                }
+
+                                                {porterOrderData.porterResponse && porterOrderData.porterResponse.order_timings && porterOrderData.porterResponse.order_timings.order_accepted_time ?
                                                     (
                                                         <p>Order Accepted Time:  {new Date(porterOrderData.porterResponse.order_timings.order_accepted_time * 1000).toLocaleString()}</p>
-                                                    ): (<p>Order Accepted Time:  N/A</p> )
-                                                    }
-                                                
-                                                {  porterOrderData.porterResponse && porterOrderData.porterResponse.order_timings && porterOrderData.porterResponse.order_timings.order_started_time ? 
+                                                    ) : (<p>Order Accepted Time:  N/A</p>)
+                                                }
+
+                                                {porterOrderData.porterResponse && porterOrderData.porterResponse.order_timings && porterOrderData.porterResponse.order_timings.order_started_time ?
                                                     (
                                                         <p>Order Started Time:  {new Date(porterOrderData.porterResponse.order_timings.order_started_time * 1000).toLocaleString()}</p>
-                                                    ): (<p>Order Started Time:  N/A</p> )
-                                                    }
-                                                 {  porterOrderData.porterResponse && porterOrderData.porterResponse.order_timings && porterOrderData.porterResponse.order_timings.order_ended_time ? 
+                                                    ) : (<p>Order Started Time:  N/A</p>)
+                                                }
+                                                {porterOrderData.porterResponse && porterOrderData.porterResponse.order_timings && porterOrderData.porterResponse.order_timings.order_ended_time ?
                                                     (
                                                         <p>Order Ended Time:  {new Date(porterOrderData.porterResponse.order_timings.order_ended_time * 1000).toLocaleString()}</p>
-                                                    ): (<p>Order Ended Time:  N/A</p> )
-                                                    }
+                                                    ) : (<p>Order Ended Time:  N/A</p>)
+                                                }
                                                 {/* <p>Order Ended Time: {new Date(porterOrderData.porterResponse.order_timings.order_ended_time * 1000).toLocaleString()}</p> */}
                                                 {/* <p>Pickup Time: {new Date(porterOrderData.porterResponse.order_timings.pickup_time * 1000).toLocaleString()}</p> */}
                                             </div>
-                                            
+
 
                                         </div>
                                         <div className="detail-column">
@@ -415,7 +442,7 @@ const UpdateOrder = () => {
                                                     </div>
 
                                                     <div className="col-4 col-lg-4 mt-4 mt-lg-0">
-                                                    <p> Rs.{item.price} x {item.productWeight}  = Rs.{(item.productWeight * item.price).toFixed(2)}</p>
+                                                        <p> Rs.{item.price} x {item.productWeight}  = Rs.{(item.productWeight * item.price).toFixed(2)}</p>
                                                     </div>
 
                                                     {/* <div className="col-4 col-lg-1 mt-4 mt-lg-0">
@@ -474,7 +501,7 @@ const UpdateOrder = () => {
                                 <select
                                     className="form-control"
                                     onChange={handleOrderStatusChange}
-                                    value={orderStatus}
+                                    value={dropStatus}
                                     name="status"
                                 >
                                     {/* <option value="Processing">Processing</option>
@@ -482,45 +509,55 @@ const UpdateOrder = () => {
                                     <option value="Removed">Remove</option>
                                     <option value="Cancelled">Cancel</option>
                                     <option value="Porter-Cancelled">Porter Cancelled</option> */}
-                                    {orderStatus === 'Processing' && (
-                                    <>
-                                        <option value="Processing">Processing</option>
-                                        <option value="Dispatched">Dispatched</option>
-                                        <option value="Removed">Remove</option>
-                                        <option value="Cancelled">Cancel</option>
-                                    </>
-                                )}
-                                {orderStatus === 'Dispatched' && (
-                                    <>
-                                    <option value="Dispatched">Dispatch</option>
-                                    <option value="Cancelled">Cancel</option>
-                                    </>
-                                     
-                                )}
-                                 {orderStatus === 'Delivered' && (
-                                    <option value="Delivered">Delivered</option>
-                                )}
-                                 {/* {orderStatus === 'Porter-Cancelled' && (
+                                    {dropStatus === 'Processing' && (
+                                        <>
+                                            <option value="Processing">Processing</option>
+                                            <option value="Dispatched">Dispatched</option>
+                                            <option value="Removed">Remove</option>
+                                            {/* <option value="Cancelled">Cancel</option> */}
+                                        </>
+                                    )}
+                                    {dropStatus === 'Dispatched' && (
+                                        <>
+                                            <option value="Dispatched">Dispatch</option>
+                                            <option value="Cancelled">Cancel</option>
+                                        </>
+
+                                    )}
+                                    {dropStatus === 'Delivered' && (
+                                        <option value="Delivered">Delivered</option>
+                                    )}
+                                    {/* {orderStatus === 'Porter-Cancelled' && (
                                     <>
                                      <option value="Porter-Cancelled">Porter-Cancelled</option>
                                     </>
                                    
                                 )} */}
-                                {orderStatus === 'Cancelled' && (
-                                    <>
-                                    <option value="Cancelled">Cancel</option>
-                                    <option value="Dispatched">Dispatched</option>
-                                    <option value="Removed">Remove</option>
-                                </>
-                                )}
-                                {orderStatus === 'Removed' && (
-                                    <>
-                                    <option value="Removed">Remove</option>
-                                </>
-                                )}
+                                    {dropStatus === 'Cancelled' && (
+                                        <>
+                                            <option value="Cancelled">Cancel</option>
+                                            <option value="Dispatched">Dispatched</option>
+                                            {/* <option value="Removed">Remove</option> */}
+                                        </>
+                                    )}
+                                    {dropStatus === 'Removed' && (
+                                        <>
+                                            <option value="Removed">Remove</option>
+                                        </>
+                                    )}
                                 </select>
                             </div>
-                            <button
+                            {/* <h4 className="my-4">Invoice</h4> */}
+                            {porterOrderData &&(
+                            <Invoice porterOrderData={porterOrderData}/>
+
+                            )
+
+                            }
+                            {/* <div className="form-group">
+                                <button  className="btn btn-primary btn-block" onClick={handelDownloadInvoice}>Download Invoice</button>
+                            </div> */}
+                            {/* <button
                                 disabled={loading}
                                 onClick={() => {
                                     if (orderStatus === "Dispatched") {
@@ -534,20 +571,20 @@ const UpdateOrder = () => {
                                 className="btn btn-primary btn-block"
                             >
                                 Update Status
-                            </button>
+                            </button> */}
                         </div>
 
                     </div>
-                    {
+                    {/* {
                         porterOrderData && porterOrderData.porterResponse && (
                             <Stepper currentStep={porterOrderData.porterResponse.status} />
                         )
-                    }
-                   
+                    } */}
+
                 </Fragment>
             </div>
 
-            {showDispatchModal && (
+            {showDispatchModal && orderStatus === "Dispatched" ? (
                 <div className="modal" tabIndex="-1" role="dialog">
                     <div className="modal-dialog" role="document">
                         <div className="modal-content">
@@ -580,7 +617,60 @@ const UpdateOrder = () => {
                         </div>
                     </div>
                 </div>
-            )}
+            ) : showDispatchModal && orderStatus === "Cancelled" ? (
+                <div className="modal" tabIndex="-1" role="dialog">
+                    <div className="modal-dialog" role="document">
+                        <div className="modal-content">
+                            <div className="modal-header">
+                                {/* <h5 className="modal-title">Select Items for Dispatch</h5> */}
+                                <button type="button" className="close" onClick={() => { setShowDispatchModal(false); setOrderStatus("Processing"); }}>
+                                    <span aria-hidden="true">&times;</span>
+                                </button>
+                            </div>
+                            <div className="modal-body">
+                                Are You Sure to Cancel The Order?
+                            </div>
+                            <div className="modal-footer">
+                                <button type="button" className="btn btn-secondary" onClick={() => { setShowDispatchModal(false); setOrderStatus("Processing"); }}>Close</button>
+                                <button type="button" className="btn btn-primary" onClick={handleCancelOrder}>Continue</button>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            ) : showDispatchModal && orderStatus === "Removed"? (
+                <>
+                    <div className="modal" tabIndex="-1" role="dialog">
+                        <div className="modal-dialog" role="document">
+                            <div className="modal-content">
+                                <div className="modal-header">
+                                    {/* <h5 className="modal-title">Select Items for Dispatch</h5> */}
+                                    <button type="button" className="close" onClick={() => { setShowDispatchModal(false); setOrderStatus("Processing"); }}>
+                                        <span aria-hidden="true">&times;</span>
+                                    </button>
+                                </div>
+                                <div className="modal-body">
+                                    <p>Are You Sure to Remove The Order?</p>
+                                    <textarea
+                                        className="form-control"
+                                        rows="4"
+                                        placeholder="Add a reason for removal (optional)"
+                                        onChange={(e) => setRemovalReason(e.target.value)} // assuming you have a state variable set up for this
+                                    ></textarea>
+                                </div>
+                                <div className="modal-footer">
+                                    <button type="button" className="btn btn-secondary" onClick={() => { setShowDispatchModal(false); setOrderStatus("Processing"); }}>Close</button>
+                                    <button type="button" className="btn btn-primary" onClick={handleRemoveOrder}>Continue</button>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </>
+            ):<>(
+                {/* <p>
+                    Something went wrong
+                </p> */}
+            )
+            </>}
         </div>
     );
 };

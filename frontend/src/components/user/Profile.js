@@ -21,7 +21,7 @@ const Profile = () => {
                 </Link>
             </div>
      
-            <div className="col-12 col-md-5">
+            <div className="col-12  col-md-5">
                  <h4>Full Name: {user.name}</h4>
                  {/* <p>{user.name}</p> */}
      

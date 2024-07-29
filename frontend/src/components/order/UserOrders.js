@@ -1,17 +1,18 @@
-import { Fragment, useEffect} from 'react'
+import { Fragment, useEffect } from 'react'
 import MetaData from '../Layouts/MetaData';
-import {MDBDataTable} from 'mdbreact'
+import { MDBDataTable } from 'mdbreact'
 import { useDispatch, useSelector } from 'react-redux';
 import { userOrders as userOrdersAction } from '../../actions/orderActions';
 import { Link } from 'react-router-dom';
+import Loader from '../Layouts/Loader';
 
-export default function UserOrders () {
-    const { userOrders = []} = useSelector(state => state.orderState)
+export default function UserOrders() {
+    const {loading, userOrders = [] } = useSelector(state => state.orderState)
     const dispatch = useDispatch();
 
     useEffect(() => {
         dispatch(userOrdersAction())
-    },[])
+    }, [])
 
     const setOrders = () => {
         const data = {
@@ -47,18 +48,21 @@ export default function UserOrders () {
                     sort: "asc"
                 }
             ],
-            rows:[]
+            rows: []
         }
 
-        userOrders.forEach((userOrder,index) => {
+        // Sort orders by creation date (newest first)
+        const sortedOrders = [...userOrders].sort((a, b) => new Date(b.createdAt) - new Date(a.createdAt));
+
+        sortedOrders.forEach((userOrder, index) => {
             data.rows.push({
-                s_no:index+1,
-                id:  userOrder.order_id,
+                s_no: index + 1,
+                id: userOrder.order_id,
                 numOfItems: userOrder.orderItems.length,
                 amount: `${userOrder.totalPrice} Rs`,
                 status: userOrder.orderStatus && userOrder.orderStatus.includes('Delivered') ?
-                (<p style={{color: 'green'}}> {userOrder.orderStatus} </p>):
-                (<p style={{color: 'red'}}> {userOrder.orderStatus} </p>),
+                    (<p style={{ color: 'green' }}> {userOrder.orderStatus} </p>) :
+                    (<p style={{ color: 'red' }}> {userOrder.orderStatus} </p>),
                 actions: <Link to={`/order/${userOrder.order_id}`} className="btn btn-primary" >
                     <i className='fa fa-eye'></i>
                 </Link>
@@ -66,7 +70,7 @@ export default function UserOrders () {
         })
 
 
-        return  data;
+        return data;
     }
 
 
@@ -74,16 +78,18 @@ export default function UserOrders () {
         <Fragment>
             <MetaData title="My Orders" />
             <div className="products_heading">Orders</div>
-            <div className='container'> 
-           
-            <MDBDataTable
-                className='px-3 product-table'
-                bordered
-                hover
-                data={setOrders()}
-                noBottomColumns
-                
-            />
+            <div className='container'>
+            <Fragment>
+                    {loading ? <Loader /> :
+                        <MDBDataTable
+                            data={setOrders()}
+                            bordered
+                            hover
+                            className="px-3 product-table"
+                            noBottomColumns
+                        />
+                    }
+                </Fragment>
             </div>
         </Fragment>
     )

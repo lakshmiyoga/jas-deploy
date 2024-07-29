@@ -1,4 +1,4 @@
-import React, { Fragment, useState, useEffect } from 'react'
+import React, { Fragment, useState, useEffect, useRef } from 'react'
 import MetaData from '../Layouts/MetaData'
 import {clearAuthError, login} from "../../actions/userActions"
 import { useDispatch, useSelector } from 'react-redux';
@@ -14,23 +14,41 @@ const Login = () => {
     const navigate = useNavigate();
     const location = useLocation();
 
-    const {loading, error, isAuthenticated} = useSelector(state => state.authState)
+    const {loading, error, isAuthenticated, user} = useSelector(state => state.authState)
     // const redirect = location.search?'/'+location.search.split('=')[1]:'/';
+
+    const hasShownToast = useRef(false);
 
     useEffect(() => {
 
-        if(isAuthenticated){
-            navigate('/');
+        // if(isAuthenticated){
+        //     navigate('/');
+        // }
+        if (isAuthenticated && !hasShownToast.current) {
+            toast('Login successfully',{
+                type:'success',
+                position:"bottom-center",
+                onOpen:  () =>{dispatch(clearAuthError)}
+              })
+            if (user.role === 'admin') {
+                hasShownToast.current = true;
+                navigate('/admin/dashboard');
+            } else {
+            hasShownToast.current = true;
+                navigate('/');
+            }
+            return
         }
-        if(error){
+        if(error && !hasShownToast.current){
            toast.error(error,{
             position:"bottom-center", 
             type: 'error',
             onOpen:  () =>{dispatch(clearAuthError)}
         });
+        hasShownToast.current = true;
         }
         return
-    }, [error, isAuthenticated, dispatch, navigate])
+    }, [error, isAuthenticated, dispatch, navigate,clearAuthError])
 
     const submitHandler = async(e) => {
         e.preventDefault();

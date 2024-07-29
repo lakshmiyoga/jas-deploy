@@ -52,7 +52,7 @@ const UpdateProfile = () => {
             toast('Profile updated successfully',{
                 type: 'success',
                 position: "bottom-center",
-                onOpen: () => dispatch(clearUpdateProfile())
+                onOpen: () => {dispatch(clearUpdateProfile())}
                 
             })
             navigate('/myProfile')

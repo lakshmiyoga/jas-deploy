@@ -32,6 +32,9 @@ const Keerai = () => {
     const filteredKeerai = keyword ? Keeraigal.filter((Keerai) => Keerai.englishName.toLowerCase().includes(keyword.toLowerCase())) : Keeraigal;
      console.log(filteredKeerai);
 
+     // Sort the filtered keerai in ascending order by name
+    const sortedKeerai = filteredKeerai.sort((a, b) => a.englishName.localeCompare(b.englishName));
+
     return (
         <Fragment>
             {/* <Header/> */}
@@ -59,7 +62,7 @@ const Keerai = () => {
 
                     </div>
                     {
-                        filteredKeerai.length === 0 ? (
+                        sortedKeerai.length === 0 ? (
                             <h2 style={{ textAlign: 'center' }}>Product not found</h2>
                         ) : (
                             <section id="products" className="container mt-5">
@@ -69,7 +72,7 @@ const Keerai = () => {
                                         <Product key={product._id} product={product} />
 
                                     ))} */}
-                                    <Product products={filteredKeerai} category={category} />
+                                    <Product products={sortedKeerai} category={category} />
 
                                 </div>
                             </section>

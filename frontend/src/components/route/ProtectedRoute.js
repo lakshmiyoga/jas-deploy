@@ -13,8 +13,19 @@ export default function ProtectedRoute({ children, isAdmin }) {
         return <Navigate to="/login" />;
     }
 
-    if (isAdmin && user.role !== 'admin') {
-        return <Navigate to="/" />;
+    // if (isAdmin && user.role !== 'admin') {
+    //     return <Navigate to="/" />;
+    // }
+
+    // if (isAdmin && user.role == 'admin') {
+    //     return <Navigate to="/admin/dashboard" />;
+    // }
+    if (isAdmin) {
+        if (user.role === 'admin') {
+            return children;
+        } else {
+            return <Navigate to="/" />;
+        }
     }
 
     return children;

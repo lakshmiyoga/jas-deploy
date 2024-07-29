@@ -93,6 +93,7 @@ const orderSlice = createSlice({
                 porterCancelResponse:null
             }
         },
+        
 
     }
 });
@@ -111,7 +112,8 @@ export const {
     porterCancelRequest,
     porterCancelSuccess,
     porterCancelFail,
-    porterCancelClearError
+    porterCancelClearError,
+   
  } = actions;
 
 export default reducer;

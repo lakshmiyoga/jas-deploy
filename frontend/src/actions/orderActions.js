@@ -30,6 +30,9 @@ import {
   userSummaryRequest,
   userSummaryFail,
   userSummarySuccess,
+  adminOrderRemoveRequest,
+  adminOrderRemoveSuccess,
+  adminOrderRemoveFail,
 } from '../slices/orderSlice';
 
 
@@ -148,5 +151,17 @@ export const fetchUserSummary = createAsyncThunk ('usersummary/get', async (date
     dispatch(userSummarySuccess(data.userSummary));
   } catch (error) {
     dispatch(userSummaryFail());
+  }
+});
+
+export const RemoveOrderResponse = createAsyncThunk('/order/cancelResponse', async ({order_id,removalReason}, { dispatch }) => {
+  try {
+      console.log("request_id",order_id,removalReason)
+    dispatch(adminOrderRemoveRequest());
+    const { data } = await axios.post('/api/v1/admin/removeOrder', {order_id, removalReason},{withCredentials: true });
+    console.log("removeresponseData",data)
+    dispatch(adminOrderRemoveSuccess(data));
+  } catch (error) {
+    dispatch(adminOrderRemoveFail(error.response.data.message));
   }
 });

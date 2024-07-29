@@ -10,7 +10,8 @@ import {  toast } from 'react-toastify';
 
 const NewProduct = () => {
 
-    const [name, setName] = useState("");
+    const [englishName, setEnglishName] = useState("");
+    const [tamilName, setTamilName] = useState("");
     const [price, setPrice] = useState("");
     const [category, setCategory] = useState("");
     const [images, setImages] = useState([]);
@@ -21,7 +22,8 @@ const NewProduct = () => {
 
     const categories = [
         'Vegetables',
-        'Fruits'
+        'Fruits',
+        'Keerai'
     ]
 
     const navigate = useNavigate();
@@ -51,7 +53,8 @@ const NewProduct = () => {
     const submitHandler = (e) => {
         e.preventDefault();
         const formData = new FormData();
-        formData.append('name' , name);
+        formData.append('englishName', englishName);
+        formData.append('tamilName', tamilName);
         formData.append('price' , price);
         formData.append('category' , category);
         images.forEach (image => {
@@ -93,13 +96,24 @@ const NewProduct = () => {
                             <h1 className="mb-4">New Product</h1>
 
                             <div className="form-group">
-                                <label for="name_field">Name</label>
+                                <label htmlFor="englishName_field">English Name</label>
                                 <input
                                     type="text"
-                                    id="name_field"
+                                    id="englishName_field"
                                     className="form-control"
-                                    onChange={e => setName(e.target.value)}
-                                    value={name}
+                                    onChange={e => setEnglishName(e.target.value)}
+                                    value={englishName}
+                                />
+                            </div>
+
+                            <div className="form-group">
+                                <label htmlFor="tamilName_field">Tamil Name</label>
+                                <input
+                                    type="text"
+                                    id="tamilName_field"
+                                    className="form-control"
+                                    onChange={e => setTamilName(e.target.value)}
+                                    value={tamilName}
                                 />
                             </div>
 

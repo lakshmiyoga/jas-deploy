@@ -29,12 +29,16 @@ const Fruits = () => {
     //     dispatch(getProducts());
 
     // }, [error, dispatch])
-   
+
 
     const fruits = products ? products.filter((product) => product.category === 'Fruits') : [];
     // console.log(fruits);
     const filteredFruits = keyword ? fruits.filter((fruit) => fruit.englishName.toLowerCase().includes(keyword.toLowerCase())) : fruits;
-     console.log(filteredFruits);
+    console.log(filteredFruits);
+
+    // Sort the filtered fruits in ascending order by name
+    const sortedFruits = filteredFruits.sort((a, b) => a.englishName.localeCompare(b.englishName));
+
     return (
         <Fragment>
             {/* <Header/> */}
@@ -61,9 +65,11 @@ const Fruits = () => {
                         </div>
 
                     </div>
+                   
+
                     {
-                        filteredFruits.length === 0 ? (
-                            <h2 style={{textAlign:'center'}}>Product not found</h2>
+                        sortedFruits.length === 0 ? (
+                            <h2 style={{ textAlign: 'center' }}>Product not found</h2>
                         ) : (
                             <section id="products" className="container mt-5">
                                 <div className="row">
@@ -72,7 +78,7 @@ const Fruits = () => {
                                         <Product key={product._id} product={product} />
 
                                     ))} */}
-                                    <Product products={filteredFruits} category={category}/>
+                                    <Product products={sortedFruits} category={category} />
 
                                 </div>
                             </section>

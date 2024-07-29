@@ -10,6 +10,7 @@ import {
     porterCancelRequest,
     porterCancelSuccess,
     porterCancelFail,
+   
 
 } from '../slices/porterSlice';
 
@@ -40,13 +41,15 @@ export const getporterOrder = createAsyncThunk('init/order/create', async ({orde
 
   export const CancelOrderResponse = createAsyncThunk('/order/cancelResponse', async ({order_id,porterOrder_id}, { dispatch }) => {
     try {
-        console.log("request_id",order_id,porterOrder_id)
+        // console.log("request_id",order_id,porterOrder_id)
       dispatch(porterCancelRequest());
       const { data } = await axios.post('/api/v1/admin/porter/cancelOrder', {order_id,porterOrder_id},{withCredentials: true });
-      console.log("cancelresponseData",data)
+      // console.log("cancelresponseData",data)
       dispatch(porterCancelSuccess(data));
     } catch (error) {
       dispatch(porterCancelFail(error.response.data.message));
     }
   });
+
+  
 

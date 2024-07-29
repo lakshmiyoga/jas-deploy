@@ -54,6 +54,7 @@ import PaymentDetails from './components/order/PaymentDetails';
 import OrderSummary from './components/order/OrderSummary';
 import UserSummary from './components/admin/SummaryUser';
 import SummaryUser from './components/admin/SummaryUser';
+import ScrollToTop from './components/Layouts/ScrollToTop';
 
 function App() {
     const location = useLocation();
@@ -67,7 +68,9 @@ function App() {
         <div className="App">
             <HelmetProvider>
                 <Header />
+                <ScrollToTop/>
                 <Routes>
+               
                     {/* <Route path="/*" element={<Login />} /> */}
                     <Route path="/login" element={<Login />} />
                     <Route path="/register" element={<Register />} />

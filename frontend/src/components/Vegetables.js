@@ -35,6 +35,10 @@ const Vegetables = () => {
     const filteredVegetable = keyword ? vegetables.filter((vegetable) => vegetable.englishName.toLowerCase().includes(keyword.toLowerCase())) : vegetables;
     console.log(filteredVegetable);
 
+    
+     // Sort the filtered vegetables in ascending order by name
+     const sortedVegetables = filteredVegetable.sort((a, b) => a.englishName.localeCompare(b.englishName));
+
     return (
         <Fragment>
             {/* <Header/> */}
@@ -62,7 +66,7 @@ const Vegetables = () => {
 
                     </div>
                     {
-                        filteredVegetable.length === 0 ? (
+                        sortedVegetables.length === 0 ? (
                             <h2 style={{ textAlign: 'center' }}>Product not found</h2>
                         ) : (
                             <section id="products" className="container mt-5">
@@ -72,7 +76,7 @@ const Vegetables = () => {
                                         <Product key={product._id} product={product} />
 
                                     ))} */}
-                                    <Product products={filteredVegetable} category={category} />
+                                    <Product products={sortedVegetables} category={category} />
 
                                 </div>
                             </section>
