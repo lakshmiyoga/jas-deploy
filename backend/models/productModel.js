@@ -27,7 +27,7 @@ const productSchema = new mongoose.Schema({
         type:String,
         required:true,
         enum: {
-            values:['Vegetables','Fruits']
+            values:['Vegetables','Fruits','Keerai']
         }
         
     },

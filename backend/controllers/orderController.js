@@ -105,12 +105,7 @@ const porterOrder = catchAsyncError(async (req, res, next) => {
 
     const porterOrderExist = await PorterModel.findOne({order_id});
 
-    if (porterOrderExist) {
-        const porterOrderExist = await PorterModel.deleteOne({order_id});
-        console.log("porterOrderExist",porterOrderExist)
-        console.log("orderdeleted successfully")
-    }
-    if(!porterOrderExist){
+    const createPorter = async() => {
         try{
             const response = await axios.post(apiEndpoint, porterData, {
                 headers: {
@@ -141,6 +136,7 @@ const porterOrder = catchAsyncError(async (req, res, next) => {
                              },
                             { new: true });
                             if(porterResponse){
+
                                 return res.status(200).json({porterOrder})
                             }     
                     }
@@ -159,8 +155,21 @@ const porterOrder = catchAsyncError(async (req, res, next) => {
         }catch(error){
            return next(new ErrorHandler(error.response.data.message, error.response.status));
         }   
-    }
           
+    }
+
+    if (porterOrderExist) {
+        const porterExistResponse = await PorterModel.deleteOne({order_id});
+        // console.log("porterOrderExist",porterExistResponse)
+        if(porterExistResponse && porterExistResponse.acknowledged){
+            createPorter();
+        }
+    }
+    else{
+        createPorter();
+    }
+   
+       
       
 })
 
@@ -210,9 +219,9 @@ const updateOrder = catchAsyncError(async (req, res, next) => {
         return next(new ErrorHandler('Order has already been delivered!', 400));
     }
 
-    if (order.orderStatus === 'Cancelled') {
-        return next(new ErrorHandler('Order has been already cancelled!', 400));
-    }
+    // if (order.orderStatus === 'Cancelled') {
+    //     return next(new ErrorHandler('Order has been already cancelled!', 400));
+    // }
 
     order.orderStatus = req.body.orderStatus;
 
@@ -553,4 +562,31 @@ nodeCron.schedule('00 21 * * *', async () => {
 });
 
 
-module.exports = { newOrder, getSingleOrder,getQuote,porterOrder, myOrders, orders, updateOrder, deleteOrder, getOrderSummaryByDate, getUserSummaryByDate };
+const getRemoveResponse = catchAsyncError(async (req, res, next) => {
+    console.log("req.body",req.body)
+    const {order_id, removalReason} = req.body;
+    try{
+        const isorderExist = await Payment.findOne({order_id});
+        console.log("isorderExist",isorderExist);
+
+        if(isorderExist){
+            const orderResponse = await Payment.findOneAndUpdate({order_id},
+            {
+                orderStatus :'Removed',
+                $set: { removalReason },
+                
+            },
+            {new:true}
+        );
+        console.log("orderResponse",orderResponse)
+        res.status(200).json({removeMessage : "Order Removed successfully"})
+        }
+
+
+    }catch(error){
+        console.error('Failed to remove order:', error);
+    }
+    
+})
+
+module.exports = { newOrder, getSingleOrder,getQuote,porterOrder, myOrders, orders, updateOrder, deleteOrder, getOrderSummaryByDate, getUserSummaryByDate, getRemoveResponse };

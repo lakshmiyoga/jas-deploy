@@ -1,2222 +1,2235 @@
 [
-    {
-        "englishName": "ASH GOURD (pumpkin)",
-        "tamilName": "பெரிய நெல்லி",
-        "price": 85,
-        "images": [
-            {
-                "image": "/images/products/ash_gourd.jpg"
-            }
-        ],
-        "category": "Vegetables",
-        "stocks": "Available"
-    },
-    {
-        "englishName": "AVARI NATTU",
-        "tamilName": "அவாரி நட்டு",
-        "price": 45,
-        "images": [
-            {
-                "image": "/images/products/avari_nattu.jpg"
-            }
-        ],
-        "category": "Vegetables",
-        "stocks": "Available"
-    },
-    {
-        "englishName": "BABY CORN",
-        "tamilName": "பெய்பி கார்ன்",
-        "price": 60,
-        "images": [
-            {
-                "image": "/images/products/baby_corn.jpg"
-            }
-        ],
-        "category": "Vegetables",
-        "stocks": "Available"
-    },
-    {
-        "englishName": "BABY POTATO",
-        "tamilName": "பெய்பி உருளைக்கிழங்கு",
-        "price": 40,
-        "images": [
-            {
-                "image": "/images/products/baby_potato.jpg"
-            }
-        ],
-        "category": "Vegetables",
-        "stocks": "Available"
-    },
-    {
-        "englishName": "BANANNA LUNCH LEAF",
-        "tamilName": "வாழை இலையை மதிய உணவு",
-        "price": 25,
-        "images": [
-            {
-                "image": "/images/products/banana_lunch_leaf.jpg"
-            }
-        ],
-        "category": "Vegetables",
-        "stocks": "Available"
-    },
-    {
-        "englishName": "BEANS",
-        "tamilName": "பீன்ஸ்",
-        "price": 55,
-        "images": [
-            {
-                "image": "/images/products/beans.jpg"
-            }
-        ],
-        "category": "Vegetables",
-        "stocks": "Available"
-    },
-    {
-        "englishName": "BEETROOT",
-        "tamilName": "பீட்ரூட்",
-        "price": 30,
-        "images": [
-            {
-                "image": "/images/products/beetroot.jpg"
-            }
-        ],
-        "category": "Vegetables",
-        "stocks": "Available"
-    },
-    {
-        "englishName": "BITTER GOURD BABY",
-        "tamilName": "கார்வெள்ளை சிறியவை",
-        "price": 35,
-        "images": [
-            {
-                "image": "/images/products/bitter_gourd_baby.jpg"
-            }
-        ],
-        "category": "Vegetables",
-        "stocks": "Available"
-    },
-    {
-        "englishName": "BITTER GOURD BIG",
-        "tamilName": "கார்வெள்ளை பெரியவை",
-        "price": 40,
-        "images": [
-            {
-                "image": "/images/products/bitter_gourd_big.jpg"
-            }
-        ],
-        "category": "Vegetables",
-        "stocks": "Available"
-    },
-    {
-        "englishName": "BITTER GOURD SMALL",
-        "tamilName": "கார்வெள்ளை சிறியவை",
-        "price": 35,
-        "images": [
-            {
-                "image": "/images/products/bitter_gourd_small.jpg"
-            }
-        ],
-        "category": "Vegetables",
-        "stocks": "Available"
-    },
-    {
-        "englishName": "BOTTLE GOURD",
-        "tamilName": "சுரைக்காய்",
-        "price": 20,
-        "images": [
-            {
-                "image": "/images/products/bottle_gourd.jpg"
-            }
-        ],
-        "category": "Vegetables",
-        "stocks": "Available"
-    },
-    {
-        "englishName": "BRINJAL BHAVANI",
-        "tamilName": "கத்திரிக்காய் பவானி",
-        "price": 35,
-        "images": [
-            {
-                "image": "/images/products/brinjal_bhavani.jpg"
-            }
-        ],
-        "category": "Vegetables",
-        "stocks": "Available"
-    },
-    {
-        "englishName": "BRINJAL BIG",
-        "tamilName": "கத்திரிக்காய் பெரியவை",
-        "price": 40,
-        "images": [
-            {
-                "image": "/images/products/brinjal_big.jpg"
-            }
-        ],
-        "category": "Vegetables",
-        "stocks": "Available"
-    },
-    {
-        "englishName": "BRINJAL DISCO",
-        "tamilName": "கத்திரிக்காய் டிஸ்கோ",
-        "price": 45,
-        "images": [
-            {
-                "image": "/images/products/brinjal_disco.jpg"
-            }
-        ],
-        "category": "Vegetables",
-        "stocks": "Available"
-    },
-    {
-        "englishName": "BRINJAL GREEN",
-        "tamilName": "பச்சைக் கத்திரிக்காய்",
-        "price": 50,
-        "images": [
-            {
-                "image": "/images/products/brinjal_green.jpg"
-            }
-        ],
-        "category": "Vegetables",
-        "stocks": "Available"
-    },
-    {
-        "englishName": "BRINJAL LONG GREEN",
-        "tamilName": "நீளமான பச்சைக் கத்திரிக்காய்",
-        "price": 55,
-        "images": [
-            {
-                "image": "/images/products/brinjal_long_green.jpg"
-            }
-        ],
-        "category": "Vegetables",
-        "stocks": "Available"
-    },
-    {
-        "englishName": "BRINJAL UJALA",
-        "tamilName": "கத்திரிக்காய் உஜாலா",
-        "price": 60,
-        "images": [
-            {
-                "image": "/images/products/brinjal_ujala.jpg"
-            }
-        ],
-        "category": "Vegetables",
-        "stocks": "Available"
-    },
-    {
-        "englishName": "BRINJAL VARI",
-        "tamilName": "வெரைட்டி கத்திரிக்காய்",
-        "price": 65,
-        "images": [
-            {
-                "image": "/images/products/brinjal_vari.jpg"
-            }
-        ],
-        "category": "Vegetables",
-        "stocks": "Available"
-    },
-    {
-        "englishName": "BROAD BEANS",
-        "tamilName": "பிராட் பீன்ஸ்",
-        "price": 70,
-        "images": [
-            {
-                "image": "/images/products/broad_beans.jpg"
-            }
-        ],
-        "category": "Vegetables",
-        "stocks": "Available"
-    },
-    {
-        "englishName": "BROCCOLI",
-        "tamilName": "ப்ரோக்கோலி",
-        "price": 75,
-        "images": [
-            {
-                "image": "/images/products/broccoli.jpg"
-            }
-        ],
-        "category": "Vegetables",
-        "stocks": "Available"
-    },
-    {
-        "englishName": "BUTTER BEANS",
-        "tamilName": "பட்டர் பீன்ஸ்",
-        "price": 80,
-        "images": [
-            {
-                "image": "/images/products/butter_beans.jpg"
-            }
-        ],
-        "category": "Vegetables",
-        "stocks": "Available"
-    },
-    {
-        "englishName": "CABBAGE CHINESES",
-        "tamilName": "சீனக்கோசு",
-        "price": 85,
-        "images": [
-            {
-                "image": "/images/products/cabbage_chineses.jpg"
-            }
-        ],
-        "category": "Vegetables",
-        "stocks": "Available"
-    },
-    {
-        "englishName": "CABBAGE GREEN",
-        "tamilName": "பச்சைக் கோசு",
-        "price": 90,
-        "images": [
-            {
-                "image": "/images/products/cabbage_green.jpg"
-            }
-        ],
-        "category": "Vegetables",
-        "stocks": "Available"
-    },
-    {
-        "englishName": "CABBAGE RED",
-        "tamilName": "சிவப்பு கோசு",
-        "price": 95,
-        "images": [
-            {
-                "image": "/images/products/cabbage_red.jpg"
-            }
-        ],
-        "category": "Vegetables",
-        "stocks": "Available"
-    },
-    {
-        "englishName": "CALIFLOWER",
-        "tamilName": "காலிஃபிளவர்",
-        "price": 100,
-        "images": [
-            {
-                "image": "/images/products/cauliflower.jpg"
-            }
-        ],
-        "category": "Vegetables",
-        "stocks": "Available"
-    },
-    {
-        "englishName": "CAPSICUM",
-        "tamilName": "குடை மிளகாய்",
-        "price": 105,
-        "images": [
-            {
-                "image": "/images/products/capsicum.jpg"
-            }
-        ],
-        "category": "Vegetables",
-        "stocks": "Available"
-    },
-    {
-        "englishName": "CAPSICUM RED",
-        "tamilName": "சிவப்பு குடை மிளகாய்",
-        "price": 110,
-        "images": [
-            {
-                "image": "/images/products/capsicum_red.jpg"
-            }
-        ],
-        "category": "Vegetables",
-        "stocks": "Available"
-    },
-    {
-        "englishName": "CAPSICUM YELLOW",
-        "tamilName": "மஞ்சள் குடை மிளகாய்",
-        "price": 115,
-        "images": [
-            {
-                "image": "/images/products/capsicum_yellow.jpg"
-            }
-        ],
-        "category": "Vegetables",
-        "stocks": "Available"
-    },
-    {
-        "englishName": "CARROT",
-        "tamilName": "காரட்",
-        "price": 50,
-        "images": [
-            {
-                "image": "/images/products/carrot.jpg"
-            }
-        ],
-        "category": "Vegetables",
-        "stocks": "Available"
-    },
-    {
-        "englishName": "CELLERY",
-        "tamilName": "செல்லரி",
-        "price": 60,
-        "images": [
-            {
-                "image": "/images/products/cellery.jpg"
-            }
-        ],
-        "category": "Vegetables",
-        "stocks": "Available"
-    },
-    {
-        "englishName": "CHERRY TOMATO",
-        "tamilName": "செர்ரி தக்காளி",
-        "price": 80,
-        "images": [
-            {
-                "image": "/images/products/cherry_tomato.jpg"
-            }
-        ],
-        "category": "Vegetables",
-        "stocks": "Available"
-    },
-    {
-        "englishName": "BAJJI CHILLY",
-        "tamilName": "பஜ்ஜி மிளகாய்",
-        "price": 45,
-        "images": [
-            {
-                "image": "/images/products/bajji_chilly.jpg"
-            }
-        ],
-        "category": "Vegetables",
-        "stocks": "Available"
-    },
-    {
-        "englishName": "CHOCHOW",
-        "tamilName": "சொசொவ்",
-        "price": 35,
-        "images": [
-            {
-                "image": "/images/products/chochow.jpg"
-            }
-        ],
-        "category": "Vegetables",
-        "stocks": "Available"
-    },
-    {
-        "englishName": "CLUSTER BEANS",
-        "tamilName": "கொத்தவரங்காய்",
-        "price": 70,
-        "images": [
-            {
-                "image": "/images/products/cluster_beans.jpg"
-            }
-        ],
-        "category": "Vegetables",
-        "stocks": "Available"
-    },
-    {
-        "englishName": "COCONUT",
-        "tamilName": "தேங்காய்",
-        "price": 30,
-        "images": [
-            {
-                "image": "/images/products/coconut.jpg"
-            }
-        ],
-        "category": "Vegetables",
-        "stocks": "Available"
-    },
-    {
-        "englishName": "CUCUMBER",
-        "tamilName": "வெள்ளரி",
-        "price": 25,
-        "images": [
-            {
-                "image": "/images/products/cucumber.jpg"
-            }
-        ],
-        "category": "Vegetables",
-        "stocks": "Available"
-    },
-    {
-        "englishName": "CUCUMBER ORGANIC",
-        "tamilName": "ஆர்கானிக் வெள்ளரி",
-        "price": 40,
-        "images": [
-            {
-                "image": "/images/products/cucumber_organic.jpg"
-            }
-        ],
-        "category": "Vegetables",
-        "stocks": "Available"
-    },
-    {
-        "englishName": "CUCUMBER YELLOW",
-        "tamilName": "மஞ்சள் வெள்ளரி",
-        "price": 35,
-        "images": [
-            {
-                "image": "/images/products/cucumber_yellow.jpg"
-            }
-        ],
-        "category": "Vegetables",
-        "stocks": "Available"
-    },
-    {
-        "englishName": "CURRY LEAVES",
-        "tamilName": "கறிவேப்பிலை",
-        "price": 20,
-        "images": [
-            {
-                "image": "/images/products/curry_leaves.jpg"
-            }
-        ],
-        "category": "Vegetables",
-        "stocks": "Available"
-    },
-    {
-        "englishName": "CARROT DELHI",
-        "tamilName": "தில்லி காரட்",
-        "price": 55,
-        "images": [
-            {
-                "image": "/images/products/carrot_delhi.jpg"
-            }
-        ],
-        "category": "Vegetables",
-        "stocks": "Available"
-    },
-    {
-        "englishName": "DOUBLE BEANS",
-        "tamilName": "டபுள் பீன்ஸ்",
-        "price": 75,
-        "images": [
-            {
-                "image": "/images/products/double_beans.jpg"
-            }
-        ],
-        "category": "Vegetables",
-        "stocks": "Available"
-    },
-    {
-        "englishName": "DRUMSTICK",
-        "tamilName": "முருங்கைக்காய்",
-        "price": 40,
-        "images": [
-            {
-                "image": "/images/products/drumstick.jpg"
-            }
-        ],
-        "category": "Vegetables",
-        "stocks": "Available"
-    },
-    {
-        "englishName": "GARLIC",
-        "tamilName": "பூண்டு",
-        "price": 100,
-        "images": [
-            {
-                "image": "/images/products/garlic.jpg"
-            }
-        ],
-        "category": "Vegetables",
-        "stocks": "Available"
-    },
-    {
-        "englishName": "GARLIC MALAI",
-        "tamilName": "மலை பூண்டு",
-        "price": 120,
-        "images": [
-            {
-                "image": "/images/products/garlic_malai.jpg"
-            }
-        ],
-        "category": "Vegetables",
-        "stocks": "Available"
-    },
-    {
-        "englishName": "GINGER",
-        "tamilName": "இஞ்சி",
-        "price": 90,
-        "images": [
-            {
-                "image": "/images/products/ginger.jpg"
-            }
-        ],
-        "category": "Vegetables",
-        "stocks": "Available"
-    },
-    {
-        "englishName": "GREEN CHILLY",
-        "tamilName": "பச்சை மிளகாய்",
-        "price": 60,
-        "images": [
-            {
-                "image": "/images/products/green_chilly.jpg"
-            }
-        ],
-        "category": "Vegetables",
-        "stocks": "Available"
-    },
-    {
-        "englishName": "GREEN PEAS",
-        "tamilName": "பச்சைப்பட்டாணி",
-        "price": 85,
-        "images": [
-            {
-                "image": "/images/products/green_peas.jpg"
-            }
-        ],
-        "category": "Vegetables",
-        "stocks": "Available"
-    },
-    {
-        "englishName": "GROUND NUT",
-        "tamilName": "நிலக்கடலை",
-        "price": 45,
-        "images": [
-            {
-                "image": "/images/products/ground_nut.jpg"
-            }
-        ],
-        "category": "Vegetables",
-        "stocks": "Available"
-    },
-    {
-        "englishName": "ICE BERG",
-        "tamilName": "ஐஸ்பேர்க்",
-        "price": 70,
-        "images": [
-            {
-                "image": "/images/products/ice_berg.jpg"
-            }
-        ],
-        "category": "Vegetables",
-        "stocks": "Available"
-    },
-    {
-        "englishName": "IVY GOURD",
-        "tamilName": "கோவைக்காய்",
-        "price": 30,
-        "images": [
-            {
-                "image": "/images/products/ivy_gourd.jpg"
-            }
-        ],
-        "category": "Vegetables",
-        "stocks": "Available"
-    },
-    {
-        "englishName": "KOORKHAN",
-        "tamilName": "கூற்கான்",
-        "price": 65,
-        "images": [
-            {
-                "image": "/images/products/koorkhan.jpg"
-            }
-        ],
-        "category": "Vegetables",
-        "stocks": "Available"
-    },
-    {
-        "englishName": "LAB LAB",
-        "tamilName": "அவரைக்காய்",
-        "price": 50,
-        "images": [
-            {
-                "image": "/images/products/lab_lab.jpg"
-            }
-        ],
-        "category": "Vegetables",
-        "stocks": "Available"
-    },
-    {
-        "englishName": "LADIESFINGER",
-        "tamilName": "வெண்டைக்காய்",
-        "price": 40,
-        "images": [
-            {
-                "image": "/images/products/ladiesfinger.jpg"
-            }
-        ],
-        "category": "Vegetables",
-        "stocks": "Available"
-    },
-    {
-        "englishName": "LEMON - KG",
-        "tamilName": "எலுமிச்சை",
-        "price": 85,
-        "images": [
-            {
-                "image": "/images/products/lemon.jpg"
-            }
-        ],
-        "category": "Vegetables",
-        "stocks": "Available"
-    },
-    {
-        "englishName": "LETTUCE",
-        "tamilName": "லெட்டூஸ்",
-        "price": 55,
-        "images": [
-            {
-                "image": "/images/products/lettuce.jpg"
-            }
-        ],
-        "category": "Vegetables",
-        "stocks": "Available"
-    },
-    {
-        "englishName": "MALABAR",
-        "tamilName": "மலபார்",
-        "price": 65,
-        "images": [
-            {
-                "image": "/images/products/malabar.jpg"
-            }
-        ],
-        "category": "Vegetables",
-        "stocks": "Available"
-    },
-    {
-        "englishName": "MALLI- PCS",
-        "tamilName": "மல்லி- துண்டுகள்",
-        "price": 35,
-        "images": [
-            {
-                "image": "/images/products/malli.jpg"
-            }
-        ],
-        "category": "Vegetables",
-        "stocks": "Available"
-    },
-    {
-        "englishName": "MANGO GINGER",
-        "tamilName": "மாம்பழ இஞ்சி",
-        "price": 90,
-        "images": [
-            {
-                "image": "/images/products/mango_ginger.jpg"
-            }
-        ],
-        "category": "Vegetables",
-        "stocks": "Available"
-    },
-    {
-        "englishName": "MARAVALLI",
-        "tamilName": "மரவள்ளி",
-        "price": 40,
-        "images": [
-            {
-                "image": "/images/products/maravalli.jpg"
-            }
-        ],
-        "category": "Vegetables",
-        "stocks": "Available"
-    },
-    {
-        "englishName": "MOCHAI",
-        "tamilName": "மொச்சை",
-        "price": 55,
-        "images": [
-            {
-                "image": "/images/products/mochai.jpg"
-            }
-        ],
-        "category": "Vegetables",
-        "stocks": "Available"
-    },
-    {
-        "englishName": "MUSHROOM",
-        "tamilName": "காளான்",
-        "price": 100,
-        "images": [
-            {
-                "image": "/images/products/mushroom.jpg"
-            }
-        ],
-        "category": "Vegetables",
-        "stocks": "Available"
-    },
-    {
-        "englishName": "NARTHANKAI",
-        "tamilName": "நார்த்தங்காய்",
-        "price": 75,
-        "images": [
-            {
-                "image": "/images/products/narthankai.jpg"
-            }
-        ],
-        "category": "Vegetables",
-        "stocks": "Available"
-    },
-    {
-        "englishName": "NOOKAL",
-        "tamilName": "நூகல்",
-        "price": 65,
-        "images": [
-            {
-                "image": "/images/products/nookal.jpg"
-            }
-        ],
-        "category": "Vegetables",
-        "stocks": "Available"
-    },
-    {
-        "englishName": "ONION BIG",
-        "tamilName": "பெரிய வெங்காயம்",
-        "price": 45,
-        "images": [
-            {
-                "image": "/images/products/onion_big.jpg"
-            }
-        ],
-        "category": "Vegetables",
-        "stocks": "Available"
-    },
-    {
-        "englishName": "ONION SMALL",
-        "tamilName": "சின்ன வெங்காயம்",
-        "price": 55,
-        "images": [
-            {
-                "image": "/images/products/onion_small.jpg"
-            }
-        ],
-        "category": "Vegetables",
-        "stocks": "Available"
-    },
-    {
-        "englishName": "ONION WHITE",
-        "tamilName": "வெள்ளை வெங்காயம்",
-        "price": 70,
-        "images": [
-            {
-                "image": "/images/products/onion_white.jpg"
-            }
-        ],
-        "category": "Vegetables",
-        "stocks": "Available"
-    },
-    {
-        "englishName": "PALLAKAI",
-        "tamilName": "பல்லாகாய்",
-        "price": 35,
-        "images": [
-            {
-                "image": "/images/products/pallakai.jpg"
-            }
-        ],
-        "category": "Vegetables",
-        "stocks": "Available"
-    },
-    {
-        "englishName": "PARUVAL",
-        "tamilName": "பருவல்",
-        "price": 45,
-        "images": [
-            {
-                "image": "/images/products/paruval.jpg"
-            }
-        ],
-        "category": "Vegetables",
-        "stocks": "Available"
-    },
-    {
-        "englishName": "PIDIKARUNAI",
-        "tamilName": "பிடிக்கருணை",
-        "price": 55,
-        "images": [
-            {
-                "image": "/images/products/pidikarunai.jpg"
-            }
-        ],
-        "category": "Vegetables",
-        "stocks": "Available"
-    },
-    {
-        "englishName": "PLANTAIN FLOWER",
-        "tamilName": "வாழைப்பூ",
-        "price": 60,
-        "images": [
-            {
-                "image": "/images/products/plantain_flower.jpg"
-            }
-        ],
-        "category": "Vegetables",
-        "stocks": "Available"
-    },
-    {
-        "englishName": "POTATO BIG",
-        "tamilName": "பெரிய உருளைக்கிழங்கு",
-        "price": 50,
-        "images": [
-            {
-                "image": "/images/products/potato_big.jpg"
-            }
-        ],
-        "category": "Vegetables",
-        "stocks": "Available"
-    },
-    {
-        "englishName": "PUDINA",
-        "tamilName": "புதினா",
-        "price": 20,
-        "images": [
-            {
-                "image": "/images/products/pudina.jpg"
-            }
-        ],
-        "category": "Vegetables",
-        "stocks": "Available"
-    },
-    {
-        "englishName": "PUMPKIN ( PARANKIKAI)",
-        "tamilName": "பரங்கிக்காய்",
-        "price": 30,
-        "images": [
-            {
-                "image": "/images/products/pumpkin.jpg"
-            }
-        ],
-        "category": "Vegetables",
-        "stocks": "Available"
-    },
-    {
-        "englishName": "RADISH RED",
-        "tamilName": "சிவப்பு முள்ளங்கி",
-        "price": 40,
-        "images": [
-            {
-                "image": "/images/products/radish_red.jpg"
-            }
-        ],
-        "category": "Vegetables",
-        "stocks": "Available"
-    },
-    {
-        "englishName": "RADISH - WHITE",
-        "tamilName": "வெள்ளை முள்ளங்கி",
-        "price": 35,
-        "images": [
-            {
-                "image": "/images/products/radish_white.jpg"
-            }
-        ],
-        "category": "Vegetables",
-        "stocks": "Available"
-    },
-    {
-        "englishName": "RAW BANANA",
-        "tamilName": "வாழைக்காய்",
-        "price": 45,
-        "images": [
-            {
-                "image": "/images/products/raw_banana.jpg"
-            }
-        ],
-        "category": "Vegetables",
-        "stocks": "Available"
-    },
-    {
-        "englishName": "RAW BANANA Chips",
-        "tamilName": "வாழைக்காய் சிப்ஸ்",
-        "price": 55,
-        "images": [
-            {
-                "image": "/images/products/raw_banana_chips.jpg"
-            }
-        ],
-        "category": "Vegetables",
-        "stocks": "Available"
-    },
-    {
-        "englishName": "RAW MANGO",
-        "tamilName": "மாங்காய்",
-        "price": 70,
-        "images": [
-            {
-                "image": "/images/products/raw_mango.jpg"
-            }
-        ],
-        "category": "Vegetables",
-        "stocks": "Available"
-    },
-    {
-        "englishName": "RIDGE GOURD",
-        "tamilName": "பீர்க்கங்காய்",
-        "price": 35,
-        "images": [
-            {
-                "image": "/images/products/ridge_gourd.jpg"
-            }
-        ],
-        "category": "Vegetables",
-        "stocks": "Available"
-    },
-    {
-        "englishName": "SEMBU",
-        "tamilName": "செம்பு",
-        "price": 40,
-        "images": [
-            {
-                "image": "/images/products/sembu.jpg"
-            }
-        ],
-        "category": "Vegetables",
-        "stocks": "Available"
-    },
-    {
-        "englishName": "SENAI",
-        "tamilName": "சேனை",
-        "price": 45,
-        "images": [
-            {
-                "image": "/images/products/senai.jpg"
-            }
-        ],
-        "category": "Vegetables",
-        "stocks": "Available"
-    },
-    {
-        "englishName": "SIRUKILANGU",
-        "tamilName": "சிறுகிழங்கு",
-        "price": 35,
-        "images": [
-            {
-                "image": "/images/products/sirukilangu.jpg"
-            }
-        ],
-        "category": "Vegetables",
-        "stocks": "Available"
-    },
-    {
-        "englishName": "SNAKE GUARD",
-        "tamilName": "புடலங்காய்",
-        "price": 30,
-        "images": [
-            {
-                "image": "/images/products/snake_guard.jpg"
-            }
-        ],
-        "category": "Vegetables",
-        "stocks": "Available"
-    },
-    {
-        "englishName": "BEANS SOYA",
-        "tamilName": "சோயா பீன்ஸ்",
-        "price": 75,
-        "images": [
-            {
-                "image": "/images/products/beans_soya.jpg"
-            }
-        ],
-        "category": "Vegetables",
-        "stocks": "Available"
-    },
-    {
-        "englishName": "SWEET CORN",
-        "tamilName": "இனிப்புச்சோளம்",
-        "price": 45,
-        "images": [
-            {
-                "image": "/images/products/sweet_corn.jpg"
-            }
-        ],
-        "category": "Vegetables",
-        "stocks": "Available"
-    },
-    {
-        "englishName": "SWEET CORN TRY",
-        "tamilName": "சோதனை இனிப்புச்சோளம்",
-        "price": 50,
-        "images": [
-            {
-                "image": "/images/products/sweet_corn_try.jpg"
-            }
-        ],
-        "category": "Vegetables",
-        "stocks": "Available"
-    },
-    {
-        "englishName": "SWEET POTATO",
-        "tamilName": "இனிப்பு உருளைக்கிழங்கு",
-        "price": 40,
-        "images": [
-            {
-                "image": "/images/products/sweet_potato.jpg"
-            }
-        ],
-        "category": "Vegetables",
-        "stocks": "Available"
-    },
-    {
-        "englishName": "THANDHU",
-        "tamilName": "தண்டு",
-        "price": 35,
-        "images": [
-            {
-                "image": "/images/products/thandhu.jpg"
-            }
-        ],
-        "category": "Vegetables",
-        "stocks": "Available"
-    },
-    {
-        "englishName": "THIN BEANS",
-        "tamilName": "மெல்லிய பீன்ஸ்",
-        "price": 55,
-        "images": [
-            {
-                "image": "/images/products/thin_beans.jpg"
-            }
-        ],
-        "category": "Vegetables",
-        "stocks": "Available"
-    },
-    {
-        "englishName": "THINDHA",
-        "tamilName": "திண்டா",
-        "price": 60,
-        "images": [
-            {
-                "image": "/images/products/thindha.jpg"
-            }
-        ],
-        "category": "Vegetables",
-        "stocks": "Available"
-    },
-    {
-        "englishName": "TOMATO GREEN",
-        "tamilName": "பச்சை தக்காளி",
-        "price": 30,
-        "images": [
-            {
-                "image": "/images/products/tomato_green.jpg"
-            }
-        ],
-        "category": "Vegetables",
-        "stocks": "Available"
-    },
-    {
-        "englishName": "TOMATO NADU",
-        "tamilName": "நாடு தக்காளி",
-        "price": 35,
-        "images": [
-            {
-                "image": "/images/products/tomato_nadu.jpg"
-            }
-        ],
-        "category": "Vegetables",
-        "stocks": "Available"
-    },
-    {
-        "englishName": "TOMATO NAVEEN",
-        "tamilName": "நவீன் தக்காளி",
-        "price": 40,
-        "images": [
-            {
-                "image": "/images/products/tomato_naveen.jpg"
-            }
-        ],
-        "category": "Vegetables",
-        "stocks": "Available"
-    },
-    {
-        "englishName": "TURNIP",
-        "tamilName": "சீமைக்கோல்",
-        "price": 55,
-        "images": [
-            {
-                "image": "/images/products/turnip.jpg"
-            }
-        ],
-        "category": "Vegetables",
-        "stocks": "Available"
-    },
-    {
-        "englishName": "VADHUMANGA",
-        "tamilName": "வதுமாங்கா",
-        "price": 45,
-        "images": [
-            {
-                "image": "/images/products/vadhumanga.jpg"
-            }
-        ],
-        "category": "Vegetables",
-        "stocks": "Available"
-    },
-    {
-        "englishName": "WHITE BEANS",
-        "tamilName": "வெள்ளை பீன்ஸ்",
-        "price": 65,
-        "images": [
-            {
-                "image": "/images/products/white_beans.jpg"
-            }
-        ],
-        "category": "Vegetables",
-        "stocks": "Available"
-    },
-    {
-        "englishName": "ZUCCHINI GREEN",
-        "tamilName": "பச்சை சுக்கினி",
-        "price": 60,
-        "images": [
-            {
-                "image": "/images/products/zucchini_green.jpg"
-            }
-        ],
-        "category": "Vegetables",
-        "stocks": "Available"
-    },
-    {
-        "englishName": "ZUCCHINI YELLOW",
-        "tamilName": "மஞ்சள் சுக்கினி",
-        "price": 65,
-        "images": [
-            {
-                "image": "/images/products/zucchini_yellow.jpg"
-            }
-        ],
-        "category": "Vegetables",
-        "stocks": "Available"
-    },
-    {
-        "englishName": "AGATHI KEERAI",
-        "tamilName": "அகத்திக்கீரை",
-        "price": 25,
-        "images": [
-            {
-                "image": "/images/products/agathi_keerai.jpg"
-            }
-        ],
-        "category": "Keerai",
-        "stocks": "Available"
-    },
-    {
-        "englishName": "ARAI KEERAI",
-        "tamilName": "அரைக்கீரை",
-        "price": 20,
-        "images": [
-            {
-                "image": "/images/products/arai_keerai.jpg"
-            }
-        ],
-        "category": "Keerai",
-        "stocks": "Available"
-    },
-    {
-        "englishName": "MANTHAKALI KEERAI",
-        "tamilName": "மாந்தக்காலிக்கீரை",
-        "price": 30,
-        "images": [
-            {
-                "image": "/images/products/manthakali_keerai.jpg"
-            }
-        ],
-        "category": "Keerai",
-        "stocks": "Available"
-    },
-    {
-        "englishName": "MUDAKATHAN KEERAI",
-        "tamilName": "முடக்கத்தான்கீரை",
-        "price": 35,
-        "images": [
-            {
-                "image": "/images/products/mudakathan_keerai.jpg"
-            }
-        ],
-        "category": "Keerai",
-        "stocks": "Available"
-    },
-    {
-        "englishName": "MULAIKEERAI",
-        "tamilName": "முளைக்கீரை",
-        "price": 25,
-        "images": [
-            {
-                "image": "/images/products/mulaikeerai.jpg"
-            }
-        ],
-        "category": "Keerai",
-        "stocks": "Available"
-    },
-    {
-        "englishName": "MURUGA KEERAI",
-        "tamilName": "முருங்கைக்கீரை",
-        "price": 30,
-        "images": [
-            {
-                "image": "/images/products/muruga_keerai.jpg"
-            }
-        ],
-        "category": "Keerai",
-        "stocks": "Available"
-    },
-    {
-        "englishName": "PALAK",
-        "tamilName": "பாலக்கீரை",
-        "price": 20,
-        "images": [
-            {
-                "image": "/images/products/palak.jpg"
-            }
-        ],
-        "category": "Keerai",
-        "stocks": "Available"
-    },
-    {
-        "englishName": "PARUPU KEERAI",
-        "tamilName": "பருப்புக்கீரை",
-        "price": 25,
-        "images": [
-            {
-                "image": "/images/products/parupu_keerai.jpg"
-            }
-        ],
-        "category": "Keerai",
-        "stocks": "Available"
-    },
-    {
-        "englishName": "PONNANGANNI GREEN",
-        "tamilName": "பொன்னாங்கண்ணி பச்சை",
-        "price": 30,
-        "images": [
-            {
-                "image": "/images/products/ponnanganni_green.jpg"
-            }
-        ],
-        "category": "Keerai",
-        "stocks": "Available"
-    },
-    {
-        "englishName": "PONNANGANNI RED",
-        "tamilName": "பொன்னாங்கண்ணி சிவப்பு",
-        "price": 30,
-        "images": [
-            {
-                "image": "/images/products/ponnanganni_red.jpg"
-            }
-        ],
-        "category": "Keerai",
-        "stocks": "Available"
-    },
-    {
-        "englishName": "PULICHA KEERAI",
-        "tamilName": "புளிச்சக்கீரை",
-        "price": 25,
-        "images": [
-            {
-                "image": "/images/products/pulicha_keerai.jpg"
-            }
-        ],
-        "category": "Keerai",
-        "stocks": "Available"
-    },
-    {
-        "englishName": "SIRU KEERAI",
-        "tamilName": "சீருக்கீரை",
-        "price": 30,
-        "images": [
-            {
-                "image": "/images/products/siru_keerai.jpg"
-            }
-        ],
-        "category": "Keerai",
-        "stocks": "Available"
-    },
-    {
-        "englishName": "SPRING ONION",
-        "tamilName": "வெந்தயம்",
-        "price": 40,
-        "images": [
-            {
-                "image": "/images/products/spring_onion.jpg"
-            }
-        ],
-        "category": "Keerai",
-        "stocks": "Available"
-    },
-    {
-        "englishName": "SUKKAN KEERAI",
-        "tamilName": "சுக்கன் கீரை",
-        "price": 30,
-        "images": [
-            {
-                "image": "/images/products/sukkan_keerai.jpg"
-            }
-        ],
-        "category": "Keerai",
-        "stocks": "Available"
-    },
-    {
-        "englishName": "SUNDAKAI",
-        "tamilName": "சுண்டைக்காய்",
-        "price": 35,
-        "images": [
-            {
-                "image": "/images/products/sundakai.jpg"
-            }
-        ],
-        "category": "Vegetables",
-        "stocks": "Available"
-    },
-    {
-        "englishName": "THOOTHUVALAI KEERAI",
-        "tamilName": "தூத்துவளைக்கீரை",
-        "price": 35,
-        "images": [
-            {
-                "image": "/images/products/thoothuvalai_keerai.jpg"
-            }
-        ],
-        "category": "Keerai",
-        "stocks": "Available"
-    },
-    {
-        "englishName": "VALLARAI KEERAI",
-        "tamilName": "வல்லாரைக் கீரை",
-        "price": 30,
-        "images": [
-            {
-                "image": "/images/products/vallarai_keerai.jpg"
-            }
-        ],
-        "category": "Keerai",
-        "stocks": "Available"
-    },
-    {
-        "englishName": "PASALAI KEERAI",
-        "tamilName": "வசாலைக் கீரை",
-        "price": 30,
-        "images": [
-            {
-                "image": "/images/products/pasalai_keerai.jpg"
-            }
-        ],
-        "category": "Keerai",
-        "stocks": "Available"
-    },
-    {
-        "englishName": "VENTHAIYAKKERAI BIG",
-        "tamilName": "வெந்தைக்கீரை பெரியது",
-        "price": 40,
-        "images": [
-            {
-                "image": "/images/products/venthaiyakkerai_big.jpg"
-            }
-        ],
-        "category": "Keerai",
-        "stocks": "Available"
-    },
-    {
-        "englishName": "VENTHAIYAKKERAI SMALL",
-        "tamilName": "வெந்தைக்கீரை சிறியது",
-        "price": 35,
-        "images": [
-            {
-                "image": "/images/products/venthaiyakkerai_small.jpg"
-            }
-        ],
-        "category": "Keerai",
-        "stocks": "Available"
-    },
-    {
-        "englishName": "KARISALAKANNI",
-        "tamilName": "கரிசலாங்கண்ணி",
-        "price": 35,
-        "images": [
-            {
-                "image": "/images/products/karisalakanni.jpg"
-            }
-        ],
-        "category": "Keerai",
-        "stocks": "Available"
-    },
-    {
-        "englishName": "APPLE - BELGIUM",
-        "tamilName": "ஆப்பிள் - பெல்ஜியம்",
-        "price": 150,
-        "images": [
-            {
-                "image": "/images/products/apple_belgium.jpg"
-            }
-        ],
-        "category": "Fruits",
-        "stocks": "Available"
-    },
-    {
-        "englishName": "APPLE - FUJI",
-        "tamilName": "ஆப்பிள் - ஃபுஜி",
-        "price": 140,
-        "images": [
-            {
-                "image": "/images/products/apple_fuji.jpg"
-            }
-        ],
-        "category": "Fruits",
-        "stocks": "Available"
-    },
-    {
-        "englishName": "APPLE - GREEN",
-        "tamilName": "ஆப்பிள் - பச்சை",
-        "price": 160,
-        "images": [
-            {
-                "image": "/images/products/apple_green.jpg"
-            }
-        ],
-        "category": "Fruits",
-        "stocks": "Available"
-    },
-    {
-        "englishName": "APPLE - ROYAL GALA",
-        "tamilName": "ஆப்பிள் - ராயல் கலை",
-        "price": 170,
-        "images": [
-            {
-                "image": "/images/products/apple_royal_gala.jpg"
-            }
-        ],
-        "category": "Fruits",
-        "stocks": "Available"
-    },
-    {
-        "englishName": "APPLE - SHIMLA",
-        "tamilName": "ஆப்பிள் - ஷிம்லா",
-        "price": 150,
-        "images": [
-            {
-                "image": "/images/products/apple_shimla.jpg"
-            }
-        ],
-        "category": "Fruits",
-        "stocks": "Available"
-    },
-    {
-        "englishName": "APPLE -WASHINGTON",
-        "tamilName": "ஆப்பிள் - வாஷிங்டன்",
-        "price": 180,
-        "images": [
-            {
-                "image": "/images/products/apple_washington.jpg"
-            }
-        ],
-        "category": "Fruits",
-        "stocks": "Available"
-    },
-    {
-        "englishName": "AUSTRALIA ORANGE",
-        "tamilName": "ஆஸ்திரேலியா ஆரஞ்சு",
-        "price": 120,
-        "images": [
-            {
-                "image": "/images/products/australia_orange.jpg"
-            }
-        ],
-        "category": "Fruits",
-        "stocks": "Available"
-    },
-    {
-        "englishName": "BANANA-ELAKKI",
-        "tamilName": "வாழைப்பழம்-எலகி",
-        "price": 60,
-        "images": [
-            {
-                "image": "/images/products/banana_elakki.jpg"
-            }
-        ],
-        "category": "Fruits",
-        "stocks": "Available"
-    },
-    {
-        "englishName": "BANANA-PEYAN",
-        "tamilName": "வாழைப்பழம்-பெயன்",
-        "price": 50,
-        "images": [
-            {
-                "image": "/images/products/banana_peyan.jpg"
-            }
-        ],
-        "category": "Fruits",
-        "stocks": "Available"
-    },
-    {
-        "englishName": "BLACK GRAPES SEED LESS",
-        "tamilName": "கருப்பு திராட்சை விதையற்ற",
-        "price": 100,
-        "images": [
-            {
-                "image": "/images/products/black_grapes_seedless.jpg"
-            }
-        ],
-        "category": "Fruits",
-        "stocks": "Available"
-    },
-    {
-        "englishName": "BLUEBERRY (KGS)",
-        "tamilName": "நீலபழம் (கிலோகிராம்)",
-        "price": 300,
-        "images": [
-            {
-                "image": "/images/products/blueberry.jpg"
-            }
-        ],
-        "category": "Fruits",
-        "stocks": "Available"
-    },
-    {
-        "englishName": "BUTTER FRUIT",
-        "tamilName": "வெண்ணெய் பழம்",
-        "price": 150,
-        "images": [
-            {
-                "image": "/images/products/butter_fruit.jpg"
-            }
-        ],
-        "category": "Fruits",
-        "stocks": "Available"
-    },
-    {
-        "englishName": "CHERRY - (IMPORTED)",
-        "tamilName": "செர்ரி - (இறக்குமதி)",
-        "price": 200,
-        "images": [
-            {
-                "image": "/images/products/cherry_imported.jpg"
-            }
-        ],
-        "category": "Fruits",
-        "stocks": "Available"
-    },
-    {
-        "englishName": "CHEVAZHAI [KGS]",
-        "tamilName": "செவ்வாழை (கிலோகிராம்)",
-        "price": 80,
-        "images": [
-            {
-                "image": "/images/products/chevazhai.jpg"
-            }
-        ],
-        "category": "Fruits",
-        "stocks": "Available"
-    },
-    {
-        "englishName": "DRAGON FRUITS",
-        "tamilName": "பாம்புப் பழங்கள்",
-        "price": 250,
-        "images": [
-            {
-                "image": "/images/products/dragon_fruits.jpg"
-            }
-        ],
-        "category": "Fruits",
-        "stocks": "Available"
-    },
-    {
-        "englishName": "FIG FRUIT",
-        "tamilName": "அத்தி பழம்",
-        "price": 180,
-        "images": [
-            {
-                "image": "/images/products/fig_fruit.jpg"
-            }
-        ],
-        "category": "Fruits",
-        "stocks": "Available"
-    },
-    {
-        "englishName": "GRAPES GREEN",
-        "tamilName": "பச்சை திராட்சை",
-        "price": 90,
-        "images": [
-            {
-                "image": "/images/products/grapes_green.jpg"
-            }
-        ],
-        "category": "Fruits",
-        "stocks": "Available"
-    },
-    {
-        "englishName": "GRAPES - PANNER",
-        "tamilName": "திராட்சை - பன்னீர்",
-        "price": 110,
-        "images": [
-            {
-                "image": "/images/products/grapes_panner.jpg"
-            }
-        ],
-        "category": "Fruits",
-        "stocks": "Available"
-    },
-    {
-        "englishName": "GUAVA WHITE",
-        "tamilName": "வெள்ளை காயா",
-        "price": 70,
-        "images": [
-            {
-                "image": "/images/products/guava_white.jpg"
-            }
-        ],
-        "category": "Fruits",
-        "stocks": "Available"
-    },
-    {
-        "englishName": "GUAVA RED",
-        "tamilName": "சிவப்பு காயா",
-        "price": 75,
-        "images": [
-            {
-                "image": "/images/products/guava_red.jpg"
-            }
-        ],
-        "category": "Fruits",
-        "stocks": "Available"
-    },
-    {
-        "englishName": "KAMALA ORANGE",
-        "tamilName": "கமலா ஆரஞ்சு",
-        "price": 120,
-        "images": [
-            {
-                "image": "/images/products/kamala_orange.jpg"
-            }
-        ],
-        "category": "Fruits",
-        "stocks": "Available"
-    },
-    {
-        "englishName": "KARPURAVALLI",
-        "tamilName": "கற்பூரவள்ளி",
-        "price": 80,
-        "images": [
-            {
-                "image": "/images/products/karpuravalli.jpg"
-            }
-        ],
-        "category": "Fruits",
-        "stocks": "Available"
-    },
-    {
-        "englishName": "KIWI FRUIT",
-        "tamilName": "கிவி பழம்",
-        "price": 200,
-        "images": [
-            {
-                "image": "/images/products/kiwi_fruit.jpg"
-            }
-        ],
-        "category": "Fruits",
-        "stocks": "Available"
-    },
-    {
-        "englishName": "LITCHE THAILAND",
-        "tamilName": "லிட்சி தாய்லாந்து",
-        "price": 300,
-        "images": [
-            {
-                "image": "/images/products/litche_thailand.jpg"
-            }
-        ],
-        "category": "Fruits",
-        "stocks": "Available"
-    },
-    {
-        "englishName": "MALAIVAZHAI (KGS)",
-        "tamilName": "மலைவாழை (கிலோகிராம்)",
-        "price": 70,
-        "images": [
-            {
-                "image": "/images/products/malaivazhai.jpg"
-            }
-        ],
-        "category": "Fruits",
-        "stocks": "Available"
-    },
-    {
-        "englishName": "MALDA ORANGE",
-        "tamilName": "மால்டா ஆரஞ்சு",
-        "price": 130,
-        "images": [
-            {
-                "image": "/images/products/malda_orange.jpg"
-            }
-        ],
-        "category": "Fruits",
-        "stocks": "Available"
-    },
-    {
-        "englishName": "MANDRINS ORANGE",
-        "tamilName": "மாண்டரின்ஸ் ஆரஞ்சு",
-        "price": 140,
-        "images": [
-            {
-                "image": "/images/products/mandrins_orange.jpg"
-            }
-        ],
-        "category": "Fruits",
-        "stocks": "Available"
-    },
-    {
-        "englishName": "MANGO - ALPHONSA",
-        "tamilName": "மாம்பழம் - அல்போன்சா",
-        "price": 180,
-        "images": [
-            {
-                "image": "/images/products/mango_alphonsa.jpg"
-            }
-        ],
-        "category": "Fruits",
-        "stocks": "Available"
-    },
-    {
-        "englishName": "MANGO - BANGANABALLI",
-        "tamilName": "மாம்பழம் - பங்கனபள்ளி",
-        "price": 170,
-        "images": [
-            {
-                "image": "/images/products/mango_banganaballi.jpg"
-            }
-        ],
-        "category": "Fruits",
-        "stocks": "Available"
-    },
-    {
-        "englishName": "MANGO - HIMAMPASAND",
-        "tamilName": "மாம்பழம் - ஹிமாம்பசந்த்",
-        "price": 190,
-        "images": [
-            {
-                "image": "/images/products/mango_himampasand.jpg"
-            }
-        ],
-        "category": "Fruits",
-        "stocks": "Available"
-    },
-    {
-        "englishName": "MANGO - JAWADU (KGS)",
-        "tamilName": "மாம்பழம் - ஜவாது (கிலோ)",
-        "price": 80,
-        "images": [
-            {
-                "image": "/images/products/mango_jawadu.jpg"
-            }
-        ],
-        "category": "Fruits",
-        "stocks": "Available"
-    },
-    {
-        "englishName": "MANGO - LANGADA (KGS)",
-        "tamilName": "மாம்பழம் - லங்கடா (கிலோ)",
-        "price": 85,
-        "images": [
-            {
-                "image": "/images/products/mango_langada.jpg"
-            }
-        ],
-        "category": "Fruits",
-        "stocks": "Available"
-    },
-    {
-        "englishName": "MANGO - MALGOVA",
-        "tamilName": "மாம்பழம் - மால்கோவா",
-        "price": 90,
-        "images": [
-            {
-                "image": "/images/products/mango_malgova.jpg"
-            }
-        ],
-        "category": "Fruits",
-        "stocks": "Available"
-    },
-    {
-        "englishName": "MANGO - RUMANI (KGS)",
-        "tamilName": "மாம்பழம் - ருமானி (கிலோ)",
-        "price": 75,
-        "images": [
-            {
-                "image": "/images/products/mango_rumani.jpg"
-            }
-        ],
-        "category": "Fruits",
-        "stocks": "Available"
-    },
-    {
-        "englishName": "MANGO - SENTHURA",
-        "tamilName": "மாம்பழம் - செந்துரா",
-        "price": 95,
-        "images": [
-            {
-                "image": "/images/products/mango_senthura.jpg"
-            }
-        ],
-        "category": "Fruits",
-        "stocks": "Available"
-    },
-    {
-        "englishName": "MANGUSTAN",
-        "tamilName": "மாங்கூஸ்டான்",
-        "price": 110,
-        "images": [
-            {
-                "image": "/images/products/mangustan.jpg"
-            }
-        ],
-        "category": "Fruits",
-        "stocks": "Available"
-    },
-    {
-        "englishName": "MORISH FRUIT (KGS)",
-        "tamilName": "மொரிஷ் பழம் (கிலோ)",
-        "price": 75,
-        "images": [
-            {
-                "image": "/images/products/morish_fruit.jpg"
-            }
-        ],
-        "category": "Fruits",
-        "stocks": "Available"
-    },
-    {
-        "englishName": "MUSK MELON VARI",
-        "tamilName": "மச்சட்டி பழம் வரி",
-        "price": 60,
-        "images": [
-            {
-                "image": "/images/products/musk_melon_vari.jpg"
-            }
-        ],
-        "category": "Fruits",
-        "stocks": "Available"
-    },
-    {
-        "englishName": "MUSKMELON (KGS)",
-        "tamilName": "முஸ்க்மெலன் (கிலோ)",
-        "price": 50,
-        "images": [
-            {
-                "image": "/images/products/muskmelon.jpg"
-            }
-        ],
-        "category": "Fruits",
-        "stocks": "Available"
-    },
-    {
-        "englishName": "MUSAMBI (KGS)",
-        "tamilName": "முசம்பி (கிலோ)",
-        "price": 40,
-        "images": [
-            {
-                "image": "/images/products/musambi.jpg"
-            }
-        ],
-        "category": "Fruits",
-        "stocks": "Available"
-    },
-    {
-        "englishName": "NENDRAM BANANA",
-        "tamilName": "நேந்திரம் வாழை",
-        "price": 30,
-        "images": [
-            {
-                "image": "/images/products/nendram_banana.jpg"
-            }
-        ],
-        "category": "Fruits",
-        "stocks": "Available"
-    },
-    {
-        "englishName": "PAPPAYA (KGS)",
-        "tamilName": "பப்பாளி (கிலோ)",
-        "price": 35,
-        "images": [
-            {
-                "image": "/images/products/pappaya.jpg"
-            }
-        ],
-        "category": "Fruits",
-        "stocks": "Available"
-    },
-    {
-        "englishName": "PASSION FR",
-        "tamilName": "பேஷன் பழம்",
-        "price": 45,
-        "images": [
-            {
-                "image": "/images/products/passion_fruit.jpg"
-            }
-        ],
-        "category": "Fruits",
-        "stocks": "Available"
-    },
-    {
-        "englishName": "PEAR FRUIT",
-        "tamilName": "பேர் பழம்",
-        "price": 55,
-        "images": [
-            {
-                "image": "/images/products/pear_fruit.jpg"
-            }
-        ],
-        "category": "Fruits",
-        "stocks": "Available"
-    },
-    {
-        "englishName": "PEAR RED",
-        "tamilName": "சிவப்பு பேர்",
-        "price": 60,
-        "images": [
-            {
-                "image": "/images/products/pear_red.jpg"
-            }
-        ],
-        "category": "Fruits",
-        "stocks": "Available"
-    },
-    {
-        "englishName": "PINE APPLE (KGS)",
-        "tamilName": "பைன் அப்பிள் (கிலோ)",
-        "price": 40,
-        "images": [
-            {
-                "image": "/images/products/pineapple.jpg"
-            }
-        ],
-        "category": "Fruits",
-        "stocks": "Available"
-    },
-    {
-        "englishName": "PLUMS FRUIT",
-        "tamilName": "ப்ளம்ஸ் பழம்",
-        "price": 70,
-        "images": [
-            {
-                "image": "/images/products/plums_fruit.jpg"
-            }
-        ],
-        "category": "Fruits",
-        "stocks": "Available"
-    },
-    {
-        "englishName": "POMEGRANATE KABUL",
-        "tamilName": "மாதுளை காபூல்",
-        "price": 80,
-        "images": [
-            {
-                "image": "/images/products/pomegranate_kabul.jpg"
-            }
-        ],
-        "category": "Fruits",
-        "stocks": "Available"
-    },
-    {
-        "englishName": "POOVAMPALAM",
-        "tamilName": "பூவாம்பழம்",
-        "price": 50,
-        "images": [
-            {
-                "image": "/images/products/poovampalam.jpg"
-            }
-        ],
-        "category": "Fruits",
-        "stocks": "Available"
-    },
-    {
-        "englishName": "RASTHALI (KGS)",
-        "tamilName": "ராஸ்தாளி (கிலோ)",
-        "price": 45,
-        "images": [
-            {
-                "image": "/images/products/rasthali.jpg"
-            }
-        ],
-        "category": "Fruits",
-        "stocks": "Available"
-    },
-    {
-        "englishName": "RED GLOAB GRAPE",
-        "tamilName": "சிவப்பு கிளோப் திராட்சை",
-        "price": 65,
-        "images": [
-            {
-                "image": "/images/products/red_gloab_grape.jpg"
-            }
-        ],
-        "category": "Fruits",
-        "stocks": "Available"
-    },
-    {
-        "englishName": "SAPPOTA (KGS)",
-        "tamilName": "சப்போட்டா (கிலோ)",
-        "price": 55,
-        "images": [
-            {
-                "image": "/images/products/sappota.jpg"
-            }
-        ],
-        "category": "Fruits",
-        "stocks": "Available"
-    },
-    {
-        "englishName": "SOURSOP(KGS)",
-        "tamilName": "முல்லைப்பழம் (கிலோ)",
-        "price": 70,
-        "images": [
-            {
-                "image": "/images/products/soursop.jpg"
-            }
-        ],
-        "category": "Fruits",
-        "stocks": "Available"
-    },
-    {
-        "englishName": "STRAWBERRY FRUIT [BOXES]",
-        "tamilName": "ஸ்ட்ராபெர்ரி பழம் [பட்டயம்]",
-        "price": 75,
-        "images": [
-            {
-                "image": "/images/products/strawberry.jpg"
-            }
-        ],
-        "category": "Fruits",
-        "stocks": "Available"
-    },
-    {
-        "englishName": "WATER MELON",
-        "tamilName": "தண்ணீர் மெலன்",
-        "price": 30,
-        "images": [
-            {
-                "image": "/images/products/watermelon.jpg"
-            }
-        ],
-        "category": "Fruits",
-        "stocks": "Available"
-    },
-    {
-        "englishName": "WATER MELON KIRAN",
-        "tamilName": "தண்ணீர் மெலன் கிரான்",
-        "price": 40,
-        "images": [
-            {
-                "image": "/images/products/watermelon_kiran.jpg"
-            }
-        ],
-        "category": "Fruits",
-        "stocks": "Available"
-    },
-    {
-        "englishName": "CHEETHA PALAM",
-        "tamilName": "சீத்தா பழம்",
-        "price": 25,
-        "images": [
-            {
-                "image": "/images/products/cheetha_palam.jpg"
-            }
-        ],
-        "category": "Fruits",
-        "stocks": "Available"
-    },
-    {
-        "englishName": "KINOR ORANGE",
-        "tamilName": "கினோர் ஆரஞ்சு",
-        "price": 60,
-        "images": [
-            {
-                "image": "/images/products/kinor_orange.jpg"
-            }
-        ],
-        "category": "Fruits",
-        "stocks": "Available"
-    },
-    {
-        "englishName": "GRAPES GREEN SEEDLESS",
-        "tamilName": "பச்சை திராட்சை இல்லாத",
-        "price": 55,
-        "images": [
-            {
-                "image": "/images/products/green_seedless_grapes.jpg"
-            }
-        ],
-        "category": "Fruits",
-        "stocks": "Available"
-    },
-    {
-        "englishName": "LITHUSE",
-        "tamilName": "லித்தூஸ்",
-        "price": 70,
-        "images": [
-            {
-                "image": "/images/products/lithuse.jpg"
-            }
-        ],
-        "category": "Fruits",
-        "stocks": "Available"
-    },
-    {
-        "englishName": "AUSTRALIA GRAPES",
-        "tamilName": "ஆஸ்திரேலியா திராட்சை",
-        "price": 80,
-        "images": [
-            {
-                "image": "/images/products/australia_grapes.jpg"
-            }
-        ],
-        "category": "Fruits",
-        "stocks": "Available"
-    },
-    {
-        "englishName": "PIRANDAI KERRAI",
-        "tamilName": "பிரண்டை கெற்றை",
-        "price": 90,
-        "images": [
-            {
-                "image": "/images/products/pirandai_kerrai.jpg"
-            }
-        ],
-        "category": "Keerai",
-        "stocks": "Available"
-    },
-    {
-        "englishName": "CHERRY - INDIAN",
-        "tamilName": "செர்ரி - இந்தியன்",
-        "price": 100,
-        "images": [
-            {
-                "image": "/images/products/indian_cherry.jpg"
-            }
-        ],
-        "category": "Fruits",
-        "stocks": "Available"
-    },
-    {
-        "englishName": "JAPAN FRUITS",
-        "tamilName": "ஜப்பான் பழங்கள்",
-        "price": 110,
-        "images": [
-            {
-                "image": "/images/products/japan_fruits.jpg"
-            }
-        ],
-        "category": "Fruits",
-        "stocks": "Available"
-    },
-    {
-        "englishName": "KIWI FRUIT",
-        "tamilName": "கீவி பழம்",
-        "price": 120,
-        "images": [
-            {
-                "image": "/images/products/kiwi_fruit.jpg"
-            }
-        ],
-        "category": "Fruits",
-        "stocks": "Available"
-    },
-    {
-        "englishName": "RAMDAN FRUITS",
-        "tamilName": "ரமடான் பழங்கள்",
-        "price": 130,
-        "images": [
-            {
-                "image": "/images/products/ramdan_fruits.jpg"
-            }
-        ],
-        "category": "Fruits",
-        "stocks": "Available"
-    }
-]
+        {
+            "englishName": "Amla",
+            "tamilName": "பெரிய நெல்லி",
+            "price": 45,
+            "images": [
+                {
+                    "image": "/images/products/amla.jpg"
+                }
+            ],
+            "category": "Vegetables",
+            "stocks": "Available"
+        },
+    
+        {
+            "englishName": "ASH GOURD (pumpkin)",
+            "tamilName": "வெண்பூசணி",
+            "price": 85,
+            "images": [
+                {
+                    "image": "/images/products/ash_gourd.jpg"
+                }
+            ],
+            "category": "Vegetables",
+            "stocks": "Available"
+        },
+        {
+            "englishName": "AVARI NATTU",
+            "tamilName": "அவாரி நட்டு",
+            "price": 45,
+            "images": [
+                {
+                    "image": "/images/products/avari_nattu.jpg"
+                }
+            ],
+            "category": "Vegetables",
+            "stocks": "Available"
+        },
+        {
+            "englishName": "BABY CORN",
+            "tamilName": "பெய்பி கார்ன்",
+            "price": 60,
+            "images": [
+                {
+                    "image": "/images/products/baby_corn.jpg"
+                }
+            ],
+            "category": "Vegetables",
+            "stocks": "Available"
+        },
+        {
+            "englishName": "BABY POTATO",
+            "tamilName": "பெய்பி உருளைக்கிழங்கு",
+            "price": 40,
+            "images": [
+                {
+                    "image": "/images/products/baby_potato.jpg"
+                }
+            ],
+            "category": "Vegetables",
+            "stocks": "Available"
+        },
+        {
+            "englishName": "BANANNA LUNCH LEAF",
+            "tamilName": "வாழை இலையை மதிய உணவு",
+            "price": 25,
+            "images": [
+                {
+                    "image": "/images/products/banana_lunch_leaf.jpg"
+                }
+            ],
+            "category": "Vegetables",
+            "stocks": "Available"
+        },
+        {
+            "englishName": "BEANS",
+            "tamilName": "பீன்ஸ்",
+            "price": 55,
+            "images": [
+                {
+                    "image": "/images/products/beans.jpg"
+                }
+            ],
+            "category": "Vegetables",
+            "stocks": "Available"
+        },
+        {
+            "englishName": "BEETROOT",
+            "tamilName": "பீட்ரூட்",
+            "price": 30,
+            "images": [
+                {
+                    "image": "/images/products/beetroot.jpg"
+                }
+            ],
+            "category": "Vegetables",
+            "stocks": "Available"
+        },
+        {
+            "englishName": "BITTER GOURD BABY",
+            "tamilName": "கார்வெள்ளை சிறியவை",
+            "price": 35,
+            "images": [
+                {
+                    "image": "/images/products/bitter_gourd_baby.jpg"
+                }
+            ],
+            "category": "Vegetables",
+            "stocks": "Available"
+        },
+        {
+            "englishName": "BITTER GOURD BIG",
+            "tamilName": "கார்வெள்ளை பெரியவை",
+            "price": 40,
+            "images": [
+                {
+                    "image": "/images/products/bitter_gourd_big.jpg"
+                }
+            ],
+            "category": "Vegetables",
+            "stocks": "Available"
+        },
+        {
+            "englishName": "BITTER GOURD SMALL",
+            "tamilName": "கார்வெள்ளை சிறியவை",
+            "price": 35,
+            "images": [
+                {
+                    "image": "/images/products/bitter_gourd_small.jpg"
+                }
+            ],
+            "category": "Vegetables",
+            "stocks": "Available"
+        },
+        {
+            "englishName": "BOTTLE GOURD",
+            "tamilName": "சுரைக்காய்",
+            "price": 20,
+            "images": [
+                {
+                    "image": "/images/products/bottle_gourd.jpg"
+                }
+            ],
+            "category": "Vegetables",
+            "stocks": "Available"
+        },
+        {
+            "englishName": "BRINJAL BHAVANI",
+            "tamilName": "கத்திரிக்காய் பவானி",
+            "price": 35,
+            "images": [
+                {
+                    "image": "/images/products/brinjal_bhavani.jpg"
+                }
+            ],
+            "category": "Vegetables",
+            "stocks": "Available"
+        },
+        {
+            "englishName": "BRINJAL BIG",
+            "tamilName": "கத்திரிக்காய் பெரியவை",
+            "price": 40,
+            "images": [
+                {
+                    "image": "/images/products/brinjal_big.jpg"
+                }
+            ],
+            "category": "Vegetables",
+            "stocks": "Available"
+        },
+        {
+            "englishName": "BRINJAL DISCO",
+            "tamilName": "கத்திரிக்காய் டிஸ்கோ",
+            "price": 45,
+            "images": [
+                {
+                    "image": "/images/products/brinjal_disco.jpg"
+                }
+            ],
+            "category": "Vegetables",
+            "stocks": "Available"
+        },
+        {
+            "englishName": "BRINJAL GREEN",
+            "tamilName": "பச்சைக் கத்திரிக்காய்",
+            "price": 50,
+            "images": [
+                {
+                    "image": "/images/products/brinjal_green.jpg"
+                }
+            ],
+            "category": "Vegetables",
+            "stocks": "Available"
+        },
+        {
+            "englishName": "BRINJAL LONG GREEN",
+            "tamilName": "நீளமான பச்சைக் கத்திரிக்காய்",
+            "price": 55,
+            "images": [
+                {
+                    "image": "/images/products/brinjal_long_green.jpg"
+                }
+            ],
+            "category": "Vegetables",
+            "stocks": "Available"
+        },
+        {
+            "englishName": "BRINJAL UJALA",
+            "tamilName": "கத்திரிக்காய் உஜாலா",
+            "price": 60,
+            "images": [
+                {
+                    "image": "/images/products/brinjal_ujala.jpg"
+                }
+            ],
+            "category": "Vegetables",
+            "stocks": "Available"
+        },
+        {
+            "englishName": "BRINJAL VARI",
+            "tamilName": "வெரைட்டி கத்திரிக்காய்",
+            "price": 65,
+            "images": [
+                {
+                    "image": "/images/products/brinjal_vari.jpg"
+                }
+            ],
+            "category": "Vegetables",
+            "stocks": "Available"
+        },
+        {
+            "englishName": "BROAD BEANS",
+            "tamilName": "பிராட் பீன்ஸ்",
+            "price": 70,
+            "images": [
+                {
+                    "image": "/images/products/broad_beans.jpg"
+                }
+            ],
+            "category": "Vegetables",
+            "stocks": "Available"
+        },
+        {
+            "englishName": "BROCCOLI",
+            "tamilName": "ப்ரோக்கோலி",
+            "price": 75,
+            "images": [
+                {
+                    "image": "/images/products/broccoli.jpg"
+                }
+            ],
+            "category": "Vegetables",
+            "stocks": "Available"
+        },
+        {
+            "englishName": "BUTTER BEANS",
+            "tamilName": "பட்டர் பீன்ஸ்",
+            "price": 80,
+            "images": [
+                {
+                    "image": "/images/products/butter_beans.jpg"
+                }
+            ],
+            "category": "Vegetables",
+            "stocks": "Available"
+        },
+        {
+            "englishName": "CABBAGE CHINESES",
+            "tamilName": "சீனக்கோசு",
+            "price": 85,
+            "images": [
+                {
+                    "image": "/images/products/cabbage_chineses.jpg"
+                }
+            ],
+            "category": "Vegetables",
+            "stocks": "Available"
+        },
+        {
+            "englishName": "CABBAGE GREEN",
+            "tamilName": "பச்சைக் கோசு",
+            "price": 90,
+            "images": [
+                {
+                    "image": "/images/products/cabbage_green.jpg"
+                }
+            ],
+            "category": "Vegetables",
+            "stocks": "Available"
+        },
+        {
+            "englishName": "CABBAGE RED",
+            "tamilName": "சிவப்பு கோசு",
+            "price": 95,
+            "images": [
+                {
+                    "image": "/images/products/cabbage_red.jpg"
+                }
+            ],
+            "category": "Vegetables",
+            "stocks": "Available"
+        },
+        {
+            "englishName": "CALIFLOWER",
+            "tamilName": "காலிஃபிளவர்",
+            "price": 100,
+            "images": [
+                {
+                    "image": "/images/products/cauliflower.jpg"
+                }
+            ],
+            "category": "Vegetables",
+            "stocks": "Available"
+        },
+        {
+            "englishName": "CAPSICUM",
+            "tamilName": "குடை மிளகாய்",
+            "price": 105,
+            "images": [
+                {
+                    "image": "/images/products/capsicum.jpg"
+                }
+            ],
+            "category": "Vegetables",
+            "stocks": "Available"
+        },
+        {
+            "englishName": "CAPSICUM RED",
+            "tamilName": "சிவப்பு குடை மிளகாய்",
+            "price": 110,
+            "images": [
+                {
+                    "image": "/images/products/capsicum_red.jpg"
+                }
+            ],
+            "category": "Vegetables",
+            "stocks": "Available"
+        },
+        {
+            "englishName": "CAPSICUM YELLOW",
+            "tamilName": "மஞ்சள் குடை மிளகாய்",
+            "price": 115,
+            "images": [
+                {
+                    "image": "/images/products/capsicum_yellow.jpg"
+                }
+            ],
+            "category": "Vegetables",
+            "stocks": "Available"
+        },
+        {
+            "englishName": "CARROT",
+            "tamilName": "காரட்",
+            "price": 50,
+            "images": [
+                {
+                    "image": "/images/products/carrot.jpg"
+                }
+            ],
+            "category": "Vegetables",
+            "stocks": "Available"
+        },
+        {
+            "englishName": "CELLERY",
+            "tamilName": "செல்லரி",
+            "price": 60,
+            "images": [
+                {
+                    "image": "/images/products/cellery.jpg"
+                }
+            ],
+            "category": "Vegetables",
+            "stocks": "Available"
+        },
+        {
+            "englishName": "CHERRY TOMATO",
+            "tamilName": "செர்ரி தக்காளி",
+            "price": 80,
+            "images": [
+                {
+                    "image": "/images/products/cherry_tomato.jpg"
+                }
+            ],
+            "category": "Vegetables",
+            "stocks": "Available"
+        },
+        {
+            "englishName": "BAJJI CHILLY",
+            "tamilName": "பஜ்ஜி மிளகாய்",
+            "price": 45,
+            "images": [
+                {
+                    "image": "/images/products/bajji_chilly.jpg"
+                }
+            ],
+            "category": "Vegetables",
+            "stocks": "Available"
+        },
+        {
+            "englishName": "CHOCHOW",
+            "tamilName": "சொசொவ்",
+            "price": 35,
+            "images": [
+                {
+                    "image": "/images/products/chochow.jpg"
+                }
+            ],
+            "category": "Vegetables",
+            "stocks": "Available"
+        },
+        {
+            "englishName": "CLUSTER BEANS",
+            "tamilName": "கொத்தவரங்காய்",
+            "price": 70,
+            "images": [
+                {
+                    "image": "/images/products/cluster_beans.jpg"
+                }
+            ],
+            "category": "Vegetables",
+            "stocks": "Available"
+        },
+        {
+            "englishName": "COCONUT",
+            "tamilName": "தேங்காய்",
+            "price": 30,
+            "images": [
+                {
+                    "image": "/images/products/coconut.jpg"
+                }
+            ],
+            "category": "Vegetables",
+            "stocks": "Available"
+        },
+        {
+            "englishName": "CUCUMBER",
+            "tamilName": "வெள்ளரி",
+            "price": 25,
+            "images": [
+                {
+                    "image": "/images/products/cucumber.jpg"
+                }
+            ],
+            "category": "Vegetables",
+            "stocks": "Available"
+        },
+        {
+            "englishName": "CUCUMBER ORGANIC",
+            "tamilName": "ஆர்கானிக் வெள்ளரி",
+            "price": 40,
+            "images": [
+                {
+                    "image": "/images/products/cucumber_organic.jpg"
+                }
+            ],
+            "category": "Vegetables",
+            "stocks": "Available"
+        },
+        {
+            "englishName": "CUCUMBER YELLOW",
+            "tamilName": "மஞ்சள் வெள்ளரி",
+            "price": 35,
+            "images": [
+                {
+                    "image": "/images/products/cucumber_yellow.jpg"
+                }
+            ],
+            "category": "Vegetables",
+            "stocks": "Available"
+        },
+        {
+            "englishName": "CURRY LEAVES",
+            "tamilName": "கறிவேப்பிலை",
+            "price": 20,
+            "images": [
+                {
+                    "image": "/images/products/curry_leaves.jpg"
+                }
+            ],
+            "category": "Vegetables",
+            "stocks": "Available"
+        },
+        {
+            "englishName": "CARROT DELHI",
+            "tamilName": "தில்லி காரட்",
+            "price": 55,
+            "images": [
+                {
+                    "image": "/images/products/carrot_delhi.jpg"
+                }
+            ],
+            "category": "Vegetables",
+            "stocks": "Available"
+        },
+        {
+            "englishName": "DOUBLE BEANS",
+            "tamilName": "டபுள் பீன்ஸ்",
+            "price": 75,
+            "images": [
+                {
+                    "image": "/images/products/double_beans.jpg"
+                }
+            ],
+            "category": "Vegetables",
+            "stocks": "Available"
+        },
+        {
+            "englishName": "DRUMSTICK",
+            "tamilName": "முருங்கைக்காய்",
+            "price": 40,
+            "images": [
+                {
+                    "image": "/images/products/drumstick.jpg"
+                }
+            ],
+            "category": "Vegetables",
+            "stocks": "Available"
+        },
+        {
+            "englishName": "GARLIC",
+            "tamilName": "பூண்டு",
+            "price": 100,
+            "images": [
+                {
+                    "image": "/images/products/garlic.jpg"
+                }
+            ],
+            "category": "Vegetables",
+            "stocks": "Available"
+        },
+        {
+            "englishName": "GARLIC MALAI",
+            "tamilName": "மலை பூண்டு",
+            "price": 120,
+            "images": [
+                {
+                    "image": "/images/products/garlic_malai.jpg"
+                }
+            ],
+            "category": "Vegetables",
+            "stocks": "Available"
+        },
+        {
+            "englishName": "GINGER",
+            "tamilName": "இஞ்சி",
+            "price": 90,
+            "images": [
+                {
+                    "image": "/images/products/ginger.jpg"
+                }
+            ],
+            "category": "Vegetables",
+            "stocks": "Available"
+        },
+        {
+            "englishName": "GREEN CHILLY",
+            "tamilName": "பச்சை மிளகாய்",
+            "price": 60,
+            "images": [
+                {
+                    "image": "/images/products/green_chilly.jpg"
+                }
+            ],
+            "category": "Vegetables",
+            "stocks": "Available"
+        },
+        {
+            "englishName": "GREEN PEAS",
+            "tamilName": "பச்சைப்பட்டாணி",
+            "price": 85,
+            "images": [
+                {
+                    "image": "/images/products/green_peas.jpg"
+                }
+            ],
+            "category": "Vegetables",
+            "stocks": "Available"
+        },
+        {
+            "englishName": "GROUND NUT",
+            "tamilName": "நிலக்கடலை",
+            "price": 45,
+            "images": [
+                {
+                    "image": "/images/products/ground_nut.jpg"
+                }
+            ],
+            "category": "Vegetables",
+            "stocks": "Available"
+        },
+        {
+            "englishName": "ICE BERG",
+            "tamilName": "ஐஸ்பேர்க்",
+            "price": 70,
+            "images": [
+                {
+                    "image": "/images/products/ice_berg.jpg"
+                }
+            ],
+            "category": "Vegetables",
+            "stocks": "Available"
+        },
+        {
+            "englishName": "IVY GOURD",
+            "tamilName": "கோவைக்காய்",
+            "price": 30,
+            "images": [
+                {
+                    "image": "/images/products/ivy_gourd.jpg"
+                }
+            ],
+            "category": "Vegetables",
+            "stocks": "Available"
+        },
+        {
+            "englishName": "KOORKHAN",
+            "tamilName": "கூற்கான்",
+            "price": 65,
+            "images": [
+                {
+                    "image": "/images/products/koorkhan.jpg"
+                }
+            ],
+            "category": "Vegetables",
+            "stocks": "Available"
+        },
+        {
+            "englishName": "LAB LAB",
+            "tamilName": "அவரைக்காய்",
+            "price": 50,
+            "images": [
+                {
+                    "image": "/images/products/lab_lab.jpg"
+                }
+            ],
+            "category": "Vegetables",
+            "stocks": "Available"
+        },
+        {
+            "englishName": "LADIESFINGER",
+            "tamilName": "வெண்டைக்காய்",
+            "price": 40,
+            "images": [
+                {
+                    "image": "/images/products/ladiesfinger.jpg"
+                }
+            ],
+            "category": "Vegetables",
+            "stocks": "Available"
+        },
+        {
+            "englishName": "LEMON - KG",
+            "tamilName": "எலுமிச்சை",
+            "price": 85,
+            "images": [
+                {
+                    "image": "/images/products/lemon.jpg"
+                }
+            ],
+            "category": "Vegetables",
+            "stocks": "Available"
+        },
+        {
+            "englishName": "LETTUCE",
+            "tamilName": "லெட்டூஸ்",
+            "price": 55,
+            "images": [
+                {
+                    "image": "/images/products/lettuce.jpg"
+                }
+            ],
+            "category": "Vegetables",
+            "stocks": "Available"
+        },
+        {
+            "englishName": "MALABAR",
+            "tamilName": "மலபார்",
+            "price": 65,
+            "images": [
+                {
+                    "image": "/images/products/malabar.jpg"
+                }
+            ],
+            "category": "Vegetables",
+            "stocks": "Available"
+        },
+        {
+            "englishName": "MALLI- PCS",
+            "tamilName": "மல்லி- துண்டுகள்",
+            "price": 35,
+            "images": [
+                {
+                    "image": "/images/products/malli.jpg"
+                }
+            ],
+            "category": "Vegetables",
+            "stocks": "Available"
+        },
+        {
+            "englishName": "MANGO GINGER",
+            "tamilName": "மாம்பழ இஞ்சி",
+            "price": 90,
+            "images": [
+                {
+                    "image": "/images/products/mango_ginger.jpg"
+                }
+            ],
+            "category": "Vegetables",
+            "stocks": "Available"
+        },
+        {
+            "englishName": "MARAVALLI",
+            "tamilName": "மரவள்ளி",
+            "price": 40,
+            "images": [
+                {
+                    "image": "/images/products/maravalli.jpg"
+                }
+            ],
+            "category": "Vegetables",
+            "stocks": "Available"
+        },
+        {
+            "englishName": "MOCHAI",
+            "tamilName": "மொச்சை",
+            "price": 55,
+            "images": [
+                {
+                    "image": "/images/products/mochai.jpg"
+                }
+            ],
+            "category": "Vegetables",
+            "stocks": "Available"
+        },
+        {
+            "englishName": "MUSHROOM",
+            "tamilName": "காளான்",
+            "price": 100,
+            "images": [
+                {
+                    "image": "/images/products/mushroom.jpg"
+                }
+            ],
+            "category": "Vegetables",
+            "stocks": "Available"
+        },
+        {
+            "englishName": "NARTHANKAI",
+            "tamilName": "நார்த்தங்காய்",
+            "price": 75,
+            "images": [
+                {
+                    "image": "/images/products/narthankai.jpg"
+                }
+            ],
+            "category": "Vegetables",
+            "stocks": "Available"
+        },
+        {
+            "englishName": "NOOKAL",
+            "tamilName": "நூகல்",
+            "price": 65,
+            "images": [
+                {
+                    "image": "/images/products/nookal.jpg"
+                }
+            ],
+            "category": "Vegetables",
+            "stocks": "Available"
+        },
+        {
+            "englishName": "ONION BIG",
+            "tamilName": "பெரிய வெங்காயம்",
+            "price": 45,
+            "images": [
+                {
+                    "image": "/images/products/onion_big.jpg"
+                }
+            ],
+            "category": "Vegetables",
+            "stocks": "Available"
+        },
+        {
+            "englishName": "ONION SMALL",
+            "tamilName": "சின்ன வெங்காயம்",
+            "price": 55,
+            "images": [
+                {
+                    "image": "/images/products/onion_small.jpg"
+                }
+            ],
+            "category": "Vegetables",
+            "stocks": "Available"
+        },
+        {
+            "englishName": "ONION WHITE",
+            "tamilName": "வெள்ளை வெங்காயம்",
+            "price": 70,
+            "images": [
+                {
+                    "image": "/images/products/onion_white.jpg"
+                }
+            ],
+            "category": "Vegetables",
+            "stocks": "Available"
+        },
+        {
+            "englishName": "PALLAKAI",
+            "tamilName": "பல்லாகாய்",
+            "price": 35,
+            "images": [
+                {
+                    "image": "/images/products/pallakai.jpg"
+                }
+            ],
+            "category": "Vegetables",
+            "stocks": "Available"
+        },
+        {
+            "englishName": "PARUVAL",
+            "tamilName": "பருவல்",
+            "price": 45,
+            "images": [
+                {
+                    "image": "/images/products/paruval.jpg"
+                }
+            ],
+            "category": "Vegetables",
+            "stocks": "Available"
+        },
+        {
+            "englishName": "PIDIKARUNAI",
+            "tamilName": "பிடிக்கருணை",
+            "price": 55,
+            "images": [
+                {
+                    "image": "/images/products/pidikarunai.jpg"
+                }
+            ],
+            "category": "Vegetables",
+            "stocks": "Available"
+        },
+        {
+            "englishName": "PLANTAIN FLOWER",
+            "tamilName": "வாழைப்பூ",
+            "price": 60,
+            "images": [
+                {
+                    "image": "/images/products/plantain_flower.jpg"
+                }
+            ],
+            "category": "Vegetables",
+            "stocks": "Available"
+        },
+        {
+            "englishName": "POTATO BIG",
+            "tamilName": "பெரிய உருளைக்கிழங்கு",
+            "price": 50,
+            "images": [
+                {
+                    "image": "/images/products/potato_big.jpg"
+                }
+            ],
+            "category": "Vegetables",
+            "stocks": "Available"
+        },
+        {
+            "englishName": "PUDINA",
+            "tamilName": "புதினா",
+            "price": 20,
+            "images": [
+                {
+                    "image": "/images/products/pudina.jpg"
+                }
+            ],
+            "category": "Vegetables",
+            "stocks": "Available"
+        },
+        {
+            "englishName": "PUMPKIN ( PARANKIKAI)",
+            "tamilName": "பரங்கிக்காய்",
+            "price": 30,
+            "images": [
+                {
+                    "image": "/images/products/pumpkin.jpg"
+                }
+            ],
+            "category": "Vegetables",
+            "stocks": "Available"
+        },
+        {
+            "englishName": "RADISH RED",
+            "tamilName": "சிவப்பு முள்ளங்கி",
+            "price": 40,
+            "images": [
+                {
+                    "image": "/images/products/radish_red.jpg"
+                }
+            ],
+            "category": "Vegetables",
+            "stocks": "Available"
+        },
+        {
+            "englishName": "RADISH - WHITE",
+            "tamilName": "வெள்ளை முள்ளங்கி",
+            "price": 35,
+            "images": [
+                {
+                    "image": "/images/products/radish_white.jpg"
+                }
+            ],
+            "category": "Vegetables",
+            "stocks": "Available"
+        },
+        {
+            "englishName": "RAW BANANA",
+            "tamilName": "வாழைக்காய்",
+            "price": 45,
+            "images": [
+                {
+                    "image": "/images/products/raw_banana.jpg"
+                }
+            ],
+            "category": "Vegetables",
+            "stocks": "Available"
+        },
+        {
+            "englishName": "RAW BANANA Chips",
+            "tamilName": "வாழைக்காய் சிப்ஸ்",
+            "price": 55,
+            "images": [
+                {
+                    "image": "/images/products/raw_banana_chips.jpg"
+                }
+            ],
+            "category": "Vegetables",
+            "stocks": "Available"
+        },
+        {
+            "englishName": "RAW MANGO",
+            "tamilName": "மாங்காய்",
+            "price": 70,
+            "images": [
+                {
+                    "image": "/images/products/raw_mango.jpg"
+                }
+            ],
+            "category": "Vegetables",
+            "stocks": "Available"
+        },
+        {
+            "englishName": "RIDGE GOURD",
+            "tamilName": "பீர்க்கங்காய்",
+            "price": 35,
+            "images": [
+                {
+                    "image": "/images/products/ridge_gourd.jpg"
+                }
+            ],
+            "category": "Vegetables",
+            "stocks": "Available"
+        },
+        {
+            "englishName": "SEMBU",
+            "tamilName": "செம்பு",
+            "price": 40,
+            "images": [
+                {
+                    "image": "/images/products/sembu.jpg"
+                }
+            ],
+            "category": "Vegetables",
+            "stocks": "Available"
+        },
+        {
+            "englishName": "SENAI",
+            "tamilName": "சேனை",
+            "price": 45,
+            "images": [
+                {
+                    "image": "/images/products/senai.jpg"
+                }
+            ],
+            "category": "Vegetables",
+            "stocks": "Available"
+        },
+        {
+            "englishName": "SIRUKILANGU",
+            "tamilName": "சிறுகிழங்கு",
+            "price": 35,
+            "images": [
+                {
+                    "image": "/images/products/sirukilangu.jpg"
+                }
+            ],
+            "category": "Vegetables",
+            "stocks": "Available"
+        },
+        {
+            "englishName": "SNAKE GUARD",
+            "tamilName": "புடலங்காய்",
+            "price": 30,
+            "images": [
+                {
+                    "image": "/images/products/snake_guard.jpg"
+                }
+            ],
+            "category": "Vegetables",
+            "stocks": "Available"
+        },
+        {
+            "englishName": "BEANS SOYA",
+            "tamilName": "சோயா பீன்ஸ்",
+            "price": 75,
+            "images": [
+                {
+                    "image": "/images/products/beans_soya.jpg"
+                }
+            ],
+            "category": "Vegetables",
+            "stocks": "Available"
+        },
+        {
+            "englishName": "SWEET CORN",
+            "tamilName": "இனிப்புச்சோளம்",
+            "price": 45,
+            "images": [
+                {
+                    "image": "/images/products/sweet_corn.jpg"
+                }
+            ],
+            "category": "Vegetables",
+            "stocks": "Available"
+        },
+        {
+            "englishName": "SWEET CORN TRY",
+            "tamilName": "சோதனை இனிப்புச்சோளம்",
+            "price": 50,
+            "images": [
+                {
+                    "image": "/images/products/sweet_corn_try.jpg"
+                }
+            ],
+            "category": "Vegetables",
+            "stocks": "Available"
+        },
+        {
+            "englishName": "SWEET POTATO",
+            "tamilName": "இனிப்பு உருளைக்கிழங்கு",
+            "price": 40,
+            "images": [
+                {
+                    "image": "/images/products/sweet_potato.jpg"
+                }
+            ],
+            "category": "Vegetables",
+            "stocks": "Available"
+        },
+        {
+            "englishName": "THANDHU",
+            "tamilName": "தண்டு",
+            "price": 35,
+            "images": [
+                {
+                    "image": "/images/products/thandhu.jpg"
+                }
+            ],
+            "category": "Vegetables",
+            "stocks": "Available"
+        },
+        {
+            "englishName": "THIN BEANS",
+            "tamilName": "மெல்லிய பீன்ஸ்",
+            "price": 55,
+            "images": [
+                {
+                    "image": "/images/products/thin_beans.jpg"
+                }
+            ],
+            "category": "Vegetables",
+            "stocks": "Available"
+        },
+        {
+            "englishName": "THINDHA",
+            "tamilName": "திண்டா",
+            "price": 60,
+            "images": [
+                {
+                    "image": "/images/products/thindha.jpg"
+                }
+            ],
+            "category": "Vegetables",
+            "stocks": "Available"
+        },
+        {
+            "englishName": "TOMATO GREEN",
+            "tamilName": "பச்சை தக்காளி",
+            "price": 30,
+            "images": [
+                {
+                    "image": "/images/products/tomato_green.jpg"
+                }
+            ],
+            "category": "Vegetables",
+            "stocks": "Available"
+        },
+        {
+            "englishName": "TOMATO NADU",
+            "tamilName": "நாடு தக்காளி",
+            "price": 35,
+            "images": [
+                {
+                    "image": "/images/products/tomato_nadu.jpg"
+                }
+            ],
+            "category": "Vegetables",
+            "stocks": "Available"
+        },
+        {
+            "englishName": "TOMATO NAVEEN",
+            "tamilName": "நவீன் தக்காளி",
+            "price": 40,
+            "images": [
+                {
+                    "image": "/images/products/tomato_naveen.jpg"
+                }
+            ],
+            "category": "Vegetables",
+            "stocks": "Available"
+        },
+        {
+            "englishName": "TURNIP",
+            "tamilName": "சீமைக்கோல்",
+            "price": 55,
+            "images": [
+                {
+                    "image": "/images/products/turnip.jpg"
+                }
+            ],
+            "category": "Vegetables",
+            "stocks": "Available"
+        },
+        {
+            "englishName": "VADHUMANGA",
+            "tamilName": "வதுமாங்கா",
+            "price": 45,
+            "images": [
+                {
+                    "image": "/images/products/vadhumanga.jpg"
+                }
+            ],
+            "category": "Vegetables",
+            "stocks": "Available"
+        },
+        {
+            "englishName": "WHITE BEANS",
+            "tamilName": "வெள்ளை பீன்ஸ்",
+            "price": 65,
+            "images": [
+                {
+                    "image": "/images/products/white_beans.jpg"
+                }
+            ],
+            "category": "Vegetables",
+            "stocks": "Available"
+        },
+        {
+            "englishName": "ZUCCHINI GREEN",
+            "tamilName": "பச்சை சுக்கினி",
+            "price": 60,
+            "images": [
+                {
+                    "image": "/images/products/zucchini_green.jpg"
+                }
+            ],
+            "category": "Vegetables",
+            "stocks": "Available"
+        },
+        {
+            "englishName": "ZUCCHINI YELLOW",
+            "tamilName": "மஞ்சள் சுக்கினி",
+            "price": 65,
+            "images": [
+                {
+                    "image": "/images/products/zucchini_yellow.jpg"
+                }
+            ],
+            "category": "Vegetables",
+            "stocks": "Available"
+        },
+        {
+            "englishName": "AGATHI KEERAI",
+            "tamilName": "அகத்திக்கீரை",
+            "price": 25,
+            "images": [
+                {
+                    "image": "/images/products/agathi_keerai.jpg"
+                }
+            ],
+            "category": "Keerai",
+            "stocks": "Available"
+        },
+        {
+            "englishName": "ARAI KEERAI",
+            "tamilName": "அரைக்கீரை",
+            "price": 20,
+            "images": [
+                {
+                    "image": "/images/products/arai_keerai.jpg"
+                }
+            ],
+            "category": "Keerai",
+            "stocks": "Available"
+        },
+        {
+            "englishName": "MANTHAKALI KEERAI",
+            "tamilName": "மாந்தக்காலிக்கீரை",
+            "price": 30,
+            "images": [
+                {
+                    "image": "/images/products/manthakali_keerai.jpg"
+                }
+            ],
+            "category": "Keerai",
+            "stocks": "Available"
+        },
+        {
+            "englishName": "MUDAKATHAN KEERAI",
+            "tamilName": "முடக்கத்தான்கீரை",
+            "price": 35,
+            "images": [
+                {
+                    "image": "/images/products/mudakathan_keerai.jpg"
+                }
+            ],
+            "category": "Keerai",
+            "stocks": "Available"
+        },
+        {
+            "englishName": "MULAIKEERAI",
+            "tamilName": "முளைக்கீரை",
+            "price": 25,
+            "images": [
+                {
+                    "image": "/images/products/mulaikeerai.jpg"
+                }
+            ],
+            "category": "Keerai",
+            "stocks": "Available"
+        },
+        {
+            "englishName": "MURUGA KEERAI",
+            "tamilName": "முருங்கைக்கீரை",
+            "price": 30,
+            "images": [
+                {
+                    "image": "/images/products/muruga_keerai.jpg"
+                }
+            ],
+            "category": "Keerai",
+            "stocks": "Available"
+        },
+        {
+            "englishName": "PALAK",
+            "tamilName": "பாலக்கீரை",
+            "price": 20,
+            "images": [
+                {
+                    "image": "/images/products/palak.jpg"
+                }
+            ],
+            "category": "Keerai",
+            "stocks": "Available"
+        },
+        {
+            "englishName": "PARUPU KEERAI",
+            "tamilName": "பருப்புக்கீரை",
+            "price": 25,
+            "images": [
+                {
+                    "image": "/images/products/parupu_keerai.jpg"
+                }
+            ],
+            "category": "Keerai",
+            "stocks": "Available"
+        },
+        {
+            "englishName": "PONNANGANNI GREEN",
+            "tamilName": "பொன்னாங்கண்ணி பச்சை",
+            "price": 30,
+            "images": [
+                {
+                    "image": "/images/products/ponnanganni_green.jpg"
+                }
+            ],
+            "category": "Keerai",
+            "stocks": "Available"
+        },
+        {
+            "englishName": "PONNANGANNI RED",
+            "tamilName": "பொன்னாங்கண்ணி சிவப்பு",
+            "price": 30,
+            "images": [
+                {
+                    "image": "/images/products/ponnanganni_red.jpg"
+                }
+            ],
+            "category": "Keerai",
+            "stocks": "Available"
+        },
+        {
+            "englishName": "PULICHA KEERAI",
+            "tamilName": "புளிச்சக்கீரை",
+            "price": 25,
+            "images": [
+                {
+                    "image": "/images/products/pulicha_keerai.jpg"
+                }
+            ],
+            "category": "Keerai",
+            "stocks": "Available"
+        },
+        {
+            "englishName": "SIRU KEERAI",
+            "tamilName": "சீருக்கீரை",
+            "price": 30,
+            "images": [
+                {
+                    "image": "/images/products/siru_keerai.jpg"
+                }
+            ],
+            "category": "Keerai",
+            "stocks": "Available"
+        },
+        {
+            "englishName": "SPRING ONION",
+            "tamilName": "வெந்தயம்",
+            "price": 40,
+            "images": [
+                {
+                    "image": "/images/products/spring_onion.jpg"
+                }
+            ],
+            "category": "Keerai",
+            "stocks": "Available"
+        },
+        {
+            "englishName": "SUKKAN KEERAI",
+            "tamilName": "சுக்கன் கீரை",
+            "price": 30,
+            "images": [
+                {
+                    "image": "/images/products/sukkan_keerai.jpg"
+                }
+            ],
+            "category": "Keerai",
+            "stocks": "Available"
+        },
+        {
+            "englishName": "SUNDAKAI",
+            "tamilName": "சுண்டைக்காய்",
+            "price": 35,
+            "images": [
+                {
+                    "image": "/images/products/sundakai.jpg"
+                }
+            ],
+            "category": "Vegetables",
+            "stocks": "Available"
+        },
+        {
+            "englishName": "THOOTHUVALAI KEERAI",
+            "tamilName": "தூத்துவளைக்கீரை",
+            "price": 35,
+            "images": [
+                {
+                    "image": "/images/products/thoothuvalai_keerai.jpg"
+                }
+            ],
+            "category": "Keerai",
+            "stocks": "Available"
+        },
+        {
+            "englishName": "VALLARAI KEERAI",
+            "tamilName": "வல்லாரைக் கீரை",
+            "price": 30,
+            "images": [
+                {
+                    "image": "/images/products/vallarai_keerai.jpg"
+                }
+            ],
+            "category": "Keerai",
+            "stocks": "Available"
+        },
+        {
+            "englishName": "PASALAI KEERAI",
+            "tamilName": "வசாலைக் கீரை",
+            "price": 30,
+            "images": [
+                {
+                    "image": "/images/products/pasalai_keerai.jpg"
+                }
+            ],
+            "category": "Keerai",
+            "stocks": "Available"
+        },
+        {
+            "englishName": "VENTHAIYAKKERAI BIG",
+            "tamilName": "வெந்தைக்கீரை பெரியது",
+            "price": 40,
+            "images": [
+                {
+                    "image": "/images/products/venthaiyakkerai_big.jpg"
+                }
+            ],
+            "category": "Keerai",
+            "stocks": "Available"
+        },
+        {
+            "englishName": "VENTHAIYAKKERAI SMALL",
+            "tamilName": "வெந்தைக்கீரை சிறியது",
+            "price": 35,
+            "images": [
+                {
+                    "image": "/images/products/venthaiyakkerai_small.jpg"
+                }
+            ],
+            "category": "Keerai",
+            "stocks": "Available"
+        },
+        {
+            "englishName": "KARISALAKANNI",
+            "tamilName": "கரிசலாங்கண்ணி",
+            "price": 35,
+            "images": [
+                {
+                    "image": "/images/products/karisalakanni.jpg"
+                }
+            ],
+            "category": "Keerai",
+            "stocks": "Available"
+        },
+        {
+            "englishName": "APPLE - BELGIUM",
+            "tamilName": "ஆப்பிள் - பெல்ஜியம்",
+            "price": 150,
+            "images": [
+                {
+                    "image": "/images/products/apple_belgium.jpg"
+                }
+            ],
+            "category": "Fruits",
+            "stocks": "Available"
+        },
+        {
+            "englishName": "APPLE - FUJI",
+            "tamilName": "ஆப்பிள் - ஃபுஜி",
+            "price": 140,
+            "images": [
+                {
+                    "image": "/images/products/apple_fuji.jpg"
+                }
+            ],
+            "category": "Fruits",
+            "stocks": "Available"
+        },
+        {
+            "englishName": "APPLE - GREEN",
+            "tamilName": "ஆப்பிள் - பச்சை",
+            "price": 160,
+            "images": [
+                {
+                    "image": "/images/products/apple_green.jpg"
+                }
+            ],
+            "category": "Fruits",
+            "stocks": "Available"
+        },
+        {
+            "englishName": "APPLE - ROYAL GALA",
+            "tamilName": "ஆப்பிள் - ராயல் கலை",
+            "price": 170,
+            "images": [
+                {
+                    "image": "/images/products/apple_royal_gala.jpg"
+                }
+            ],
+            "category": "Fruits",
+            "stocks": "Available"
+        },
+        {
+            "englishName": "APPLE - SHIMLA",
+            "tamilName": "ஆப்பிள் - ஷிம்லா",
+            "price": 150,
+            "images": [
+                {
+                    "image": "/images/products/apple_shimla.jpg"
+                }
+            ],
+            "category": "Fruits",
+            "stocks": "Available"
+        },
+        {
+            "englishName": "APPLE -WASHINGTON",
+            "tamilName": "ஆப்பிள் - வாஷிங்டன்",
+            "price": 180,
+            "images": [
+                {
+                    "image": "/images/products/apple_washington.jpg"
+                }
+            ],
+            "category": "Fruits",
+            "stocks": "Available"
+        },
+        {
+            "englishName": "AUSTRALIA ORANGE",
+            "tamilName": "ஆஸ்திரேலியா ஆரஞ்சு",
+            "price": 120,
+            "images": [
+                {
+                    "image": "/images/products/australia_orange.jpg"
+                }
+            ],
+            "category": "Fruits",
+            "stocks": "Available"
+        },
+        {
+            "englishName": "BANANA-ELAKKI",
+            "tamilName": "வாழைப்பழம்-எலகி",
+            "price": 60,
+            "images": [
+                {
+                    "image": "/images/products/banana_elakki.jpg"
+                }
+            ],
+            "category": "Fruits",
+            "stocks": "Available"
+        },
+        {
+            "englishName": "BANANA-PEYAN",
+            "tamilName": "வாழைப்பழம்-பெயன்",
+            "price": 50,
+            "images": [
+                {
+                    "image": "/images/products/banana_peyan.jpg"
+                }
+            ],
+            "category": "Fruits",
+            "stocks": "Available"
+        },
+        {
+            "englishName": "BLACK GRAPES SEED LESS",
+            "tamilName": "கருப்பு திராட்சை விதையற்ற",
+            "price": 100,
+            "images": [
+                {
+                    "image": "/images/products/black_grapes_seedless.jpg"
+                }
+            ],
+            "category": "Fruits",
+            "stocks": "Available"
+        },
+        {
+            "englishName": "BLUEBERRY (KGS)",
+            "tamilName": "நீலபழம் (கிலோகிராம்)",
+            "price": 300,
+            "images": [
+                {
+                    "image": "/images/products/blueberry.jpg"
+                }
+            ],
+            "category": "Fruits",
+            "stocks": "Available"
+        },
+        {
+            "englishName": "BUTTER FRUIT",
+            "tamilName": "வெண்ணெய் பழம்",
+            "price": 150,
+            "images": [
+                {
+                    "image": "/images/products/butter_fruit.jpg"
+                }
+            ],
+            "category": "Fruits",
+            "stocks": "Available"
+        },
+        {
+            "englishName": "CHERRY - (IMPORTED)",
+            "tamilName": "செர்ரி - (இறக்குமதி)",
+            "price": 200,
+            "images": [
+                {
+                    "image": "/images/products/cherry_imported.jpg"
+                }
+            ],
+            "category": "Fruits",
+            "stocks": "Available"
+        },
+        {
+            "englishName": "CHEVAZHAI [KGS]",
+            "tamilName": "செவ்வாழை (கிலோகிராம்)",
+            "price": 80,
+            "images": [
+                {
+                    "image": "/images/products/chevazhai.jpg"
+                }
+            ],
+            "category": "Fruits",
+            "stocks": "Available"
+        },
+        {
+            "englishName": "DRAGON FRUITS",
+            "tamilName": "பாம்புப் பழங்கள்",
+            "price": 250,
+            "images": [
+                {
+                    "image": "/images/products/dragon_fruits.jpg"
+                }
+            ],
+            "category": "Fruits",
+            "stocks": "Available"
+        },
+        {
+            "englishName": "FIG FRUIT",
+            "tamilName": "அத்தி பழம்",
+            "price": 180,
+            "images": [
+                {
+                    "image": "/images/products/fig_fruit.jpg"
+                }
+            ],
+            "category": "Fruits",
+            "stocks": "Available"
+        },
+        {
+            "englishName": "GRAPES GREEN",
+            "tamilName": "பச்சை திராட்சை",
+            "price": 90,
+            "images": [
+                {
+                    "image": "/images/products/grapes_green.jpg"
+                }
+            ],
+            "category": "Fruits",
+            "stocks": "Available"
+        },
+        {
+            "englishName": "GRAPES - PANNER",
+            "tamilName": "திராட்சை - பன்னீர்",
+            "price": 110,
+            "images": [
+                {
+                    "image": "/images/products/grapes_panner.jpg"
+                }
+            ],
+            "category": "Fruits",
+            "stocks": "Available"
+        },
+        {
+            "englishName": "GUAVA WHITE",
+            "tamilName": "வெள்ளை காயா",
+            "price": 70,
+            "images": [
+                {
+                    "image": "/images/products/guava_white.jpg"
+                }
+            ],
+            "category": "Fruits",
+            "stocks": "Available"
+        },
+        {
+            "englishName": "GUAVA RED",
+            "tamilName": "சிவப்பு காயா",
+            "price": 75,
+            "images": [
+                {
+                    "image": "/images/products/guava_red.jpg"
+                }
+            ],
+            "category": "Fruits",
+            "stocks": "Available"
+        },
+        {
+            "englishName": "KAMALA ORANGE",
+            "tamilName": "கமலா ஆரஞ்சு",
+            "price": 120,
+            "images": [
+                {
+                    "image": "/images/products/kamala_orange.jpg"
+                }
+            ],
+            "category": "Fruits",
+            "stocks": "Available"
+        },
+        {
+            "englishName": "KARPURAVALLI",
+            "tamilName": "கற்பூரவள்ளி",
+            "price": 80,
+            "images": [
+                {
+                    "image": "/images/products/karpuravalli.jpg"
+                }
+            ],
+            "category": "Fruits",
+            "stocks": "Available"
+        },
+        {
+            "englishName": "KIWI FRUIT",
+            "tamilName": "கிவி பழம்",
+            "price": 200,
+            "images": [
+                {
+                    "image": "/images/products/kiwi_fruit.jpg"
+                }
+            ],
+            "category": "Fruits",
+            "stocks": "Available"
+        },
+        {
+            "englishName": "LITCHE THAILAND",
+            "tamilName": "லிட்சி தாய்லாந்து",
+            "price": 300,
+            "images": [
+                {
+                    "image": "/images/products/litche_thailand.jpg"
+                }
+            ],
+            "category": "Fruits",
+            "stocks": "Available"
+        },
+        {
+            "englishName": "MALAIVAZHAI (KGS)",
+            "tamilName": "மலைவாழை (கிலோகிராம்)",
+            "price": 70,
+            "images": [
+                {
+                    "image": "/images/products/malaivazhai.jpg"
+                }
+            ],
+            "category": "Fruits",
+            "stocks": "Available"
+        },
+        {
+            "englishName": "MALDA ORANGE",
+            "tamilName": "மால்டா ஆரஞ்சு",
+            "price": 130,
+            "images": [
+                {
+                    "image": "/images/products/malda_orange.jpg"
+                }
+            ],
+            "category": "Fruits",
+            "stocks": "Available"
+        },
+        {
+            "englishName": "MANDRINS ORANGE",
+            "tamilName": "மாண்டரின்ஸ் ஆரஞ்சு",
+            "price": 140,
+            "images": [
+                {
+                    "image": "/images/products/mandrins_orange.jpg"
+                }
+            ],
+            "category": "Fruits",
+            "stocks": "Available"
+        },
+        {
+            "englishName": "MANGO - ALPHONSA",
+            "tamilName": "மாம்பழம் - அல்போன்சா",
+            "price": 180,
+            "images": [
+                {
+                    "image": "/images/products/mango_alphonsa.jpg"
+                }
+            ],
+            "category": "Fruits",
+            "stocks": "Available"
+        },
+        {
+            "englishName": "MANGO - BANGANABALLI",
+            "tamilName": "மாம்பழம் - பங்கனபள்ளி",
+            "price": 170,
+            "images": [
+                {
+                    "image": "/images/products/mango_banganaballi.jpg"
+                }
+            ],
+            "category": "Fruits",
+            "stocks": "Available"
+        },
+        {
+            "englishName": "MANGO - HIMAMPASAND",
+            "tamilName": "மாம்பழம் - ஹிமாம்பசந்த்",
+            "price": 190,
+            "images": [
+                {
+                    "image": "/images/products/mango_himampasand.jpg"
+                }
+            ],
+            "category": "Fruits",
+            "stocks": "Available"
+        },
+        {
+            "englishName": "MANGO - JAWADU (KGS)",
+            "tamilName": "மாம்பழம் - ஜவாது (கிலோ)",
+            "price": 80,
+            "images": [
+                {
+                    "image": "/images/products/mango_jawadu.jpg"
+                }
+            ],
+            "category": "Fruits",
+            "stocks": "Available"
+        },
+        {
+            "englishName": "MANGO - LANGADA (KGS)",
+            "tamilName": "மாம்பழம் - லங்கடா (கிலோ)",
+            "price": 85,
+            "images": [
+                {
+                    "image": "/images/products/mango_langada.jpg"
+                }
+            ],
+            "category": "Fruits",
+            "stocks": "Available"
+        },
+        {
+            "englishName": "MANGO - MALGOVA",
+            "tamilName": "மாம்பழம் - மால்கோவா",
+            "price": 90,
+            "images": [
+                {
+                    "image": "/images/products/mango_malgova.jpg"
+                }
+            ],
+            "category": "Fruits",
+            "stocks": "Available"
+        },
+        {
+            "englishName": "MANGO - RUMANI (KGS)",
+            "tamilName": "மாம்பழம் - ருமானி (கிலோ)",
+            "price": 75,
+            "images": [
+                {
+                    "image": "/images/products/mango_rumani.jpg"
+                }
+            ],
+            "category": "Fruits",
+            "stocks": "Available"
+        },
+        {
+            "englishName": "MANGO - SENTHURA",
+            "tamilName": "மாம்பழம் - செந்துரா",
+            "price": 95,
+            "images": [
+                {
+                    "image": "/images/products/mango_senthura.jpg"
+                }
+            ],
+            "category": "Fruits",
+            "stocks": "Available"
+        },
+        {
+            "englishName": "MANGUSTAN",
+            "tamilName": "மாங்கூஸ்டான்",
+            "price": 110,
+            "images": [
+                {
+                    "image": "/images/products/mangustan.jpg"
+                }
+            ],
+            "category": "Fruits",
+            "stocks": "Available"
+        },
+        {
+            "englishName": "MORISH FRUIT (KGS)",
+            "tamilName": "மொரிஷ் பழம் (கிலோ)",
+            "price": 75,
+            "images": [
+                {
+                    "image": "/images/products/morish_fruit.jpg"
+                }
+            ],
+            "category": "Fruits",
+            "stocks": "Available"
+        },
+        {
+            "englishName": "MUSK MELON VARI",
+            "tamilName": "மச்சட்டி பழம் வரி",
+            "price": 60,
+            "images": [
+                {
+                    "image": "/images/products/musk_melon_vari.jpg"
+                }
+            ],
+            "category": "Fruits",
+            "stocks": "Available"
+        },
+        {
+            "englishName": "MUSKMELON (KGS)",
+            "tamilName": "முஸ்க்மெலன் (கிலோ)",
+            "price": 50,
+            "images": [
+                {
+                    "image": "/images/products/muskmelon.jpg"
+                }
+            ],
+            "category": "Fruits",
+            "stocks": "Available"
+        },
+        {
+            "englishName": "MUSAMBI (KGS)",
+            "tamilName": "முசம்பி (கிலோ)",
+            "price": 40,
+            "images": [
+                {
+                    "image": "/images/products/musambi.jpg"
+                }
+            ],
+            "category": "Fruits",
+            "stocks": "Available"
+        },
+        {
+            "englishName": "NENDRAM BANANA",
+            "tamilName": "நேந்திரம் வாழை",
+            "price": 30,
+            "images": [
+                {
+                    "image": "/images/products/nendram_banana.jpg"
+                }
+            ],
+            "category": "Fruits",
+            "stocks": "Available"
+        },
+        {
+            "englishName": "PAPPAYA (KGS)",
+            "tamilName": "பப்பாளி (கிலோ)",
+            "price": 35,
+            "images": [
+                {
+                    "image": "/images/products/pappaya.jpg"
+                }
+            ],
+            "category": "Fruits",
+            "stocks": "Available"
+        },
+        {
+            "englishName": "PASSION FR",
+            "tamilName": "பேஷன் பழம்",
+            "price": 45,
+            "images": [
+                {
+                    "image": "/images/products/passion_fruit.jpg"
+                }
+            ],
+            "category": "Fruits",
+            "stocks": "Available"
+        },
+        {
+            "englishName": "PEAR FRUIT",
+            "tamilName": "பேர் பழம்",
+            "price": 55,
+            "images": [
+                {
+                    "image": "/images/products/pear_fruit.jpg"
+                }
+            ],
+            "category": "Fruits",
+            "stocks": "Available"
+        },
+        {
+            "englishName": "PEAR RED",
+            "tamilName": "சிவப்பு பேர்",
+            "price": 60,
+            "images": [
+                {
+                    "image": "/images/products/pear_red.jpg"
+                }
+            ],
+            "category": "Fruits",
+            "stocks": "Available"
+        },
+        {
+            "englishName": "PINE APPLE (KGS)",
+            "tamilName": "பைன் அப்பிள் (கிலோ)",
+            "price": 40,
+            "images": [
+                {
+                    "image": "/images/products/pineapple.jpg"
+                }
+            ],
+            "category": "Fruits",
+            "stocks": "Available"
+        },
+        {
+            "englishName": "PLUMS FRUIT",
+            "tamilName": "ப்ளம்ஸ் பழம்",
+            "price": 70,
+            "images": [
+                {
+                    "image": "/images/products/plums_fruit.jpg"
+                }
+            ],
+            "category": "Fruits",
+            "stocks": "Available"
+        },
+        {
+            "englishName": "POMEGRANATE KABUL",
+            "tamilName": "மாதுளை காபூல்",
+            "price": 80,
+            "images": [
+                {
+                    "image": "/images/products/pomegranate_kabul.jpg"
+                }
+            ],
+            "category": "Fruits",
+            "stocks": "Available"
+        },
+        {
+            "englishName": "POOVAMPALAM",
+            "tamilName": "பூவாம்பழம்",
+            "price": 50,
+            "images": [
+                {
+                    "image": "/images/products/poovampalam.jpg"
+                }
+            ],
+            "category": "Fruits",
+            "stocks": "Available"
+        },
+        {
+            "englishName": "RASTHALI (KGS)",
+            "tamilName": "ராஸ்தாளி (கிலோ)",
+            "price": 45,
+            "images": [
+                {
+                    "image": "/images/products/rasthali.jpg"
+                }
+            ],
+            "category": "Fruits",
+            "stocks": "Available"
+        },
+        {
+            "englishName": "RED GLOAB GRAPE",
+            "tamilName": "சிவப்பு கிளோப் திராட்சை",
+            "price": 65,
+            "images": [
+                {
+                    "image": "/images/products/red_gloab_grape.jpg"
+                }
+            ],
+            "category": "Fruits",
+            "stocks": "Available"
+        },
+        {
+            "englishName": "SAPPOTA (KGS)",
+            "tamilName": "சப்போட்டா (கிலோ)",
+            "price": 55,
+            "images": [
+                {
+                    "image": "/images/products/sappota.jpg"
+                }
+            ],
+            "category": "Fruits",
+            "stocks": "Available"
+        },
+        {
+            "englishName": "SOURSOP(KGS)",
+            "tamilName": "முல்லைப்பழம் (கிலோ)",
+            "price": 70,
+            "images": [
+                {
+                    "image": "/images/products/soursop.jpg"
+                }
+            ],
+            "category": "Fruits",
+            "stocks": "Available"
+        },
+        {
+            "englishName": "STRAWBERRY FRUIT [BOXES]",
+            "tamilName": "ஸ்ட்ராபெர்ரி பழம் [பட்டயம்]",
+            "price": 75,
+            "images": [
+                {
+                    "image": "/images/products/strawberry.jpg"
+                }
+            ],
+            "category": "Fruits",
+            "stocks": "Available"
+        },
+        {
+            "englishName": "WATER MELON",
+            "tamilName": "தண்ணீர் மெலன்",
+            "price": 30,
+            "images": [
+                {
+                    "image": "/images/products/watermelon.jpg"
+                }
+            ],
+            "category": "Fruits",
+            "stocks": "Available"
+        },
+        {
+            "englishName": "WATER MELON KIRAN",
+            "tamilName": "தண்ணீர் மெலன் கிரான்",
+            "price": 40,
+            "images": [
+                {
+                    "image": "/images/products/watermelon_kiran.jpg"
+                }
+            ],
+            "category": "Fruits",
+            "stocks": "Available"
+        },
+        {
+            "englishName": "CHEETHA PALAM",
+            "tamilName": "சீத்தா பழம்",
+            "price": 25,
+            "images": [
+                {
+                    "image": "/images/products/cheetha_palam.jpg"
+                }
+            ],
+            "category": "Fruits",
+            "stocks": "Available"
+        },
+        {
+            "englishName": "KINOR ORANGE",
+            "tamilName": "கினோர் ஆரஞ்சு",
+            "price": 60,
+            "images": [
+                {
+                    "image": "/images/products/kinor_orange.jpg"
+                }
+            ],
+            "category": "Fruits",
+            "stocks": "Available"
+        },
+        {
+            "englishName": "GRAPES GREEN SEEDLESS",
+            "tamilName": "பச்சை திராட்சை இல்லாத",
+            "price": 55,
+            "images": [
+                {
+                    "image": "/images/products/green_seedless_grapes.jpg"
+                }
+            ],
+            "category": "Fruits",
+            "stocks": "Available"
+        },
+        {
+            "englishName": "LITHUSE",
+            "tamilName": "லித்தூஸ்",
+            "price": 70,
+            "images": [
+                {
+                    "image": "/images/products/lithuse.jpg"
+                }
+            ],
+            "category": "Fruits",
+            "stocks": "Available"
+        },
+        {
+            "englishName": "AUSTRALIA GRAPES",
+            "tamilName": "ஆஸ்திரேலியா திராட்சை",
+            "price": 80,
+            "images": [
+                {
+                    "image": "/images/products/australia_grapes.jpg"
+                }
+            ],
+            "category": "Fruits",
+            "stocks": "Available"
+        },
+        {
+            "englishName": "PIRANDAI KERRAI",
+            "tamilName": "பிரண்டை கெற்றை",
+            "price": 90,
+            "images": [
+                {
+                    "image": "/images/products/pirandai_kerrai.jpg"
+                }
+            ],
+            "category": "Keerai",
+            "stocks": "Available"
+        },
+        {
+            "englishName": "CHERRY - INDIAN",
+            "tamilName": "செர்ரி - இந்தியன்",
+            "price": 100,
+            "images": [
+                {
+                    "image": "/images/products/indian_cherry.jpg"
+                }
+            ],
+            "category": "Fruits",
+            "stocks": "Available"
+        },
+        {
+            "englishName": "JAPAN FRUITS",
+            "tamilName": "ஜப்பான் பழங்கள்",
+            "price": 110,
+            "images": [
+                {
+                    "image": "/images/products/japan_fruits.jpg"
+                }
+            ],
+            "category": "Fruits",
+            "stocks": "Available"
+        },
+        {
+            "englishName": "KIWI FRUIT",
+            "tamilName": "கீவி பழம்",
+            "price": 120,
+            "images": [
+                {
+                    "image": "/images/products/kiwi_fruit.jpg"
+                }
+            ],
+            "category": "Fruits",
+            "stocks": "Available"
+        },
+        {
+            "englishName": "RAMDAN FRUITS",
+            "tamilName": "ரமடான் பழங்கள்",
+            "price": 130,
+            "images": [
+                {
+                    "image": "/images/products/ramdan_fruits.jpg"
+                }
+            ],
+            "category": "Fruits",
+            "stocks": "Available"
+        }
+    ]

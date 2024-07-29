@@ -51,6 +51,28 @@ const getPorterResponse = catchAsyncError(async (req, res, next) => {
         { new: true }
     );
 //   console.log("porterResponseData",porterResponseData)
+if (porterResponseData && porterResponseData.porterResponse && porterResponseData.porterResponse.status && porterResponseData.porterResponse.status === 'open'){
+    const order = await Payment.findOne({ order_id});
+    // console.log("order",order)
+    if (!order || !porterOrder_id) {
+        return next(new ErrorHandler(`Order not found with this id: ${order_id}`, 404))
+    }
+
+    const porterResponseStatus = await Payment.findOneAndUpdate(
+        { order_id },
+        { orderStatus:'Dispatched' },
+        { new: true }
+    );
+    if (porterResponseData && porterResponseStatus) {
+       return res.status(200).json({
+            success: true,
+            porterResponse: responseData
+        });
+    } else {
+        return next(new ErrorHandler(`Something went wrong with this id: ${order_id}`, 404));
+    }
+//   console.log("porterResponseStatus",porterResponseStatus)
+ }
 
  if (porterResponseData && porterResponseData.porterResponse && porterResponseData.porterResponse.status && porterResponseData.porterResponse.status === 'ended'){
     const order = await Payment.findOne({ order_id});
@@ -111,7 +133,7 @@ const getPorterResponse = catchAsyncError(async (req, res, next) => {
 
 const getCancelResponse = catchAsyncError(async (req, res, next) => {
     //    console.log(req.params)
-        console.log(req.body)
+        // console.log(req.body)
     const  {order_id,porterOrder_id}  = req.body;
 
     const order = await porterModel.findOne({ order_id});

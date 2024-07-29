@@ -9,10 +9,27 @@ const createEnquiry = catchAsyncError(async(req, res, next)=>{
 
     try {
 
-        // Ensure all fields are provided
-        // if (!name || !email || !mobile || !message) {
-        //     return next(new ErrorHandler('All fields are required', 400));
-        // }
+        // Validate name
+        if (!name || typeof name !== 'string' || name.trim().length === 0) {
+            return next(new ErrorHandler('Please enter Name', 400));
+        }
+
+        // Validate email
+        const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+        if (!email || !emailRegex.test(email)) {
+            return next(new ErrorHandler('Please enter valid Email', 400));
+        }
+
+        // Validate mobile
+        const mobileRegex = /^[0-9]{10}$/; // Adjust regex as per your mobile number format
+        if (!mobile || !mobileRegex.test(mobile)) {
+            return next(new ErrorHandler('Please enter 10-digit mobile number', 400));
+        }
+
+        // Validate message
+        if (!message || typeof message !== 'string' || message.trim().length === 0) {
+            return next(new ErrorHandler('Please enter Message', 400));
+        }
     
         const enquiry = new Enquiry({name, email, mobile, message,createdAt:Date.now()})
         console.log("enquiry",enquiry)

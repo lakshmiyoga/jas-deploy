@@ -28,8 +28,16 @@ const createProducts = catchAsyncError(async (req, res, next) => {
 
     // console.log(name);
 
-    const newItem = new Product(req.body);
-    // console.log(newItem);
+    const newItem = new Product({
+        englishName: req.body.englishName,
+        tamilName: req.body.tamilName,
+        price: req.body.price,
+        category: req.body.category,
+        images: req.body.images,
+        user: req.body.user
+    });
+    
+    console.log(newItem);
     await newItem.save();
     res.status(201).json({ success: true, newItem });
 

@@ -15,9 +15,11 @@ const nodemailer = require('nodemailer')
 const userRegister = catchAsyncError(async (req, res, next) => {
   const { name, email, password } = req.body;
 
-  if (!name || !email || !password) {
-    return next(new ErrorHandler('Please provide all required fields: name, email, and password', 400));
-  }
+  // if (!name || !email || !password) {
+  //   return next(new ErrorHandler('Please provide all required fields: name, email, and password', 400));
+  // }
+
+
 
   let avatar;
 
@@ -25,7 +27,7 @@ const userRegister = catchAsyncError(async (req, res, next) => {
   if (process.env.NODE_ENV === "production") {
     BASE_URL = `${req.protocol}://${req.get('host')}`
   }
- 
+
 
   if (req.file) {
     avatar = `${BASE_URL}/uploads/user/${req.file.originalname}`;
@@ -46,6 +48,8 @@ const userRegister = catchAsyncError(async (req, res, next) => {
       password: hashedPassword,
       avatar
     });
+
+    console.log("regUser",regUser)
 
     await regUser.save();
     sendToken(regUser, 201, res);
@@ -125,7 +129,7 @@ const requestPasswordReset = async (req, res, next) => {
 
     const resetUrl = `${BASE_URL}/password/reset/${user.resetPasswordToken}`
     const message = `Your password reset url is as follows \n\n ${resetUrl} \n\n If you have not request this email, then ignore it.`
-console.log("message",message)
+    console.log("message", message)
     // Code to send email goes here
     // sendEmail({
     //   email: user.email,
@@ -134,14 +138,14 @@ console.log("message",message)
 
     // })
 
-     // Send link via email
-  const transporter = nodemailer.createTransport({
-    service: 'gmail',
-    auth: {
-      user: process.env.SEND_MAIL, // Your Gmail email address
-      pass: process.env.MAIL_PASS // Your Gmail password
-    }
-  });
+    // Send link via email
+    const transporter = nodemailer.createTransport({
+      service: 'gmail',
+      auth: {
+        user: process.env.SEND_MAIL, // Your Gmail email address
+        pass: process.env.MAIL_PASS // Your Gmail password
+      }
+    });
     // Configure mail options
     const mailOptions = {
       from: process.env.SEND_MAIL,
@@ -149,18 +153,18 @@ console.log("message",message)
       subject: 'Password Recovery',
       text: message // Use 'text' instead of 'message'
     };
-  console.log("mailOptions",mailOptions)
+    console.log("mailOptions", mailOptions)
 
-  transporter.sendMail(mailOptions, (error, info) => {
-    if (error) {
-      console.error('Error sending email:', error); // Log the error for debugging
-      return next(new ErrorHandler("Failed to send mail", 500))
-    } else {
-      console.log('Email sent: ' + info.response);
-      res.status(200).json({ success: true, message: `email send to ${user.email}` });
-    }
-  });
-  
+    transporter.sendMail(mailOptions, (error, info) => {
+      if (error) {
+        console.error('Error sending email:', error); // Log the error for debugging
+        return next(new ErrorHandler("Failed to send mail", 500))
+      } else {
+        console.log('Email sent: ' + info.response);
+        res.status(200).json({ success: true, message: `email send to ${user.email}` });
+      }
+    });
+
 
     // res.status(200).json({ success: true, message: `email send to ${user.email}` });
   } catch (error) {
@@ -322,13 +326,14 @@ const updateUser = catchAsyncError(async (req, res, next) => {
 const deleteUser = catchAsyncError(async (req, res, next) => {
   const user = await User.findById(req.params.id);
   if (!user) {
-    return next(new ErrorHandler(`User not found with this id ${req.params.id}`))
+    return next(new ErrorHandler(`User not found with this id ${req.params.id}`));
   }
-  await user.remove();
+  await User.deleteOne({ _id: req.params.id });
   res.status(200).json({
     success: true,
-  })
-})
+  });
+});
+
 
 
 
