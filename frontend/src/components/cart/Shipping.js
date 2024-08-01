@@ -272,7 +272,7 @@ const Shipping = () => {
                     const location = response.data.results[0];
                     const components = location.components;
 
-                    const city = components.county || "";
+                    const city = components.state_district || "";
                     const state = components.state || "";
                     const country = components.country || "";
                     // const latitude = location.geometry.lat;
@@ -393,6 +393,7 @@ const Shipping = () => {
                                 value={state}
                                 onChange={(e) => setState(e.target.value)}
                                 required
+                                readOnly
                             />
                         </div>
 
@@ -405,6 +406,7 @@ const Shipping = () => {
                                 value={city}
                                 onChange={(e) => setCity(e.target.value)}
                                 required
+                                readOnly
                             />
                         </div>
 
@@ -415,6 +417,7 @@ const Shipping = () => {
                                 id="country_field"
                                 className="form-control"
                                 value={country}
+                                required
                                 readOnly
                             />
                         </div>

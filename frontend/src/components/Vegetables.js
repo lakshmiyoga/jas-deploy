@@ -37,6 +37,7 @@ const Vegetables = () => {
 
     
      // Sort the filtered vegetables in ascending order by name
+    //  const sortedVegetables = filteredVegetable.sort();
      const sortedVegetables = filteredVegetable.sort((a, b) => a.englishName.localeCompare(b.englishName));
 
     return (
