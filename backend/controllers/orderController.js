@@ -6,10 +6,33 @@ const nodeCron = require('node-cron');
 const nodemailer = require('nodemailer');
 const path = require('path');
 const axios = require('axios');
-const PorterModel = require('../models/porterModel');
-
 // const fetch = require('node-fetch');
+const fs = require('fs');
+const PorterModel = require('../models/porterModel');
+const { Juspay, APIError } = require('expresscheckout-nodejs');
+const config = require('../config/config.json');
 
+const SANDBOX_BASE_URL = "https://smartgatewayuat.hdfcbank.com"
+const PRODUCTION_BASE_URL = "https://smartgateway.hdfcbank.com";
+
+// Read config.json file
+
+
+// Ensure the paths are read correctly
+const publicKey = fs.readFileSync(path.resolve(config.PUBLIC_KEY_PATH));
+const privateKey = fs.readFileSync(path.resolve(config.PRIVATE_KEY_PATH));
+const paymentPageClientId = config.PAYMENT_PAGE_CLIENT_ID; // used in orderSession request
+
+
+const juspay = new Juspay({
+    merchantId: config.MERCHANT_ID,
+    baseUrl: SANDBOX_BASE_URL, // Using sandbox base URL for testing
+    jweAuth: {
+        keyId: config.KEY_UUID,
+        publicKey,
+        privateKey
+    }
+});
 
 
 //create new order
@@ -52,16 +75,39 @@ const newOrder = catchAsyncError(async (req, res, next) => {
 const getSingleOrder = catchAsyncError(async (req, res, next) => {
     //    console.log(req.params)
     const { id } = req.params
-    // console.log(id)
+    console.log("id", id)
     const order = await Payment.findOne({ 'order_id': id }).populate('user', 'name email');
     // console.log(order)
     if (!order) {
         return next(new ErrorHandler(`Order not found with this id: ${req.params.id}`, 404))
     }
-    res.status(200).json({
-        success: true,
-        order
-    })
+    try {
+        const statusResponse = await juspay.order.status(id);
+        if (statusResponse) {
+            const onepayments = await Payment.findOne({ 'order_id': id });
+            try{
+                if (onepayments) {
+                    const paymentstatus = await Payment.findOneAndUpdate({ 'order_id': id },
+                        {
+                            $set: { statusResponse: statusResponse }
+                        },
+                        { new: true });
+                }
+
+            }catch(error){
+                return next(new ErrorHandler('Something went wrong', 404))
+            }
+           
+        }
+        return res.status(200).json({
+            success: true,
+            order
+        })
+
+    } catch (error) {
+        return next(new ErrorHandler('Something went wrong', 404))
+    }
+
 
 })
 
@@ -71,28 +117,28 @@ const getQuote = catchAsyncError(async (req, res, next) => {
     const { pickup_details, drop_details, customer } = req.body;
     const apiEndpoint = 'https://pfe-apigw-uat.porter.in/v1/get_quote';
     // const apiKey = 'fdbe7c47-25ce-4b15-90c7-ccce2027841d';
-//    console.log(req.body)
+    //    console.log(req.body)
     try {
-      const requestData = {
-        pickup_details,
-        drop_details,
-        customer
-      };
-//   console.log(requestData)
+        const requestData = {
+            pickup_details,
+            drop_details,
+            customer
+        };
+        //   console.log(requestData)
 
-      const response = await axios.post(apiEndpoint, requestData, {
-        headers: {
-          'X-API-KEY': process.env.PORTER_API_KEY,
-          'Content-Type': 'application/json'
-        }
-      });
-    // console.log(response.data)
-      return res.json(response.data);
+        const response = await axios.post(apiEndpoint, requestData, {
+            headers: {
+                'X-API-KEY': process.env.PORTER_API_KEY,
+                'Content-Type': 'application/json'
+            }
+        });
+        // console.log(response.data)
+        return res.json(response.data);
     } catch (error) {
         // console.log(error.response.status)
         // console.log(error.response.data.message)
         return next(new ErrorHandler(error.response.data.message, error.response.status));
-    //   return res.status(500).json({ message: 'Error sending data', error });
+        //   return res.status(500).json({ message: 'Error sending data', error });
     }
 
 })
@@ -100,77 +146,117 @@ const getQuote = catchAsyncError(async (req, res, next) => {
 //create porter order
 const porterOrder = catchAsyncError(async (req, res, next) => {
     //    console.log(req.params)
-    const  {order_id,request_id,user,user_id,porterData, updatedItems}  = req.body;
+    const { order_id, request_id, user, user_id, porterData, updatedItems, detailedTable, totalRefundableAmount } = req.body;
     const apiEndpoint = 'https://pfe-apigw-uat.porter.in/v1/orders/create';
 
-    const porterOrderExist = await PorterModel.findOne({order_id});
+    const porterOrderExist = await PorterModel.findOne({ order_id });
 
-    const createPorter = async() => {
-        try{
+
+    const createPorter = async () => {
+        try {
             const response = await axios.post(apiEndpoint, porterData, {
                 headers: {
-                  'X-API-KEY': process.env.PORTER_API_KEY,
-                  'Content-Type': 'application/json'
+                    'X-API-KEY': process.env.PORTER_API_KEY,
+                    'Content-Type': 'application/json'
                 }
-              });
-              const porterOrder= response.data;
-              if(order_id && request_id && user_id && porterData && porterOrder){
+            });
+            const porterOrder = response.data;
+            if (order_id && request_id && user_id && porterData && porterOrder) {
                 const Data = new PorterModel({
-                    order_id:order_id,
-                    request_id:request_id,
-                    user:user,
-                    user_id :user_id ,
-                    porterData:porterData ,
-                    porterOrder:{},
-                    porterResponse:{},
-                    updatedItems:updatedItems
+                    order_id: order_id,
+                    request_id: request_id,
+                    user: user,
+                    user_id: user_id,
+                    porterData: porterData,
+                    porterOrder: {},
+                    porterResponse: {},
+                    updatedItems: updatedItems,
+                    detailedTable: detailedTable,
+                    totalRefundableAmount: totalRefundableAmount
+
                 });
-                // console.log("Data",Data)
+                console.log("Data", Data)
                 await Data.save();
-                if(Data){
+                if (Data) {
                     const onepayments = await PorterModel.findOne({ request_id: porterOrder && porterOrder.request_id });
                     if (onepayments) {
                         const porterResponse = await PorterModel.findOneAndUpdate({ request_id: porterOrder.request_id },
                             {
                                 $set: { porterOrder: porterOrder }
-                             },
+                            },
                             { new: true });
-                            if(porterResponse){
+                        if (porterResponse) {
+                            if (porterResponse && porterResponse.porterOrder && porterResponse.porterOrder.order_id) {
+                                try {
+                                    // Initiate refund
+                                    const refundPayload = {
+                                        unique_request_id: 'refund_test_' + Date.now(),
+                                        order_id: order_id,
+                                        amount: totalRefundableAmount,
+                                    };
+                                    console.log("refundPayload", refundPayload);
 
-                                return res.status(200).json({porterOrder})
-                            }     
+                                    const refundResponse = await juspay.order.refund(order_id, refundPayload);
+                                    if (refundResponse) {
+                                        const statusResponse = await juspay.order.status(order_id);
+                                        if (statusResponse) {
+                                            const onepayments = await Payment.findOne({ order_id });
+                                            if (onepayments) {
+                                                const paymentstatus = await Payment.findOneAndUpdate({ order_id },
+                                                    {
+                                                        $set: { statusResponse: statusResponse }
+                                                    },
+                                                    { new: true });
+                                            }
+                                        }
+                                    }
+                                    console.log("refundResponse", refundResponse)
+
+                                    // Return refund response
+                                    return res.status(200).json({ refundResponse })
+                                } catch (error) {
+                                    console.error('Error during refund:', error);
+                                    //   return next(new ErrorHandler('Could Not find any Order', 500));
+                                }
+                            }
+
+                            return res.status(200).json({ porterOrder })
+                        }
                     }
-                    else{
+                    else {
                         return next(new ErrorHandler('Could Not find any Order', 500));
                     }
-            }
-            else{
-             return next(new ErrorHandler('Error for create Porter Order', 500));
-            }
-            
-            } else  {
+                }
+                else {
+                    return next(new ErrorHandler('Error for create Porter Order', 500));
+                }
+
+            } else {
                 return next(new ErrorHandler('Error for create Porter Order', 500));
-            //   return res.status(500).json({ message: 'Error sending data', error });
+                //   return res.status(500).json({ message: 'Error sending data', error });
             }
-        }catch(error){
-           return next(new ErrorHandler(error.response.data.message, error.response.status));
-        }   
-          
+        } catch (error) {
+            return next(new ErrorHandler(error.response.data.message, error.response.status));
+        }
+
     }
 
     if (porterOrderExist) {
-        const porterExistResponse = await PorterModel.deleteOne({order_id});
-        // console.log("porterOrderExist",porterExistResponse)
-        if(porterExistResponse && porterExistResponse.acknowledged){
-            createPorter();
+        if (porterOrderExist && porterOrderExist.porterOrder && porterOrderExist.porterOrder.order_id) {
+            return next(new ErrorHandler(`Order already exist with this id: ${porterOrderExist.porterOrder.order_id}`, 400));
         }
+        // const porterExistResponse = await PorterModel.deleteOne({order_id});
+        // console.log("porterOrderExist",porterExistResponse)
+        // if(porterExistResponse && porterExistResponse.acknowledged){
+        //     createPorter();
+        // }
     }
-    else{
+    else {
         createPorter();
     }
-   
-       
-      
+
+
+
 })
 
 //Get Loggedin User Orders 
@@ -209,8 +295,8 @@ const updateOrder = catchAsyncError(async (req, res, next) => {
     // Find the order using the custom order_id field
 
     const order = await Payment.findOne({ order_id: req.params.id });
-//  console.log("order",order)
-//  console.log("req.body.orderStatus",req.body)
+    //  console.log("order",order)
+    //  console.log("req.body.orderStatus",req.body)
     if (!order) {
         return next(new ErrorHandler('Order not found', 404));
     }
@@ -563,30 +649,30 @@ nodeCron.schedule('00 21 * * *', async () => {
 
 
 const getRemoveResponse = catchAsyncError(async (req, res, next) => {
-    console.log("req.body",req.body)
-    const {order_id, removalReason} = req.body;
-    try{
-        const isorderExist = await Payment.findOne({order_id});
-        console.log("isorderExist",isorderExist);
+    console.log("req.body", req.body)
+    const { order_id, removalReason } = req.body;
+    try {
+        const isorderExist = await Payment.findOne({ order_id });
+        console.log("isorderExist", isorderExist);
 
-        if(isorderExist){
-            const orderResponse = await Payment.findOneAndUpdate({order_id},
-            {
-                orderStatus :'Removed',
-                $set: { removalReason },
-                
-            },
-            {new:true}
-        );
-        console.log("orderResponse",orderResponse)
-        res.status(200).json({removeMessage : "Order Removed successfully"})
+        if (isorderExist) {
+            const orderResponse = await Payment.findOneAndUpdate({ order_id },
+                {
+                    orderStatus: 'Removed',
+                    $set: { removalReason },
+
+                },
+                { new: true }
+            );
+            console.log("orderResponse", orderResponse)
+            res.status(200).json({ removeMessage: "Order Removed successfully" })
         }
 
 
-    }catch(error){
+    } catch (error) {
         console.error('Failed to remove order:', error);
     }
-    
+
 })
 
-module.exports = { newOrder, getSingleOrder,getQuote,porterOrder, myOrders, orders, updateOrder, deleteOrder, getOrderSummaryByDate, getUserSummaryByDate, getRemoveResponse };
+module.exports = { newOrder, getSingleOrder, getQuote, porterOrder, myOrders, orders, updateOrder, deleteOrder, getOrderSummaryByDate, getUserSummaryByDate, getRemoveResponse };

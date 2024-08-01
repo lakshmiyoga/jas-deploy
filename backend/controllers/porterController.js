@@ -44,7 +44,7 @@ const getPorterResponse = catchAsyncError(async (req, res, next) => {
         }
       });
       const responseData = response.data; // Extract only the data part of the response
-
+    //   console.log("responseData",responseData)
     const porterResponseData = await porterModel.findOneAndUpdate(
         { order_id },
         { $set: { porterResponse: responseData } },
