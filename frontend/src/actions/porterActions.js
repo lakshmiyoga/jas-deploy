@@ -10,7 +10,9 @@ import {
     porterCancelRequest,
     porterCancelSuccess,
     porterCancelFail,
-   
+    porterRemoveRequest,
+    porterRemoveSuccess,
+    porterRemoveFail,
 
 } from '../slices/porterSlice';
 
@@ -51,5 +53,15 @@ export const getporterOrder = createAsyncThunk('init/order/create', async ({orde
     }
   });
 
-  
+  export const RemoveOrderResponse = createAsyncThunk('/order/cancelResponse', async ({order_id,removalReason}, { dispatch }) => {
+    try {
+        console.log("request_id",order_id,removalReason)
+      dispatch(porterRemoveRequest());
+      const { data } = await axios.post('/api/v1/admin/removeOrder', {order_id, removalReason},{withCredentials: true });
+      console.log("removeresponseData",data)
+      dispatch(porterRemoveSuccess(data));
+    } catch (error) {
+      dispatch(porterRemoveFail(error.response.data.message));
+    }
+  });
 

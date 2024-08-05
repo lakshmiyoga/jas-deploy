@@ -2,7 +2,7 @@ html,
 body {
   /* font-family:"Trebuchet MS", Helvetica, sans-serif; */
    
-   /* font-family:Cambria, Cochin, Georgia, Times, 'Times New Roman', serif; */
+   font-family:Cambria, Cochin, Georgia, Times, 'Times New Roman', serif;
   /* font-family:Verdana, Geneva, Tahoma, sans-serif; */
   width: 100%;
   height: 100%;
@@ -11,9 +11,9 @@ body {
   overflow-x: hidden;
   overflow-y: auto;
 }
-*{
+/* *{
   font-family:Verdana, Geneva, Tahoma, sans-serif;
-}
+} */
 
 ::-webkit-scrollbar-track {
   background-color: #f5f5f5;
@@ -62,6 +62,7 @@ input[type=number]::-webkit-outer-spin-button {
 .product-dropdown:hover{
   color: #f8ce0b;
 }
+
 
 
 /* .navbar-brand img{
@@ -1610,7 +1611,108 @@ h5 {
 
 
 /* updateorder css */
+.invoice-table-container {
+  margin: 20px 0;
+}
+
+.updatetable-responsive {
+  overflow-x: auto;
+}
+
+.updatetable {
+  width: 100%;
+  margin-bottom: 1rem;
+  color: #212529;
+  border-collapse: collapse;
+}
+
+.updatetable th,
+.updatetable td {
+  padding: 0.75rem;
+  vertical-align: middle;
+  border-top: 1px solid #dee2e6;
+  max-width: fit-content;
+}
+
+.updatetable thead th {
+  vertical-align: middle;
+  border-bottom: 2px solid #dee2e6;
+  /* display: flex;
+  flex-direction: row;
+  justify-content: center;
+  align-items: center; */
+}
+
+.updatetable-bordered {
+  border: 1px solid #dee2e6;
+}
+
+.updatetable-bordered th,
+.updatetable-bordered td {
+  border: 1px solid #dee2e6;
+}
+
+.updateTableproduct-image {
+  width: 50px;
+  height: 50px;
+}
+.updatecheck-input{
+  width: 20px;
+  height: 20px;
+}
+.updateTableInput{
+  width: 80%;
+  height: 80%;
+
+}
+
+@media (max-width: 768px) {
+  .updatetable-responsive {
+      border: 0;
+  }
+
+  .updatetable th,
+  .updatetable td {
+      font-size: 12px;
+      padding: 0.5rem;
+  }
+
+  .updateTableproduct-image {
+      width: 30px;
+  }
+  .updateTableInput{
+    font-size: 12px;
+    width:100%;
+    height:100%
+  
+  }
+}
 
 
+
+/* enquiry admin css */
+/* .sno-column, 
+.name-column, 
+.email-column, 
+.mobile-column, 
+.message-column, 
+.date-column, 
+.actions-column {
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap; 
+}
+
+.message-column {
+  max-width: 200px;
+  word-break: break-word; 
+}
+ */
+ @media (max-width: 768px) {
+  .message-column {
+      min-width: 300px;
+      min-height: auto;
+  }
+}
 
 

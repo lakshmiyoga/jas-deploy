@@ -28,7 +28,7 @@ const orderSlice = createSlice({
             return {
                 ...state,
                 loading: false,
-                error: action.payload
+                portererror: action.payload
             }
         },
         porterOrderResponseRequest(state, action) {
@@ -113,7 +113,10 @@ export const {
     porterCancelSuccess,
     porterCancelFail,
     porterCancelClearError,
-   
+    porterRemoveRequest,
+    porterRemoveSuccess,
+    porterRemoveFail,
+    porterRemoveClearError
  } = actions;
 
 export default reducer;

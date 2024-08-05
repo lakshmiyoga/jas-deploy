@@ -23,47 +23,111 @@ const EnquiryRequest = () => {
 
   console.log(enquiry)
     const setEnquiryDetails = () => {
+        // const data = {
+        //     columns: [
+        //         {
+        //             label: 'S.NO',
+        //             field: 's_no',
+        //             sort: 'asc'
+        //         },
+        //         {
+        //             label: 'Name',
+        //             field: 'name',
+        //             sort: 'asc'
+        //         },
+        //         {
+        //             label: 'Email',
+        //             field: 'email',
+        //             sort: 'asc'
+        //         },
+        //         {
+        //             label: 'Mobile',
+        //             field: 'mobile',
+        //             sort: 'asc'
+        //         },
+                
+        //         {
+        //             label: 'Message',
+        //             field: 'messageData',
+        //             sort: 'asc'
+        //         },
+        //         {
+        //             label: 'Date',
+        //             field: 'date',
+        //             sort: 'asc'
+        //         },
+        //         {
+        //             label: 'Actions',
+        //             field: 'actions',
+        //             sort: 'asc'
+        //         }
+        //     ],
+        //     rows: []
+        // }
+
         const data = {
             columns: [
-                {
-                    label: 'S.NO',
-                    field: 's_no',
-                    sort: 'asc'
-                },
-                {
-                    label: 'Name',
-                    field: 'name',
-                    sort: 'asc'
-                },
-                {
-                    label: 'Email',
-                    field: 'email',
-                    sort: 'asc'
-                },
-                {
-                    label: 'Mobile',
-                    field: 'mobile',
-                    sort: 'asc'
-                },
-                
-                {
-                    label: 'Message',
-                    field: 'message',
-                    sort: 'asc'
-                },
-                {
-                    label: 'Date',
-                    field: 'date',
-                    sort: 'asc'
-                },
-                {
-                    label: 'Actions',
-                    field: 'actions',
-                    sort: 'asc'
+              {
+                label: 'S.NO',
+                field: 's_no',
+                // sort: 'asc',
+                attributes: {
+                  'className': 'sno-column'
                 }
+              },
+              {
+                label: 'Name',
+                field: 'name',
+                // sort: 'asc',
+                attributes: {
+                  'className': 'name-column'
+                }
+              },
+              {
+                label: 'Email',
+                field: 'email',
+                // sort: 'asc',
+                attributes: {
+                  'className': 'email-column'
+                }
+              },
+              {
+                label: 'Mobile',
+                field: 'mobile',
+                // sort: 'asc',
+                attributes: {
+                  'className': 'mobile-column'
+                }
+              },
+              {
+                label: 'Message',
+                field: 'messageData',
+                // sort: 'asc',
+                attributes: {
+                  'className': 'message-column'
+                }
+              },
+              {
+                label: 'Date',
+                field: 'date',
+                // sort: 'asc',
+                attributes: {
+                  'className': 'date-column'
+                }
+              },
+              {
+                label: 'Actions',
+                field: 'actions',
+                // sort: 'asc',
+                attributes: {
+                  'className': 'actions-column'
+                }
+              }
             ],
             rows: []
-        }
+          };
+          
+        
 
         // Sort orders by creation date (newest first)
         const sortedEnquiry = [...enquiry].sort((a, b) => new Date(b.createdAt) - new Date(a.createdAt));
@@ -74,7 +138,11 @@ const EnquiryRequest = () => {
                 name: user.name,
                 email:user.email,
                 mobile:user.mobile,
-                // message:user.message,
+                messageData: (
+                    <div style={{ position:'relative',maxWidth: 'auto', wordBreak: 'break-word'}}>
+                      {user.messageData || 'N/A'}
+                    </div>
+                  ),
                 date: new Date(user.createdAt).toLocaleString(), 
                 actions: (
                     <Fragment>
@@ -146,7 +214,7 @@ const EnquiryRequest = () => {
                             bordered
                             noBottomColumns
                             hover
-                            className="px-3 product-table"
+                            className="px-3 product-table "
                         />
                     </div>
                     }

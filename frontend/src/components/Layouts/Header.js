@@ -37,8 +37,8 @@ const Header = () => {
           </Link>
         </Navbar.Brand>
         <Navbar.Toggle aria-controls="responsive-navbar-nav" />
-        <Navbar.Collapse id="responsive-navbar-nav" style={{ display: 'flex', justifyContent: 'space-evenly', alignItems: 'center' }}>
-          <Nav className="me-auto" style={{ display: 'flex', gap: '1rem' }}>
+        <Navbar.Collapse id="responsive-navbar-nav" style={{}}>
+          <Nav className="me-auto" style={{ display: 'flex', gap: '1rem',justifyContent: 'space-evenly', alignItems: 'center' }}>
             <Nav.Link>
               <Link to="/" className="navbar-link">HOME</Link>
             </Nav.Link>

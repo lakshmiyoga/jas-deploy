@@ -200,6 +200,7 @@ const orderSlice = createSlice({
         clearOrderUpdated(state, action) {
             return {
                 ...state,
+                porterOrderDetail:null,
                 isOrderUpdated: false
             }
         },

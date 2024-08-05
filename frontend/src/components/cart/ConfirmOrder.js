@@ -33,6 +33,7 @@ const ConfirmOrder = () => {
     const message = queryParams.get('message');
 
     const shippingCharge = shippingAmount / 100;
+    //  const shippingCharge = 50.00;
     console.log("shippingCharge", shippingCharge)
     const subtotal = cartItems.reduce((acc, item) => acc + item.price * item.productWeight, 0).toFixed(2);
     const total = (parseFloat(subtotal) + shippingCharge).toFixed(2);

@@ -21,7 +21,7 @@ import Loader from "../Layouts/Loader";
 const UpdateOrder = () => {
     const { loading, isOrderUpdated, error, orderDetail, porterOrderDetail, orderRemoveResponse, orderRemoveError } = useSelector(state => state.orderState);
     const { products } = useSelector((state) => state.productsState);
-    const { porterOrderData, porterOrderResponse, porterCancelResponse, porterCancelError } = useSelector((state) => state.porterState);
+    const { porterOrderData, porterOrderResponse, porterCancelResponse, porterCancelError,portererror } = useSelector((state) => state.porterState);
     const { user = {}, orderItems = [], shippingInfo = {}, totalPrice = 0, statusResponse = {} } = orderDetail;
     const [orderStatus, setOrderStatus] = useState("Processing");
     const [dropStatus, setDropStatus] = useState("");
@@ -36,80 +36,6 @@ const UpdateOrder = () => {
     const dispatch = useDispatch();
     console.log("orderDetail", orderDetail)
 
-    useEffect(() => {
-        const functioncall = async () => {
-            if (isOrderUpdated) {
-                if (porterOrderDetail && !error) {
-                    const orderData = { orderStatus };
-                    //     console.log("orderData", orderData)
-                    //     await dispatch(updateOrder({ id: orderDetail.order_id, orderData }))
-                    //    await dispatch(clearOrderUpdated())
-                    toast('Order Updated Successfully!', {
-                        type: 'success',
-                        position: "bottom-center",
-                        onOpen: () => dispatch(clearOrderUpdated())
-                    });
-
-                }
-                if (error && !porterOrderDetail) {
-                    const orderData = { orderStatus: "Processing" };
-                    console.log("orderData", orderData)
-                    await dispatch(updateOrder({ id: orderDetail.order_id, orderData }))
-                    await dispatch(clearOrderUpdated())
-                }
-
-                return;
-            }
-
-            if (error) {
-                toast(error, {
-                    position: "bottom-center",
-                    type: 'error',
-                    onOpen: () => { dispatch(clearError()) }
-                });
-
-                return;
-            }
-        }
-        if (porterCancelResponse) {
-            toast(porterCancelResponse.message, {
-                type: 'success',
-                position: "bottom-center",
-                onOpen: () => { dispatch(porterCancelClearError()) }
-            });
-
-        }
-        if (porterCancelError) {
-            toast(porterCancelError, {
-                position: "bottom-center",
-                type: 'error',
-                onOpen: () => { dispatch(porterCancelClearError()) }
-            });
-
-        }
-
-        if (orderRemoveResponse) {
-            toast(orderRemoveResponse, {
-                type: 'success',
-                position: "bottom-center",
-                onOpen: () => { dispatch(adminOrderRemoveClearError()) }
-            });
-
-        }
-        if (orderRemoveError) {
-            toast(orderRemoveError, {
-                position: "bottom-center",
-                type: 'error',
-                onOpen: () => { dispatch(adminOrderRemoveClearError()) }
-            });
-
-        }
-
-
-        functioncall()
-        
-        // dispatch(orderDetailAction(id));
-    }, [isOrderUpdated, error, dispatch, id, porterOrderResponse, porterCancelError, porterCancelResponse, orderRemoveResponse, orderRemoveError]);
 
     useEffect(() => {
         if (orderDetail.order_id) {
@@ -121,21 +47,11 @@ const UpdateOrder = () => {
         }
     }, [orderDetail]);
 
-    const handleOrderStatusChange = (e) => {
-        const status = e.target.value;
-        setOrderStatus(status);
-
-        if (status === 'Dispatched' || status === "Cancelled" || status === "Removed") {
-            setShowDispatchModal(true);
-        } else {
-            setShowDispatchModal(false);
-        }
-    };
 
     const handleItemSelection = (index) => {
         const newSelectedItems = [...selectedItems];
         newSelectedItems[index] = !newSelectedItems[index];
-    
+
         if (newSelectedItems[index]) {
             // If the checkbox is checked, set the weight to zero
             const newWeights = [...editableWeights];
@@ -147,13 +63,14 @@ const UpdateOrder = () => {
             newWeights[index] = orderItems[index].productWeight;
             setEditableWeights(newWeights);
         }
-    
+
         setSelectedItems(newSelectedItems);
     };
 
 
     const submitHandler = async (e) => {
         e.preventDefault();
+        // setRefreshData(false)
         const requestId = `TEST_0_${uuidv4()}`;
         const porterData = {
             "request_id": requestId,
@@ -222,7 +139,7 @@ const UpdateOrder = () => {
             totalRefundableAmount += refundableAmount;
 
             return {
-                image:item.image,
+                image: item.image,
                 name: item.name,
                 orderedWeight,
                 pricePerKg,
@@ -254,27 +171,15 @@ const UpdateOrder = () => {
 
         try {
             await dispatch(porterOrder({ id: orderDetail.order_id, reqPorterData }));
-            setShowDispatchModal(false);
-            // dispatch(getporterOrder({ order_id: id }));
+            // setShowDispatchModal(false);
+            // setRefreshData(true)
+            // await dispatch(getporterOrder({ order_id: id }));
         } catch (error) {
             toast.error(error);
+            // setRefreshData(true)
         }
 
         setRefreshData(true)
-    };
-
-    const handleCancelOrder = () => {
-        // Implement the function to cancel the order
-        setShowDispatchModal(false);
-        dispatch(CancelOrderResponse({ order_id: id, porterOrder_id: porterOrderData?.porterOrder?.order_id }));
-
-        // console.log('Cancel Order');
-    };
-
-    const handleRemoveOrder = () => {
-        // Implement the function to remove the order
-        setShowDispatchModal(false);
-        dispatch(RemoveOrderResponse({ order_id: id, removalReason }))
     };
 
 
@@ -290,16 +195,16 @@ const UpdateOrder = () => {
                 setEditableWeights(newWeights);
                 return;
             }
-            
+
             if (numericValue > orderItems[index].productWeight) {
                 toast.error("Entered Kg is greater than requested Kg. Reverting to original weight.");
             }
-            
+
             const weight = Math.min(numericValue, orderItems[index].productWeight); // Ensure weight does not exceed initially ordered weight
             const newWeights = [...editableWeights];
             newWeights[index] = value === '' ? 0 : weight; // Allow empty value temporarily for editing
             setEditableWeights(newWeights);
-            }
+        }
 
     };
 
@@ -312,51 +217,52 @@ const UpdateOrder = () => {
     };
 
     useEffect(() => {
-        // dispatch(porterClearData())
-        if (!porterOrderData && !refreshData) {
-            const fetchData = async () => {
-                if (!porterOrderData) {
-                    try {
-                        
-                        await dispatch(porterClearData())
-                        await dispatch(getporterOrder({ order_id: id }))
-                        await dispatch(createPorterOrderResponse({ order_id: id, porterOrder_id: porterOrderData?.porterOrder?.order_id }))
-                        await dispatch(getporterOrder({ order_id: id }))
-                        await dispatch(porterClearResponse())
-                    //    await dispatch(orderDetailAction(id));
-                    } catch (error) {
-                        console.error('Error in fetching porter order data:', error);
-                        toast.error("Failed to fetch porter order data.");
-                    }
-                }
-            };
+        if (isOrderUpdated) {
+            toast('Order Updated Successfully!', {
+            type: 'success',
+            position: "bottom-center",
+            onOpen: () => dispatch(clearOrderUpdated())
+        });
 
-            fetchData();
         }
-        if (porterOrderData && !refreshData) {
-            const fetchData = async () => {
-                if (porterOrderData) {
-                    try {
-                        await dispatch(porterClearData());
-                        await dispatch(createPorterOrderResponse({ order_id: id, porterOrder_id: porterOrderData?.porterOrder?.order_id }))
-                        await dispatch(getporterOrder({ order_id: id }))
-                        await dispatch(porterClearResponse())
-                        // dispatch(orderDetailAction(id));
-                    } catch (error) {
-                        console.error('Error in fetching porter order data:', error);
-                        toast.error("Failed to fetch porter order data.");
-                    }
-                }
-            };
+        if (error) {
+            toast(error, {
+                position: "bottom-center",
+                type: 'error',
+                onOpen: () => { dispatch(clearError()) }
+            });
+        }
+        // if (portererror) {
+        //     toast(portererror, {
+        //         position: "bottom-center",
+        //         type: 'error',
+        //         onOpen: () => { dispatch(clearError()) }
+        //     });
+        // }
+        dispatch(orderDetailAction(id));
 
-            fetchData();
-        }
+        // if (!refreshData) {
+        //     const fetchData = async () => {
+        //          dispatch(porterClearData())
+        //         await dispatch(getporterOrder({ order_id: id }))
+        //         await dispatch(createPorterOrderResponse({ order_id: id, porterOrder_id: porterOrderData?.porterOrder?.order_id }))
+        //         await dispatch(porterClearData())
+        //         await dispatch(getporterOrder({ order_id: id }))
+        //         await dispatch(porterClearResponse())
+        //         // dispatch(orderDetailAction(id));
+        //         setRefreshData(false); 
+        //     }
+
+        //     fetchData();
+        // }
+
 
         if (refreshData) {
             const fetchData = async () => {
-                await dispatch(porterClearData())
+                dispatch(porterClearData())
                 await dispatch(getporterOrder({ order_id: id }))
                 await dispatch(createPorterOrderResponse({ order_id: id, porterOrder_id: porterOrderData?.porterOrder?.order_id }))
+                await dispatch(porterClearData())
                 await dispatch(getporterOrder({ order_id: id }))
                 await dispatch(porterClearResponse())
                 // dispatch(orderDetailAction(id));
@@ -365,12 +271,12 @@ const UpdateOrder = () => {
 
             fetchData();
         }
+        dispatch(porterClearData())
+        dispatch(createPorterOrderResponse({ order_id: id, porterOrder_id: porterOrderData?.porterOrder?.order_id }))
+        dispatch(getporterOrder({ order_id: id }))
 
-    }, [dispatch, id, porterOrderDetail, refreshData, error, porterCancelResponse]);
+    }, [dispatch, id, refreshData, porterOrderDetail,error]);
 
-    // useEffect(() => {
-
-    // }, [porterOrderDetail])
 
     return (
         <div className="row">
@@ -378,254 +284,392 @@ const UpdateOrder = () => {
                 <Sidebar />
             </div>
             {
-                loading ? <Loader/> : (
+                loading ? <Loader /> : (
                     <div className="col-12 col-md-10">
-                    <Fragment>
-                        {/* <div className="row d-flex justify-content-around"> */}
-                        <div className="col-12 col-lg-12 mt-5 order-details">
-                            <h1 className="my-5">Order # {orderDetail.order_id}</h1>
-    
-                            <h4 className="mb-4">Shipping Info</h4>
-                            <p><b>Name:</b> {user.name}</p>
-                            <p><b>Phone:</b> {shippingInfo.phoneNo}</p>
-                            <p className="mb-4"><b>Address:</b> {shippingInfo.address}, {shippingInfo.city}, {shippingInfo.postalCode}, {shippingInfo.state} {shippingInfo.country}</p>
-                            <p><b>Amount:</b> Rs.{parseFloat(totalPrice).toFixed(2)}</p>
-    
-                            <hr />
-    
-                            <h4 className="my-4">Payment status</h4>
-                            <p className={orderDetail.paymentStatus === 'CHARGED' ? 'greenColor' : 'redColor'}><b>{orderDetail.paymentStatus || 'Pending'}</b></p>
-                            <hr />
-                            <h4 className="my-4">Order Status:</h4>
-                            <p className={dropStatus.includes('Delivered') ? 'greenColor' : 'redColor'}><b>{dropStatus}</b></p>
-    
-                            {porterOrderData && porterOrderData.porterResponse && (
-                                <Fragment>
-                                    <hr />
-                                    <h4 className="my-4">Delivery Details:</h4>
-                                    <div className="delivery-details">
-                                        <div className="detail-column">
-                                            <div className="detail-row">
-                                                <h6>Order ID:</h6>
-                                                <p>{porterOrderData.porterResponse.order_id && porterOrderData.porterResponse.order_id}</p>
-                                            </div>
-                                            <div className="detail-row">
-                                                <h6>Estimated Fair details:</h6>
-                                                <p>Currency: {porterOrderData.porterResponse.fare_details && porterOrderData.porterResponse.fare_details.estimated_fare_details && porterOrderData.porterResponse.fare_details.estimated_fare_details.currency && porterOrderData.porterResponse.fare_details.estimated_fare_details.currency || "INR"}</p>
-                                                <p>Minor Amount: {porterOrderData.porterResponse.fare_details && porterOrderData.porterResponse.fare_details.estimated_fare_details && porterOrderData.porterResponse.fare_details.estimated_fare_details.minor_amount && porterOrderData.porterResponse.fare_details.estimated_fare_details.minor_amount || "N/A"}</p>
-                                            </div>
-    
-    
-                                            <div className="detail-row">
-                                                <h6>Order Timings:</h6>
-    
-                                                {porterOrderData.porterResponse && porterOrderData.porterResponse.order_timings && porterOrderData.porterResponse.order_timings.pickup_time ?
-                                                    (
-                                                        <p>Pickup Time:  {new Date(porterOrderData.porterResponse.order_timings.pickup_time * 1000).toLocaleString()}</p>
-                                                    ) : (<p>Pickup Time:  N/A</p>)
-                                                }
-    
-                                                {porterOrderData.porterResponse && porterOrderData.porterResponse.order_timings && porterOrderData.porterResponse.order_timings.order_accepted_time ?
-                                                    (
-                                                        <p>Order Accepted Time:  {new Date(porterOrderData.porterResponse.order_timings.order_accepted_time * 1000).toLocaleString()}</p>
-                                                    ) : (<p>Order Accepted Time:  N/A</p>)
-                                                }
-    
-                                                {porterOrderData.porterResponse && porterOrderData.porterResponse.order_timings && porterOrderData.porterResponse.order_timings.order_started_time ?
-                                                    (
-                                                        <p>Order Started Time:  {new Date(porterOrderData.porterResponse.order_timings.order_started_time * 1000).toLocaleString()}</p>
-                                                    ) : (<p>Order Started Time:  N/A</p>)
-                                                }
-                                                {porterOrderData.porterResponse && porterOrderData.porterResponse.order_timings && porterOrderData.porterResponse.order_timings.order_ended_time ?
-                                                    (
-                                                        <p>Order Ended Time:  {new Date(porterOrderData.porterResponse.order_timings.order_ended_time * 1000).toLocaleString()}</p>
-                                                    ) : (<p>Order Ended Time:  N/A</p>)
-                                                }
-                                                {/* <p>Order Ended Time: {new Date(porterOrderData.porterResponse.order_timings.order_ended_time * 1000).toLocaleString()}</p> */}
-                                                {/* <p>Pickup Time: {new Date(porterOrderData.porterResponse.order_timings.pickup_time * 1000).toLocaleString()}</p> */}
-                                            </div>
-    
-    
-                                        </div>
-                                        <div className="detail-column">
-                                            <div className="detail-row">
-                                                <h6>Delivery Status:</h6>
-                                                <p>{porterOrderData.porterResponse.status}</p>
-                                            </div>
-    
-                                            <div className="detail-row">
-                                                <h6>Actual Fare Details:</h6>
-                                                <p>Currency: {porterOrderData.porterResponse.fare_details && porterOrderData.porterResponse.fare_details.actual_fare_details && porterOrderData.porterResponse.fare_details.actual_fare_details.currency && porterOrderData.porterResponse.fare_details.actual_fare_details.currency || "INR"}</p>
-                                                <p>Minor Amount: {porterOrderData.porterResponse.fare_details && porterOrderData.porterResponse.fare_details.actual_fare_details && porterOrderData.porterResponse.fare_details.actual_fare_details.minor_amount && porterOrderData.porterResponse.fare_details.actual_fare_details.minor_amount || "N/A"}</p>
-                                            </div>
-    
-                                            {
-                                                porterOrderData.porterResponse.partner_info && (
-                                                    <div className="detail-row">
-                                                        <h5>Delivery Partner:</h5>
-                                                        {/* <h6>Name:</h6> */}
-                                                        <p>Name: {porterOrderData.porterResponse.partner_info.name}</p>
-                                                        {/* <h6>Mobile:</h6> */}
-                                                        <p>Mobile: {porterOrderData.porterResponse.partner_info.mobile.country_code} {porterOrderData.porterResponse.partner_info.mobile.mobile_number}</p>
-                                                        {porterOrderData.porterResponse.partner_info.partner_secondary_mobile && (
-                                                            <>
-                                                                {/* <h6>Secondary Mobile:</h6> */}
-                                                                <p>Secondary Mobile: {porterOrderData.porterResponse.partner_info.partner_secondary_mobile.country_code} {porterOrderData.porterResponse.partner_info.partner_secondary_mobile.mobile_number}</p>
-                                                            </>
-                                                        )
-                                                        }
-                                                        {/* <h6>Vehicle Number:</h6> */}
-                                                        <p>Vehicle Number: {porterOrderData.porterResponse.partner_info.vehicle_number}</p>
-                                                        {/* <h6>Vehicle Type:</h6> */}
-                                                        <p>Vehicle Type: {porterOrderData.porterResponse.partner_info.vehicle_type}</p>
-                                                        {/* <h6>Location:</h6> */}
-                                                        {/* <p>Lat: {porterOrderData.porterResponse.partner_info.location.lat}, Long: {porterOrderData.porterResponse.partner_info.location.long}</p> */}
-                                                    </div>
-                                                )
-                                            }
-                                        </div>
-                                    </div>
-                                </Fragment>
-                            )}
-    
-    
-                            <hr />
-                            <h4 className="my-4">Order Items:</h4>
-                            <div className="cart-item my-1">
-                                {
-                                    porterOrderData && porterOrderData.detailedTable ? (
-                                        porterOrderData && porterOrderData.detailedTable && porterOrderData.detailedTable.map((item, index) => {
-                                            console.log("item", item)
-                                            const product = products && products.find(product => product.englishName === item.name);
-                                            if (!product) {
-                                                return null;
-                                            }
-    
-                                            return (
-                                                <div className="row my-5" key={index}>
-                                                    <div className="col-2 col-lg-1">
-                                                        <img src={item.image} alt={item.name} height="45" width="65" />
-                                                    </div>
-                                                    <div className="col-2 col-lg-2">
-                                                        <p> {item.name}</p>
-                                                    </div>
-    
-                                                    <div className="col-2 col-lg-1">
-                                                        {/* <Link to={`/product/${item.product}`}>{item.name}</Link> */}
-                                                        <p>{item.orderedWeight} kg</p>
-                                                    </div>
-    
-                                                    <div className="col-2 col-lg-2">
-                                                        <p> Rs.{item.pricePerKg}</p>
-                                                    </div>
-    
-                                                    <div className="col-2 col-lg-2">
-                                                        <p>{item.dispatchedWeight} kg</p>
-                                                    </div>
-                                                    <div className="col-2 col-lg-2">
-                                                        <p>{item.refundableWeight} kg</p>
-                                                    </div>
-                                                    <div className="col-2 col-lg-2">
-                                                        rs.{item.refundableAmount} 
-                                                    </div>
-    
+                        <Fragment>
+                            {/* <div className="row d-flex justify-content-around"> */}
+                            <div className="col-12 col-lg-12 mt-5 order-details">
+                                <h1 className="my-5">Order # {orderDetail.order_id}</h1>
+
+                                <h4 className="mb-4">Shipping Info</h4>
+                                <p><b>Name:</b> {user.name}</p>
+                                <p><b>Phone:</b> {shippingInfo.phoneNo}</p>
+                                <p className="mb-4"><b>Address:</b> {shippingInfo.address}, {shippingInfo.city}, {shippingInfo.postalCode}, {shippingInfo.state} {shippingInfo.country}</p>
+                                <p><b>Amount:</b> Rs.{parseFloat(totalPrice).toFixed(2)}</p>
+
+                                <hr />
+
+                                <h4 className="my-4">Payment status</h4>
+                                <p className={orderDetail.paymentStatus === 'CHARGED' ? 'greenColor' : 'redColor'}><b>{orderDetail.paymentStatus || 'Pending'}</b></p>
+                                <hr />
+                                <h4 className="my-4">Order Status:</h4>
+                                <p className={dropStatus.includes('Delivered') ? 'greenColor' : 'redColor'}><b>{dropStatus}</b></p>
+
+                                {porterOrderData && porterOrderData.porterResponse && (
+                                    <Fragment>
+                                        <hr />
+                                        <h4 className="my-4">Delivery Details:</h4>
+                                        <div className="delivery-details">
+                                            <div className="detail-column">
+                                                <div className="detail-row">
+                                                    <h6>Order ID:</h6>
+                                                    <p>{porterOrderData.porterResponse.order_id && porterOrderData.porterResponse.order_id}</p>
                                                 </div>
-                                            );
-                                        })
-                                    ) : !porterOrderData ? (
-                                     orderItems.map((item, index) => {
-                                            const product = products.find(product => product.englishName === item.name);
-                                            if (!product) {
-                                                return null;
-                                            }
-    
-                                            return (
-                                                <div className="row my-5" key={index}>
-                                                    <div className="col-2 col-lg-1">
-                                                        <input
-                                                            type="checkbox"
-                                                            className="check-input"
-                                                            id={`item-${index}`}
-                                                            checked={selectedItems[index]}
-                                                            onChange={() => handleItemSelection(index)}
-                                                        />
-                                                    </div>
-                                                    <div className="col-2 col-lg-1">
-                                                        <img src={item.image} alt={item.name} height="45" width="65" />
-                                                    </div>
-    
-                                                    <div className="col-2 col-lg-2">
-                                                        {/* <Link to={`/product/${item.product}`}>{item.name}</Link> */}
-                                                        <p>{item.name}</p>
-                                                    </div>
-    
-                                                    <div className="col-2  col-lg-2">
-                                                        <p> Rs.{item.price}</p>
-                                                    </div>
-                                                    {
-                                                        editableWeights && (
-    
-                                                            <>
-                                                                <div className="col-2  col-lg-2">
-                                                                    {/* <p>{item.productWeight}</p> */}
-                                                                    <NumberInput
-                                                                        className="no-arrow-input form-control"
-                                                                        value={editableWeights && editableWeights[index]=== 0?'':editableWeights[index]}
-                                                                        onChange={(e) => changeWeight(e, index)}
-                                                                        placeholder={editableWeights && editableWeights[index]=== 0?0:''}
-                                                                        onBlur={() => handleBlur(index)}
-                                                                        disabled={!selectedItems[index]} // Disable input if checkbox is not checked
-                                                                        required
-                                                                    />
-                                                                </div>
-    
-                                                                <div className="col-2 col-lg-2">
-                                                                    <p>Rs.{(editableWeights[index] * item.price).toFixed(2)}</p>
-                                                                </div>
-                                                            </>
-                                                        )
+                                                <div className="detail-row">
+                                                    <h6>Estimated Fair details:</h6>
+                                                    <p>Currency: {porterOrderData.porterResponse.fare_details && porterOrderData.porterResponse.fare_details.estimated_fare_details && porterOrderData.porterResponse.fare_details.estimated_fare_details.currency && porterOrderData.porterResponse.fare_details.estimated_fare_details.currency || "INR"}</p>
+                                                    <p>Minor Amount: {porterOrderData.porterResponse.fare_details && porterOrderData.porterResponse.fare_details.estimated_fare_details && porterOrderData.porterResponse.fare_details.estimated_fare_details.minor_amount && porterOrderData.porterResponse.fare_details.estimated_fare_details.minor_amount || "N/A"}</p>
+                                                </div>
+
+
+                                                <div className="detail-row">
+                                                    <h6>Order Timings:</h6>
+
+                                                    {porterOrderData.porterResponse && porterOrderData.porterResponse.order_timings && porterOrderData.porterResponse.order_timings.pickup_time ?
+                                                        (
+                                                            <p>Pickup Time:  {new Date(porterOrderData.porterResponse.order_timings.pickup_time * 1000).toLocaleString()}</p>
+                                                        ) : (<p>Pickup Time:  N/A</p>)
                                                     }
-    
-    
+
+                                                    {porterOrderData.porterResponse && porterOrderData.porterResponse.order_timings && porterOrderData.porterResponse.order_timings.order_accepted_time ?
+                                                        (
+                                                            <p>Order Accepted Time:  {new Date(porterOrderData.porterResponse.order_timings.order_accepted_time * 1000).toLocaleString()}</p>
+                                                        ) : (<p>Order Accepted Time:  N/A</p>)
+                                                    }
+
+                                                    {porterOrderData.porterResponse && porterOrderData.porterResponse.order_timings && porterOrderData.porterResponse.order_timings.order_started_time ?
+                                                        (
+                                                            <p>Order Started Time:  {new Date(porterOrderData.porterResponse.order_timings.order_started_time * 1000).toLocaleString()}</p>
+                                                        ) : (<p>Order Started Time:  N/A</p>)
+                                                    }
+                                                    {porterOrderData.porterResponse && porterOrderData.porterResponse.order_timings && porterOrderData.porterResponse.order_timings.order_ended_time ?
+                                                        (
+                                                            <p>Order Ended Time:  {new Date(porterOrderData.porterResponse.order_timings.order_ended_time * 1000).toLocaleString()}</p>
+                                                        ) : (<p>Order Ended Time:  N/A</p>)
+                                                    }
+                                                    {/* <p>Order Ended Time: {new Date(porterOrderData.porterResponse.order_timings.order_ended_time * 1000).toLocaleString()}</p> */}
+                                                    {/* <p>Pickup Time: {new Date(porterOrderData.porterResponse.order_timings.pickup_time * 1000).toLocaleString()}</p> */}
+                                                </div>
+
+
+                                            </div>
+                                            <div className="detail-column">
+                                                <div className="detail-row">
+                                                    <h6>Delivery Status:</h6>
+                                                    <p>{porterOrderData.porterResponse.status}</p>
+                                                </div>
+
+                                                <div className="detail-row">
+                                                    <h6>Actual Fare Details:</h6>
+                                                    <p>Currency: {porterOrderData.porterResponse.fare_details && porterOrderData.porterResponse.fare_details.actual_fare_details && porterOrderData.porterResponse.fare_details.actual_fare_details.currency && porterOrderData.porterResponse.fare_details.actual_fare_details.currency || "INR"}</p>
+                                                    <p>Minor Amount: {porterOrderData.porterResponse.fare_details && porterOrderData.porterResponse.fare_details.actual_fare_details && porterOrderData.porterResponse.fare_details.actual_fare_details.minor_amount && porterOrderData.porterResponse.fare_details.actual_fare_details.minor_amount || "N/A"}</p>
+                                                </div>
+
+                                                {
+                                                    porterOrderData.porterResponse.partner_info && (
+                                                        <div className="detail-row">
+                                                            <h5>Delivery Partner:</h5>
+                                                            {/* <h6>Name:</h6> */}
+                                                            <p>Name: {porterOrderData.porterResponse.partner_info.name}</p>
+                                                            {/* <h6>Mobile:</h6> */}
+                                                            <p>Mobile: {porterOrderData.porterResponse.partner_info.mobile.country_code} {porterOrderData.porterResponse.partner_info.mobile.mobile_number}</p>
+                                                            {porterOrderData.porterResponse.partner_info.partner_secondary_mobile && (
+                                                                <>
+                                                                    {/* <h6>Secondary Mobile:</h6> */}
+                                                                    <p>Secondary Mobile: {porterOrderData.porterResponse.partner_info.partner_secondary_mobile.country_code} {porterOrderData.porterResponse.partner_info.partner_secondary_mobile.mobile_number}</p>
+                                                                </>
+                                                            )
+                                                            }
+                                                            {/* <h6>Vehicle Number:</h6> */}
+                                                            <p>Vehicle Number: {porterOrderData.porterResponse.partner_info.vehicle_number}</p>
+                                                            {/* <h6>Vehicle Type:</h6> */}
+                                                            <p>Vehicle Type: {porterOrderData.porterResponse.partner_info.vehicle_type}</p>
+                                                            {/* <h6>Location:</h6> */}
+                                                            {/* <p>Lat: {porterOrderData.porterResponse.partner_info.location.lat}, Long: {porterOrderData.porterResponse.partner_info.location.long}</p> */}
+                                                        </div>
+                                                    )
+                                                }
+                                            </div>
+                                        </div>
+                                    </Fragment>
+                                )}
+
+
+                                <hr />
+                                <h4 className="my-4">Order Items:</h4>
+                                {/* <div className="cart-item my-1">
+                                    {
+                                        porterOrderData && porterOrderData.detailedTable && porterOrderData.detailedTable ? (
+                                            <div>
+                                            
+                                                <div className="row my-2">
+                                                    <div className="col-2 col-lg-1">
+                                                        <strong> Image</strong>
+                                                    </div>
                                                     <div className="col-2 col-lg-2">
-                                                        {product && product.stocks ? (
-                                                            <p>{product.stocks}</p>
-                                                        ) : (
-                                                            <p>Out of Stock</p>
-                                                        )}
+                                                        <strong> Name</strong>
+                                                    </div>
+                                                    <div className="col-2 col-lg-1">
+                                                        <strong>Ordered Weight</strong>
+                                                    </div>
+                                                    <div className="col-2 col-lg-2">
+                                                        <strong>Price per kg</strong>
+                                                    </div>
+                                                    <div className="col-2 col-lg-2">
+                                                        <strong>Dispatched Weight</strong>
+                                                    </div>
+                                                    <div className="col-2 col-lg-2">
+                                                        <strong>Refundable Weight</strong>
+                                                    </div>
+                                                    <div className="col-2 col-lg-2">
+                                                        <strong>Refundable Amount</strong>
                                                     </div>
                                                 </div>
-                                            );
-                                        })
-                                    ):(
-                                        <></>
-                                    )
+
+                                              
+                                                {porterOrderData && porterOrderData.detailedTable && porterOrderData.detailedTable.map((item, index) => {
+                                                    const product = products.find(product => product.englishName === item.name);
+                                                    if (!product) {
+                                                        return null;
+                                                    }
+
+                                                    return (
+                                                        <div className="row my-5" key={index}>
+                                                            <div className="col-2 col-lg-1">
+                                                                <img src={item.image} alt={item.name} height="45" width="65" />
+                                                            </div>
+                                                            <div className="col-2 col-lg-2">
+                                                                <p>{item.name}</p>
+                                                            </div>
+                                                            <div className="col-2 col-lg-1">
+                                                                <p>{item.orderedWeight} kg</p>
+                                                            </div>
+                                                            <div className="col-2 col-lg-2">
+                                                                <p>Rs. {item.pricePerKg}</p>
+                                                            </div>
+                                                            <div className="col-2 col-lg-2">
+                                                                <p>{item.dispatchedWeight} kg</p>
+                                                            </div>
+                                                            <div className="col-2 col-lg-2">
+                                                                <p>{item.refundableWeight} kg</p>
+                                                            </div>
+                                                            <div className="col-2 col-lg-2">
+                                                                <p>Rs. {item.refundableAmount}</p>
+                                                            </div>
+                                                        </div>
+                                                    );
+                                                })}
+                                            </div>
+                                        ) : !porterOrderData ? (
+                                            <div>
+                                               
+                                                <div className="row my-2">
+                                                    <div className="col-1 col-lg-1">
+                                                        <strong>Select Item</strong>
+                                                    </div>
+                                                    <div className="col-1 col-lg-1">
+                                                        <strong> Image</strong>
+                                                    </div>
+                                                    <div className="col-2 col-lg-2">
+                                                        <strong> Name</strong>
+                                                    </div>
+                                                    <div className="col-1 col-lg-1">
+                                                        <strong>Price per kg</strong>
+                                                    </div>
+                                                    <div className="col-1 col-lg-1">
+                                                        <strong>Original Weight</strong>
+                                                    </div>
+                                                    <div className="col-1 col-lg-1">
+                                                        <strong>New Weight</strong>
+                                                    </div>
+                                                    <div className="col-1 col-lg-1">
+                                                        <strong>Total Price</strong>
+                                                    </div>
+                                                    <div className="col-1 col-lg-1">
+                                                        <strong> Status</strong>
+                                                    </div>
+                                                </div>
+
+                                               
+                                                {orderItems.map((item, index) => {
+                                                    const product = products.find(product => product.englishName === item.name);
+                                                    if (!product) {
+                                                        return null;
+                                                    }
+
+                                                    return (
+                                                        <div className="row my-5" key={index}>
+                                                            <div className="col-1 col-lg-1">
+                                                                <input
+                                                                    type="checkbox"
+                                                                    className="check-input"
+                                                                    id={`item-${index}`}
+                                                                    checked={selectedItems[index]}
+                                                                    onChange={() => handleItemSelection(index)}
+                                                                />
+                                                            </div>
+                                                            <div className="col-1 col-lg-1">
+                                                                <img src={item.image} alt={item.name} height="45" width="65" />
+                                                            </div>
+                                                            <div className="col-2 col-lg-2">
+                                                                <p>{item.name}</p>
+                                                            </div>
+                                                            <div className="col-1 col-lg-1">
+                                                                <p>Rs. {item.price}</p>
+                                                            </div>
+                                                            <div className="col-1 col-lg-1">
+                                                                <p> {item.productWeight}kg</p>
+                                                            </div>
+                                                            {editableWeights && (
+                                                                <>
+                                                                    <div className="col-1 col-lg-1">
+                                                                        <NumberInput
+                                                                            className="no-arrow-input form-control"
+                                                                            value={editableWeights[index] === 0 ? '' : editableWeights[index]}
+                                                                            onChange={(e) => changeWeight(e, index)}
+                                                                            placeholder={editableWeights[index] === 0 ? 0 : ''}
+                                                                            onBlur={() => handleBlur(index)}
+                                                                            disabled={!selectedItems[index]} 
+                                                                            required
+                                                                        />
+                                                                    </div>
+                                                                    <div className="col-1 col-lg-1">
+                                                                        <p>Rs. {(editableWeights[index] * item.price).toFixed(2)}</p>
+                                                                    </div>
+                                                                </>
+                                                            )}
+                                                            <div className="col-1 col-lg-1">
+                                                                {product.stocks ? (
+                                                                    <p>{product.stocks}</p>
+                                                                ) : (
+                                                                    <p>Out of Stock</p>
+                                                                )}
+                                                            </div>
+                                                        </div>
+                                                    );
+                                                })}
+                                            </div>
+                                        ) : (
+                                            <></>
+                                        )
+                                    }
+                                </div> */}
+                                <div className="invoice-table-container">
+                                    <div className="updatetable-responsive">
+                                        <table className="updatetable updatetable-bordered">
+                                            <thead>
+                                                <tr>
+                                                    {porterOrderData && porterOrderData.detailedTable ? (
+                                                        <>
+                                                            <th>Image</th>
+                                                            <th>Name</th>
+                                                            <th>Ordered Weight</th>
+                                                            <th>Price per kg</th>
+                                                            <th>Dispatched Weight</th>
+                                                            <th>Refundable Weight</th>
+                                                            <th>Refundable Amount</th>
+                                                        </>
+                                                    ) : (
+                                                        <>
+                                                            <th>Select Item</th>
+                                                            <th>Image</th>
+                                                            <th>Name</th>
+                                                            <th>Price per kg</th>
+                                                            <th>Ordered Weight</th>
+                                                            <th>Dispatch Weight</th>
+                                                            <th>Total Price</th>
+                                                            <th>Status</th>
+                                                        </>
+                                                    )}
+                                                </tr>
+                                            </thead>
+                                            <tbody>
+                                                {porterOrderData && porterOrderData.detailedTable ? (
+                                                    porterOrderData.detailedTable.map((item, index) => (
+                                                        <tr key={index}>
+                                                            <td>
+                                                                <img src={item.image} alt={item.name} className="updateTableproduct-image" />
+                                                            </td>
+                                                            <td>{item.name}</td>
+                                                            <td>{item.orderedWeight} kg</td>
+                                                            <td>Rs. {item.pricePerKg}</td>
+                                                            <td>{item.dispatchedWeight} kg</td>
+                                                            <td>{item.refundableWeight} kg</td>
+                                                            <td>Rs. {item.refundableAmount}</td>
+                                                        </tr>
+                                                    ))
+                                                ) : (
+                                                    orderItems.map((item, index) => {
+                                                        const product = products.find((product) => product.englishName === item.name);
+                                                        if (!product) return null;
+
+                                                        return (
+                                                            <tr key={index}>
+                                                                <td>
+                                                                    <input
+                                                                        type="checkbox"
+                                                                        className="updatecheck-input"
+                                                                        checked={selectedItems[index]}
+                                                                        onChange={() => handleItemSelection(index)}
+                                                                    />
+                                                                </td>
+                                                                <td>
+                                                                    <img src={item.image} alt={item.name} className="updateTableproduct-image" />
+                                                                </td>
+                                                                <td>{item.name}</td>
+                                                                <td>Rs. {item.price}</td>
+                                                                <td>{item.productWeight} kg</td>
+                                                                {editableWeights && (
+                                                                    <>
+                                                                        <td style={{maxWidth:'70px'}}>
+                                                                            <input
+                                                                                type="number"
+                                                                                className="no-arrow-input form-control updateTableInput"
+                                                                                value={editableWeights[index] === 0 ? '' : editableWeights[index]}
+                                                                                onChange={(e) => changeWeight(e, index)}
+                                                                                placeholder={editableWeights[index] === 0 ? 0 : ''}
+                                                                                onBlur={() => handleBlur(index)}
+                                                                                disabled={!selectedItems[index]}
+                                                                                required
+                                                                            />
+                                                                        </td>
+                                                                        <td>Rs. {(editableWeights[index] * item.price).toFixed(2)}</td>
+                                                                    </>
+                                                                )}
+                                                                <td>{product.stocks ? <p>{product.stocks}</p> : <p>Out of Stock</p>}</td>
+                                                            </tr>
+                                                        );
+                                                    })
+                                                )}
+                                            </tbody>
+                                        </table>
+                                    </div>
+                                </div>
+
+                                <hr />
+                                <div>
+                                    <button className='btn btn-primary' onClick={submitHandler} disabled={dropStatus === "Dispatched"}>Dispatch</button>
+                                </div>
+
+                                {porterOrderData && (
+                                    <Invoice porterOrderData={porterOrderData} />
+
+                                )
+
                                 }
                             </div>
-                            <hr />
-                            <div>
-                                <button className='btn btn-primary' onClick={submitHandler} disabled={dropStatus==="Dispatched"}>Dispatch</button>
-                            </div>
-    
-                            {porterOrderData && (
-                                <Invoice porterOrderData={porterOrderData} />
-    
-                            )
-    
-                            }
-                        </div>
-                    </Fragment>
-                </div>
+                        </Fragment>
+                    </div>
                 )
             }
-           
+
 
 
         </div>
     );
 
-   
-      
+
+
 };
 
 export default UpdateOrder;
