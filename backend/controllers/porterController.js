@@ -15,6 +15,9 @@ const porterModel = require('../models/porterModel');
 const getSinglePorterOrder = catchAsyncError(async (req, res, next) => {
     //    console.log(req.params)
     const  {order_id}  = req.body;
+    // if (!order_id) {
+    //     return next(new ErrorHandler(`Order not found`, 404))
+    // }
     // console.log(req.body)
     const order = await porterModel.findOne({ order_id});
     // console.log(order)
@@ -30,12 +33,13 @@ const getSinglePorterOrder = catchAsyncError(async (req, res, next) => {
 const getPorterResponse = catchAsyncError(async (req, res, next) => {
     //    console.log(req.params)
     const  {order_id,porterOrder_id}  = req.body;
+
     const order = await porterModel.findOne({ order_id});
     // console.log("order",order)
     if (!order || !porterOrder_id) {
         return next(new ErrorHandler(`Order not found with this id: ${order_id}`, 404))
     }
-    apiEndpoint = `https://pfe-apigw-uat.porter.in/v1/orders/${porterOrder_id}`
+    const apiEndpoint = `https://pfe-apigw-uat.porter.in/v1/orders/${porterOrder_id}`
     // apiEndpoint = `https://pfe-apigw-uat.porter.in/v1/orders/{order_id:CRN93814651}`
     const response = await axios.get(apiEndpoint, {
         headers: {

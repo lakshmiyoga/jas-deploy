@@ -4,21 +4,23 @@ const validator= require('validator');
 const enquirySchema = new mongoose.Schema({
 name:{
     type:String,
-    required:true
+    // required:true,
+    default:''
 },
 email:{
     type:String,
-    required:true
-    // unique:true,
-    // validate:[validator.isEmail, 'Please enter valid email']
+    // required:true,
+    default:''
 },
 mobile:{
     type:String,
-    required:true
+    // required:true,
+    default:''
 },
-message:{
+messageData:{
     type:String,
-    required:true
+    // required:true,
+    default:''
 },
 createdAt: {
     type: Date,

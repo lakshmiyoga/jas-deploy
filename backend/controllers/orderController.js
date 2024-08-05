@@ -135,9 +135,9 @@ const getQuote = catchAsyncError(async (req, res, next) => {
         // console.log(response.data)
         return res.json(response.data);
     } catch (error) {
-        // console.log(error.response.status)
+        console.log(error)
         // console.log(error.response.data.message)
-        return next(new ErrorHandler(error.response.data.message, error.response.status));
+        return next(new ErrorHandler(error.response && error.response.data && error.response.data.message ?error.response.data.message:"Server Error Please Try After SomeTime!", error.response.status));
         //   return res.status(500).json({ message: 'Error sending data', error });
     }
 
@@ -188,6 +188,38 @@ const porterOrder = catchAsyncError(async (req, res, next) => {
                         if (porterResponse) {
                             if (porterResponse && porterResponse.porterOrder && porterResponse.porterOrder.order_id) {
                                 try {
+                                   const apiEndpoint1 = `https://pfe-apigw-uat.porter.in/v1/orders/${porterResponse.porterOrder.order_id}`
+                                    // apiEndpoint = `https://pfe-apigw-uat.porter.in/v1/orders/{order_id:CRN93814651}`
+                                    const response = await axios.get(apiEndpoint1, {
+                                        headers: {
+                                          'X-API-KEY': process.env.PORTER_API_KEY,
+                                          'Content-Type': 'application/json'
+                                        }
+                                      });
+                                      const responseData = response.data; // Extract only the data part of the response
+                                    //   console.log("responseData",responseData)
+                                    const porterResponseData = await PorterModel.findOneAndUpdate(
+                                        { order_id },
+                                        { $set: { porterResponse: responseData } },
+                                        { new: true }
+                                    );
+                                    if (porterResponseData && porterResponseData.porterResponse && porterResponseData.porterResponse.status && porterResponseData.porterResponse.status === 'open'){
+                                        const order = await Payment.findOne({ order_id});
+                                        // console.log("order",order)
+                                        if (!order || !porterResponse.porterOrder.order_id) {
+                                            return next(new ErrorHandler(`Order not found with this id: ${order_id}`, 404))
+                                        }
+                                    
+                                        const porterResponseStatus = await Payment.findOneAndUpdate(
+                                            { order_id },
+                                            { orderStatus:'Dispatched' },
+                                            { new: true }
+                                        );
+                                    }
+
+                                    if (typeof order_id !== 'string' || typeof totalRefundableAmount !== 'number') {
+                                        return res.status(400).json(makeError('Invalid data types: orderId should be a string and amount should be a number'));
+                                    }
                                     // Initiate refund
                                     const refundPayload = {
                                         unique_request_id: 'refund_test_' + Date.now(),
@@ -195,32 +227,29 @@ const porterOrder = catchAsyncError(async (req, res, next) => {
                                         amount: totalRefundableAmount,
                                     };
                                     console.log("refundPayload", refundPayload);
-
-                                    const refundResponse = await juspay.order.refund(order_id, refundPayload);
-                                    if (refundResponse) {
-                                        const statusResponse = await juspay.order.status(order_id);
-                                        if (statusResponse) {
-                                            const onepayments = await Payment.findOne({ order_id });
-                                            if (onepayments) {
-                                                const paymentstatus = await Payment.findOneAndUpdate({ order_id },
-                                                    {
-                                                        $set: { statusResponse: statusResponse }
-                                                    },
-                                                    { new: true });
+                                    if(totalRefundableAmount>0){
+                                        const refundResponse = await juspay.order.refund(order_id, refundPayload);
+                                        if (refundResponse) {
+                                            const statusResponse = await juspay.order.status(order_id);
+                                            if (statusResponse) {
+                                                const onepayments = await Payment.findOne({ order_id });
+                                                if (onepayments) {
+                                                    const paymentstatus = await Payment.findOneAndUpdate({ order_id },
+                                                        {
+                                                            // orderStatus:"Dispatched",
+                                                            $set: { statusResponse: statusResponse }
+                                                        },
+                                                        { new: true });
+                                                }
                                             }
                                         }
                                     }
-                                    console.log("refundResponse", refundResponse)
 
-                                    // Return refund response
-                                    return res.status(200).json({ refundResponse })
+                                    return res.status(200).json({ porterOrder })
                                 } catch (error) {
-                                    console.error('Error during refund:', error);
-                                    //   return next(new ErrorHandler('Could Not find any Order', 500));
+                                    return next(new ErrorHandler(error.response.data.message, error.response.status));
                                 }
                             }
-
-                            return res.status(200).json({ porterOrder })
                         }
                     }
                     else {

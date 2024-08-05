@@ -2,12 +2,20 @@ const Enquiry = require("../models/enquiryModel");
 const catchAsyncError = require("../middleware/catchAsyncError");
 const ErrorHandler = require("../utils/errorHandler");
 
+
 //post enquiry
 const createEnquiry = catchAsyncError(async(req, res, next)=>{
     const{name, email, mobile, message} = req.body;
-    // console.log(req.body);
+    console.log(req.body);
 
     try {
+
+        // Check if an enquiry with the same email already exists
+        // const existingEnquiry = await Enquiry.findOne({ email });
+
+        // if (existingEnquiry) {
+        //     return res.status(400).json({ message: 'An enquiry with this email already exists.' });
+        // }
 
         // Validate name
         if (!name || typeof name !== 'string' || name.trim().length === 0) {
@@ -27,18 +35,20 @@ const createEnquiry = catchAsyncError(async(req, res, next)=>{
         }
 
         // Validate message
-        if (!message || typeof message !== 'string' || message.trim().length === 0) {
+        if (!message) {
             return next(new ErrorHandler('Please enter Message', 400));
         }
     
-        const enquiry = new Enquiry({name, email, mobile, message,createdAt:Date.now()})
-        console.log("enquiry",enquiry)
+        const enquiry = new Enquiry(
+            {name, email, mobile, messageData:message,createdAt:Date.now()},
+        )
+        // console.log("enquiry",enquiry)
         await enquiry.save();
          res.status(200).json({ success: true, enquiry });
         
       } catch (error) {
         console.log("error",error)
-        return next(new ErrorHandler('Internal Server Error' , 500));
+        return next(new ErrorHandler(error.errorResponse.errmsg, 500));
         
       }
 
@@ -67,7 +77,7 @@ const deleteEnquiry = catchAsyncError(async (req, res, next) => {
         const enquiry = await Enquiry.findByIdAndDelete(id);
         res.status(200).json({ message: 'Item deleted successfully' });
     } catch (error) {
-        return next(new ErrorHandler('Error deleting item' , 500));
+        return next(new ErrorHandler(error.response.data.message , 500));
     }
 })
 
