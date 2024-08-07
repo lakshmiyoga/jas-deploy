@@ -133,6 +133,26 @@ const orderSlice = createSlice({
                 getpackedOrderError: action.payload
             }
         },
+        allpackedOrderRequest(state, action) {
+            return {
+                ...state,
+                loading: true
+            }
+        },
+        allpackedOrderSuccess(state, action) {
+            return {
+                ...state,
+                loading: false,
+                allpackedOrderData: action.payload.allpackedOrderData
+            }
+        },
+        allpackedOrderFail(state, action) {
+            return {
+                ...state,
+                loading: false,
+                allpackedOrderError: action.payload
+            }
+        },
         refundRequest(state, action) {
             return {
                 ...state,
@@ -153,6 +173,14 @@ const orderSlice = createSlice({
                 refundError: action.payload
             }
         },
+        clearRefundError(state, action){
+            return{
+                loading: false,
+                refundError: null,
+                refundData:null
+            }
+             
+        }
         
         
 
@@ -184,9 +212,13 @@ export const {
     getpackedOrderRequest,
     getpackedOrderSuccess,
     getpackedOrderFail,
+    allpackedOrderRequest,
+    allpackedOrderSuccess,
+    allpackedOrderFail,
     refundRequest,
     refundSuccess,
-    refundFail
+    refundFail,
+    clearRefundError
  } = actions;
 
 export default reducer;

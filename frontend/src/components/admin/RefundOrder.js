@@ -6,6 +6,7 @@ import { orderDetail as orderDetailAction, updateOrder, porterOrder, RemoveOrder
 import { CancelOrderResponse, createPorterOrderResponse, getPackedOrder, getporterOrder, initRefund, packedOrder } from "../../actions/porterActions";
 import { toast } from "react-toastify";
 import { clearOrderUpdated, clearError, adminOrderRemoveClearError } from "../../slices/orderSlice";
+import { clearRefundError } from "../../slices/porterSlice";
 import { Link } from "react-router-dom";
 import { v4 as uuidv4 } from 'uuid';
 import {
@@ -21,7 +22,7 @@ import Loader from "../Layouts/Loader";
 const RefundOrder = () => {
     const { loading, isOrderUpdated, error, orderDetail, porterOrderDetail, orderRemoveResponse, orderRemoveError } = useSelector(state => state.orderState);
     const { products } = useSelector((state) => state.productsState);
-    const { porterOrderData, porterOrderResponse, porterCancelResponse, porterCancelError, portererror, getpackedOrderData } = useSelector((state) => state.porterState);
+    const { porterOrderData, porterOrderResponse, porterCancelResponse, porterCancelError, portererror, getpackedOrderData ,refundData,refundError} = useSelector((state) => state.porterState);
     const { user = {}, orderItems = [], shippingInfo = {}, totalPrice = 0, statusResponse = {} } = orderDetail;
     const [orderStatus, setOrderStatus] = useState("Processing");
     const [dropStatus, setDropStatus] = useState("");
@@ -34,7 +35,7 @@ const RefundOrder = () => {
     const [removalReason, setRemovalReason] = useState('');
     const navigate = useNavigate();
     const dispatch = useDispatch();
-    console.log("getpackedOrderData", getpackedOrderData)
+    console.log("orderDetail", orderDetail)
 
 
     useEffect(() => {
@@ -48,175 +49,175 @@ const RefundOrder = () => {
     }, [orderDetail]);
 
 
-    const handleItemSelection = (index) => {
-        const newSelectedItems = [...selectedItems];
-        newSelectedItems[index] = !newSelectedItems[index];
+    // const handleItemSelection = (index) => {
+    //     const newSelectedItems = [...selectedItems];
+    //     newSelectedItems[index] = !newSelectedItems[index];
 
-        if (newSelectedItems[index]) {
-            // If the checkbox is checked, set the weight to zero
-            const newWeights = [...editableWeights];
-            newWeights[index] = 0;
-            setEditableWeights(newWeights);
-        } else {
-            // If the checkbox is unchecked, reset the weight to the original value
-            const newWeights = [...editableWeights];
-            newWeights[index] = orderItems[index].productWeight;
-            setEditableWeights(newWeights);
-        }
+    //     if (newSelectedItems[index]) {
+    //         // If the checkbox is checked, set the weight to zero
+    //         const newWeights = [...editableWeights];
+    //         newWeights[index] = 0;
+    //         setEditableWeights(newWeights);
+    //     } else {
+    //         // If the checkbox is unchecked, reset the weight to the original value
+    //         const newWeights = [...editableWeights];
+    //         newWeights[index] = orderItems[index].productWeight;
+    //         setEditableWeights(newWeights);
+    //     }
 
-        setSelectedItems(newSelectedItems);
-    };
-
-
-    const submitHandler = async (e) => {
-        e.preventDefault();
-        // setRefreshData(false)
-        const requestId = `TEST_0_${uuidv4()}`;
-        const porterData = {
-            "request_id": requestId,
-            "delivery_instructions": {
-                "instructions_list": [
-                    {
-                        "type": "text",
-                        "description": "handle with care"
-                    }
-                ]
-            },
-            "pickup_details": {
-                "address": {
-                    "apartment_address": "27",
-                    "street_address1": "Sona Towers",
-                    "street_address2": "Krishna Nagar Industrial Area",
-                    "landmark": "Hosur Road",
-                    "city": "Bengaluru",
-                    "state": "Karnataka",
-                    "pincode": "560029",
-                    "country": "India",
-                    "lat": 12.935025018880504,
-                    "lng": 77.6092605236106,
-                    "contact_details": {
-                        "name": "admin",
-                        "phone_number": "+919876543210"
-                    }
-                }
-            },
-            "drop_details": {
-                "address": {
-                    "apartment_address": "this is apartment address",
-                    "street_address1": shippingInfo.address,
-                    "street_address2": "This is My Order ID",
-                    "landmark": "BTM Layout",
-                    "city": shippingInfo.city,
-                    "state": shippingInfo.state || "TamilNadu",
-                    "pincode": shippingInfo.postalCode,
-                    "country": shippingInfo.country,
-                    "lat": 12.947146336879577,
-                    "lng": 77.62102993895199,
-                    "contact_details": {
-                        "name": user.name,
-                        "phone_number": shippingInfo.phoneNo
-                    }
-                }
-            },
-            "additional_comments": "This is a test comment",
-        };
-
-        // Create an array to store status for each item
-        // const updatedItems = orderItems.map((item, index) => ({
-        //     ...item,
-        //     status: editableWeights[index] > 0 ? 'confirm' : 'cancel',
-        //     productWeight: editableWeights[index]
-        // }));
-
-        // let totalRefundableAmount = 0;
-
-        // const detailedTable = orderItems.map((item, index) => {
-        //     const orderedWeight = parseFloat(item.productWeight);
-        //     const dispatchedWeight = parseFloat(updatedItems[index].productWeight);
-        //     const refundableWeight = parseFloat((orderedWeight - dispatchedWeight).toFixed(2)); // Keeping two decimal places
-        //     const pricePerKg = parseFloat((item.price).toFixed(2)); // Keeping two decimal places
-        //     const refundableAmount = parseFloat((refundableWeight * pricePerKg).toFixed(2)); // Keeping two decimal places
-
-        //     totalRefundableAmount += refundableAmount;
-
-        //     return {
-        //         image: item.image,
-        //         name: item.name,
-        //         orderedWeight,
-        //         pricePerKg,
-        //         dispatchedWeight,
-        //         refundableWeight,
-        //         refundableAmount,
-        //     };
-        // });
-
-        // totalRefundableAmount = parseFloat(totalRefundableAmount.toFixed(2)); // Keeping two decimal places
+    //     setSelectedItems(newSelectedItems);
+    // };
 
 
-        // console.log("detailedTable", detailedTable);
-        // console.log(`Total Refundable Amount: ₹${totalRefundableAmount}`);
+    // const submitHandler = async (e) => {
+    //     e.preventDefault();
+    //     // setRefreshData(false)
+    //     const requestId = `TEST_0_${uuidv4()}`;
+    //     const porterData = {
+    //         "request_id": requestId,
+    //         "delivery_instructions": {
+    //             "instructions_list": [
+    //                 {
+    //                     "type": "text",
+    //                     "description": "handle with care"
+    //                 }
+    //             ]
+    //         },
+    //         "pickup_details": {
+    //             "address": {
+    //                 "apartment_address": "27",
+    //                 "street_address1": "Sona Towers",
+    //                 "street_address2": "Krishna Nagar Industrial Area",
+    //                 "landmark": "Hosur Road",
+    //                 "city": "Bengaluru",
+    //                 "state": "Karnataka",
+    //                 "pincode": "560029",
+    //                 "country": "India",
+    //                 "lat": 12.935025018880504,
+    //                 "lng": 77.6092605236106,
+    //                 "contact_details": {
+    //                     "name": "admin",
+    //                     "phone_number": "+919876543210"
+    //                 }
+    //             }
+    //         },
+    //         "drop_details": {
+    //             "address": {
+    //                 "apartment_address": "this is apartment address",
+    //                 "street_address1": shippingInfo.address,
+    //                 "street_address2": "This is My Order ID",
+    //                 "landmark": "BTM Layout",
+    //                 "city": shippingInfo.city,
+    //                 "state": shippingInfo.state || "TamilNadu",
+    //                 "pincode": shippingInfo.postalCode,
+    //                 "country": shippingInfo.country,
+    //                 "lat": 12.947146336879577,
+    //                 "lng": 77.62102993895199,
+    //                 "contact_details": {
+    //                     "name": user.name,
+    //                     "phone_number": shippingInfo.phoneNo
+    //                 }
+    //             }
+    //         },
+    //         "additional_comments": "This is a test comment",
+    //     };
 
-        // console.log("updatedItems", updatedItems)
+    //     // Create an array to store status for each item
+    //     // const updatedItems = orderItems.map((item, index) => ({
+    //     //     ...item,
+    //     //     status: editableWeights[index] > 0 ? 'confirm' : 'cancel',
+    //     //     productWeight: editableWeights[index]
+    //     // }));
+
+    //     // let totalRefundableAmount = 0;
+
+    //     // const detailedTable = orderItems.map((item, index) => {
+    //     //     const orderedWeight = parseFloat(item.productWeight);
+    //     //     const dispatchedWeight = parseFloat(updatedItems[index].productWeight);
+    //     //     const refundableWeight = parseFloat((orderedWeight - dispatchedWeight).toFixed(2)); // Keeping two decimal places
+    //     //     const pricePerKg = parseFloat((item.price).toFixed(2)); // Keeping two decimal places
+    //     //     const refundableAmount = parseFloat((refundableWeight * pricePerKg).toFixed(2)); // Keeping two decimal places
+
+    //     //     totalRefundableAmount += refundableAmount;
+
+    //     //     return {
+    //     //         image: item.image,
+    //     //         name: item.name,
+    //     //         orderedWeight,
+    //     //         pricePerKg,
+    //     //         dispatchedWeight,
+    //     //         refundableWeight,
+    //     //         refundableAmount,
+    //     //     };
+    //     // });
+
+    //     // totalRefundableAmount = parseFloat(totalRefundableAmount.toFixed(2)); // Keeping two decimal places
+
+
+    //     // console.log("detailedTable", detailedTable);
+    //     // console.log(`Total Refundable Amount: ₹${totalRefundableAmount}`);
+
+    //     // console.log("updatedItems", updatedItems)
 
        
-        const reqPorterData = {
-            user: user,
-            request_id: requestId,
-            user_id: user._id,
-            order_id: orderDetail.order_id,
-            porterData: porterData,
-            updatedItems:  getpackedOrderData.updatedItems,
-            detailedTable: getpackedOrderData && getpackedOrderData.dispatchedTable,
-            totalRefundableAmount: Number(getpackedOrderData && getpackedOrderData.totalRefundableAmount)
-        };
-        console.log('reqPorterData', reqPorterData);
+    //     const reqPorterData = {
+    //         user: user,
+    //         request_id: requestId,
+    //         user_id: user._id,
+    //         order_id: orderDetail.order_id,
+    //         porterData: porterData,
+    //         updatedItems:  getpackedOrderData.updatedItems,
+    //         detailedTable: getpackedOrderData && getpackedOrderData.dispatchedTable,
+    //         totalRefundableAmount: Number(getpackedOrderData && getpackedOrderData.totalRefundableAmount)
+    //     };
+    //     console.log('reqPorterData', reqPorterData);
 
-        try {
-            await dispatch(porterOrder({ id: orderDetail.order_id, reqPorterData }));
-            // setShowDispatchModal(false);
-            // setRefreshData(true)
-            // await dispatch(getporterOrder({ order_id: id }));
-        } catch (error) {
-            toast.error(error);
-            // setRefreshData(true)
-        }
+    //     try {
+    //         await dispatch(porterOrder({ id: orderDetail.order_id, reqPorterData }));
+    //         // setShowDispatchModal(false);
+    //         // setRefreshData(true)
+    //         // await dispatch(getporterOrder({ order_id: id }));
+    //     } catch (error) {
+    //         toast.error(error);
+    //         // setRefreshData(true)
+    //     }
 
-        setRefreshData(true)
-    };
+    //     setRefreshData(true)
+    // };
 
 
-    const changeWeight = (e, index) => {
-        const value = e.target.value;
-        if (value === '' || !isNaN(value)) {
-            const numericValue = parseFloat(value);
-            if (numericValue < 0) {
-                // If the entered value is negative, reset to the original weight and show an error
-                toast.error("Weight cannot be negative. Reverting to original weight.");
-                const newWeights = [...editableWeights];
-                newWeights[index] = originalWeights[index]; // Reset to original weight
-                setEditableWeights(newWeights);
-                return;
-            }
+    // const changeWeight = (e, index) => {
+    //     const value = e.target.value;
+    //     if (value === '' || !isNaN(value)) {
+    //         const numericValue = parseFloat(value);
+    //         if (numericValue < 0) {
+    //             // If the entered value is negative, reset to the original weight and show an error
+    //             toast.error("Weight cannot be negative. Reverting to original weight.");
+    //             const newWeights = [...editableWeights];
+    //             newWeights[index] = originalWeights[index]; // Reset to original weight
+    //             setEditableWeights(newWeights);
+    //             return;
+    //         }
 
-            if (numericValue > orderItems[index].productWeight) {
-                toast.error("Entered Kg is greater than requested Kg. Reverting to original weight.");
-            }
+    //         if (numericValue > orderItems[index].productWeight) {
+    //             toast.error("Entered Kg is greater than requested Kg. Reverting to original weight.");
+    //         }
 
-            const weight = Math.min(numericValue, orderItems[index].productWeight); // Ensure weight does not exceed initially ordered weight
-            const newWeights = [...editableWeights];
-            newWeights[index] = value === '' ? 0 : weight; // Allow empty value temporarily for editing
-            setEditableWeights(newWeights);
-        }
+    //         const weight = Math.min(numericValue, orderItems[index].productWeight); // Ensure weight does not exceed initially ordered weight
+    //         const newWeights = [...editableWeights];
+    //         newWeights[index] = value === '' ? 0 : weight; // Allow empty value temporarily for editing
+    //         setEditableWeights(newWeights);
+    //     }
 
-    };
+    // };
 
-    const handleBlur = (index) => {
-        if (editableWeights[index] === '' || editableWeights[index] === null) {
-            const newWeights = [...editableWeights];
-            newWeights[index] = orderItems[index].productWeight;
-            setEditableWeights(newWeights);
-        }
-    };
+    // const handleBlur = (index) => {
+    //     if (editableWeights[index] === '' || editableWeights[index] === null) {
+    //         const newWeights = [...editableWeights];
+    //         newWeights[index] = orderItems[index].productWeight;
+    //         setEditableWeights(newWeights);
+    //     }
+    // };
 
     // const submitHandlerPacked =async (e) =>{
     //     e.preventDefault();
@@ -290,16 +291,16 @@ const RefundOrder = () => {
 
     const submitRefundHandler = () =>{
         const RefundableAmount = Number(getpackedOrderData.totalRefundableAmount);
-        console.log("RefundableAmount",RefundableAmount)
+        // console.log("RefundableAmount",RefundableAmount)
         dispatch(initRefund({ order_id: id,  RefundableAmount }))
     }
 
     useEffect(() => {
-        if (isOrderUpdated) {
-            toast('Order Updated Successfully!', {
+        if (refundData) {
+            toast(refundData, {
                 type: 'success',
                 position: "bottom-center",
-                onOpen: () => dispatch(clearOrderUpdated())
+                onOpen: () => dispatch(clearRefundError())
             });
 
         }
@@ -310,31 +311,22 @@ const RefundOrder = () => {
                 onOpen: () => { dispatch(clearError()) }
             });
         }
+        if (refundError) {
+            toast(refundError, {
+                position: "bottom-center",
+                type: 'error',
+                onOpen: () => { dispatch(clearRefundError()) }
+            });
+        }
 
         dispatch(orderDetailAction(id));
         dispatch(getPackedOrder({ order_id: id }))
 
-
-
-        if (refreshData) {
-            const fetchData = async () => {
-                dispatch(porterClearData())
-                await dispatch(getporterOrder({ order_id: id }))
-                await dispatch(createPorterOrderResponse({ order_id: id, porterOrder_id: porterOrderData?.porterOrder?.order_id }))
-                await dispatch(porterClearData())
-                await dispatch(getporterOrder({ order_id: id }))
-                await dispatch(porterClearResponse())
-                // dispatch(orderDetailAction(id));
-                setRefreshData(false);
-            }
-
-            fetchData();
-        }
         dispatch(porterClearData())
         dispatch(createPorterOrderResponse({ order_id: id, porterOrder_id: porterOrderData?.porterOrder?.order_id }))
         dispatch(getporterOrder({ order_id: id }))
 
-    }, [dispatch, id, refreshData, porterOrderDetail, error]);
+    }, [dispatch, id, refreshData, porterOrderDetail, error,refundData,refundError]);
 
 
     return (
@@ -360,11 +352,11 @@ const RefundOrder = () => {
 
                                 <h4 className="my-4">Payment status</h4>
                                 <p className={orderDetail.paymentStatus === 'CHARGED' ? 'greenColor' : 'redColor'}><b>{orderDetail.paymentStatus || 'Pending'}</b></p>
-                                <hr />
-                                <h4 className="my-4">Order Status:</h4>
-                                <p className={dropStatus.includes('Delivered') ? 'greenColor' : 'redColor'}><b>{dropStatus}</b></p>
+                                {/* <hr /> */}
+                                {/* <h4 className="my-4">Order Status:</h4>
+                                <p className={dropStatus.includes('Delivered') ? 'greenColor' : 'redColor'}><b>{dropStatus}</b></p> */}
 
-                                {porterOrderData && porterOrderData.porterResponse && (
+                                {/* {porterOrderData && porterOrderData.porterResponse && (
                                     <Fragment>
                                         <hr />
                                         <h4 className="my-4">Delivery Details:</h4>
@@ -406,8 +398,7 @@ const RefundOrder = () => {
                                                             <p>Order Ended Time:  {new Date(porterOrderData.porterResponse.order_timings.order_ended_time * 1000).toLocaleString()}</p>
                                                         ) : (<p>Order Ended Time:  N/A</p>)
                                                     }
-                                                    {/* <p>Order Ended Time: {new Date(porterOrderData.porterResponse.order_timings.order_ended_time * 1000).toLocaleString()}</p> */}
-                                                    {/* <p>Pickup Time: {new Date(porterOrderData.porterResponse.order_timings.pickup_time * 1000).toLocaleString()}</p> */}
+                                                    
                                                 </div>
 
 
@@ -428,30 +419,29 @@ const RefundOrder = () => {
                                                     porterOrderData.porterResponse.partner_info && (
                                                         <div className="detail-row">
                                                             <h5>Delivery Partner:</h5>
-                                                            {/* <h6>Name:</h6> */}
+                                                           
                                                             <p>Name: {porterOrderData.porterResponse.partner_info.name}</p>
-                                                            {/* <h6>Mobile:</h6> */}
+
                                                             <p>Mobile: {porterOrderData.porterResponse.partner_info.mobile.country_code} {porterOrderData.porterResponse.partner_info.mobile.mobile_number}</p>
                                                             {porterOrderData.porterResponse.partner_info.partner_secondary_mobile && (
                                                                 <>
-                                                                    {/* <h6>Secondary Mobile:</h6> */}
+                                                                  
                                                                     <p>Secondary Mobile: {porterOrderData.porterResponse.partner_info.partner_secondary_mobile.country_code} {porterOrderData.porterResponse.partner_info.partner_secondary_mobile.mobile_number}</p>
                                                                 </>
                                                             )
                                                             }
-                                                            {/* <h6>Vehicle Number:</h6> */}
+                                                            
                                                             <p>Vehicle Number: {porterOrderData.porterResponse.partner_info.vehicle_number}</p>
-                                                            {/* <h6>Vehicle Type:</h6> */}
+                                                            
                                                             <p>Vehicle Type: {porterOrderData.porterResponse.partner_info.vehicle_type}</p>
-                                                            {/* <h6>Location:</h6> */}
-                                                            {/* <p>Lat: {porterOrderData.porterResponse.partner_info.location.lat}, Long: {porterOrderData.porterResponse.partner_info.location.long}</p> */}
+                                                           
                                                         </div>
                                                     )
                                                 }
                                             </div>
                                         </div>
                                     </Fragment>
-                                )}
+                                )} */}
 
 
                                 <hr />
@@ -459,7 +449,9 @@ const RefundOrder = () => {
 
                                 <div className="invoice-table-container">
                                     <div className="updatetable-responsive">
-                                        <table className="updatetable updatetable-bordered">
+                                      {
+                                        getpackedOrderData && getpackedOrderData.totalRefundableAmount>0 ? (
+                                            <table className="updatetable updatetable-bordered">
                                             <thead>
                                                 <tr>
                                                     {getpackedOrderData && getpackedOrderData.dispatchedTable && (
@@ -468,8 +460,8 @@ const RefundOrder = () => {
                                                             <th>Name</th>
                                                             <th>Price per kg</th>
                                                             <th>Ordered Weight</th>
-                                                            <th>Dispatched Weight</th>
-                                                            <th>Total Amount</th>
+                                                            <th>Refund Weight</th>
+                                                            <th>Total Refundable Amount</th>
                                                             {/* <th>Refundable Amount</th> */}
                                                         </>
                                                     )}
@@ -485,36 +477,45 @@ const RefundOrder = () => {
                                                             <td>{item.name}</td>                                           
                                                             <td>Rs. {parseFloat(item.pricePerKg).toFixed(2)}</td>
                                                             <td>{item.orderedWeight} kg</td>
-                                                            <td>{item.dispatchedWeight} kg</td>
-                                                            <td>Rs. {parseFloat(item.pricePerKg * item.dispatchedWeight).toFixed(2)}</td>
+                                                            <td>{item.refundableWeight} kg</td>
+                                                            <td>Rs. {parseFloat(item.pricePerKg * item.refundableWeight).toFixed(2)}</td>
                                                             {/* <td>Rs. {item.refundableAmount}</td> */}
                                                         </tr>
                                                     ))
                                                     
                                                 )}
                                                 <tr>
-                                                    <td colSpan="5" style={{ textAlign: 'right' }}><strong>TotalDispatchedAmount</strong></td>
-                                                    <td className="amount"><strong>Rs. {getpackedOrderData && getpackedOrderData.totalDispatchedAmount && getpackedOrderData.totalDispatchedAmount}</strong></td>
+                                                    <td colSpan="5" style={{ textAlign: 'right' }}><strong>TotalRefundableAmount</strong></td>
+                                                    <td className="amount"><strong>Rs. {getpackedOrderData && getpackedOrderData.totalRefundableAmount && getpackedOrderData.totalRefundableAmount}</strong></td>
                                                 </tr>
                                                 
                                             </tbody>
                                         </table>
+
+                                        ) :(
+                                            <>
+                                            there is no refund data
+                                            </>
+                                        )
+                                      }  
+                                      
                                     </div>
                                 </div>
 
                                 <hr />
                                 <div>
-                                    <button className='btn btn-primary' onClick={submitRefundHandler} disabled={dropStatus === "Refund"}>Refund</button>
-                                    {/* <button className='btn btn-primary' onClick={(e)=>submitHandlerPacked(e)} disabled={dropStatus === "Packed"}>Packed</button> */}
+                                    {
+                                        orderDetail && orderDetail.statusResponse && orderDetail.statusResponse.refunds ? (
+                                            <button className='btn btn-primary' onClick={submitRefundHandler} disabled={true}>Already Refunded</button>
+                                        ):(
+                                            <button className='btn btn-primary' onClick={submitRefundHandler} disabled={dropStatus === "Refund"}>Refund</button>  
+                                        )
 
+                                    }
+                                    {/* <button className='btn btn-primary' onClick={submitRefundHandler} disabled={dropStatus === "Refund"}>Refund</button> */}
+                                    {/* <button className='btn btn-primary' onClick={(e)=>submitHandlerPacked(e)} disabled={dropStatus === "Packed"}>Packed</button> */}
                                 </div>
 
-                                {porterOrderData && (
-                                    <Invoice porterOrderData={porterOrderData} />
-
-                                )
-
-                                }
                             </div>
                         </Fragment>
                     </div>

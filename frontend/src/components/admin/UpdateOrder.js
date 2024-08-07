@@ -564,7 +564,7 @@ const UpdateOrder = () => {
                                 <hr />
                                 <div>
                                     {/* <button className='btn btn-primary' onClick={submitHandler} disabled={dropStatus === "Dispatched"}>Dispatch</button> */}
-                                    <button className='btn btn-primary' onClick={(e)=>submitHandlerPacked(e)} disabled={dropStatus === "Packed"}>Packed</button>
+                                    <button className='btn btn-primary' onClick={(e)=>submitHandlerPacked(e)} disabled={dropStatus === "Processing"?false:true}>Packed</button>
 
                                 </div>
 

@@ -19,6 +19,9 @@ import {
     getpackedOrderRequest,
     getpackedOrderSuccess,
     getpackedOrderFail,
+    allpackedOrderRequest,
+    allpackedOrderSuccess,
+    allpackedOrderFail,
     refundRequest,
     refundSuccess,
     refundFail,
@@ -95,6 +98,19 @@ export const getporterOrder = createAsyncThunk('init/order/create', async ({orde
       dispatch(getpackedOrderSuccess(data));
     } catch (error) {
       dispatch(getpackedOrderFail(error.response.data.message));
+    }
+  });
+
+
+  export const allPackedOrder = createAsyncThunk('/order/allpackedOrderResponse', async ({}, { dispatch }) => {
+    try {
+        // console.log("order_id",order_id)
+      dispatch(allpackedOrderRequest());
+      const { data } = await axios.get('/api/v1/admin/PackedOrder/all',{withCredentials: true });
+      console.log("allpackedresponseData",data)
+      dispatch(allpackedOrderSuccess(data));
+    } catch (error) {
+      dispatch(allpackedOrderFail(error.response.data.message));
     }
   });
 

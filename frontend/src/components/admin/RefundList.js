@@ -3,6 +3,7 @@ import { Button } from "react-bootstrap";
 import { useDispatch, useSelector } from 'react-redux';
 import { Link } from "react-router-dom";
 import { deleteOrder, adminOrders as adminOrdersAction } from "../../actions/orderActions"
+import {allPackedOrder } from "../../actions/porterActions"
 import Loader from '../Layouts/Loader';
 import { MDBDataTable } from 'mdbreact';
 import { toast } from 'react-toastify';
@@ -11,8 +12,9 @@ import { clearError } from '../../slices/productsSlice';
 import { clearOrderDeleted } from "../../slices/orderSlice";
 
 const RefundList = () => {
-    const { adminOrders: orders = [], loading = true, error, isOrderDeleted }  = useSelector(state => state.orderState);
-    console.log(orders);
+    // const { adminOrders: orders = [], loading = true, error, isOrderDeleted }  = useSelector(state => state.orderState);
+    const { loading,allpackedOrderData: orders = [],allpackedOrderError }  = useSelector(state => state.porterState);
+    console.log("allpackedOrderData",orders,allpackedOrderError);
     
     const dispatch = useDispatch();
 
@@ -34,11 +36,11 @@ const RefundList = () => {
                     field: 'name',
                     sort: 'asc'
                 },
-                {
-                    label: 'Phone.No',
-                    field: 'phone_no',
-                    sort: 'asc'
-                },
+                // {
+                //     label: 'Phone.No',
+                //     field: 'phone_no',
+                //     sort: 'asc'
+                // },
                 {
                     label: 'Email',
                     field: 'email',
@@ -49,21 +51,21 @@ const RefundList = () => {
                 //     field: 'noOfItems',
                 //     sort: 'asc'
                 // },
-                {
-                    label: 'Amount',
-                    field: 'amount',
-                    sort: 'asc'
-                },
-                {
-                    label: 'OrderStatus',
-                    field: 'orderstatus',
-                    sort: 'asc'
-                },
-                {
-                    label: 'PaymentStatus',
-                    field: 'paymentstatus',
-                    sort: 'asc'
-                },
+                // {
+                //     label: 'Amount',
+                //     field: 'amount',
+                //     sort: 'asc'
+                // },
+                // {
+                //     label: 'OrderStatus',
+                //     field: 'orderstatus',
+                //     sort: 'asc'
+                // },
+                // {
+                //     label: 'PaymentStatus',
+                //     field: 'paymentstatus',
+                //     sort: 'asc'
+                // },
                 {
                     label: 'Actions',
                     field: 'actions',
@@ -75,22 +77,23 @@ const RefundList = () => {
 
         // Sort orders by creation date (newest first)
         const sortedOrders = [...orders].sort((a, b) => new Date(b.createdAt) - new Date(a.createdAt));
+        console.log("sortedOrders",sortedOrders)
 
-        sortedOrders.filter(order => order.paymentStatus === 'CHARGED').forEach((order, index) => {
+        sortedOrders.filter(order => order.totalRefundableAmount> 0).forEach((order, index) => {
             data.rows.push({
                 s_no: index + 1,
                 id: order.order_id,
                 name:order.user.name,
-                phone_no:order.shippingInfo.phoneNo,
+                // phone_no:order.shippingInfo.phoneNo,
                 email:order.user.email,
                 // noOfItems: order.orderItems.length,
-                amount: `Rs.${order.totalPrice}`,
-                orderstatus: (
-                    <p className={order.orderStatus && order.orderStatus.includes('Delivered') ? 'greenColor' : 'redColor' } ><p>{order.orderStatus}</p></p>
-                ),
-                paymentstatus: (
-                    <p className='greenColor'><p>{order.paymentStatus}</p></p>
-                ),
+                // amount: `Rs.${order.totalPrice}`,
+                // orderstatus: (
+                //     <p className={order.orderStatus && order.orderStatus.includes('Delivered') ? 'greenColor' : 'redColor' } ><p>{order.orderStatus}</p></p>
+                // ),
+                // paymentstatus: (
+                //     <p className='greenColor'><p>{order.paymentStatus}</p></p>
+                // ),
                 actions: (
                     <Fragment>
                         <Link to={`/admin/refund/${order.order_id}`} className="btn btn-primary py-1 px-2 ml-2">
@@ -108,31 +111,31 @@ const RefundList = () => {
     };
 
 
-    // const deleteHandler = (e, id) => {
-    //     e.target.disabled = true;
-    //     dispatch(deleteOrder(id));
-    // };
+    const deleteHandler = (e, id) => {
+        e.target.disabled = true;
+        dispatch(deleteOrder(id));
+    };
 
     useEffect(() => {
-        if (error) {
-            toast(error, {
+        if (allpackedOrderError) {
+            toast(allpackedOrderError, {
                 position: "bottom-center",
                 type: 'error',
                 onOpen: () => { dispatch(clearError()) }
             });
             return;
         }
-        if (isOrderDeleted) {
-            toast('Order Deleted Successfully!', {
-                type: 'success',
-                position: "bottom-center",
-                onOpen: () => dispatch(clearOrderDeleted())
-            });
-            return;
-        }
+        // if (isOrderDeleted) {
+        //     toast('Order Deleted Successfully!', {
+        //         type: 'success',
+        //         position: "bottom-center",
+        //         onOpen: () => dispatch(clearOrderDeleted())
+        //     });
+        //     return;
+        // }
 
-        dispatch(adminOrdersAction());
-    }, [dispatch, error, isOrderDeleted]);
+        dispatch(allPackedOrder({}));
+    }, [dispatch,allpackedOrderError]);
 
     return (
         <div className="row">

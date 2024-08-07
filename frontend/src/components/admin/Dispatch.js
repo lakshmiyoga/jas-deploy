@@ -498,7 +498,7 @@ const Dispatch = () => {
 
                                 <hr />
                                 <div>
-                                    <button className='btn btn-primary' onClick={submitHandler} disabled={dropStatus === "Dispatched"}>Dispatch</button>
+                                    <button className='btn btn-primary' onClick={submitHandler} disabled={dropStatus === "Dispatched" || dropStatus === "Delivered"}>Dispatch</button>
                                     {/* <button className='btn btn-primary' onClick={(e)=>submitHandlerPacked(e)} disabled={dropStatus === "Packed"}>Packed</button> */}
 
                                 </div>
