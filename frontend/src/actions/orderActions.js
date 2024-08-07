@@ -104,7 +104,7 @@ export const deleteOrder = createAsyncThunk('order/delete', async (id, { dispatc
   }
 });
 
-export const porterOrder = createAsyncThunk('order/porter', async ({ id, reqPorterData }, { dispatch }) => {
+export const porterOrder = createAsyncThunk('order/porter', async ({  reqPorterData }, { dispatch }) => {
   // console.log(id)
   try {
     dispatch(porterOrderRequest());

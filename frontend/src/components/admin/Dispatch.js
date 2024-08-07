@@ -3,7 +3,7 @@ import Sidebar from "./Sidebar";
 import { useDispatch, useSelector } from 'react-redux';
 import { useNavigate, useParams } from "react-router-dom";
 import { orderDetail as orderDetailAction, updateOrder, porterOrder, RemoveOrderResponse } from "../../actions/orderActions";
-import { CancelOrderResponse, createPorterOrderResponse, getporterOrder, packedOrder } from "../../actions/porterActions";
+import { CancelOrderResponse, createPorterOrderResponse, getPackedOrder, getporterOrder, packedOrder } from "../../actions/porterActions";
 import { toast } from "react-toastify";
 import { clearOrderUpdated, clearError, adminOrderRemoveClearError } from "../../slices/orderSlice";
 import { Link } from "react-router-dom";
@@ -18,10 +18,10 @@ import Invoice from "../Layouts/Invoice";
 import NumberInput from "../Layouts/NumberInput";
 import Loader from "../Layouts/Loader";
 
-const UpdateOrder = () => {
+const Dispatch = () => {
     const { loading, isOrderUpdated, error, orderDetail, porterOrderDetail, orderRemoveResponse, orderRemoveError } = useSelector(state => state.orderState);
     const { products } = useSelector((state) => state.productsState);
-    const { porterOrderData, porterOrderResponse, porterCancelResponse, porterCancelError,portererror } = useSelector((state) => state.porterState);
+    const { porterOrderData, porterOrderResponse, porterCancelResponse, porterCancelError, portererror, getpackedOrderData } = useSelector((state) => state.porterState);
     const { user = {}, orderItems = [], shippingInfo = {}, totalPrice = 0, statusResponse = {} } = orderDetail;
     const [orderStatus, setOrderStatus] = useState("Processing");
     const [dropStatus, setDropStatus] = useState("");
@@ -34,7 +34,7 @@ const UpdateOrder = () => {
     const [removalReason, setRemovalReason] = useState('');
     const navigate = useNavigate();
     const dispatch = useDispatch();
-    console.log("orderDetail", orderDetail)
+    console.log("getpackedOrderData", getpackedOrderData)
 
 
     useEffect(() => {
@@ -122,51 +122,52 @@ const UpdateOrder = () => {
         };
 
         // Create an array to store status for each item
-        const updatedItems = orderItems.map((item, index) => ({
-            ...item,
-            status: editableWeights[index] > 0 ? 'confirm' : 'cancel',
-            productWeight: editableWeights[index]
-        }));
+        // const updatedItems = orderItems.map((item, index) => ({
+        //     ...item,
+        //     status: editableWeights[index] > 0 ? 'confirm' : 'cancel',
+        //     productWeight: editableWeights[index]
+        // }));
 
-        let totalRefundableAmount = 0;
-    
-        const detailedTable = orderItems.map((item, index) => {
-            const orderedWeight = parseFloat(item.productWeight);
-            const dispatchedWeight = parseFloat(updatedItems[index].productWeight);
-            const refundableWeight = parseFloat((orderedWeight - dispatchedWeight).toFixed(2)); // Keeping two decimal places
-            const pricePerKg = parseFloat((item.price).toFixed(2)); // Keeping two decimal places
-            const refundableAmount = parseFloat((refundableWeight * pricePerKg).toFixed(2)); // Keeping two decimal places
+        // let totalRefundableAmount = 0;
 
-            totalRefundableAmount += refundableAmount;
+        // const detailedTable = orderItems.map((item, index) => {
+        //     const orderedWeight = parseFloat(item.productWeight);
+        //     const dispatchedWeight = parseFloat(updatedItems[index].productWeight);
+        //     const refundableWeight = parseFloat((orderedWeight - dispatchedWeight).toFixed(2)); // Keeping two decimal places
+        //     const pricePerKg = parseFloat((item.price).toFixed(2)); // Keeping two decimal places
+        //     const refundableAmount = parseFloat((refundableWeight * pricePerKg).toFixed(2)); // Keeping two decimal places
 
-            return {
-                image: item.image,
-                name: item.name,
-                orderedWeight,
-                pricePerKg,
-                dispatchedWeight,
-                refundableWeight,
-                refundableAmount,
-            };
-        });
+        //     totalRefundableAmount += refundableAmount;
 
-        totalRefundableAmount = parseFloat(totalRefundableAmount.toFixed(2)); // Keeping two decimal places
+        //     return {
+        //         image: item.image,
+        //         name: item.name,
+        //         orderedWeight,
+        //         pricePerKg,
+        //         dispatchedWeight,
+        //         refundableWeight,
+        //         refundableAmount,
+        //     };
+        // });
+
+        // totalRefundableAmount = parseFloat(totalRefundableAmount.toFixed(2)); // Keeping two decimal places
 
 
-        console.log("detailedTable", detailedTable);
-        console.log(`Total Refundable Amount: ₹${totalRefundableAmount}`);
+        // console.log("detailedTable", detailedTable);
+        // console.log(`Total Refundable Amount: ₹${totalRefundableAmount}`);
 
-        console.log("updatedItems", updatedItems)
+        // console.log("updatedItems", updatedItems)
 
+       
         const reqPorterData = {
             user: user,
             request_id: requestId,
             user_id: user._id,
             order_id: orderDetail.order_id,
             porterData: porterData,
-            updatedItems: updatedItems,
-            detailedTable: detailedTable,
-            totalRefundableAmount: totalRefundableAmount
+            updatedItems:  getpackedOrderData.updatedItems,
+            detailedTable: getpackedOrderData && getpackedOrderData.dispatchedTable,
+            totalRefundableAmount: Number(getpackedOrderData && getpackedOrderData.totalRefundableAmount)
         };
         console.log('reqPorterData', reqPorterData);
 
@@ -217,83 +218,83 @@ const UpdateOrder = () => {
         }
     };
 
-    const submitHandlerPacked =async (e) =>{
-        e.preventDefault();
+    // const submitHandlerPacked =async (e) =>{
+    //     e.preventDefault();
 
-        const updatedItems = orderItems.map((item, index) => ({
-            ...item,
-            status: editableWeights[index] > 0 ? 'confirm' : 'cancel',
-            productWeight: editableWeights[index]
-        }));
+    //     const updatedItems = orderItems.map((item, index) => ({
+    //         ...item,
+    //         status: editableWeights[index] > 0 ? 'confirm' : 'cancel',
+    //         productWeight: editableWeights[index]
+    //     }));
 
-        let totalDispatchedAmount = 0;
-        let totalRefundableAmount = 0;
-    
-        const dispatchedTable = orderItems.map((item, index) => {
-            const orderedWeight = parseFloat(item.productWeight);
-            const dispatchedWeight = parseFloat(updatedItems[index].productWeight);
-            const refundableWeight = parseFloat((orderedWeight - dispatchedWeight).toFixed(2)); // Keeping two decimal places
-            const pricePerKg = parseFloat((item.price).toFixed(2)); // Keeping two decimal places
-            const totalAmount = parseFloat((dispatchedWeight * pricePerKg).toFixed(2)); 
-            const refundableAmount = parseFloat((refundableWeight * pricePerKg).toFixed(2)); // Keeping two decimal places
+    //     let totalDispatchedAmount = 0;
+    //     let totalRefundableAmount = 0;
 
-            totalRefundableAmount += refundableAmount;
+    //     const dispatchedTable = orderItems.map((item, index) => {
+    //         const orderedWeight = parseFloat(item.productWeight);
+    //         const dispatchedWeight = parseFloat(updatedItems[index].productWeight);
+    //         const refundableWeight = parseFloat((orderedWeight - dispatchedWeight).toFixed(2)); // Keeping two decimal places
+    //         const pricePerKg = parseFloat((item.price).toFixed(2)); // Keeping two decimal places
+    //         const totalAmount = parseFloat((dispatchedWeight * pricePerKg).toFixed(2)); 
+    //         const refundableAmount = parseFloat((refundableWeight * pricePerKg).toFixed(2)); // Keeping two decimal places
 
-            totalDispatchedAmount += totalAmount;
+    //         totalRefundableAmount += refundableAmount;
 
-            return {
-                image: item.image,
-                name: item.name,
-                orderedWeight,
-                pricePerKg,
-                dispatchedWeight,
-                refundableWeight,
-                // totalRefundableAmount,
-                // totalDispatchedAmount,
-            };
-        });
+    //         totalDispatchedAmount += totalAmount;
 
-        totalDispatchedAmount = parseFloat(totalDispatchedAmount.toFixed(2)); // Keeping two decimal places
-        totalRefundableAmount = parseFloat(totalRefundableAmount.toFixed(2)); // Keeping two decimal places
+    //         return {
+    //             image: item.image,
+    //             name: item.name,
+    //             orderedWeight,
+    //             pricePerKg,
+    //             dispatchedWeight,
+    //             refundableWeight,
+    //             // totalRefundableAmount,
+    //             // totalDispatchedAmount,
+    //         };
+    //     });
 
-
-        console.log("dispatchedTable", dispatchedTable);
-        console.log(`Total Amount: ₹${totalDispatchedAmount}`);
-
-        const reqPackedData = {
-            user: user,
-            // request_id: requestId,
-            user_id: user._id,
-            order_id: orderDetail.order_id,
-            // porterData: porterData,
-            updatedItems: updatedItems,
-            dispatchedTable: dispatchedTable,
-            totalDispatchedAmount: totalDispatchedAmount,
-            totalRefundableAmount:totalRefundableAmount
-        };
-        console.log('reqPackedData', reqPackedData);
-
-        try {
-            await dispatch(packedOrder({reqPackedData }));
-            // setShowDispatchModal(false);
-            // setRefreshData(true)
-            // await dispatch(getporterOrder({ order_id: id }));
-        } catch (error) {
-            toast.error(error);
-            // setRefreshData(true)
-        }
+    //     totalDispatchedAmount = parseFloat(totalDispatchedAmount.toFixed(2)); // Keeping two decimal places
+    //     totalRefundableAmount = parseFloat(totalRefundableAmount.toFixed(2)); // Keeping two decimal places
 
 
+    //     console.log("dispatchedTable", dispatchedTable);
+    //     console.log(`Total Amount: ₹${totalDispatchedAmount}`);
 
-    }
+    //     const reqPackedData = {
+    //         user: user,
+    //         // request_id: requestId,
+    //         user_id: user._id,
+    //         order_id: orderDetail.order_id,
+    //         // porterData: porterData,
+    //         // updatedItems: updatedItems,
+    //         dispatchedTable: dispatchedTable,
+    //         totalDispatchedAmount: totalDispatchedAmount,
+    //         totalRefundableAmount:totalRefundableAmount
+    //     };
+    //     console.log('reqPackedData', reqPackedData);
+
+    //     try {
+    //         await dispatch(packedOrder({reqPackedData }));
+    //         // setShowDispatchModal(false);
+    //         // setRefreshData(true)
+    //         // await dispatch(getporterOrder({ order_id: id }));
+    //     } catch (error) {
+    //         toast.error(error);
+    //         // setRefreshData(true)
+    //     }
+
+
+
+    // }
 
     useEffect(() => {
         if (isOrderUpdated) {
             toast('Order Updated Successfully!', {
-            type: 'success',
-            position: "bottom-center",
-            onOpen: () => dispatch(clearOrderUpdated())
-        });
+                type: 'success',
+                position: "bottom-center",
+                onOpen: () => dispatch(clearOrderUpdated())
+            });
 
         }
         if (error) {
@@ -303,29 +304,10 @@ const UpdateOrder = () => {
                 onOpen: () => { dispatch(clearError()) }
             });
         }
-        // if (portererror) {
-        //     toast(portererror, {
-        //         position: "bottom-center",
-        //         type: 'error',
-        //         onOpen: () => { dispatch(clearError()) }
-        //     });
-        // }
+
         dispatch(orderDetailAction(id));
+        dispatch(getPackedOrder({ order_id: id }))
 
-        // if (!refreshData) {
-        //     const fetchData = async () => {
-        //          dispatch(porterClearData())
-        //         await dispatch(getporterOrder({ order_id: id }))
-        //         await dispatch(createPorterOrderResponse({ order_id: id, porterOrder_id: porterOrderData?.porterOrder?.order_id }))
-        //         await dispatch(porterClearData())
-        //         await dispatch(getporterOrder({ order_id: id }))
-        //         await dispatch(porterClearResponse())
-        //         // dispatch(orderDetailAction(id));
-        //         setRefreshData(false); 
-        //     }
-
-        //     fetchData();
-        // }
 
 
         if (refreshData) {
@@ -346,7 +328,7 @@ const UpdateOrder = () => {
         dispatch(createPorterOrderResponse({ order_id: id, porterOrder_id: porterOrderData?.porterOrder?.order_id }))
         dispatch(getporterOrder({ order_id: id }))
 
-    }, [dispatch, id, refreshData, porterOrderDetail,error]);
+    }, [dispatch, id, refreshData, porterOrderDetail, error]);
 
 
     return (
@@ -468,94 +450,47 @@ const UpdateOrder = () => {
 
                                 <hr />
                                 <h4 className="my-4">Order Items:</h4>
-                                
+
                                 <div className="invoice-table-container">
                                     <div className="updatetable-responsive">
                                         <table className="updatetable updatetable-bordered">
                                             <thead>
                                                 <tr>
-                                                    {porterOrderData && porterOrderData.detailedTable ? (
+                                                    {getpackedOrderData && getpackedOrderData.dispatchedTable && (
                                                         <>
                                                             <th>Image</th>
                                                             <th>Name</th>
-                                                            <th>Ordered Weight</th>
                                                             <th>Price per kg</th>
+                                                            <th>Ordered Weight</th>
                                                             <th>Dispatched Weight</th>
-                                                            <th>Refundable Weight</th>
-                                                            <th>Refundable Amount</th>
-                                                        </>
-                                                    ) : (
-                                                        <>
-                                                            <th>Select Item</th>
-                                                            <th>Image</th>
-                                                            <th>Name</th>
-                                                            <th>Price per kg</th>
-                                                            <th>Ordered Weight</th>
-                                                            <th>Dispatch Weight</th>
-                                                            <th>Total Price</th>
-                                                            <th>Status</th>
+                                                            <th>Total Amount</th>
+                                                            {/* <th>Refundable Amount</th> */}
                                                         </>
                                                     )}
                                                 </tr>
                                             </thead>
                                             <tbody>
-                                                {porterOrderData && porterOrderData.detailedTable ? (
-                                                    porterOrderData.detailedTable.map((item, index) => (
+                                                {getpackedOrderData && getpackedOrderData.dispatchedTable && (
+                                                    getpackedOrderData.dispatchedTable.map((item, index) => (
                                                         <tr key={index}>
                                                             <td>
                                                                 <img src={item.image} alt={item.name} className="updateTableproduct-image" />
                                                             </td>
-                                                            <td>{item.name}</td>
+                                                            <td>{item.name}</td>                                           
+                                                            <td>Rs. {parseFloat(item.pricePerKg).toFixed(2)}</td>
                                                             <td>{item.orderedWeight} kg</td>
-                                                            <td>Rs. {item.pricePerKg}</td>
                                                             <td>{item.dispatchedWeight} kg</td>
-                                                            <td>{item.refundableWeight} kg</td>
-                                                            <td>Rs. {item.refundableAmount}</td>
+                                                            <td>Rs. {parseFloat(item.pricePerKg * item.dispatchedWeight).toFixed(2)}</td>
+                                                            {/* <td>Rs. {item.refundableAmount}</td> */}
                                                         </tr>
                                                     ))
-                                                ) : (
-                                                    orderItems.map((item, index) => {
-                                                        const product = products.find((product) => product.englishName === item.name);
-                                                        if (!product) return null;
-
-                                                        return (
-                                                            <tr key={index}>
-                                                                <td>
-                                                                    <input
-                                                                        type="checkbox"
-                                                                        className="updatecheck-input"
-                                                                        checked={selectedItems[index]}
-                                                                        onChange={() => handleItemSelection(index)}
-                                                                    />
-                                                                </td>
-                                                                <td>
-                                                                    <img src={item.image} alt={item.name} className="updateTableproduct-image" />
-                                                                </td>
-                                                                <td>{item.name}</td>
-                                                                <td>Rs. {item.price}</td>
-                                                                <td>{item.productWeight} kg</td>
-                                                                {editableWeights && (
-                                                                    <>
-                                                                        <td style={{maxWidth:'70px'}}>
-                                                                            <input
-                                                                                type="number"
-                                                                                className="no-arrow-input form-control updateTableInput"
-                                                                                value={editableWeights[index] === 0 ? '' : editableWeights[index]}
-                                                                                onChange={(e) => changeWeight(e, index)}
-                                                                                placeholder={editableWeights[index] === 0 ? 0 : ''}
-                                                                                onBlur={() => handleBlur(index)}
-                                                                                disabled={!selectedItems[index]}
-                                                                                required
-                                                                            />
-                                                                        </td>
-                                                                        <td>Rs. {(editableWeights[index] * item.price).toFixed(2)}</td>
-                                                                    </>
-                                                                )}
-                                                                <td>{product.stocks ? <p>{product.stocks}</p> : <p>Out of Stock</p>}</td>
-                                                            </tr>
-                                                        );
-                                                    })
+                                                    
                                                 )}
+                                                <tr>
+                                                    <td colSpan="5" style={{ textAlign: 'right' }}><strong>TotalDispatchedAmount</strong></td>
+                                                    <td className="amount"><strong>Rs. {getpackedOrderData && getpackedOrderData.totalDispatchedAmount && getpackedOrderData.totalDispatchedAmount}</strong></td>
+                                                </tr>
+                                                
                                             </tbody>
                                         </table>
                                     </div>
@@ -563,8 +498,8 @@ const UpdateOrder = () => {
 
                                 <hr />
                                 <div>
-                                    {/* <button className='btn btn-primary' onClick={submitHandler} disabled={dropStatus === "Dispatched"}>Dispatch</button> */}
-                                    <button className='btn btn-primary' onClick={(e)=>submitHandlerPacked(e)} disabled={dropStatus === "Packed"}>Packed</button>
+                                    <button className='btn btn-primary' onClick={submitHandler} disabled={dropStatus === "Dispatched"}>Dispatch</button>
+                                    {/* <button className='btn btn-primary' onClick={(e)=>submitHandlerPacked(e)} disabled={dropStatus === "Packed"}>Packed</button> */}
 
                                 </div>
 
@@ -589,4 +524,4 @@ const UpdateOrder = () => {
 
 };
 
-export default UpdateOrder;
+export default Dispatch;

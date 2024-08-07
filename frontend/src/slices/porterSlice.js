@@ -93,6 +93,67 @@ const orderSlice = createSlice({
                 porterCancelResponse:null
             }
         },
+        packedOrderRequest(state, action) {
+            return {
+                ...state,
+                loading: true
+            }
+        },
+        packedOrderSuccess(state, action) {
+            return {
+                ...state,
+                loading: false,
+                packedOrderData: action.payload.packedOrderData
+            }
+        },
+        packedOrderFail(state, action) {
+            return {
+                ...state,
+                loading: false,
+                packedOrderError: action.payload
+            }
+        },
+        getpackedOrderRequest(state, action) {
+            return {
+                ...state,
+                loading: true
+            }
+        },
+        getpackedOrderSuccess(state, action) {
+            return {
+                ...state,
+                loading: false,
+                getpackedOrderData: action.payload.getpackedOrderData
+            }
+        },
+        getpackedOrderFail(state, action) {
+            return {
+                ...state,
+                loading: false,
+                getpackedOrderError: action.payload
+            }
+        },
+        refundRequest(state, action) {
+            return {
+                ...state,
+                loading: true
+            }
+        },
+        refundSuccess(state, action) {
+            return {
+                ...state,
+                loading: false,
+                refundData: action.payload.refundData
+            }
+        },
+        refundFail(state, action) {
+            return {
+                ...state,
+                loading: false,
+                refundError: action.payload
+            }
+        },
+        
         
 
     }
@@ -116,7 +177,16 @@ export const {
     porterRemoveRequest,
     porterRemoveSuccess,
     porterRemoveFail,
-    porterRemoveClearError
+    porterRemoveClearError,
+    packedOrderRequest,
+    packedOrderSuccess,
+    packedOrderFail,
+    getpackedOrderRequest,
+    getpackedOrderSuccess,
+    getpackedOrderFail,
+    refundRequest,
+    refundSuccess,
+    refundFail
  } = actions;
 
 export default reducer;

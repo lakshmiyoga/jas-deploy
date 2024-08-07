@@ -48,13 +48,17 @@ import PaymentConfirm from './components/order/PaymentConfirm';
 // import FailedPayment from './components/order/FailedPayment';
 import OrderList from './components/admin/OrderList';
 import UpdateOrder from './components/admin/UpdateOrder';
-import Refund from './components/order/Refund';
+// import Refund from './components/order/Refund';
 import PaymentList from './components/admin/PaymentList';
 import PaymentDetails from './components/order/PaymentDetails';
 import OrderSummary from './components/order/OrderSummary';
 import UserSummary from './components/admin/SummaryUser';
 import SummaryUser from './components/admin/SummaryUser';
 import ScrollToTop from './components/Layouts/ScrollToTop';
+import Dispatch from './components/admin/Dispatch';
+import RefundOrder from './components/admin/RefundOrder';
+import DispatchList from './components/admin/DispatchList';
+import RefundList from './components/admin/RefundList';
 
 function App() {
     const location = useLocation();
@@ -92,7 +96,7 @@ function App() {
                     <Route path="/password/reset/:token" element={<ResetPassword />} />
                     <Route path="/cart" element={<Cart />} />
                     <Route path="/shipping" element={<Shipping />} />
-                    <Route path="/refund" element={<Refund />} />
+                    {/* <Route path="/refund" element={<Refund />} /> */}
                     <Route path="/orders" element={<ProtectedRoute><UserOrders /></ProtectedRoute>} />
                     <Route path='/order/:id' element={<ProtectedRoute><OrderDetail /></ProtectedRoute>} />
                     <Route path='/payment/:id' element={<ProtectedRoute><PaymentDetails /></ProtectedRoute>} />
@@ -105,6 +109,10 @@ function App() {
                     <Route path="/getenquiry" element={<ProtectedRoute isAdmin={true}><EnquiryRequest /></ProtectedRoute>} />
                     <Route path='/admin/users' element={<ProtectedRoute isAdmin={true}><UserList /></ProtectedRoute>} />
                     <Route path='/admin/payments' element={<ProtectedRoute isAdmin={true}><PaymentList /></ProtectedRoute>} />
+                    <Route path="/admin/dispatch/:id" element={<ProtectedRoute isAdmin={true}><Dispatch/></ProtectedRoute>} />
+                    <Route path="/admin/dispatch" element={<ProtectedRoute isAdmin={true}><DispatchList/></ProtectedRoute>} />
+                    <Route path="/admin/refund/:id" element={<ProtectedRoute isAdmin={true}><RefundOrder /></ProtectedRoute>} />
+                    <Route path="/admin/refund" element={<ProtectedRoute isAdmin={true}><RefundList /></ProtectedRoute>} />
                     <Route path='/admin/user/:id' element={<ProtectedRoute isAdmin={true}><UpdateUser /></ProtectedRoute>} />
                     <Route path='/admin/products/updateprice' element={<ProtectedRoute isAdmin={true}><UpdatePrice /></ProtectedRoute>} />
                     <Route path='/admin/orders' element={<ProtectedRoute isAdmin={true}><OrderList /></ProtectedRoute>} />

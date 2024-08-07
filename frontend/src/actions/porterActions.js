@@ -13,6 +13,15 @@ import {
     porterRemoveRequest,
     porterRemoveSuccess,
     porterRemoveFail,
+    packedOrderRequest,
+    packedOrderSuccess,
+    packedOrderFail,
+    getpackedOrderRequest,
+    getpackedOrderSuccess,
+    getpackedOrderFail,
+    refundRequest,
+    refundSuccess,
+    refundFail,
 
 } from '../slices/porterSlice';
 
@@ -64,4 +73,41 @@ export const getporterOrder = createAsyncThunk('init/order/create', async ({orde
       dispatch(porterRemoveFail(error.response.data.message));
     }
   });
+
+  export const packedOrder = createAsyncThunk('/order/postpackedOrderResponse', async ({reqPackedData}, { dispatch }) => {
+    try {
+        console.log("reqPackedData",reqPackedData)
+      dispatch(packedOrderRequest());
+      const { data } = await axios.post('/api/v1/admin/packedOrder', reqPackedData,{withCredentials: true });
+      console.log("postpackedresponseData",data)
+      dispatch(packedOrderSuccess(data));
+    } catch (error) {
+      dispatch(packedOrderFail(error.response.data.message));
+    }
+  });
+
+  export const getPackedOrder = createAsyncThunk('/order/getpackedOrderResponse', async ({order_id}, { dispatch }) => {
+    try {
+        console.log("order_id",order_id)
+      dispatch(getpackedOrderRequest());
+      const { data } = await axios.post('/api/v1/admin/getPackedOrder', {order_id} ,{withCredentials: true });
+      console.log("getpackedresponseData",data)
+      dispatch(getpackedOrderSuccess(data));
+    } catch (error) {
+      dispatch(getpackedOrderFail(error.response.data.message));
+    }
+  });
+
+  export const initRefund = createAsyncThunk('/order/initRefund', async ({order_id,RefundableAmount }, { dispatch }) => {
+    try {
+        console.log("order_id",order_id,RefundableAmount)
+      dispatch(refundRequest());
+      const { data } = await axios.post('/api/v1/admin/refund', {order_id,RefundableAmount} ,{withCredentials: true });
+      console.log("refundData",data)
+      dispatch(refundSuccess(data));
+    } catch (error) {
+      dispatch(refundFail(error.response.data.message));
+    }
+  });
+
 

@@ -44,6 +44,13 @@ const Sidebar = () => {
                     <li>
                         <Link to="/admin/payments"><i className="fa fa-credit-card"></i> Payments</Link>
                     </li>
+                    <li>
+                        <Link to="/admin/dispatch"><i className="fa fa-truck"></i> Dispatch</Link>
+
+                    </li>
+                    <li>
+                        <Link to="/admin/refund"><i className="fa fa-reply"></i> Refund</Link>
+                    </li>
                 </ul>
             </nav>
         </div>

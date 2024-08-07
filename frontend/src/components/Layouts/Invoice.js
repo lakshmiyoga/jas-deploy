@@ -5,7 +5,7 @@ const Invoice = ({ porterOrderData }) => {
     console.log("porterOrderData", porterOrderData);
 
     // Extract important data from the response
-    const { order_id, createdAt, porterData, updatedItems, user } = porterOrderData;
+    const { order_id, createdAt, porterData, updatedItems, user, detailedTable } = porterOrderData;
     const { pickup_details, drop_details } = porterData;
     const { name: userName, email: userEmail } = user;
 
@@ -34,7 +34,7 @@ const Invoice = ({ porterOrderData }) => {
                              ${drop_details.address.state},
                              ${drop_details.address.pincode}`, customerX, 35);
 
-        doc.text(`Supplier Address: ${pickup_details.address.street_address1},
+        doc.text(` Address: ${pickup_details.address.street_address1},
                                   ${pickup_details.address.street_address2},
                                   ${pickup_details.address.city},
                                   ${pickup_details.address.state}, 
@@ -50,63 +50,93 @@ const Invoice = ({ porterOrderData }) => {
         const tableStartX = margin;
         const tableEndX = pageWidth - margin;
         const columns = [
-            { title: "S.NO", width: 20 },
-            { title: "Items", width: 60 },
-            { title: "Gross value", width: 40 },
-            { title: "Discount", width: 40 },
-            { title: "Total", width: 40 },
+            { title: "S.No", width: 20 },
+            { title: "Description of Goods", width: 40 },
+            { title: "Order KG", width: 20 },
+            { title: "EXCESS/MINUS", width: 20 },
+            { title: "Total KG", width: 20 },
+            { title: "Rate per KG", width: 20 },
+            { title: "Value in Rupee", width: 20 },
         ];
 
-        // Draw table headers
+        // Draw table headers and borders
+        doc.setFont("helvetica", "bold");
         let currentX = tableStartX;
+        let currentY = tableStartY;
+
+        // Draw header row
         doc.rect(tableStartX, tableStartY, tableEndX - tableStartX, tableRowHeight);
         columns.forEach(column => {
-            doc.text(column.title, currentX + 2, tableStartY + 7);
+            doc.rect(currentX, currentY, column.width, tableRowHeight); // Draw column border
+            doc.text(column.title, currentX + 2, currentY + 7);
             currentX += column.width;
         });
 
-        // Adding items
+        // Draw table rows with borders
         updatedItems.forEach((item, index) => {
-            const y = tableStartY + tableRowHeight + (index * tableRowHeight);
+            const rowY = tableStartY + tableRowHeight + (index * tableRowHeight);
             currentX = tableStartX;
-            doc.rect(tableStartX, y, tableEndX - tableStartX, tableRowHeight);
-            doc.text(`${index + 1}`, currentX + 2, y + 7);
+
+            // Draw row border
+            doc.rect(tableStartX, rowY, tableEndX - tableStartX, tableRowHeight);
+
+            // Draw cell borders and content
+            doc.rect(currentX, rowY, columns[0].width, tableRowHeight); // S.NO
+            doc.text(`${index + 1}`, currentX + 2, rowY + 7);
             currentX += columns[0].width;
-            doc.text(`${item.name}`, currentX + 2, y + 7);
+
+            doc.rect(currentX, rowY, columns[1].width, tableRowHeight); // Items
+            doc.text(`${item.name}`, currentX + 2, rowY + 7);
             currentX += columns[1].width;
+
+            doc.rect(currentX, rowY, columns[1].width, tableRowHeight); // orderedWeight
+            doc.text(`${item.detailedTable && item.detailedTable.orderedWeight}`, currentX + 2, rowY + 7);
+            currentX += columns[1].width;
+
+            doc.rect(currentX, rowY, columns[2].width, tableRowHeight); // excess
             const grossValue = item.price;
-            const discount = 0; // Assuming no discount
-            const total = grossValue - discount;
-            doc.text(`${grossValue.toFixed(2)}`, currentX + 2, y + 7);
+            doc.text(`${grossValue.toFixed(2)}`, currentX + 2, rowY + 7);
             currentX += columns[2].width;
-            doc.text(`${discount.toFixed(2)}`, currentX + 2, y + 7);
+
+            doc.rect(currentX, rowY, columns[3].width, tableRowHeight); // total kg
+           
+            doc.text(`${item.detailedTable && item.detailedTable.orderedWeight}`, currentX + 2, rowY + 7);
             currentX += columns[3].width;
-            doc.text(`${total.toFixed(2)}`, currentX + 2, y + 7);
+
+            doc.rect(currentX, rowY, columns[3].width, tableRowHeight); // rate kg
+           
+            doc.text(`${item.detailedTable && item.detailedTable.pricePerKg}`, currentX + 2, rowY + 7);
+            currentX += columns[3].width;
+
+            doc.rect(currentX, rowY, columns[4].width, tableRowHeight); // Total
+            const total = item.detailedTable && item.detailedTable.orderedWeight * item.detailedTable && item.detailedTable.pricePerKg;
+            doc.text(`${total}`, currentX + 2, rowY + 7);
         });
 
-        // Adding total
+        // Adding total row with border
         const totalY = tableStartY + tableRowHeight + (updatedItems.length * tableRowHeight);
         const totalGross = updatedItems.reduce((acc, item) => acc + item.price, 0);
         const totalDiscount = 0; // Assuming no discount
         const finalTotal = totalGross - totalDiscount;
 
         currentX = tableStartX;
+        doc.setFont("helvetica", "bold");
         doc.rect(tableStartX, totalY, tableEndX - tableStartX, tableRowHeight);
         doc.text(`Total Value`, currentX + 2, totalY + 7);
         currentX += columns[0].width;
         currentX += columns[1].width;
+        doc.rect(currentX, totalY, columns[2].width, tableRowHeight); // Total Gross Value
         doc.text(`${totalGross.toFixed(2)}`, currentX + 2, totalY + 7);
         currentX += columns[2].width;
+        doc.rect(currentX, totalY, columns[3].width, tableRowHeight); // Total Discount
         doc.text(`${totalDiscount.toFixed(2)}`, currentX + 2, totalY + 7);
         currentX += columns[3].width;
+        doc.rect(currentX, totalY, columns[4].width, tableRowHeight); // Final Total
         doc.text(`${finalTotal.toFixed(2)}`, currentX + 2, totalY + 7);
 
-        // Adding amount in words
-        // doc.text(`Amount (in words): ${convertNumberToWords(finalTotal.toFixed(2))} Only`, margin, totalY + 15);
-
         // Adding digital payment information
-        doc.text(`Amount of INR ${finalTotal.toFixed(2)} settled through digital mode/payment received against Order ID: ${order_id} dated 
-${new Date(createdAt).toLocaleDateString('en-GB')}.`, margin, totalY + 25);
+        doc.setFontSize(10);
+        doc.text(`Amount of INR ${finalTotal.toFixed(2)} settled through digital mode/payment received against Order ID: ${order_id} dated ${new Date(createdAt).toLocaleDateString('en-GB')}.`, margin, totalY + 25);
 
         // Save the PDF
         doc.save(`Invoice_${order_id}.pdf`);
