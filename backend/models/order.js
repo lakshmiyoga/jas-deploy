@@ -116,7 +116,7 @@ deliveredAt: {
 orderStatus: {
     type: String,
     required: true,
-    enum: ['Processing','Dispatched', 'Removed', 'Cancelled',"Ended"],
+    enum: ['Processing','Dispatched', 'Removed', 'Cancelled',"Ended","Packed", "Refund"],
     default: 'Processing'
 },
 createdAt: {

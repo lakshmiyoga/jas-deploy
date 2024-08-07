@@ -147,6 +147,7 @@ const getQuote = catchAsyncError(async (req, res, next) => {
 const porterOrder = catchAsyncError(async (req, res, next) => {
     //    console.log(req.params)
     const { order_id, request_id, user, user_id, porterData, updatedItems, detailedTable, totalRefundableAmount } = req.body;
+    console.log("req.body",req.body)
     const apiEndpoint = 'https://pfe-apigw-uat.porter.in/v1/orders/create';
 
     const porterOrderExist = await PorterModel.findOne({ order_id });
@@ -217,36 +218,38 @@ const porterOrder = catchAsyncError(async (req, res, next) => {
                                         );
                                     }
 
-                                    if (typeof order_id !== 'string' || typeof totalRefundableAmount !== 'number') {
-                                        return res.status(400).json(makeError('Invalid data types: orderId should be a string and amount should be a number'));
-                                    }
-                                    // Initiate refund
-                                    const refundPayload = {
-                                        unique_request_id: 'refund_test_' + Date.now(),
-                                        order_id: order_id,
-                                        amount: totalRefundableAmount,
-                                    };
-                                    console.log("refundPayload", refundPayload);
-                                    if(totalRefundableAmount>0){
-                                        const refundResponse = await juspay.order.refund(order_id, refundPayload);
-                                        if (refundResponse) {
-                                            const statusResponse = await juspay.order.status(order_id);
-                                            if (statusResponse) {
-                                                const onepayments = await Payment.findOne({ order_id });
-                                                if (onepayments) {
-                                                    const paymentstatus = await Payment.findOneAndUpdate({ order_id },
-                                                        {
-                                                            // orderStatus:"Dispatched",
-                                                            $set: { statusResponse: statusResponse }
-                                                        },
-                                                        { new: true });
-                                                }
-                                            }
-                                        }
-                                    }
+                                    // if (typeof order_id !== 'string' || typeof totalRefundableAmount !== 'number') {
+                                        
+                                    //     return next(new ErrorHandler('Invalid data types: orderId should be a string and amount should be a number', 404))
+                                    // }
+                                    // // Initiate refund
+                                    // const refundPayload = {
+                                    //     unique_request_id: 'refund_test_' + Date.now(),
+                                    //     order_id: order_id,
+                                    //     amount: totalRefundableAmount,
+                                    // };
+                                    // console.log("refundPayload", refundPayload);
+                                    // if(totalRefundableAmount>0){
+                                    //     const refundResponse = await juspay.order.refund(order_id, refundPayload);
+                                    //     if (refundResponse) {
+                                    //         const statusResponse = await juspay.order.status(order_id);
+                                    //         if (statusResponse) {
+                                    //             const onepayments = await Payment.findOne({ order_id });
+                                    //             if (onepayments) {
+                                    //                 const paymentstatus = await Payment.findOneAndUpdate({ order_id },
+                                    //                     {
+                                    //                         // orderStatus:"Dispatched",
+                                    //                         $set: { statusResponse: statusResponse }
+                                    //                     },
+                                    //                     { new: true });
+                                    //             }
+                                    //         }
+                                    //     }
+                                    // }
 
                                     return res.status(200).json({ porterOrder })
                                 } catch (error) {
+                                    console.log(error)
                                     return next(new ErrorHandler(error.response.data.message, error.response.status));
                                 }
                             }
