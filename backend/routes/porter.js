@@ -1,6 +1,6 @@
 const express =require('express');
 const { isAuthenticateUser, authorizeRoles } = require('../middleware/authmiddleware');
-const {getSinglePorterOrder, getPorterResponse,getCancelResponse, getPackedOrder, postPackedOrder, refundOrder} = require("../controllers/porterController");
+const {getSinglePorterOrder, getPorterResponse,getCancelResponse, getPackedOrder, postPackedOrder, refundOrder,getAllPackedOrder} = require("../controllers/porterController");
 const router = express.Router();
 
 
@@ -18,6 +18,7 @@ router.post('/admin/porter/createResponse',isAuthenticateUser,authorizeRoles('ad
 router.post('/admin/porter/cancelOrder',isAuthenticateUser,authorizeRoles('admin'), getCancelResponse)
 router.post('/admin/packedOrder',isAuthenticateUser,authorizeRoles('admin'), postPackedOrder)
 router.post('/admin/getPackedOrder',isAuthenticateUser,authorizeRoles('admin'), getPackedOrder)
+router.get('/admin/PackedOrder/all',isAuthenticateUser,authorizeRoles('admin'), getAllPackedOrder)
 router.post('/admin/refund',isAuthenticateUser,authorizeRoles('admin'), refundOrder)
 
 

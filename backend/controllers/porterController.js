@@ -263,6 +263,21 @@ const getPackedOrder = catchAsyncError(async (req, res, next) => {
 
 })
 
+const getAllPackedOrder = catchAsyncError(async (req, res, next) => {
+    
+try{
+    const allpackedOrderData = await Dispatch.find({});
+    console.log("allpackedOrderData",allpackedOrderData)
+   return res.status(201).json({
+        success: true,
+        allpackedOrderData
+    })
+}catch(error){
+    return next(new ErrorHandler(error.response.data.message, error.response.status))
+}
+   
+})
+
 const refundOrder = catchAsyncError(async (req, res, next) => {
     console.log("req.body", req.body);
     const { order_id, RefundableAmount } = req.body;
@@ -315,4 +330,4 @@ const refundOrder = catchAsyncError(async (req, res, next) => {
 })
 
 
-module.exports = { getSinglePorterOrder, getPorterResponse, getCancelResponse, postPackedOrder, getPackedOrder, refundOrder };
+module.exports = { getSinglePorterOrder, getPorterResponse, getCancelResponse, postPackedOrder, getPackedOrder, refundOrder,getAllPackedOrder };

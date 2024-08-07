@@ -29,6 +29,10 @@ const dispatchSchema = new mongoose.Schema({
     updatedItems:{
         type: mongoose.Schema.Types.Mixed,
         required: true
+    },
+    createdAt: {
+        type: Date,
+        default: Date.now
     }
 
 })
