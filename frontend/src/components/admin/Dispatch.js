@@ -17,6 +17,10 @@ import Stepper from "../Layouts/Stepper";
 import Invoice from "../Layouts/Invoice";
 import NumberInput from "../Layouts/NumberInput";
 import Loader from "../Layouts/Loader";
+import React, { useRef } from 'react';
+import { useReactToPrint } from 'react-to-print';
+import ReactDOM from 'react-dom';
+import JasInvoice from "../Layouts/JasInvoice";
 
 const Dispatch = () => {
     const { loading, isOrderUpdated, error, orderDetail, porterOrderDetail, orderRemoveResponse, orderRemoveError } = useSelector(state => state.orderState);
@@ -32,10 +36,68 @@ const Dispatch = () => {
     const { id } = useParams();
     const [refreshData, setRefreshData] = useState(false)
     const [removalReason, setRemovalReason] = useState('');
+    const invoiceRef = useRef();
     const navigate = useNavigate();
     const dispatch = useDispatch();
     console.log("getpackedOrderData", getpackedOrderData)
 
+    const sampleInvoice = {
+        number: 'RVP/528/24-25',
+        date: '7/Aug/2024',
+        buyer: {
+            name: 'A2B GREENS',
+            address: 'NO : 53, SOUTH SPACE - 3RD STREET, 2ND SECTOR, AMBATTUR INDUSTRIAL ESTATE',
+            city: 'CHENNAI - 600058',
+        },
+        items: [
+            { goods: 'AmlaAmlaAmlaAmlaAmlaAmla', orderKg: 7, excessMinus: 0, totalKg: 7, ratePerKg: 95, value: 100 },
+            { goods: 'Apple', orderKg: 10, excessMinus: 0, totalKg: 10, ratePerKg: 27, value: 100 },
+            { goods: 'Amla', orderKg: 7, excessMinus: 0, totalKg: 7, ratePerKg: 95, value: 100 },
+            { goods: 'Apple', orderKg: 10, excessMinus: 0, totalKg: 10, ratePerKg: 27, value: 100 },
+            { goods: 'Amla', orderKg: 7, excessMinus: 0, totalKg: 7, ratePerKg: 95, value: 100 },
+            { goods: 'Apple', orderKg: 10, excessMinus: 0, totalKg: 10, ratePerKg: 27, value: 100 },
+            { goods: 'Amla', orderKg: 7, excessMinus: 0, totalKg: 7, ratePerKg: 95, value: 100 },
+            { goods: 'Apple', orderKg: 10, excessMinus: 0, totalKg: 10, ratePerKg: 27, value: 100 },
+            { goods: 'Amla', orderKg: 7, excessMinus: 0, totalKg: 7, ratePerKg: 95, value: 100 },
+            { goods: 'Apple', orderKg: 10, excessMinus: 0, totalKg: 10, ratePerKg: 27, value: 100 },
+            { goods: 'Amla', orderKg: 7, excessMinus: 0, totalKg: 7, ratePerKg: 95, value: 100 },
+            { goods: 'Apple', orderKg: 10, excessMinus: 0, totalKg: 10, ratePerKg: 27, value: 100 },
+            { goods: 'Amla', orderKg: 7, excessMinus: 0, totalKg: 7, ratePerKg: 95, value: 100 },
+            { goods: 'Apple', orderKg: 10, excessMinus: 0, totalKg: 10, ratePerKg: 27, value: 100 },
+            { goods: 'Amla', orderKg: 7, excessMinus: 0, totalKg: 7, ratePerKg: 95, value: 100 },
+            { goods: 'Apple', orderKg: 10, excessMinus: 0, totalKg: 10, ratePerKg: 27, value: 100 },
+            { goods: 'Amla', orderKg: 7, excessMinus: 0, totalKg: 7, ratePerKg: 95, value: 100 },
+            { goods: 'Apple', orderKg: 10, excessMinus: 0, totalKg: 10, ratePerKg: 27, value: 100 },
+            { goods: 'Amla', orderKg: 7, excessMinus: 0, totalKg: 7, ratePerKg: 95, value: 100 },
+            { goods: 'Apple', orderKg: 10, excessMinus: 0, totalKg: 10, ratePerKg: 27, value: 100 },
+            { goods: 'Amla', orderKg: 7, excessMinus: 0, totalKg: 7, ratePerKg: 95, value: 100 },
+            { goods: 'Apple', orderKg: 10, excessMinus: 0, totalKg: 10, ratePerKg: 27, value: 100 },
+            { goods: 'Amla', orderKg: 7, excessMinus: 0, totalKg: 7, ratePerKg: 95, value: 100 },
+            { goods: 'Apple', orderKg: 10, excessMinus: 0, totalKg: 10, ratePerKg: 27, value: 100 },
+            { goods: 'Amla', orderKg: 7, excessMinus: 0, totalKg: 7, ratePerKg: 95, value: 100 },
+            { goods: 'Apple', orderKg: 10, excessMinus: 0, totalKg: 10, ratePerKg: 27, value: 100 },
+            { goods: 'Amla', orderKg: 7, excessMinus: 0, totalKg: 7, ratePerKg: 95, value: 100 },
+            { goods: 'Apple', orderKg: 10, excessMinus: 0, totalKg: 10, ratePerKg: 27, value: 100 },
+            { goods: 'Amla', orderKg: 7, excessMinus: 0, totalKg: 7, ratePerKg: 95, value: 100 },
+            { goods: 'Apple', orderKg: 10, excessMinus: 0, totalKg: 10, ratePerKg: 27, value: 100 },
+            { goods: 'Amla', orderKg: 7, excessMinus: 0, totalKg: 7, ratePerKg: 95, value: 100 },
+            { goods: 'Apple', orderKg: 10, excessMinus: 0, totalKg: 10, ratePerKg: 27, value: 100 },
+            { goods: 'Amla', orderKg: 7, excessMinus: 0, totalKg: 7, ratePerKg: 95, value: 100 },
+            { goods: 'Apple', orderKg: 10, excessMinus: 0, totalKg: 10, ratePerKg: 27, value: 100 },
+            { goods: 'Amla', orderKg: 7, excessMinus: 0, totalKg: 7, ratePerKg: 95, value: 100 },
+            { goods: 'Apple', orderKg: 10, excessMinus: 0, totalKg: 10, ratePerKg: 27, value: 100 },
+            // Add more items as needed
+        ],
+        supplier: {
+            name: 'RVP SOURCING ',
+            address: '29 Reddy Street, Nerkundram',
+            city: 'Chennai-600107',
+        },
+    };
+
+    const handlePrint = useReactToPrint({
+        content: () => invoiceRef.current,
+    });
 
     useEffect(() => {
         if (orderDetail.order_id) {
@@ -158,14 +220,15 @@ const Dispatch = () => {
 
         // console.log("updatedItems", updatedItems)
 
-       
+
         const reqPorterData = {
             user: user,
             request_id: requestId,
             user_id: user._id,
             order_id: orderDetail.order_id,
+            // shippingInfo:orderDetail.shippingInfo,
             porterData: porterData,
-            updatedItems:  getpackedOrderData.updatedItems,
+            updatedItems: getpackedOrderData.updatedItems,
             detailedTable: getpackedOrderData && getpackedOrderData.dispatchedTable,
             totalRefundableAmount: Number(getpackedOrderData && getpackedOrderData.totalRefundableAmount)
         };
@@ -181,7 +244,7 @@ const Dispatch = () => {
             // setRefreshData(true)
         }
 
-        setRefreshData(true)
+        // setRefreshData(true)
     };
 
 
@@ -308,22 +371,20 @@ const Dispatch = () => {
         dispatch(orderDetailAction(id));
         dispatch(getPackedOrder({ order_id: id }))
 
+        // if (refreshData) {
+        //     const fetchData = async () => {
+        //         dispatch(porterClearData())
+        //         await dispatch(getporterOrder({ order_id: id }))
+        //         await dispatch(createPorterOrderResponse({ order_id: id, porterOrder_id: porterOrderData?.porterOrder?.order_id }))
+        //         await dispatch(porterClearData())
+        //         await dispatch(getporterOrder({ order_id: id }))
+        //         await dispatch(porterClearResponse())
+        //         // dispatch(orderDetailAction(id));
+        //         setRefreshData(false);
+        //     }
 
-
-        if (refreshData) {
-            const fetchData = async () => {
-                dispatch(porterClearData())
-                await dispatch(getporterOrder({ order_id: id }))
-                await dispatch(createPorterOrderResponse({ order_id: id, porterOrder_id: porterOrderData?.porterOrder?.order_id }))
-                await dispatch(porterClearData())
-                await dispatch(getporterOrder({ order_id: id }))
-                await dispatch(porterClearResponse())
-                // dispatch(orderDetailAction(id));
-                setRefreshData(false);
-            }
-
-            fetchData();
-        }
+        //     fetchData();
+        // }
         dispatch(porterClearData())
         dispatch(createPorterOrderResponse({ order_id: id, porterOrder_id: porterOrderData?.porterOrder?.order_id }))
         dispatch(getporterOrder({ order_id: id }))
@@ -476,7 +537,7 @@ const Dispatch = () => {
                                                             <td>
                                                                 <img src={item.image} alt={item.name} className="updateTableproduct-image" />
                                                             </td>
-                                                            <td>{item.name}</td>                                           
+                                                            <td>{item.name}</td>
                                                             <td>Rs. {parseFloat(item.pricePerKg).toFixed(2)}</td>
                                                             <td>{item.orderedWeight} kg</td>
                                                             <td>{item.dispatchedWeight} kg</td>
@@ -484,13 +545,13 @@ const Dispatch = () => {
                                                             {/* <td>Rs. {item.refundableAmount}</td> */}
                                                         </tr>
                                                     ))
-                                                    
+
                                                 )}
                                                 <tr>
                                                     <td colSpan="5" style={{ textAlign: 'right' }}><strong>TotalDispatchedAmount</strong></td>
                                                     <td className="amount"><strong>Rs. {getpackedOrderData && getpackedOrderData.totalDispatchedAmount && getpackedOrderData.totalDispatchedAmount}</strong></td>
                                                 </tr>
-                                                
+
                                             </tbody>
                                         </table>
                                     </div>
@@ -503,8 +564,23 @@ const Dispatch = () => {
 
                                 </div>
 
-                                {porterOrderData && (
+                                {/* {porterOrderData && (
                                     <Invoice porterOrderData={porterOrderData} />
+
+                                )
+
+                                } */}
+
+                                {getpackedOrderData && (
+                                    <div style={{ marginTop: '20px' }}>
+                                        <button onClick={handlePrint} className='btn btn-primary'>Download Invoice</button>
+                                        {ReactDOM.createPortal(
+                                            <div style={{ position: 'absolute', top: '-9999px', left: '-9999px', zIndex: '-9999999999' }}>
+                                                <JasInvoice ref={invoiceRef} invoice={getpackedOrderData} />
+                                            </div>,
+                                            document.body
+                                        )}
+                                    </div>
 
                                 )
 

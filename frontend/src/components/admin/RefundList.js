@@ -36,11 +36,11 @@ const RefundList = () => {
                     field: 'name',
                     sort: 'asc'
                 },
-                // {
-                //     label: 'Phone.No',
-                //     field: 'phone_no',
-                //     sort: 'asc'
-                // },
+                {
+                    label: 'Phone.No',
+                    field: 'phone_no',
+                    sort: 'asc'
+                },
                 {
                     label: 'Email',
                     field: 'email',
@@ -56,11 +56,11 @@ const RefundList = () => {
                 //     field: 'amount',
                 //     sort: 'asc'
                 // },
-                // {
-                //     label: 'OrderStatus',
-                //     field: 'orderstatus',
-                //     sort: 'asc'
-                // },
+                {
+                    label: 'RefundStatus',
+                    field: 'refundstatus',
+                    sort: 'asc'
+                },
                 // {
                 //     label: 'PaymentStatus',
                 //     field: 'paymentstatus',
@@ -84,13 +84,13 @@ const RefundList = () => {
                 s_no: index + 1,
                 id: order.order_id,
                 name:order.user.name,
-                // phone_no:order.shippingInfo.phoneNo,
+                phone_no: order.orderDetail && order.orderDetail.shippingInfo && order.orderDetail.shippingInfo.phoneNo,
                 email:order.user.email,
                 // noOfItems: order.orderItems.length,
                 // amount: `Rs.${order.totalPrice}`,
-                // orderstatus: (
-                //     <p className={order.orderStatus && order.orderStatus.includes('Delivered') ? 'greenColor' : 'redColor' } ><p>{order.orderStatus}</p></p>
-                // ),
+                refundstatus: (
+                    <p className={order.refundStatus && order.refundStatus.includes('Success') ? 'greenColor' : 'redColor' } ><p>{order.refundStatus}</p></p>
+                ),
                 // paymentstatus: (
                 //     <p className='greenColor'><p>{order.paymentStatus}</p></p>
                 // ),

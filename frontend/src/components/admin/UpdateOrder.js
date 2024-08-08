@@ -1,4 +1,4 @@
-import { Fragment, useEffect, useState } from "react";
+import { Fragment, useEffect } from "react";
 import Sidebar from "./Sidebar";
 import { useDispatch, useSelector } from 'react-redux';
 import { useNavigate, useParams } from "react-router-dom";
@@ -17,11 +17,15 @@ import Stepper from "../Layouts/Stepper";
 import Invoice from "../Layouts/Invoice";
 import NumberInput from "../Layouts/NumberInput";
 import Loader from "../Layouts/Loader";
+import React, { useState, useRef } from 'react';
+import { useReactToPrint } from 'react-to-print';
+import ReactDOM from 'react-dom';
+import JasInvoice from "../Layouts/JasInvoice";
 
 const UpdateOrder = () => {
     const { loading, isOrderUpdated, error, orderDetail, porterOrderDetail, orderRemoveResponse, orderRemoveError } = useSelector(state => state.orderState);
     const { products } = useSelector((state) => state.productsState);
-    const { porterOrderData, porterOrderResponse, porterCancelResponse, porterCancelError,portererror } = useSelector((state) => state.porterState);
+    const { porterOrderData, porterOrderResponse, porterCancelResponse, porterCancelError, portererror, packedOrderData } = useSelector((state) => state.porterState);
     const { user = {}, orderItems = [], shippingInfo = {}, totalPrice = 0, statusResponse = {} } = orderDetail;
     const [orderStatus, setOrderStatus] = useState("Processing");
     const [dropStatus, setDropStatus] = useState("");
@@ -34,8 +38,68 @@ const UpdateOrder = () => {
     const [removalReason, setRemovalReason] = useState('');
     const navigate = useNavigate();
     const dispatch = useDispatch();
-    console.log("orderDetail", orderDetail)
+    console.log("packedOrderData", packedOrderData)
+    const invoiceRef = useRef();
 
+
+
+    const sampleInvoice = {
+        number: 'RVP/528/24-25',
+        date: '7/Aug/2024',
+        buyer: {
+            name: 'A2B GREENS',
+            address: 'NO : 53, SOUTH SPACE - 3RD STREET, 2ND SECTOR, AMBATTUR INDUSTRIAL ESTATE',
+            city: 'CHENNAI - 600058',
+        },
+        items: [
+            { goods: 'AmlaAmlaAmlaAmlaAmlaAmla', orderKg: 7, excessMinus: 0, totalKg: 7, ratePerKg: 95, value: 100 },
+            { goods: 'Apple', orderKg: 10, excessMinus: 0, totalKg: 10, ratePerKg: 27, value: 100 },
+            { goods: 'Amla', orderKg: 7, excessMinus: 0, totalKg: 7, ratePerKg: 95, value: 100 },
+            { goods: 'Apple', orderKg: 10, excessMinus: 0, totalKg: 10, ratePerKg: 27, value: 100 },
+            { goods: 'Amla', orderKg: 7, excessMinus: 0, totalKg: 7, ratePerKg: 95, value: 100 },
+            { goods: 'Apple', orderKg: 10, excessMinus: 0, totalKg: 10, ratePerKg: 27, value: 100 },
+            { goods: 'Amla', orderKg: 7, excessMinus: 0, totalKg: 7, ratePerKg: 95, value: 100 },
+            { goods: 'Apple', orderKg: 10, excessMinus: 0, totalKg: 10, ratePerKg: 27, value: 100 },
+            { goods: 'Amla', orderKg: 7, excessMinus: 0, totalKg: 7, ratePerKg: 95, value: 100 },
+            { goods: 'Apple', orderKg: 10, excessMinus: 0, totalKg: 10, ratePerKg: 27, value: 100 },
+            { goods: 'Amla', orderKg: 7, excessMinus: 0, totalKg: 7, ratePerKg: 95, value: 100 },
+            { goods: 'Apple', orderKg: 10, excessMinus: 0, totalKg: 10, ratePerKg: 27, value: 100 },
+            { goods: 'Amla', orderKg: 7, excessMinus: 0, totalKg: 7, ratePerKg: 95, value: 100 },
+            { goods: 'Apple', orderKg: 10, excessMinus: 0, totalKg: 10, ratePerKg: 27, value: 100 },
+            { goods: 'Amla', orderKg: 7, excessMinus: 0, totalKg: 7, ratePerKg: 95, value: 100 },
+            { goods: 'Apple', orderKg: 10, excessMinus: 0, totalKg: 10, ratePerKg: 27, value: 100 },
+            { goods: 'Amla', orderKg: 7, excessMinus: 0, totalKg: 7, ratePerKg: 95, value: 100 },
+            { goods: 'Apple', orderKg: 10, excessMinus: 0, totalKg: 10, ratePerKg: 27, value: 100 },
+            { goods: 'Amla', orderKg: 7, excessMinus: 0, totalKg: 7, ratePerKg: 95, value: 100 },
+            { goods: 'Apple', orderKg: 10, excessMinus: 0, totalKg: 10, ratePerKg: 27, value: 100 },
+            { goods: 'Amla', orderKg: 7, excessMinus: 0, totalKg: 7, ratePerKg: 95, value: 100 },
+            { goods: 'Apple', orderKg: 10, excessMinus: 0, totalKg: 10, ratePerKg: 27, value: 100 },
+            { goods: 'Amla', orderKg: 7, excessMinus: 0, totalKg: 7, ratePerKg: 95, value: 100 },
+            { goods: 'Apple', orderKg: 10, excessMinus: 0, totalKg: 10, ratePerKg: 27, value: 100 },
+            { goods: 'Amla', orderKg: 7, excessMinus: 0, totalKg: 7, ratePerKg: 95, value: 100 },
+            { goods: 'Apple', orderKg: 10, excessMinus: 0, totalKg: 10, ratePerKg: 27, value: 100 },
+            { goods: 'Amla', orderKg: 7, excessMinus: 0, totalKg: 7, ratePerKg: 95, value: 100 },
+            { goods: 'Apple', orderKg: 10, excessMinus: 0, totalKg: 10, ratePerKg: 27, value: 100 },
+            { goods: 'Amla', orderKg: 7, excessMinus: 0, totalKg: 7, ratePerKg: 95, value: 100 },
+            { goods: 'Apple', orderKg: 10, excessMinus: 0, totalKg: 10, ratePerKg: 27, value: 100 },
+            { goods: 'Amla', orderKg: 7, excessMinus: 0, totalKg: 7, ratePerKg: 95, value: 100 },
+            { goods: 'Apple', orderKg: 10, excessMinus: 0, totalKg: 10, ratePerKg: 27, value: 100 },
+            { goods: 'Amla', orderKg: 7, excessMinus: 0, totalKg: 7, ratePerKg: 95, value: 100 },
+            { goods: 'Apple', orderKg: 10, excessMinus: 0, totalKg: 10, ratePerKg: 27, value: 100 },
+            { goods: 'Amla', orderKg: 7, excessMinus: 0, totalKg: 7, ratePerKg: 95, value: 100 },
+            { goods: 'Apple', orderKg: 10, excessMinus: 0, totalKg: 10, ratePerKg: 27, value: 100 },
+            // Add more items as needed
+        ],
+        supplier: {
+            name: 'RVP SOURCING ',
+            address: '29 Reddy Street, Nerkundram',
+            city: 'Chennai-600107',
+        },
+    };
+
+    const handlePrint = useReactToPrint({
+        content: () => invoiceRef.current,
+    });
 
     useEffect(() => {
         if (orderDetail.order_id) {
@@ -68,120 +132,120 @@ const UpdateOrder = () => {
     };
 
 
-    const submitHandler = async (e) => {
-        e.preventDefault();
-        // setRefreshData(false)
-        const requestId = `TEST_0_${uuidv4()}`;
-        const porterData = {
-            "request_id": requestId,
-            "delivery_instructions": {
-                "instructions_list": [
-                    {
-                        "type": "text",
-                        "description": "handle with care"
-                    }
-                ]
-            },
-            "pickup_details": {
-                "address": {
-                    "apartment_address": "27",
-                    "street_address1": "Sona Towers",
-                    "street_address2": "Krishna Nagar Industrial Area",
-                    "landmark": "Hosur Road",
-                    "city": "Bengaluru",
-                    "state": "Karnataka",
-                    "pincode": "560029",
-                    "country": "India",
-                    "lat": 12.935025018880504,
-                    "lng": 77.6092605236106,
-                    "contact_details": {
-                        "name": "admin",
-                        "phone_number": "+919876543210"
-                    }
-                }
-            },
-            "drop_details": {
-                "address": {
-                    "apartment_address": "this is apartment address",
-                    "street_address1": shippingInfo.address,
-                    "street_address2": "This is My Order ID",
-                    "landmark": "BTM Layout",
-                    "city": shippingInfo.city,
-                    "state": shippingInfo.state || "TamilNadu",
-                    "pincode": shippingInfo.postalCode,
-                    "country": shippingInfo.country,
-                    "lat": 12.947146336879577,
-                    "lng": 77.62102993895199,
-                    "contact_details": {
-                        "name": user.name,
-                        "phone_number": shippingInfo.phoneNo
-                    }
-                }
-            },
-            "additional_comments": "This is a test comment",
-        };
+    // const submitHandler = async (e) => {
+    //     e.preventDefault();
+    //     // setRefreshData(false)
+    //     const requestId = `TEST_0_${uuidv4()}`;
+    //     const porterData = {
+    //         "request_id": requestId,
+    //         "delivery_instructions": {
+    //             "instructions_list": [
+    //                 {
+    //                     "type": "text",
+    //                     "description": "handle with care"
+    //                 }
+    //             ]
+    //         },
+    //         "pickup_details": {
+    //             "address": {
+    //                 "apartment_address": "27",
+    //                 "street_address1": "Sona Towers",
+    //                 "street_address2": "Krishna Nagar Industrial Area",
+    //                 "landmark": "Hosur Road",
+    //                 "city": "Bengaluru",
+    //                 "state": "Karnataka",
+    //                 "pincode": "560029",
+    //                 "country": "India",
+    //                 "lat": 12.935025018880504,
+    //                 "lng": 77.6092605236106,
+    //                 "contact_details": {
+    //                     "name": "admin",
+    //                     "phone_number": "+919876543210"
+    //                 }
+    //             }
+    //         },
+    //         "drop_details": {
+    //             "address": {
+    //                 "apartment_address": "this is apartment address",
+    //                 "street_address1": shippingInfo.address,
+    //                 "street_address2": "This is My Order ID",
+    //                 "landmark": "BTM Layout",
+    //                 "city": shippingInfo.city,
+    //                 "state": shippingInfo.state || "TamilNadu",
+    //                 "pincode": shippingInfo.postalCode,
+    //                 "country": shippingInfo.country,
+    //                 "lat": 12.947146336879577,
+    //                 "lng": 77.62102993895199,
+    //                 "contact_details": {
+    //                     "name": user.name,
+    //                     "phone_number": shippingInfo.phoneNo
+    //                 }
+    //             }
+    //         },
+    //         "additional_comments": "This is a test comment",
+    //     };
 
-        // Create an array to store status for each item
-        const updatedItems = orderItems.map((item, index) => ({
-            ...item,
-            status: editableWeights[index] > 0 ? 'confirm' : 'cancel',
-            productWeight: editableWeights[index]
-        }));
+    //     // Create an array to store status for each item
+    //     const updatedItems = orderItems.map((item, index) => ({
+    //         ...item,
+    //         status: editableWeights[index] > 0 ? 'confirm' : 'cancel',
+    //         productWeight: editableWeights[index]
+    //     }));
 
-        let totalRefundableAmount = 0;
-    
-        const detailedTable = orderItems.map((item, index) => {
-            const orderedWeight = parseFloat(item.productWeight);
-            const dispatchedWeight = parseFloat(updatedItems[index].productWeight);
-            const refundableWeight = parseFloat((orderedWeight - dispatchedWeight).toFixed(2)); // Keeping two decimal places
-            const pricePerKg = parseFloat((item.price).toFixed(2)); // Keeping two decimal places
-            const refundableAmount = parseFloat((refundableWeight * pricePerKg).toFixed(2)); // Keeping two decimal places
+    //     let totalRefundableAmount = 0;
 
-            totalRefundableAmount += refundableAmount;
+    //     const detailedTable = orderItems.map((item, index) => {
+    //         const orderedWeight = parseFloat(item.productWeight);
+    //         const dispatchedWeight = parseFloat(updatedItems[index].productWeight);
+    //         const refundableWeight = parseFloat((orderedWeight - dispatchedWeight).toFixed(2)); // Keeping two decimal places
+    //         const pricePerKg = parseFloat((item.price).toFixed(2)); // Keeping two decimal places
+    //         const refundableAmount = parseFloat((refundableWeight * pricePerKg).toFixed(2)); // Keeping two decimal places
 
-            return {
-                image: item.image,
-                name: item.name,
-                orderedWeight,
-                pricePerKg,
-                dispatchedWeight,
-                refundableWeight,
-                refundableAmount,
-            };
-        });
+    //         totalRefundableAmount += refundableAmount;
 
-        totalRefundableAmount = parseFloat(totalRefundableAmount.toFixed(2)); // Keeping two decimal places
+    //         return {
+    //             image: item.image,
+    //             name: item.name,
+    //             orderedWeight,
+    //             pricePerKg,
+    //             dispatchedWeight,
+    //             refundableWeight,
+    //             refundableAmount,
+    //         };
+    //     });
+
+    //     totalRefundableAmount = parseFloat(totalRefundableAmount.toFixed(2)); // Keeping two decimal places
 
 
-        console.log("detailedTable", detailedTable);
-        console.log(`Total Refundable Amount: ₹${totalRefundableAmount}`);
+    //     console.log("detailedTable", detailedTable);
+    //     console.log(`Total Refundable Amount: ₹${totalRefundableAmount}`);
 
-        console.log("updatedItems", updatedItems)
+    //     console.log("updatedItems", updatedItems)
 
-        const reqPorterData = {
-            user: user,
-            request_id: requestId,
-            user_id: user._id,
-            order_id: orderDetail.order_id,
-            porterData: porterData,
-            updatedItems: updatedItems,
-            detailedTable: detailedTable,
-            totalRefundableAmount: totalRefundableAmount
-        };
-        console.log('reqPorterData', reqPorterData);
+    //     const reqPorterData = {
+    //         user: user,
+    //         request_id: requestId,
+    //         user_id: user._id,
+    //         order_id: orderDetail.order_id,
+    //         porterData: porterData,
+    //         updatedItems: updatedItems,
+    //         detailedTable: detailedTable,
+    //         totalRefundableAmount: totalRefundableAmount
+    //     };
+    //     console.log('reqPorterData', reqPorterData);
 
-        try {
-            await dispatch(porterOrder({ id: orderDetail.order_id, reqPorterData }));
-            // setShowDispatchModal(false);
-            // setRefreshData(true)
-            // await dispatch(getporterOrder({ order_id: id }));
-        } catch (error) {
-            toast.error(error);
-            // setRefreshData(true)
-        }
+    //     try {
+    //         await dispatch(porterOrder({ id: orderDetail.order_id, reqPorterData }));
+    //         // setShowDispatchModal(false);
+    //         // setRefreshData(true)
+    //         // await dispatch(getporterOrder({ order_id: id }));
+    //     } catch (error) {
+    //         toast.error(error);
+    //         // setRefreshData(true)
+    //     }
 
-        setRefreshData(true)
-    };
+    //     setRefreshData(true)
+    // };
 
 
     const changeWeight = (e, index) => {
@@ -217,7 +281,7 @@ const UpdateOrder = () => {
         }
     };
 
-    const submitHandlerPacked =async (e) =>{
+    const submitHandlerPacked = async (e) => {
         e.preventDefault();
 
         const updatedItems = orderItems.map((item, index) => ({
@@ -228,13 +292,13 @@ const UpdateOrder = () => {
 
         let totalDispatchedAmount = 0;
         let totalRefundableAmount = 0;
-    
+
         const dispatchedTable = orderItems.map((item, index) => {
             const orderedWeight = parseFloat(item.productWeight);
             const dispatchedWeight = parseFloat(updatedItems[index].productWeight);
             const refundableWeight = parseFloat((orderedWeight - dispatchedWeight).toFixed(2)); // Keeping two decimal places
             const pricePerKg = parseFloat((item.price).toFixed(2)); // Keeping two decimal places
-            const totalAmount = parseFloat((dispatchedWeight * pricePerKg).toFixed(2)); 
+            const totalAmount = parseFloat((dispatchedWeight * pricePerKg).toFixed(2));
             const refundableAmount = parseFloat((refundableWeight * pricePerKg).toFixed(2)); // Keeping two decimal places
 
             totalRefundableAmount += refundableAmount;
@@ -257,24 +321,24 @@ const UpdateOrder = () => {
         totalRefundableAmount = parseFloat(totalRefundableAmount.toFixed(2)); // Keeping two decimal places
 
 
-        console.log("dispatchedTable", dispatchedTable);
-        console.log(`Total Amount: ₹${totalDispatchedAmount}`);
+        // console.log("dispatchedTable", dispatchedTable);
+        // console.log(`Total Amount: ₹${totalDispatchedAmount}`);
 
         const reqPackedData = {
             user: user,
             // request_id: requestId,
             user_id: user._id,
             order_id: orderDetail.order_id,
-            // porterData: porterData,
+            orderDetail: orderDetail,
             updatedItems: updatedItems,
             dispatchedTable: dispatchedTable,
             totalDispatchedAmount: totalDispatchedAmount,
-            totalRefundableAmount:totalRefundableAmount
+            totalRefundableAmount: totalRefundableAmount
         };
         console.log('reqPackedData', reqPackedData);
 
         try {
-            await dispatch(packedOrder({reqPackedData }));
+            await dispatch(packedOrder({ reqPackedData }));
             // setShowDispatchModal(false);
             // setRefreshData(true)
             // await dispatch(getporterOrder({ order_id: id }));
@@ -290,10 +354,10 @@ const UpdateOrder = () => {
     useEffect(() => {
         if (isOrderUpdated) {
             toast('Order Updated Successfully!', {
-            type: 'success',
-            position: "bottom-center",
-            onOpen: () => dispatch(clearOrderUpdated())
-        });
+                type: 'success',
+                position: "bottom-center",
+                onOpen: () => dispatch(clearOrderUpdated())
+            });
 
         }
         if (error) {
@@ -328,25 +392,25 @@ const UpdateOrder = () => {
         // }
 
 
-        if (refreshData) {
-            const fetchData = async () => {
-                dispatch(porterClearData())
-                await dispatch(getporterOrder({ order_id: id }))
-                await dispatch(createPorterOrderResponse({ order_id: id, porterOrder_id: porterOrderData?.porterOrder?.order_id }))
-                await dispatch(porterClearData())
-                await dispatch(getporterOrder({ order_id: id }))
-                await dispatch(porterClearResponse())
-                // dispatch(orderDetailAction(id));
-                setRefreshData(false);
-            }
+        // if (refreshData) {
+        //     const fetchData = async () => {
+        //         dispatch(porterClearData())
+        //         await dispatch(getporterOrder({ order_id: id }))
+        //         await dispatch(createPorterOrderResponse({ order_id: id, porterOrder_id: porterOrderData?.porterOrder?.order_id }))
+        //         await dispatch(porterClearData())
+        //         await dispatch(getporterOrder({ order_id: id }))
+        //         await dispatch(porterClearResponse())
+        //         // dispatch(orderDetailAction(id));
+        //         setRefreshData(false);
+        //     }
 
-            fetchData();
-        }
+        //     fetchData();
+        // }
         dispatch(porterClearData())
         dispatch(createPorterOrderResponse({ order_id: id, porterOrder_id: porterOrderData?.porterOrder?.order_id }))
         dispatch(getporterOrder({ order_id: id }))
 
-    }, [dispatch, id, refreshData, porterOrderDetail,error]);
+    }, [dispatch, id, refreshData, porterOrderDetail, error, packedOrderData]);
 
 
     return (
@@ -468,7 +532,7 @@ const UpdateOrder = () => {
 
                                 <hr />
                                 <h4 className="my-4">Order Items:</h4>
-                                
+
                                 <div className="invoice-table-container">
                                     <div className="updatetable-responsive">
                                         <table className="updatetable updatetable-bordered">
@@ -536,7 +600,7 @@ const UpdateOrder = () => {
                                                                 <td>{item.productWeight} kg</td>
                                                                 {editableWeights && (
                                                                     <>
-                                                                        <td style={{maxWidth:'70px'}}>
+                                                                        <td style={{ maxWidth: '70px' }}>
                                                                             <input
                                                                                 type="number"
                                                                                 className="no-arrow-input form-control updateTableInput"
@@ -564,24 +628,39 @@ const UpdateOrder = () => {
                                 <hr />
                                 <div>
                                     {/* <button className='btn btn-primary' onClick={submitHandler} disabled={dropStatus === "Dispatched"}>Dispatch</button> */}
-                                    <button className='btn btn-primary' onClick={(e)=>submitHandlerPacked(e)} disabled={dropStatus === "Processing"?false:true}>Packed</button>
+                                    <button className='btn btn-primary' onClick={(e) => submitHandlerPacked(e)} disabled={dropStatus === "Processing" ? false : true}>Packed</button>
 
                                 </div>
 
-                                {porterOrderData && (
+                                {/* {porterOrderData && (
+                 <div style={{marginTop:'20px'}}>
+                    <button onClick={handlePrint} className='btn btn-primary'>Download Invoice</button>
+                    {ReactDOM.createPortal(
+                        <div style={{ position: 'absolute', top: '-9999px', left: '-9999px', zIndex: '-9999999999' }}>
+                            <JasInvoice ref={invoiceRef} invoice={packedOrderData} />
+                        </div>,
+                        document.body
+                    )}
+                </div>
+
+            )
+
+            } */}
+
+
+                                {/* {porterOrderData && (
                                     <Invoice porterOrderData={porterOrderData} />
 
                                 )
 
-                                }
+                                } */}
                             </div>
                         </Fragment>
                     </div>
                 )
             }
 
-
-
+           
         </div>
     );
 
