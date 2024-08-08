@@ -194,7 +194,7 @@ const getCancelResponse = catchAsyncError(async (req, res, next) => {
 
 const postPackedOrder = catchAsyncError(async (req, res, next) => {
     //    console.log(req.body)
-    const { order_id, user_id, user, dispatchedTable, totalDispatchedAmount, totalRefundableAmount, updatedItems } = req.body;
+    const { order_id, user_id, user, dispatchedTable, totalDispatchedAmount, totalRefundableAmount, updatedItems,orderDetail } = req.body;
     // console.log(order_id,user_id,user,dispatchedTable)
 
     const order = await Dispatch.findOne({ order_id });
@@ -207,10 +207,12 @@ const postPackedOrder = catchAsyncError(async (req, res, next) => {
             order_id: order_id,
             user_id: user_id,
             user: user,
+            orderDetail:orderDetail,
             updatedItems: updatedItems,
             dispatchedTable: dispatchedTable,
             totalDispatchedAmount: totalDispatchedAmount,
-            totalRefundableAmount: totalRefundableAmount
+            totalRefundableAmount: totalRefundableAmount,
+            
         });
 
         await packedOrder.save();

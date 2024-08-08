@@ -8,7 +8,7 @@ const dispatchSchema = new mongoose.Schema({
     },
     user_id:{
         type: String,
-        required: true
+        required: true,
     },
     user: {
         type: Object,
@@ -27,6 +27,17 @@ const dispatchSchema = new mongoose.Schema({
         required: true
     },
     updatedItems:{
+        type: mongoose.Schema.Types.Mixed,
+        required: true
+    },
+    refundStatus: {
+        type: String,
+        required: true,
+        enum: ['Pending','Refund'],
+        default: 'Pending'
+    },
+    
+    orderDetail:{
         type: mongoose.Schema.Types.Mixed,
         required: true
     },
