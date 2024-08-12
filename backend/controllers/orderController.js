@@ -85,7 +85,7 @@ const getSingleOrder = catchAsyncError(async (req, res, next) => {
         const statusResponse = await juspay.order.status(id);
         if (statusResponse) {
             const onepayments = await Payment.findOne({ 'order_id': id });
-            try{
+            try {
                 if (onepayments) {
                     const paymentstatus = await Payment.findOneAndUpdate({ 'order_id': id },
                         {
@@ -94,10 +94,10 @@ const getSingleOrder = catchAsyncError(async (req, res, next) => {
                         { new: true });
                 }
 
-            }catch(error){
+            } catch (error) {
                 return next(new ErrorHandler('Something went wrong', 404))
             }
-           
+
         }
         return res.status(200).json({
             success: true,
@@ -137,7 +137,7 @@ const getQuote = catchAsyncError(async (req, res, next) => {
     } catch (error) {
         console.log(error)
         // console.log(error.response.data.message)
-        return next(new ErrorHandler(error.response && error.response.data && error.response.data.message ?error.response.data.message:"Server Error Please Try After SomeTime!", error.response.status));
+        return next(new ErrorHandler(error.response && error.response.data && error.response.data.message ? error.response.data.message : "Server Error Please Try After SomeTime!", error.response.status));
         //   return res.status(500).json({ message: 'Error sending data', error });
     }
 
@@ -147,7 +147,7 @@ const getQuote = catchAsyncError(async (req, res, next) => {
 const porterOrder = catchAsyncError(async (req, res, next) => {
     //    console.log(req.params)
     const { order_id, request_id, user, user_id, porterData, updatedItems, detailedTable, totalRefundableAmount } = req.body;
-    console.log("req.body",req.body)
+    console.log("req.body", req.body)
     const apiEndpoint = 'https://pfe-apigw-uat.porter.in/v1/orders/create';
 
     const porterOrderExist = await PorterModel.findOne({ order_id });
@@ -189,37 +189,37 @@ const porterOrder = catchAsyncError(async (req, res, next) => {
                         if (porterResponse) {
                             if (porterResponse && porterResponse.porterOrder && porterResponse.porterOrder.order_id) {
                                 try {
-                                   const apiEndpoint1 = `https://pfe-apigw-uat.porter.in/v1/orders/${porterResponse.porterOrder.order_id}`
+                                    const apiEndpoint1 = `https://pfe-apigw-uat.porter.in/v1/orders/${porterResponse.porterOrder.order_id}`
                                     // apiEndpoint = `https://pfe-apigw-uat.porter.in/v1/orders/{order_id:CRN93814651}`
                                     const response = await axios.get(apiEndpoint1, {
                                         headers: {
-                                          'X-API-KEY': process.env.PORTER_API_KEY,
-                                          'Content-Type': 'application/json'
+                                            'X-API-KEY': process.env.PORTER_API_KEY,
+                                            'Content-Type': 'application/json'
                                         }
-                                      });
-                                      const responseData = response.data; // Extract only the data part of the response
+                                    });
+                                    const responseData = response.data; // Extract only the data part of the response
                                     //   console.log("responseData",responseData)
                                     const porterResponseData = await PorterModel.findOneAndUpdate(
                                         { order_id },
                                         { $set: { porterResponse: responseData } },
                                         { new: true }
                                     );
-                                    if (porterResponseData && porterResponseData.porterResponse && porterResponseData.porterResponse.status && porterResponseData.porterResponse.status === 'open'){
-                                        const order = await Payment.findOne({ order_id});
+                                    if (porterResponseData && porterResponseData.porterResponse && porterResponseData.porterResponse.status && porterResponseData.porterResponse.status === 'open') {
+                                        const order = await Payment.findOne({ order_id });
                                         // console.log("order",order)
                                         if (!order || !porterResponse.porterOrder.order_id) {
                                             return next(new ErrorHandler(`Order not found with this id: ${order_id}`, 404))
                                         }
-                                    
+
                                         const porterResponseStatus = await Payment.findOneAndUpdate(
                                             { order_id },
-                                            { orderStatus:'Dispatched' },
+                                            { orderStatus: 'Dispatched' },
                                             { new: true }
                                         );
                                     }
 
                                     // if (typeof order_id !== 'string' || typeof totalRefundableAmount !== 'number') {
-                                        
+
                                     //     return next(new ErrorHandler('Invalid data types: orderId should be a string and amount should be a number', 404))
                                     // }
                                     // // Initiate refund
@@ -374,21 +374,31 @@ const getOrderSummaryByDate = catchAsyncError(async (req, res) => {
         console.log("ordersummarydate", date);
 
         // Assuming date is in YYYY-MM-DD format
-        const startDate = new Date(date);
-        const endDate = new Date(date);
-        endDate.setDate(endDate.getDate() + 1);
-        console.log("startDate", startDate)
-        console.log("endDate", endDate)
+        // const startDate = new Date(date);
+        // const endDate = new Date(date);
+        // endDate.setDate(endDate.getDate() + 1);
+        // console.log("startDate", startDate)
+        // console.log("endDate", endDate)
+        const formattedDate = new Date(date).toISOString().split('T')[0];
 
         // Fetch orders within the date range, explicitly selecting fields
         // const orders = await Order.find({
         //     createdAt: { $gte: startDate, $lt: endDate },
         //     paymentStatus: 'CHARGED',
         // }).select('orderItems shippingInfo user user_id itemsPrice taxPrice shippingPrice totalPrice order_id paymentStatus orderStatus createdAt').exec();
+        // const orders = await Payment.find({
+        //     createdAt: { $gte: startDate, $lt: endDate },
+        //     paymentStatus: 'CHARGED',
+        // })
         const orders = await Payment.find({
-            createdAt: { $gte: startDate, $lt: endDate },
             paymentStatus: 'CHARGED',
-        })
+            $expr: {
+                $eq: [
+                    { $dateToString: { format: "%Y-%m-%d", date: "$orderDate" } },
+                    formattedDate
+                ]
+            }
+        }).select('orderItems shippingInfo user user_id itemsPrice taxPrice shippingPrice totalPrice order_id paymentStatus orderStatus createdAt').exec();
         console.log("Fetched orders:", orders);
 
         const orderSummary = [];
@@ -465,11 +475,47 @@ const sendEmaildata = async (orderSummary) => {
 };
 
 // Schedule task to run at 10 PM every day
-nodeCron.schedule('00 21 * * *', async () => {
+
+// nodeCron.schedule('28 15 * * *', async () => {
+//     const date = new Date();
+//     const formattedDate = date.toISOString().split('T')[0]; // Get YYYY-MM-DD format
+//     // console.log(formattedDate);
+
+
+//     let BASE_URL;
+//     if (process.env.NODE_ENV === 'production') {
+//         BASE_URL = process.env.BACKEND_URL_PROD; // Use production URL
+//     } else {
+//         BASE_URL = process.env.BACKEND_URL_DEV; // Use development URL
+//     }
+
+//     try {
+//         const fetch = (await import('node-fetch')).default; // Dynamic import of node-fetch
+//         const response = await fetch(`${BASE_URL}/api/v1/admin/orders-summary/sendmail/jasadmin/orderreport?date=${formattedDate}`, {
+//             headers: {
+//                 'Content-Type': 'application/json',
+//                 // Add any other headers as needed
+//                 // You may need to include authentication headers or tokens here
+//             },
+//             credentials: 'include', // Send cookies with the request if needed
+//         });
+//         console.log(response)
+//         const data = await response.json();
+//         if (!response.ok) {
+//             throw new Error(`HTTP error! Status: ${response.status}`);
+//         }
+
+//         if (data.orderSummary) {
+//             await sendEmaildata(data.orderSummary);
+//         }
+//     } catch (error) {
+//         console.error('Error fetching order summary or sending email:', error);
+//     }
+// });
+
+nodeCron.schedule('0 21 * * *', async () => {
     const date = new Date();
     const formattedDate = date.toISOString().split('T')[0]; // Get YYYY-MM-DD format
-    // console.log(formattedDate);
-
 
     let BASE_URL;
     if (process.env.NODE_ENV === 'production') {
@@ -483,12 +529,10 @@ nodeCron.schedule('00 21 * * *', async () => {
         const response = await fetch(`${BASE_URL}/api/v1/admin/orders-summary/sendmail/jasadmin/orderreport?date=${formattedDate}`, {
             headers: {
                 'Content-Type': 'application/json',
-                // Add any other headers as needed
-                // You may need to include authentication headers or tokens here
             },
-            credentials: 'include', // Send cookies with the request if needed
+            credentials: 'include',
         });
-        console.log(response)
+
         const data = await response.json();
         if (!response.ok) {
             throw new Error(`HTTP error! Status: ${response.status}`);
@@ -500,28 +544,40 @@ nodeCron.schedule('00 21 * * *', async () => {
     } catch (error) {
         console.error('Error fetching order summary or sending email:', error);
     }
+}, {
+    scheduled: true,
+    timezone: "Asia/Kolkata" // Schedule at 9 PM IST
 });
+
 
 // Get user summary
 const getUserSummaryByDate = catchAsyncError(async (req, res) => {
     try {
         const { date } = req.query;
-        console.log("usersummarydate", date);
+        // console.log("usersummarydate", date);
 
         // Assuming date is in YYYY-MM-DD format
-        const startDate = new Date(date);
-        const endDate = new Date(date);
-        endDate.setDate(endDate.getDate() + 1);
-        console.log("startDate", startDate)
-        console.log("endDate", endDate)
-
+        // const startDate = new Date(date);
+        // const endDate = new Date(date);
+        // endDate.setDate(endDate.getDate() + 1);
+        // console.log("startDate", startDate)
+        // console.log("endDate", endDate)
+        const formattedDate = new Date(date).toISOString().split('T')[0];
         // Fetch orders within the date range
+        // const orders = await Payment.find({
+        //     createdAt: { $gte: startDate, $lt: endDate },
+        //     paymentStatus: 'CHARGED',
+        // });
         const orders = await Payment.find({
-            createdAt: { $gte: startDate, $lt: endDate },
             paymentStatus: 'CHARGED',
-        });
-
-        console.log("Fetched users:", orders);
+            $expr: {
+                $eq: [
+                    { $dateToString: { format: "%Y-%m-%d", date: "$orderDate" } },
+                    formattedDate
+                ]
+            }
+        }).select('orderItems shippingInfo user user_id itemsPrice taxPrice shippingPrice totalPrice order_id paymentStatus orderStatus createdAt').exec();
+        console.log("Fetched orders:", orders);
 
         const userSummary = [];
 
@@ -639,6 +695,47 @@ const sendEmail = async (userSummary) => {
 
 
 // Schedule task to run at 10 PM every day
+// nodeCron.schedule('23 15 * * *', async () => {
+//     const date = new Date();
+//     const formattedDate = date.toISOString().split('T')[0]; // Get YYYY-MM-DD format
+//     console.log(formattedDate);
+
+//     let BASE_URL;
+//     if (process.env.NODE_ENV === 'production') {
+//         BASE_URL = process.env.BACKEND_URL_PROD; // Use production URL
+//     } else {
+//         BASE_URL = process.env.BACKEND_URL_DEV; // Use development URL
+//     }
+
+//     console.log(BASE_URL)
+//     try {
+//         const fetch = (await import('node-fetch')).default; // Dynamic import of node-fetch
+//         const response = await fetch(`${BASE_URL}/api/v1/admin/user-summary/sendmail/jasadmin/userreport?date=${formattedDate}`, {
+//             headers: {
+//                 'Content-Type': 'application/json',
+//                 // Add any other headers as needed
+//                 // You may need to include authentication headers or tokens here
+//             },
+//             credentials: 'include', // Send cookies with the request if needed
+//         });
+//         // console.log(response)
+//         const data = await response.json();
+//         console.log("Fetched data:", data);
+
+//         if (!response.ok) {
+//             throw new Error(`HTTP error! Status: ${response.status}`);
+//         }
+
+
+//         if (data.userSummary) {
+//             await sendEmail(data.userSummary);
+//         }
+//     } catch (error) {
+//         console.error('Error fetching user summary or sending email:', error);
+//     }
+// });
+
+
 nodeCron.schedule('00 21 * * *', async () => {
     const date = new Date();
     const formattedDate = date.toISOString().split('T')[0]; // Get YYYY-MM-DD format
@@ -651,7 +748,7 @@ nodeCron.schedule('00 21 * * *', async () => {
         BASE_URL = process.env.BACKEND_URL_DEV; // Use development URL
     }
 
-    console.log(BASE_URL)
+    console.log(BASE_URL);
     try {
         const fetch = (await import('node-fetch')).default; // Dynamic import of node-fetch
         const response = await fetch(`${BASE_URL}/api/v1/admin/user-summary/sendmail/jasadmin/userreport?date=${formattedDate}`, {
@@ -662,7 +759,7 @@ nodeCron.schedule('00 21 * * *', async () => {
             },
             credentials: 'include', // Send cookies with the request if needed
         });
-        console.log(response)
+
         const data = await response.json();
         console.log("Fetched data:", data);
 
@@ -670,13 +767,15 @@ nodeCron.schedule('00 21 * * *', async () => {
             throw new Error(`HTTP error! Status: ${response.status}`);
         }
 
-
         if (data.userSummary) {
             await sendEmail(data.userSummary);
         }
     } catch (error) {
         console.error('Error fetching user summary or sending email:', error);
     }
+}, {
+    scheduled: true,
+    timezone: "Asia/Kolkata" // Schedule at 9 PM IST
 });
 
 

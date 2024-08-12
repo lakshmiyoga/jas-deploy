@@ -113,6 +113,16 @@ const paymentSchema = mongoose.Schema({
     removalReason:{
         type: String,
     },
+    orderDate:{
+        type: mongoose.Schema.Types.Mixed,
+        default: {},
+        required: true, 
+    },
+    orderDescription:{
+        type: String,
+        default: '',
+        required: true, 
+    },
     createdAt: {
         type: Date,
         default: Date.now

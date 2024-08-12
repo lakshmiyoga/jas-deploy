@@ -11,6 +11,7 @@ const Payment = require('../models/paymentModel');
 const responseModel = require('../models/responseModel');
 const CryptoJS = require('crypto-js');
 const validator = require("validator");
+const SerialNumber = require('../models/SerialNumber');
 
 
 
@@ -76,7 +77,14 @@ const payment = catchAsyncError(async (req, res, next) => {
     const totalPrice = decryptData(encryptedTotalPrice,decryptedKey);
 
 
-    const orderId = `order_${Date.now()}`;
+    // const orderId = `order_${Date.now()}`;
+	const now = new Date();
+const day = String(now.getDate()).padStart(2, '0'); // Ensure day is 2 digits
+const month = String(now.getMonth() + 1).padStart(2, '0'); // Ensure month is 2 digits
+const year = String(now.getFullYear()).slice(-2); // Get last 2 digits of the year
+const randomNumber = Math.floor(Math.random() * 9000) + 1000; // Generate a random 3-digit number
+
+const orderId = `order_${day}${month}${year}${randomNumber}`;
     const amount = parseFloat(totalPrice).toFixed(2);
 
     // Validate total price
@@ -108,6 +116,26 @@ const payment = catchAsyncError(async (req, res, next) => {
 			return next(new ErrorHandler('Your order is already exist Please Try Again!', 400));
 		}
 		else{
+			const currentDate = new Date();
+			const currentHour = currentDate.getHours();
+		
+			// Initialize orderDate and orderDescription
+			let orderDate;
+			let orderDescription;
+		
+			if (currentHour < 21) { // Before 9 PM
+				orderDate = new Date(currentDate);
+				orderDate.setDate(orderDate.getDate() ); // Next day
+				orderDateDelivery = new Date(currentDate);
+				orderDateDelivery.setDate(orderDateDelivery.getDate() + 1 ); // Next day
+				orderDescription = `The order will be delivered on this day: ${orderDateDelivery.toDateString()}`;
+			} else { // After 9 PM
+				orderDate = new Date(currentDate);
+				orderDate.setDate(orderDate.getDate() + 1); // Day after tomorrow
+				orderDateDelivery = new Date(currentDate);
+				orderDateDelivery.setDate(orderDateDelivery.getDate() + 2 ); // Next day
+				orderDescription = `The order will be delivered on this day: ${orderDateDelivery.toDateString()}`;
+			}
 			const payment = new Payment({
 				order_id: orderId,
 				user_id: user_id,
@@ -119,6 +147,8 @@ const payment = catchAsyncError(async (req, res, next) => {
 				shippingPrice,
 				totalPrice: amount,
 				paymentStatus: 'initiated',
+				orderDate: orderDate, // Add the calculated orderDate
+				orderDescription: orderDescription // Add the calculated orderDescription
 			});
 	
 			await payment.save();
@@ -184,6 +214,8 @@ const payment = catchAsyncError(async (req, res, next) => {
         return res.redirect(`${BASE_URL}/order/confirm?message=${encodeURIComponent('Something went wrong')}`);
     }
 });
+
+
 
 
 const handleResponse = catchAsyncError(async (req, res,next) => {
