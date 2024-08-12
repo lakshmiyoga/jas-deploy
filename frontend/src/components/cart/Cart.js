@@ -9,6 +9,7 @@ const Cart = () => {
     const { isAuthenticated } = useSelector(state => state.authState);
     const dispatch = useDispatch();
     const navigate = useNavigate();
+    console.log("items",items)
 
     const [showModal, setShowModal] = useState(false);
     const [productToDelete, setProductToDelete] = useState(null);
@@ -57,17 +58,19 @@ const Cart = () => {
                                         <th>S.No</th>
                                         <th>Name</th>
                                         <th>Price</th>
-                                        <th>Weight</th>
+                                        <th>Weight/Piece</th>
                                         <th>Total</th>
                                         <th>Actions</th>
                                     </tr>
                                 </thead>
                                 <tbody>
+                                    
                                     {items.map((item, index) => (
+                                        
                                         <tr key={item.product}>
                                             <td>{index + 1}</td>
                                             <td>{item.name}</td>
-                                            <td>RS.{item.price}(per Kg)</td>
+                                            <td>RS.{(item.price).toFixed(2)}</td>
                                             <td>{item.productWeight}</td>
                                             <td>Rs.{(item.price * item.productWeight).toFixed(2)}</td>
                                             <td>
@@ -80,7 +83,9 @@ const Cart = () => {
                                         </tr>
                                     ))}
                                 </tbody>
+                               
                             </table>
+                            
                             <div className="row d-flex justify-content-center">
                                 <div className="col-12 col-lg-8 my-4 float-left">
                                     <div id="order_summary">
