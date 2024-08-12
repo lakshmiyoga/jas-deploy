@@ -31,6 +31,8 @@ const ConfirmOrder = () => {
     const location = useLocation();
     const queryParams = new URLSearchParams(location.search);
     const message = queryParams.get('message');
+    const [showModal, setShowModal] = useState(false);
+    const [orderDescription, setOrderDescription] = useState('');
 
     const shippingCharge = shippingAmount / 100;
     //  const shippingCharge = 50.00;
@@ -200,9 +202,29 @@ const ConfirmOrder = () => {
                 toast.error(error && error.response.data.message)
              }
             setLoading(false);
+            setShowModal(false);
         }
     };
-
+    const handelopenModal = () => {
+        const currentDate = new Date();
+        const currentHour = currentDate.getHours();
+        let orderDate;
+        let orderDescription;
+        if (currentHour < 21) { // Before 9 PM
+            orderDate = new Date(currentDate);
+            orderDate.setDate(orderDate.getDate() + 1); // Next day
+            setOrderDescription(`The order will be delivered on this day: ${orderDate.toDateString()}`);
+        } else { // After 9 PM
+            orderDate = new Date(currentDate);
+            orderDate.setDate(orderDate.getDate() + 2); // Day after tomorrow
+            setOrderDescription(`The order will be delivered on this day: ${orderDate.toDateString()}`);
+        }
+    
+        setShowModal(true);
+    };
+    const handleCancelModal= () =>{
+        setShowModal(false);
+    }
     
     useEffect(() => {
         if (shippingInfo) {
@@ -261,7 +283,7 @@ const ConfirmOrder = () => {
                                 <p>Total: <span className="order-summary-values">Rs.{total}</span></p>
                                 <hr />
                                 {shippingCharge ? (
-                                    <button id="checkout_btn" className="btn btn-primary btn-block" onClick={processPayment} disabled={loading}>
+                                    <button id="checkout_btn" className="btn btn-primary btn-block" onClick={handelopenModal} disabled={loading}>
                                         Proceed to Payment
                                     </button>
                                 ) : (
@@ -269,6 +291,27 @@ const ConfirmOrder = () => {
                                         Proceed to Payment
                                     </button>
                                 )}
+                                {showModal && (
+                        <div className="modal" tabIndex="-1" role="dialog" style={modalStyle}>
+                            <div className="modal-dialog" role="document">
+                                <div className="modal-content">
+                                    <div className="modal-header">
+                                        <h5 className="modal-title">Confirm Order</h5>
+                                        <button type="button" className="close" onClick={handleCancelModal}>
+                                            <span aria-hidden="true">&times;</span>
+                                        </button>
+                                    </div>
+                                    <div className="modal-body">
+                                        <p>{orderDescription && orderDescription}</p>
+                                    </div>
+                                    <div className="modal-footer">
+                                        <button type="button" className="btn btn-secondary" onClick={handleCancelModal}>Cancel</button>
+                                        <button type="button" className="btn btn-success" onClick={processPayment}>Continue</button>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    )}
 
                             </div>
                         </div>
@@ -277,6 +320,17 @@ const ConfirmOrder = () => {
             </div>
         </Fragment>
     );
+};
+const modalStyle = {
+    display: 'flex',
+    justifyContent: 'center',
+    alignItems: 'center',
+    position: 'fixed',
+    top: 0,
+    left: 0,
+    width: '100%',
+    height: '100%',
+    backgroundColor: 'rgba(0,0,0,0.5)'
 };
 
 export default ConfirmOrder;
