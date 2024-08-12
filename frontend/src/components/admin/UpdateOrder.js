@@ -36,6 +36,8 @@ const UpdateOrder = () => {
     const { id } = useParams();
     const [refreshData, setRefreshData] = useState(false)
     const [removalReason, setRemovalReason] = useState('');
+    // Add a timeout state to manage debounce
+const [debounceTimeout, setDebounceTimeout] = useState(null);
     const navigate = useNavigate();
     const dispatch = useDispatch();
     console.log("packedOrderData", packedOrderData)
@@ -272,6 +274,13 @@ const UpdateOrder = () => {
         }
 
     };
+
+   
+
+
+
+    
+    
 
     const handleBlur = (index) => {
         if (editableWeights[index] === '' || editableWeights[index] === null) {

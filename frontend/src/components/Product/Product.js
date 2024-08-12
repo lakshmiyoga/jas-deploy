@@ -8,32 +8,44 @@ const Product = ({ products, category }) => {
     const [quantity, setQuantity] = useState(1);
     const dispatch = useDispatch();
 
-    // const handleWeightChange = (productId, weight) => {
-    //     setWeight(prevWeights => ({ ...prevWeights, [productId]: weight }));
-    // };
+    console.log("products",products)
+
     const handleWeightChange = (productId, value) => {
         const weightValue = parseFloat(value);
-        // if (!isNaN(weightValue) && weightValue < 0.2) {
-        //     setWeight(prevWeights => ({ ...prevWeights, [productId]: '' }));
-        // } 
-        if (!isNaN(weightValue) && weightValue < 0.25) {
-            setWeight(prevWeights => ({ ...prevWeights, [productId]: '' }));
-            toast.error('the value should not be less than 0.25kg')
-        } 
-        else {
-            // Optionally, you can show an error or reset the weight if the value is invalid
-            setWeight(prevWeights => ({ ...prevWeights, [productId]: weightValue }));  
-        }
+        setWeight(prevWeights => ({ ...prevWeights, [productId]: weightValue }));
     };
+    // const handleWeightChange = (productId, value) => {
+    //     const weightValue = parseFloat(value);
+    //     // if (!isNaN(weightValue) && weightValue < 0.2) {
+    //     //     setWeight(prevWeights => ({ ...prevWeights, [productId]: '' }));
+    //     // } 
+    //     if (!isNaN(weightValue) && weightValue < 0.25) {
+    //         setWeight(prevWeights => ({ ...prevWeights, [productId]: '' }));
+    //         toast.error('the value should not be less than 0.25kg')
+    //     } 
+    //     else {
+    //         // Optionally, you can show an error or reset the weight if the value is invalid
+    //         setWeight(prevWeights => ({ ...prevWeights, [productId]: weightValue }));  
+    //     }
+    // };
 
 
     const calculateRate = (price, weight) => {
         return (price * weight).toFixed(2);
     };
 
-    const handleAddToCart = (product) => {
+    const handleAddToCart = (product, productId) => {
+
         const productWeight = weight[product._id];
-        if (productWeight) {
+        if (!isNaN(productWeight) && productWeight < 0.25) {
+            setWeight(prevWeights => ({ ...prevWeights, [productId]: '' }));
+            return toast('The value should not be less than 0.25kg', {
+                type: 'error',
+                position: 'bottom-center',
+            });
+
+        }
+        if (productWeight >= 0.25) {
             dispatch(addCartItem({ productId: product._id, quantity, productWeight }));
             toast('Item added successfully!', {
                 type: 'success',
@@ -67,7 +79,7 @@ const Product = ({ products, category }) => {
                             <th>Products Image</th>
                             <th>Products Name</th>
                             <th>Price</th>
-                            <th>Weight(KG)</th>
+                            {category === 'Keerai' ? <th>Weight(Piece)</th>:<th>Weight(KG)</th>}   
                             <th>Rate (As Per Weight)</th>
                             <th>Stock</th>
                             <th>Add to Cart</th>
@@ -129,16 +141,12 @@ const Product = ({ products, category }) => {
                                             ? [...Array(10).keys()].map(i => (
                                                 <option key={i} value={i + 1}>{i + 1}</option>
                                             ))
-                                            : [...Array(10).keys()].map(i => (
-                                    
-                                                    <option key={i} value={(i + 1) * 0.5}></option>
-                                               
-
+                                            : [...Array(20).keys()].map(i => (
+                                                <option key={i} value={(i + 1) * 0.5}></option>
                                             ))}
                                     </datalist>
                                 </td>
-
-
+                                
                                 <td className="Rate (As Per Weight)">
                                     {weight[product._id] ? `Rs.${calculateRate(product.price, weight[product._id])}` : 'Rs.0.00'}
                                 </td>

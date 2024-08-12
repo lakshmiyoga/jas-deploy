@@ -62,6 +62,7 @@ import RefundList from './components/admin/RefundList';
 
 function App() {
     const location = useLocation();
+    const isAdminRoute = location.pathname.startsWith('/admin');
 
     useEffect(() => {
         store.dispatch(loadUser());
@@ -71,7 +72,8 @@ function App() {
     return (
         <div className="App">
             <HelmetProvider>
-                <Header />
+                {/* <Header /> */}
+                {!isAdminRoute && <Header />}
                 <ScrollToTop/>
                 <Routes>
                
@@ -120,7 +122,8 @@ function App() {
                     <Route path='/admin/order-summary' element={<ProtectedRoute isAdmin={true}><OrderSummary /></ProtectedRoute>} />
                     <Route path='/admin/user-summary' element={<ProtectedRoute isAdmin={true}><SummaryUser /></ProtectedRoute>} />
                 </Routes>
-                <Footer />
+                {/* <Footer /> */}
+                {!isAdminRoute && <Footer />}
                 <ToastContainer theme="dark" />
             </HelmetProvider>
         </div>
