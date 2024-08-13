@@ -90,8 +90,7 @@ const orderId = `order_${day}${month}${year}${randomNumber}`;
     // Validate total price
     const calculatedTotalPrice = (parseFloat(itemsPrice) + parseFloat(shippingPrice)).toFixed(2);
     if (calculatedTotalPrice !== amount) {
-        return next(new ErrorHandler('Price validation failed', 400));
-		
+        return next(new ErrorHandler('Price validation failed', 400));	
     }
 	const isSignatureValid = verifySignature(`${itemsPrice}${shippingPrice}${totalPrice}`,signature,decryptedKey);
     
@@ -214,8 +213,6 @@ const orderId = `order_${day}${month}${year}${randomNumber}`;
         return res.redirect(`${BASE_URL}/order/confirm?message=${encodeURIComponent('Something went wrong')}`);
     }
 });
-
-
 
 
 const handleResponse = catchAsyncError(async (req, res,next) => {

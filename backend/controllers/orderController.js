@@ -436,8 +436,6 @@ const getOrderSummaryByDate = catchAsyncError(async (req, res) => {
 });
 
 
-
-
 // Function to send email
 const sendEmaildata = async (orderSummary) => {
     let transporter = nodemailer.createTransport({
