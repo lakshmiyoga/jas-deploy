@@ -15,6 +15,8 @@ export default function UserList() {
     const [showModal, setShowModal] = useState(false);
     const [userToDelete, setUserToDelete] = useState(null);
 
+    
+
     const setUsers = () => {
         const data = {
             columns: [

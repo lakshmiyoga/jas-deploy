@@ -1,9 +1,9 @@
-import React, { useEffect, Fragment } from 'react';
+import React, { useEffect, Fragment, useState } from 'react';
 import { Button } from "react-bootstrap";
 import { useDispatch, useSelector } from 'react-redux';
 import { Link } from "react-router-dom";
 import { deleteOrder, adminOrders as adminOrdersAction } from "../../actions/orderActions"
-import {allPackedOrder } from "../../actions/porterActions"
+import { allPackedOrder, getporterOrder, updatedPackedOrder } from "../../actions/porterActions"
 import Loader from '../Layouts/Loader';
 import { MDBDataTable } from 'mdbreact';
 import { toast } from 'react-toastify';
@@ -12,11 +12,20 @@ import { clearError } from '../../slices/productsSlice';
 import { clearOrderDeleted } from "../../slices/orderSlice";
 
 const RefundList = () => {
-    // const { adminOrders: orders = [], loading = true, error, isOrderDeleted }  = useSelector(state => state.orderState);
-    const { loading,allpackedOrderData: orders = [],allpackedOrderError }  = useSelector(state => state.porterState);
-    console.log("allpackedOrderData",orders,allpackedOrderError);
-    
+    // const { adminOrders: orders = [], error, isOrderDeleted }  = useSelector(state => state.orderState);
+    const { loading, allpackedOrderData: orders = [], allpackedOrderError,updatepackedOrderData :orderslist = []  } = useSelector(state => state.porterState);
+    console.log("allpackedOrderData", orders, allpackedOrderError);
+
     const dispatch = useDispatch();
+
+
+    // Initialize the date with the current date
+    const currentDate = new Date();
+    const formattedCurrentDate = currentDate.toISOString().split('T')[0];
+
+    const [date, setDate] = useState(formattedCurrentDate);
+    const [refresh, setRefresh] = useState(false);
+
 
     const setOrders = () => {
         const data = {
@@ -75,21 +84,34 @@ const RefundList = () => {
             rows: []
         };
 
-        // Sort orders by creation date (newest first)
-        const sortedOrders = [...orders].sort((a, b) => new Date(b.createdAt) - new Date(a.createdAt));
-        console.log("sortedOrders",sortedOrders)
+        // Filter and validate orders by selected date
+        const filteredRefundOrders = orderslist && refresh && orderslist.filter(order => {
+            if (!order.createdAt) return false; // Skip orders with no orderDate
 
-        sortedOrders.filter(order => order.totalRefundableAmount> 0).forEach((order, index) => {
+            // Attempt to parse the orderDate
+            const orderDate = new Date(order.createdAt);
+            if (isNaN(orderDate.getTime())) return false; // Skip invalid dates
+
+            // Compare the date part only (ignoring time)
+            return orderDate.toISOString().split('T')[0] === date && order && order.orderDetail && order.orderDetail.statusResponse.status === 'CHARGED';
+        });
+        console.log("filteredRefundOrders", filteredRefundOrders)
+
+        // Sort orders by creation date (newest first)
+        const sortedOrders = filteredRefundOrders && filteredRefundOrders.sort((a, b) => new Date(b.createdAt) - new Date(a.createdAt));
+        console.log("sortedOrders", sortedOrders)
+
+        sortedOrders && sortedOrders.filter(order => order.totalRefundableAmount > 0).forEach((order, index) => {
             data.rows.push({
                 s_no: index + 1,
                 id: order.order_id,
-                name:order.user.name,
+                name: order.user.name,
                 phone_no: order.orderDetail && order.orderDetail.shippingInfo && order.orderDetail.shippingInfo.phoneNo,
-                email:order.user.email,
+                email: order.user.email,
                 // noOfItems: order.orderItems.length,
                 // amount: `Rs.${order.totalPrice}`,
                 refundstatus: (
-                    <p className={order.refundStatus && order.refundStatus.includes('Success') ? 'greenColor' : 'redColor' } ><p>{order.refundStatus}</p></p>
+                    <p className={order.refundStatus && order.refundStatus.includes('SUCCESS') ? 'greenColor' : 'redColor'} ><p>{order.refundStatus}</p></p>
                 ),
                 // paymentstatus: (
                 //     <p className='greenColor'><p>{order.paymentStatus}</p></p>
@@ -133,9 +155,43 @@ const RefundList = () => {
         //     });
         //     return;
         // }
+if(refresh){
+    dispatch(updatedPackedOrder({}));
+}
+        
+    }, [dispatch, allpackedOrderError, refresh]);
 
-        dispatch(allPackedOrder({}));
-    }, [dispatch,allpackedOrderError]);
+    useEffect(() => {
+        const updateOrders = async () => {
+
+            dispatch(allPackedOrder({}));
+
+            const filteredOrders = orders.filter(order => {
+                if (!order.createdAt) return false;
+
+                const orderDate = new Date(order.createdAt);
+                if (isNaN(orderDate.getTime())) return false;
+
+                return orderDate.toISOString().split('T')[0] === date && order && order.orderDetail && order.orderDetail.statusResponse.status === 'CHARGED';
+            });
+
+            const sortedOrders = filteredOrders && filteredOrders.sort((a, b) => new Date(b.createdAt) - new Date(a.createdAt));
+
+            // Update each order and wait for all updates to complete
+            await Promise.all(
+                sortedOrders
+                    .filter(order => order.totalRefundableAmount > 0)
+                    .map(order => dispatch(getporterOrder({ order_id: order.order_id })))
+            );
+
+            // Set refresh to true after all updates are completed
+            setRefresh(true);
+        };
+
+        updateOrders();
+
+    }, [])
+
 
     return (
         <div className="row">
@@ -144,15 +200,24 @@ const RefundList = () => {
             </div>
             <div className="col-12 col-md-10">
                 <h1 className="my-4">Refund List</h1>
+                <input
+                    type="date"
+                    value={date}
+                    onChange={(e) => setDate(e.target.value)}
+                    className="form-control mb-3 date-input"
+                />
                 <Fragment>
                     {loading ? <Loader /> :
-                        <MDBDataTable
-                            data={setOrders()}
-                            bordered
-                            hover
-                            className="px-3 product-table"
-                            noBottomColumns
-                        />
+                        refresh && (
+                            <MDBDataTable
+                                data={setOrders()}
+                                bordered
+                                hover
+                                className="px-3 product-table"
+                                noBottomColumns
+                            />
+                        )
+
                     }
                 </Fragment>
             </div>

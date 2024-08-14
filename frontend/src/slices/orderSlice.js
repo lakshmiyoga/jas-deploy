@@ -126,6 +126,33 @@ const orderSlice = createSlice({
                 error: action.payload
             }
         },
+        adminOrderClear(state, action) {
+            return {
+                ...state,
+                loading: false,
+                adminOrders: null
+            }
+        },
+        updateadminOrdersRequest(state, action) {
+            return {
+                ...state,
+                loading: true
+            }
+        },
+        updateadminOrdersSuccess(state, action) {
+            return {
+                ...state,
+                loading: false,
+                updateadminOrders: action.payload.orders
+            }
+        },
+        updateadminOrdersFail(state, action) {
+            return {
+                ...state,
+                loading: false,
+                error: action.payload
+            }
+        },
 
         deleteOrderRequest(state, action) {
             return {
@@ -319,7 +346,11 @@ export const {
     adminOrderRemoveRequest,
     adminOrderRemoveSuccess,
     adminOrderRemoveFail,
-    adminOrderRemoveClearError
+    adminOrderRemoveClearError,
+    updateadminOrdersFail,
+    updateadminOrdersRequest,
+    updateadminOrdersSuccess,
+    adminOrderClear
 
  } = actions;
 

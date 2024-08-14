@@ -352,6 +352,15 @@ const RefundOrder = () => {
 
                                 <h4 className="my-4">Payment status</h4>
                                 <p className={orderDetail.paymentStatus === 'CHARGED' ? 'greenColor' : 'redColor'}><b>{orderDetail.paymentStatus || 'Pending'}</b></p>
+                                {
+                                    orderDetail && orderDetail.statusResponse &&  orderDetail.statusResponse.refunds && (
+                                        <>
+                                         <h4 className="my-4">Refund status</h4>
+                                <p className={orderDetail && orderDetail.statusResponse &&  orderDetail.statusResponse.refunds && orderDetail.statusResponse.refunds[0].status === 'SUCCESS' ? 'greenColor' : 'redColor'}><b>{orderDetail && orderDetail.statusResponse &&  orderDetail.statusResponse.refunds && orderDetail.statusResponse.refunds[0].status}</b></p>
+                                        </>
+                                    )
+                                }
+                               
                                 {/* <hr /> */}
                                 {/* <h4 className="my-4">Order Status:</h4>
                                 <p className={dropStatus.includes('Delivered') ? 'greenColor' : 'redColor'}><b>{dropStatus}</b></p> */}

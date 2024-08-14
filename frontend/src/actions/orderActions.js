@@ -33,6 +33,9 @@ import {
   adminOrderRemoveRequest,
   adminOrderRemoveSuccess,
   adminOrderRemoveFail,
+  updateadminOrdersRequest,
+  updateadminOrdersSuccess,
+  updateadminOrdersFail,
 } from '../slices/orderSlice';
 
 
@@ -91,6 +94,17 @@ export const adminOrders = createAsyncThunk('order/adminOrders', async (_, { dis
     dispatch(adminOrdersSuccess(data));
   } catch (error) {
     dispatch(adminOrdersFail(error.response.data.message));
+  }
+});
+
+export const updateadminOrders = createAsyncThunk('order/adminOrders', async (_, { dispatch }) => {
+  try {
+    dispatch(updateadminOrdersRequest());
+    const { data } = await axios.get('/api/v1/admin/orders',{ withCredentials: true })
+    console.log(data)
+    dispatch(updateadminOrdersSuccess(data));
+  } catch (error) {
+    dispatch(updateadminOrdersFail(error.response.data.message));
   }
 });
 

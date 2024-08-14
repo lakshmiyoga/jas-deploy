@@ -1,4 +1,4 @@
-import React, { useEffect, Fragment } from 'react';
+import React, { useEffect, Fragment, useState } from 'react';
 import { Button } from "react-bootstrap";
 import { useDispatch, useSelector } from 'react-redux';
 import { Link } from "react-router-dom";
@@ -11,9 +11,21 @@ import { clearError } from '../../slices/productsSlice';
 import { clearOrderDeleted } from "../../slices/orderSlice";
 
 const OrderList = () => {
-    const { adminOrders: orders = [], loading = true, error, isOrderDeleted }  = useSelector(state => state.orderState);
-    console.log(orders);
+    const { adminOrders: orders = [], loading = true, error, isOrderDeleted } = useSelector(state => state.orderState);
+    console.log("orders", orders);
+
+    // Initialize the date with the current date
+    const previousDate = new Date();
+    previousDate.setDate(previousDate.getDate() - 1);
+    const formattedPreviousDate = previousDate.toISOString().split('T')[0];
+
+    const [date, setDate] = useState(formattedPreviousDate);
+    const [refresh,setRefresh]=useState(false);
     
+
+
+    console.log("date", date);
+
     const dispatch = useDispatch();
 
     const setOrders = () => {
@@ -73,20 +85,34 @@ const OrderList = () => {
             rows: []
         };
 
+        // Filter and validate orders by selected date
+        const filteredOrders = orders.filter(order => {
+            if (!order.orderDate) return false; // Skip orders with no orderDate
+
+            // Attempt to parse the orderDate
+            const orderDate = new Date(order.orderDate);
+            if (isNaN(orderDate.getTime())) return false; // Skip invalid dates
+
+            // Compare the date part only (ignoring time)
+            return orderDate.toISOString().split('T')[0] === date && order.paymentStatus === 'CHARGED' && order.orderStatus === 'Processing'|| order.orderStatus === 'Packed';
+        });
+
+
+
         // Sort orders by creation date (newest first)
-        const sortedOrders = [...orders].sort((a, b) => new Date(b.createdAt) - new Date(a.createdAt));
+        const sortedOrders = filteredOrders.sort((a, b) => new Date(b.createdAt) - new Date(a.createdAt));
 
         sortedOrders.filter(order => order.paymentStatus === 'CHARGED').forEach((order, index) => {
             data.rows.push({
                 s_no: index + 1,
                 id: order.order_id,
-                name:order.user.name,
-                phone_no:order.shippingInfo.phoneNo,
-                email:order.user.email,
+                name: order.user.name,
+                phone_no: order.shippingInfo.phoneNo,
+                email: order.user.email,
                 // noOfItems: order.orderItems.length,
                 amount: `Rs.${order.totalPrice}`,
                 orderstatus: (
-                    <p className={order.orderStatus && order.orderStatus.includes('Delivered') ? 'greenColor' : 'redColor' } ><p>{order.orderStatus}</p></p>
+                    <p className={order.orderStatus && order.orderStatus.includes('Delivered') ? 'greenColor' : 'redColor'} ><p>{order.orderStatus}</p></p>
                 ),
                 paymentstatus: (
                     <p className='greenColor'><p>{order.paymentStatus}</p></p>
@@ -133,6 +159,7 @@ const OrderList = () => {
 
         dispatch(adminOrdersAction());
     }, [dispatch, error, isOrderDeleted]);
+    console.log("date", date)
 
     return (
         <div className="row">
@@ -141,6 +168,12 @@ const OrderList = () => {
             </div>
             <div className="col-12 col-md-10">
                 <h1 className="my-4">Order List</h1>
+                <input
+                    type="date"
+                    value={date}
+                    onChange={(e) => setDate(e.target.value)}
+                    className="form-control mb-3 date-input"
+                />
                 <Fragment>
                     {loading ? <Loader /> :
                         <MDBDataTable
@@ -153,6 +186,7 @@ const OrderList = () => {
                     }
                 </Fragment>
             </div>
+
         </div>
     );
 };
