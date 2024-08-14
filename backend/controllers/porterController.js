@@ -54,8 +54,29 @@ const getSinglePorterOrder = catchAsyncError(async (req, res, next) => {
         success: true,
         porterOrder: order
     })
+    const statusResponse = await juspay.order.status(order_id);
 
+    if (statusResponse) {
+
+        const onepayments = await Dispatch.findOne({ order_id });
+        if (onepayments) {
+            const refundStatus = await Dispatch.findOneAndUpdate({ order_id },
+                {
+                    refundStatus: statusResponse.refunds[0].status,
+                    $set: { statusResponse: statusResponse }
+                },
+                { new: true });
+                res.status(200).json({
+                    success: true,
+                    porterOrder: order
+                })  
+           
+        }
+
+    }
+   
 })
+
 const getPorterResponse = catchAsyncError(async (req, res, next) => {
     //    console.log(req.params)
     const { order_id, porterOrder_id } = req.body;
@@ -150,14 +171,14 @@ const getPorterResponse = catchAsyncError(async (req, res, next) => {
         //   console.log("porterResponseStatus",porterResponseStatus)
     }
 
-    if (porterResponseData) {
-        return res.status(200).json({
-            success: true,
-            porterResponse: responseData
-        });
-    } else {
-        return next(new ErrorHandler(`Something went wrong with this id: ${order_id}`, 404));
-    }
+    // if (porterResponseData) {
+    //     return res.status(200).json({
+    //         success: true,
+    //         porterResponse: responseData
+    //     });
+    // } else {
+    //     return next(new ErrorHandler(`Something went wrong with this id: ${order_id}`, 404));
+    // }
 })
 
 
@@ -194,7 +215,7 @@ const getCancelResponse = catchAsyncError(async (req, res, next) => {
 
 const postPackedOrder = catchAsyncError(async (req, res, next) => {
     //    console.log(req.body)
-    const { order_id, user_id, user, dispatchedTable, totalDispatchedAmount, totalRefundableAmount, updatedItems,orderDetail } = req.body;
+    const { order_id, user_id, user, dispatchedTable, totalDispatchedAmount, totalRefundableAmount, updatedItems, orderDetail } = req.body;
     // console.log(order_id,user_id,user,dispatchedTable)
 
     const order = await Dispatch.findOne({ order_id });
@@ -207,12 +228,13 @@ const postPackedOrder = catchAsyncError(async (req, res, next) => {
             order_id: order_id,
             user_id: user_id,
             user: user,
-            orderDetail:orderDetail,
+            orderDetail: orderDetail,
             updatedItems: updatedItems,
             dispatchedTable: dispatchedTable,
+            // orderDate:orderDate,
             totalDispatchedAmount: totalDispatchedAmount,
             totalRefundableAmount: totalRefundableAmount,
-            
+
         });
 
         await packedOrder.save();
@@ -266,18 +288,18 @@ const getPackedOrder = catchAsyncError(async (req, res, next) => {
 })
 
 const getAllPackedOrder = catchAsyncError(async (req, res, next) => {
-    
-try{
-    const allpackedOrderData = await Dispatch.find({});
-    console.log("allpackedOrderData",allpackedOrderData)
-   return res.status(201).json({
-        success: true,
-        allpackedOrderData
-    })
-}catch(error){
-    return next(new ErrorHandler(error.response.data.message, error.response.status))
-}
-   
+
+    try {
+        const allpackedOrderData = await Dispatch.find({});
+        console.log("allpackedOrderData", allpackedOrderData)
+        return res.status(201).json({
+            success: true,
+            allpackedOrderData
+        })
+    } catch (error) {
+        return next(new ErrorHandler(error.response.data.message, error.response.status))
+    }
+
 })
 
 const refundOrder = catchAsyncError(async (req, res, next) => {
@@ -332,4 +354,4 @@ const refundOrder = catchAsyncError(async (req, res, next) => {
 })
 
 
-module.exports = { getSinglePorterOrder, getPorterResponse, getCancelResponse, postPackedOrder, getPackedOrder, refundOrder,getAllPackedOrder };
+module.exports = { getSinglePorterOrder, getPorterResponse, getCancelResponse, postPackedOrder, getPackedOrder, refundOrder, getAllPackedOrder };
