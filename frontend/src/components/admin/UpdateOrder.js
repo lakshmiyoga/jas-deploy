@@ -37,71 +37,12 @@ const UpdateOrder = () => {
     const [refreshData, setRefreshData] = useState(false)
     const [removalReason, setRemovalReason] = useState('');
     // Add a timeout state to manage debounce
-const [debounceTimeout, setDebounceTimeout] = useState(null);
+    const [debounceTimeout, setDebounceTimeout] = useState(null);
     const navigate = useNavigate();
     const dispatch = useDispatch();
-    console.log("packedOrderData", packedOrderData)
+    console.log("orderDetail", orderDetail)
     const invoiceRef = useRef();
 
-
-
-    const sampleInvoice = {
-        number: 'RVP/528/24-25',
-        date: '7/Aug/2024',
-        buyer: {
-            name: 'A2B GREENS',
-            address: 'NO : 53, SOUTH SPACE - 3RD STREET, 2ND SECTOR, AMBATTUR INDUSTRIAL ESTATE',
-            city: 'CHENNAI - 600058',
-        },
-        items: [
-            { goods: 'AmlaAmlaAmlaAmlaAmlaAmla', orderKg: 7, excessMinus: 0, totalKg: 7, ratePerKg: 95, value: 100 },
-            { goods: 'Apple', orderKg: 10, excessMinus: 0, totalKg: 10, ratePerKg: 27, value: 100 },
-            { goods: 'Amla', orderKg: 7, excessMinus: 0, totalKg: 7, ratePerKg: 95, value: 100 },
-            { goods: 'Apple', orderKg: 10, excessMinus: 0, totalKg: 10, ratePerKg: 27, value: 100 },
-            { goods: 'Amla', orderKg: 7, excessMinus: 0, totalKg: 7, ratePerKg: 95, value: 100 },
-            { goods: 'Apple', orderKg: 10, excessMinus: 0, totalKg: 10, ratePerKg: 27, value: 100 },
-            { goods: 'Amla', orderKg: 7, excessMinus: 0, totalKg: 7, ratePerKg: 95, value: 100 },
-            { goods: 'Apple', orderKg: 10, excessMinus: 0, totalKg: 10, ratePerKg: 27, value: 100 },
-            { goods: 'Amla', orderKg: 7, excessMinus: 0, totalKg: 7, ratePerKg: 95, value: 100 },
-            { goods: 'Apple', orderKg: 10, excessMinus: 0, totalKg: 10, ratePerKg: 27, value: 100 },
-            { goods: 'Amla', orderKg: 7, excessMinus: 0, totalKg: 7, ratePerKg: 95, value: 100 },
-            { goods: 'Apple', orderKg: 10, excessMinus: 0, totalKg: 10, ratePerKg: 27, value: 100 },
-            { goods: 'Amla', orderKg: 7, excessMinus: 0, totalKg: 7, ratePerKg: 95, value: 100 },
-            { goods: 'Apple', orderKg: 10, excessMinus: 0, totalKg: 10, ratePerKg: 27, value: 100 },
-            { goods: 'Amla', orderKg: 7, excessMinus: 0, totalKg: 7, ratePerKg: 95, value: 100 },
-            { goods: 'Apple', orderKg: 10, excessMinus: 0, totalKg: 10, ratePerKg: 27, value: 100 },
-            { goods: 'Amla', orderKg: 7, excessMinus: 0, totalKg: 7, ratePerKg: 95, value: 100 },
-            { goods: 'Apple', orderKg: 10, excessMinus: 0, totalKg: 10, ratePerKg: 27, value: 100 },
-            { goods: 'Amla', orderKg: 7, excessMinus: 0, totalKg: 7, ratePerKg: 95, value: 100 },
-            { goods: 'Apple', orderKg: 10, excessMinus: 0, totalKg: 10, ratePerKg: 27, value: 100 },
-            { goods: 'Amla', orderKg: 7, excessMinus: 0, totalKg: 7, ratePerKg: 95, value: 100 },
-            { goods: 'Apple', orderKg: 10, excessMinus: 0, totalKg: 10, ratePerKg: 27, value: 100 },
-            { goods: 'Amla', orderKg: 7, excessMinus: 0, totalKg: 7, ratePerKg: 95, value: 100 },
-            { goods: 'Apple', orderKg: 10, excessMinus: 0, totalKg: 10, ratePerKg: 27, value: 100 },
-            { goods: 'Amla', orderKg: 7, excessMinus: 0, totalKg: 7, ratePerKg: 95, value: 100 },
-            { goods: 'Apple', orderKg: 10, excessMinus: 0, totalKg: 10, ratePerKg: 27, value: 100 },
-            { goods: 'Amla', orderKg: 7, excessMinus: 0, totalKg: 7, ratePerKg: 95, value: 100 },
-            { goods: 'Apple', orderKg: 10, excessMinus: 0, totalKg: 10, ratePerKg: 27, value: 100 },
-            { goods: 'Amla', orderKg: 7, excessMinus: 0, totalKg: 7, ratePerKg: 95, value: 100 },
-            { goods: 'Apple', orderKg: 10, excessMinus: 0, totalKg: 10, ratePerKg: 27, value: 100 },
-            { goods: 'Amla', orderKg: 7, excessMinus: 0, totalKg: 7, ratePerKg: 95, value: 100 },
-            { goods: 'Apple', orderKg: 10, excessMinus: 0, totalKg: 10, ratePerKg: 27, value: 100 },
-            { goods: 'Amla', orderKg: 7, excessMinus: 0, totalKg: 7, ratePerKg: 95, value: 100 },
-            { goods: 'Apple', orderKg: 10, excessMinus: 0, totalKg: 10, ratePerKg: 27, value: 100 },
-            { goods: 'Amla', orderKg: 7, excessMinus: 0, totalKg: 7, ratePerKg: 95, value: 100 },
-            { goods: 'Apple', orderKg: 10, excessMinus: 0, totalKg: 10, ratePerKg: 27, value: 100 },
-            // Add more items as needed
-        ],
-        supplier: {
-            name: 'RVP SOURCING ',
-            address: '29 Reddy Street, Nerkundram',
-            city: 'Chennai-600107',
-        },
-    };
-
-    const handlePrint = useReactToPrint({
-        content: () => invoiceRef.current,
-    });
 
     useEffect(() => {
         if (orderDetail.order_id) {
@@ -111,8 +52,12 @@ const [debounceTimeout, setDebounceTimeout] = useState(null);
         if (orderItems) {
             setEditableWeights(orderItems.map(item => item.productWeight))
         }
+
     }, [orderDetail]);
 
+    useEffect(() => {
+        dispatch(porterClearData())
+    }, [])
 
     const handleItemSelection = (index) => {
         const newSelectedItems = [...selectedItems];
@@ -275,12 +220,9 @@ const [debounceTimeout, setDebounceTimeout] = useState(null);
 
     };
 
-   
 
 
 
-    
-    
 
     const handleBlur = (index) => {
         if (editableWeights[index] === '' || editableWeights[index] === null) {
@@ -298,6 +240,20 @@ const [debounceTimeout, setDebounceTimeout] = useState(null);
             status: editableWeights[index] > 0 ? 'confirm' : 'cancel',
             productWeight: editableWeights[index]
         }));
+
+        // const currentDate = new Date();
+        // const currentHour = currentDate.getHours();
+        // let orderDate;
+
+        // if (currentHour < 21) { // Before 9 PM
+        //     orderDate = new Date(currentDate);
+        //     orderDate.setDate(orderDate.getDate() + 1); // Next day
+        //     // setOrderDescription(`The order will be delivered on this day: ${orderDate.toDateString()}`);
+        // } else { // After 9 PM
+        //     orderDate = new Date(currentDate);
+        //     orderDate.setDate(orderDate.getDate() + 2); // Day after tomorrow
+        //     // setOrderDescription(`The order will be delivered on this day: ${orderDate.toDateString()}`);
+        // }
 
         let totalDispatchedAmount = 0;
         let totalRefundableAmount = 0;
@@ -321,6 +277,7 @@ const [debounceTimeout, setDebounceTimeout] = useState(null);
                 pricePerKg,
                 dispatchedWeight,
                 refundableWeight,
+                // orderDate
                 // totalRefundableAmount,
                 // totalDispatchedAmount,
             };
@@ -341,6 +298,7 @@ const [debounceTimeout, setDebounceTimeout] = useState(null);
             orderDetail: orderDetail,
             updatedItems: updatedItems,
             dispatchedTable: dispatchedTable,
+            orderDate:orderDetail.orderDate,
             totalDispatchedAmount: totalDispatchedAmount,
             totalRefundableAmount: totalRefundableAmount
         };
@@ -384,7 +342,7 @@ const [debounceTimeout, setDebounceTimeout] = useState(null);
         //     });
         // }
         dispatch(orderDetailAction(id));
-
+        dispatch(getporterOrder({ order_id: id }))
         // if (!refreshData) {
         //     const fetchData = async () => {
         //          dispatch(porterClearData())
@@ -416,11 +374,23 @@ const [debounceTimeout, setDebounceTimeout] = useState(null);
         //     fetchData();
         // }
         dispatch(porterClearData())
-        dispatch(createPorterOrderResponse({ order_id: id, porterOrder_id: porterOrderData?.porterOrder?.order_id }))
+        dispatch(createPorterOrderResponse({ order_id: porterOrderData && porterOrderData.order_id, porterOrder_id: porterOrderData?.porterOrder?.order_id }))
         dispatch(getporterOrder({ order_id: id }))
+        setRefreshData(true)
 
-    }, [dispatch, id, refreshData, porterOrderDetail, error, packedOrderData]);
+    }, [dispatch, id, porterOrderDetail, error,packedOrderData]);
 
+    useEffect(() => {
+        const handlePorterOrder = async () => {
+            if (porterOrderResponse || refreshData) {
+                await dispatch(porterClearResponse());
+                await dispatch(porterClearData());
+                await dispatch(getporterOrder({ order_id: id }));
+            }
+        };
+
+        handlePorterOrder();
+    }, [porterOrderResponse, refreshData])
 
     return (
         <div className="row">
@@ -449,7 +419,7 @@ const [debounceTimeout, setDebounceTimeout] = useState(null);
                                 <h4 className="my-4">Order Status:</h4>
                                 <p className={dropStatus.includes('Delivered') ? 'greenColor' : 'redColor'}><b>{dropStatus}</b></p>
 
-                                {porterOrderData && porterOrderData.porterResponse && (
+                                {/* {porterOrderData && porterOrderData.porterResponse && (
                                     <Fragment>
                                         <hr />
                                         <h4 className="my-4">Delivery Details:</h4>
@@ -491,8 +461,7 @@ const [debounceTimeout, setDebounceTimeout] = useState(null);
                                                             <p>Order Ended Time:  {new Date(porterOrderData.porterResponse.order_timings.order_ended_time * 1000).toLocaleString()}</p>
                                                         ) : (<p>Order Ended Time:  N/A</p>)
                                                     }
-                                                    {/* <p>Order Ended Time: {new Date(porterOrderData.porterResponse.order_timings.order_ended_time * 1000).toLocaleString()}</p> */}
-                                                    {/* <p>Pickup Time: {new Date(porterOrderData.porterResponse.order_timings.pickup_time * 1000).toLocaleString()}</p> */}
+                                                   
                                                 </div>
 
 
@@ -513,30 +482,29 @@ const [debounceTimeout, setDebounceTimeout] = useState(null);
                                                     porterOrderData.porterResponse.partner_info && (
                                                         <div className="detail-row">
                                                             <h5>Delivery Partner:</h5>
-                                                            {/* <h6>Name:</h6> */}
+                                                           
                                                             <p>Name: {porterOrderData.porterResponse.partner_info.name}</p>
-                                                            {/* <h6>Mobile:</h6> */}
+                                                            
                                                             <p>Mobile: {porterOrderData.porterResponse.partner_info.mobile.country_code} {porterOrderData.porterResponse.partner_info.mobile.mobile_number}</p>
                                                             {porterOrderData.porterResponse.partner_info.partner_secondary_mobile && (
                                                                 <>
-                                                                    {/* <h6>Secondary Mobile:</h6> */}
+                                                                   
                                                                     <p>Secondary Mobile: {porterOrderData.porterResponse.partner_info.partner_secondary_mobile.country_code} {porterOrderData.porterResponse.partner_info.partner_secondary_mobile.mobile_number}</p>
                                                                 </>
                                                             )
                                                             }
-                                                            {/* <h6>Vehicle Number:</h6> */}
+                                                           
                                                             <p>Vehicle Number: {porterOrderData.porterResponse.partner_info.vehicle_number}</p>
-                                                            {/* <h6>Vehicle Type:</h6> */}
+                                                           
                                                             <p>Vehicle Type: {porterOrderData.porterResponse.partner_info.vehicle_type}</p>
-                                                            {/* <h6>Location:</h6> */}
-                                                            {/* <p>Lat: {porterOrderData.porterResponse.partner_info.location.lat}, Long: {porterOrderData.porterResponse.partner_info.location.long}</p> */}
+                                                           
                                                         </div>
                                                     )
                                                 }
                                             </div>
                                         </div>
                                     </Fragment>
-                                )}
+                                )} */}
 
 
                                 <hr />
@@ -669,7 +637,7 @@ const [debounceTimeout, setDebounceTimeout] = useState(null);
                 )
             }
 
-           
+
         </div>
     );
 

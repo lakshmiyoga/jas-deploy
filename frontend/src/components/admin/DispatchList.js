@@ -1,20 +1,32 @@
-import React, { useEffect, Fragment } from 'react';
+import React, { useEffect, Fragment , useState} from 'react';
 import { Button } from "react-bootstrap";
 import { useDispatch, useSelector } from 'react-redux';
 import { Link } from "react-router-dom";
-import { deleteOrder, adminOrders as adminOrdersAction } from "../../actions/orderActions"
+import { deleteOrder, adminOrders as adminOrdersAction, updateadminOrders } from "../../actions/orderActions"
+import {orderDetail as orderDetailAction } from '../../actions/orderActions';
 import Loader from '../Layouts/Loader';
 import { MDBDataTable } from 'mdbreact';
 import { toast } from 'react-toastify';
 import Sidebar from "../admin/Sidebar";
 import { clearError } from '../../slices/productsSlice';
-import { clearOrderDeleted } from "../../slices/orderSlice";
+import { clearOrderDeleted ,adminOrderClear} from "../../slices/orderSlice";
 
 const DispatchList = () => {
-    const { adminOrders: orders = [], loading = true, error, isOrderDeleted }  = useSelector(state => state.orderState);
+    const { adminOrders: orders = [], loading, error, isOrderDeleted ,updateadminOrders:orderlist=[]}  = useSelector(state => state.orderState);
     console.log(orders);
     
     const dispatch = useDispatch();
+    // const [updatedOrders, setUpdatedOrders] = useState([]);
+// console.log("updatedOrders",updatedOrders)
+    // Initialize the date with the current date
+    const previousDate = new Date();
+    previousDate.setDate(previousDate.getDate() );
+    const formattedPreviousDate = previousDate.toISOString().split('T')[0];
+
+    const [date, setDate] = useState(formattedPreviousDate);
+    const [refresh,setRefresh]=useState(false);
+    const [pageloading, setPageLoading] = useState(true)
+
 
     const setOrders = () => {
         const data = {
@@ -73,10 +85,23 @@ const DispatchList = () => {
             rows: []
         };
 
-        // Sort orders by creation date (newest first)
-        const sortedOrders = [...orders].sort((a, b) => new Date(b.createdAt) - new Date(a.createdAt));
+         // Filter and validate orders by selected date
+         const filteredOrders = orders && orders.filter(order => {
+            if (!order.orderDate) return false; // Skip orders with no orderDate
 
-        sortedOrders.filter(order => order.paymentStatus === 'CHARGED' && order.orderStatus !== 'Processing' ).forEach((order, index) => {
+            // Attempt to parse the orderDate
+            const orderDate = new Date(order.orderDate);
+            if (isNaN(orderDate.getTime())) return false; // Skip invalid dates
+
+            // Compare the date part only (ignoring time)
+            return orderDate.toISOString().split('T')[0] === date && order.paymentStatus === 'CHARGED';
+        });
+
+        // Sort orders by creation date (newest first)
+        const sortedOrders = filteredOrders &&  filteredOrders.sort((a, b) => new Date(b.createdAt) - new Date(a.createdAt));
+        
+
+        sortedOrders && sortedOrders.filter(order => order.paymentStatus === 'CHARGED' && order.orderStatus !== 'Processing' ).forEach((order, index) => {
             data.rows.push({
                 s_no: index + 1,
                 id: order.order_id,
@@ -122,17 +147,56 @@ const DispatchList = () => {
             });
             return;
         }
-        if (isOrderDeleted) {
-            toast('Order Deleted Successfully!', {
-                type: 'success',
-                position: "bottom-center",
-                onOpen: () => dispatch(clearOrderDeleted())
-            });
-            return;
-        }
-
+        // if (isOrderDeleted) {
+        //     toast('Order Deleted Successfully!', {
+        //         type: 'success',
+        //         position: "bottom-center",
+        //         onOpen: () => dispatch(clearOrderDeleted())
+        //     });
+        //     return;
+        // }
+        // if(refresh){
+        //     dispatch(updateadminOrders());
+        //     // setRefresh(false)
+        //     // setPageLoading(false)
+        // }
         dispatch(adminOrdersAction());
-    }, [dispatch, error, isOrderDeleted]);
+        
+    }, [dispatch, error,refresh]);
+
+//   useEffect(()=>{
+//     const updateOrders = async () => {
+//         // await dispatch(adminOrderClear());
+//         await dispatch(adminOrdersAction());
+//         if(orders){
+//             const filteredOrders = orders.filter(order => {
+//                 if (!order.orderDate) return false;
+    
+//                 const orderDate = new Date(order.orderDate);
+//                 if (isNaN(orderDate.getTime())) return false;
+    
+//                 return orderDate.toISOString().split('T')[0] === date && order.paymentStatus === 'CHARGED';
+//             });
+    
+//             const sortedOrders = filteredOrders && filteredOrders.sort((a, b) => new Date(b.createdAt) - new Date(a.createdAt));
+    
+//             // Update each order and wait for all updates to complete
+//             await Promise.all(
+//                 sortedOrders
+//                     .filter(order => order.paymentStatus === 'CHARGED' && order.orderStatus !== 'Processing')
+//                     .map(order => dispatch(orderDetailAction(order.order_id)))
+//             );
+    
+//             // Set refresh to true after all updates are completed
+//             setRefresh(true);
+//         }
+
+       
+//     };
+
+//     updateOrders();
+
+//   },[])
 
     return (
         <div className="row">
@@ -141,15 +205,24 @@ const DispatchList = () => {
             </div>
             <div className="col-12 col-md-10">
                 <h1 className="my-4">Dispatch List</h1>
+                <input
+                    type="date"
+                    value={date}
+                    onChange={(e) => setDate(e.target.value)}
+                    className="form-control mb-3 date-input"
+                />
                 <Fragment>
                     {loading ? <Loader /> :
+                    orders && (
                         <MDBDataTable
-                            data={setOrders()}
-                            bordered
-                            hover
-                            className="px-3 product-table"
-                            noBottomColumns
-                        />
+                        data={setOrders()}
+                        bordered
+                        hover
+                        className="px-3 product-table"
+                        noBottomColumns
+                    />
+                    )
+                      
                     }
                 </Fragment>
             </div>
@@ -158,3 +231,4 @@ const DispatchList = () => {
 };
 
 export default DispatchList;
+

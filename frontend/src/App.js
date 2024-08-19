@@ -59,10 +59,13 @@ import Dispatch from './components/admin/Dispatch';
 import RefundOrder from './components/admin/RefundOrder';
 import DispatchList from './components/admin/DispatchList';
 import RefundList from './components/admin/RefundList';
+import { useSelector } from 'react-redux';
 
 function App() {
     const location = useLocation();
-    const isAdminRoute = location.pathname.startsWith('/admin');
+  
+    const { isAuthenticated, loading, user } = useSelector(state => state.authState);
+    const isAdminRoute = user && user.role === 'admin';
 
     useEffect(() => {
         store.dispatch(loadUser());
@@ -80,7 +83,14 @@ function App() {
                     {/* <Route path="/*" element={<Login />} /> */}
                     <Route path="/login" element={<Login />} />
                     <Route path="/register" element={<Register />} />
-                    <Route path="/" element={<LandingPage />} />
+                    {
+                        user && user.role === "admin"?  <Route path="/" element={<ProtectedRoute isAdmin={true}><Dashboard /></ProtectedRoute>} /> :
+                        <Route path="/" element={<LandingPage />} />
+                    }
+                    {
+                        !user &&  <Route path="/" element={<LandingPage />} />
+                    }
+                    {/* <Route path="/" element={<LandingPage />} /> */}
                     <Route path="/vegetables" element={<Vegetables />} />
                     <Route path="/fruits" element={<Fruits />} />
                     <Route path="/keerai" element={<Keerai />} />

@@ -32,7 +32,7 @@ const Login = () => {
               })
             if (user.role === 'admin') {
                 hasShownToast.current = true;
-                navigate('/admin/dashboard');
+                navigate('/');
             } else {
             hasShownToast.current = true;
                 navigate('/');

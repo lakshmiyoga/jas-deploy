@@ -78,7 +78,7 @@ export default function OrderDetail() {
                                     {getpackedOrderData && (
                                         <div style={{ display: 'flex', alignItems: 'center', margin: '10px' }}>
                                             <p><b>Refund Status:</b></p>
-                                            <p className={getpackedOrderData.refundStatus && getpackedOrderData.refundStatus.includes('Success') ? 'greenColor' : 'redColor'} style={{ marginLeft: '10px' }}><b>{getpackedOrderData.refundStatus}</b></p>
+                                            <p className={getpackedOrderData.refundStatus && getpackedOrderData.refundStatus.includes('SUCCESS') ? 'greenColor' : 'redColor'} style={{ marginLeft: '10px' }}><b>{getpackedOrderData.refundStatus}</b></p>
                                         </div>
                                     )}
                                 </div>

@@ -17,7 +17,7 @@ router.post('/admin/porter/orders',isAuthenticateUser,authorizeRoles('admin'), g
 router.post('/admin/porter/createResponse',isAuthenticateUser,authorizeRoles('admin'), getPorterResponse)
 router.post('/admin/porter/cancelOrder',isAuthenticateUser,authorizeRoles('admin'), getCancelResponse)
 router.post('/admin/packedOrder',isAuthenticateUser,authorizeRoles('admin'), postPackedOrder)
-router.post('/admin/getPackedOrder',isAuthenticateUser,authorizeRoles('admin'), getPackedOrder)
+router.post('/admin/getPackedOrder',isAuthenticateUser, getPackedOrder)
 router.get('/admin/PackedOrder/all',isAuthenticateUser,authorizeRoles('admin'), getAllPackedOrder)
 router.post('/admin/refund',isAuthenticateUser,authorizeRoles('admin'), refundOrder)
 

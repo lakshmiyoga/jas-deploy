@@ -39,61 +39,8 @@ const Dispatch = () => {
     const invoiceRef = useRef();
     const navigate = useNavigate();
     const dispatch = useDispatch();
-    console.log("getpackedOrderData", getpackedOrderData)
+    console.log("porterOrderData", porterOrderData)
 
-    const sampleInvoice = {
-        number: 'RVP/528/24-25',
-        date: '7/Aug/2024',
-        buyer: {
-            name: 'A2B GREENS',
-            address: 'NO : 53, SOUTH SPACE - 3RD STREET, 2ND SECTOR, AMBATTUR INDUSTRIAL ESTATE',
-            city: 'CHENNAI - 600058',
-        },
-        items: [
-            { goods: 'AmlaAmlaAmlaAmlaAmlaAmla', orderKg: 7, excessMinus: 0, totalKg: 7, ratePerKg: 95, value: 100 },
-            { goods: 'Apple', orderKg: 10, excessMinus: 0, totalKg: 10, ratePerKg: 27, value: 100 },
-            { goods: 'Amla', orderKg: 7, excessMinus: 0, totalKg: 7, ratePerKg: 95, value: 100 },
-            { goods: 'Apple', orderKg: 10, excessMinus: 0, totalKg: 10, ratePerKg: 27, value: 100 },
-            { goods: 'Amla', orderKg: 7, excessMinus: 0, totalKg: 7, ratePerKg: 95, value: 100 },
-            { goods: 'Apple', orderKg: 10, excessMinus: 0, totalKg: 10, ratePerKg: 27, value: 100 },
-            { goods: 'Amla', orderKg: 7, excessMinus: 0, totalKg: 7, ratePerKg: 95, value: 100 },
-            { goods: 'Apple', orderKg: 10, excessMinus: 0, totalKg: 10, ratePerKg: 27, value: 100 },
-            { goods: 'Amla', orderKg: 7, excessMinus: 0, totalKg: 7, ratePerKg: 95, value: 100 },
-            { goods: 'Apple', orderKg: 10, excessMinus: 0, totalKg: 10, ratePerKg: 27, value: 100 },
-            { goods: 'Amla', orderKg: 7, excessMinus: 0, totalKg: 7, ratePerKg: 95, value: 100 },
-            { goods: 'Apple', orderKg: 10, excessMinus: 0, totalKg: 10, ratePerKg: 27, value: 100 },
-            { goods: 'Amla', orderKg: 7, excessMinus: 0, totalKg: 7, ratePerKg: 95, value: 100 },
-            { goods: 'Apple', orderKg: 10, excessMinus: 0, totalKg: 10, ratePerKg: 27, value: 100 },
-            { goods: 'Amla', orderKg: 7, excessMinus: 0, totalKg: 7, ratePerKg: 95, value: 100 },
-            { goods: 'Apple', orderKg: 10, excessMinus: 0, totalKg: 10, ratePerKg: 27, value: 100 },
-            { goods: 'Amla', orderKg: 7, excessMinus: 0, totalKg: 7, ratePerKg: 95, value: 100 },
-            { goods: 'Apple', orderKg: 10, excessMinus: 0, totalKg: 10, ratePerKg: 27, value: 100 },
-            { goods: 'Amla', orderKg: 7, excessMinus: 0, totalKg: 7, ratePerKg: 95, value: 100 },
-            { goods: 'Apple', orderKg: 10, excessMinus: 0, totalKg: 10, ratePerKg: 27, value: 100 },
-            { goods: 'Amla', orderKg: 7, excessMinus: 0, totalKg: 7, ratePerKg: 95, value: 100 },
-            { goods: 'Apple', orderKg: 10, excessMinus: 0, totalKg: 10, ratePerKg: 27, value: 100 },
-            { goods: 'Amla', orderKg: 7, excessMinus: 0, totalKg: 7, ratePerKg: 95, value: 100 },
-            { goods: 'Apple', orderKg: 10, excessMinus: 0, totalKg: 10, ratePerKg: 27, value: 100 },
-            { goods: 'Amla', orderKg: 7, excessMinus: 0, totalKg: 7, ratePerKg: 95, value: 100 },
-            { goods: 'Apple', orderKg: 10, excessMinus: 0, totalKg: 10, ratePerKg: 27, value: 100 },
-            { goods: 'Amla', orderKg: 7, excessMinus: 0, totalKg: 7, ratePerKg: 95, value: 100 },
-            { goods: 'Apple', orderKg: 10, excessMinus: 0, totalKg: 10, ratePerKg: 27, value: 100 },
-            { goods: 'Amla', orderKg: 7, excessMinus: 0, totalKg: 7, ratePerKg: 95, value: 100 },
-            { goods: 'Apple', orderKg: 10, excessMinus: 0, totalKg: 10, ratePerKg: 27, value: 100 },
-            { goods: 'Amla', orderKg: 7, excessMinus: 0, totalKg: 7, ratePerKg: 95, value: 100 },
-            { goods: 'Apple', orderKg: 10, excessMinus: 0, totalKg: 10, ratePerKg: 27, value: 100 },
-            { goods: 'Amla', orderKg: 7, excessMinus: 0, totalKg: 7, ratePerKg: 95, value: 100 },
-            { goods: 'Apple', orderKg: 10, excessMinus: 0, totalKg: 10, ratePerKg: 27, value: 100 },
-            { goods: 'Amla', orderKg: 7, excessMinus: 0, totalKg: 7, ratePerKg: 95, value: 100 },
-            { goods: 'Apple', orderKg: 10, excessMinus: 0, totalKg: 10, ratePerKg: 27, value: 100 },
-            // Add more items as needed
-        ],
-        supplier: {
-            name: 'RVP SOURCING ',
-            address: '29 Reddy Street, Nerkundram',
-            city: 'Chennai-600107',
-        },
-    };
 
     const handlePrint = useReactToPrint({
         content: () => invoiceRef.current,
@@ -108,6 +55,10 @@ const Dispatch = () => {
             setEditableWeights(orderItems.map(item => item.productWeight))
         }
     }, [orderDetail]);
+
+    useEffect(() => {
+        dispatch(porterClearData())
+    }, [])
 
 
     const handleItemSelection = (index) => {
@@ -367,8 +318,9 @@ const Dispatch = () => {
                 onOpen: () => { dispatch(clearError()) }
             });
         }
-
+        // dispatch(clearError()) 
         dispatch(orderDetailAction(id));
+        dispatch(getporterOrder({ order_id: id }))
         dispatch(getPackedOrder({ order_id: id }))
 
         // if (refreshData) {
@@ -385,12 +337,24 @@ const Dispatch = () => {
 
         //     fetchData();
         // }
+        // dispatch(porterClearData())
+        // dispatch(createPorterOrderResponse({ order_id: id, porterOrder_id: porterOrderData?.porterOrder?.order_id }))
+        // dispatch(getporterOrder({ order_id: id }))
+
         dispatch(porterClearData())
-        dispatch(createPorterOrderResponse({ order_id: id, porterOrder_id: porterOrderData?.porterOrder?.order_id }))
+        dispatch(createPorterOrderResponse({ order_id: porterOrderData && porterOrderData.order_id, porterOrder_id: porterOrderData?.porterOrder?.order_id }))
         dispatch(getporterOrder({ order_id: id }))
+        setRefreshData(true)
 
-    }, [dispatch, id, refreshData, porterOrderDetail, error]);
-
+    }, [dispatch, id, porterOrderDetail, error]);
+    
+    useEffect(()=>{
+if(refreshData){
+    dispatch(porterClearData())
+    dispatch(getporterOrder({ order_id: id }))
+    setRefreshData(false)
+}
+    },[refreshData])
 
     return (
         <div className="row">

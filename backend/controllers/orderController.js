@@ -307,7 +307,23 @@ const myOrders = catchAsyncError(async (req, res, next) => {
 //Admin: Get All Orders - api/v1/admin/orders
 
 const orders = catchAsyncError(async (req, res, next) => {
-    const orders = await Payment.find();
+
+    try{
+        // const { date } = req.query;
+        // console.log("ordersummarydate", date);
+        // const formattedDate = new Date(date).toISOString().split('T')[0];
+        // const orders = await Payment.find({
+        //     paymentStatus: 'CHARGED',
+        //     $expr: {
+        //         $eq: [
+        //             { $dateToString: { format: "%Y-%m-%d", date: "$orderDate" } },
+        //             formattedDate
+        //         ]
+        //     }
+        // }).select('orderItems shippingInfo user user_id itemsPrice taxPrice shippingPrice totalPrice order_id paymentStatus orderStatus createdAt').exec();
+        // console.log("Fetched orders:", orders);
+
+        const orders = await Payment.find();
 
     let totalAmount = 0;
     // console.log("this is sample response",JSON.stringify(orders, null, 2));
@@ -319,6 +335,14 @@ const orders = catchAsyncError(async (req, res, next) => {
         totalAmount,
         orders
     })
+
+    }
+    catch(error){
+        // console.error("Error fetching order summary:", error);
+        // res.status(500).json({ message: 'Server Error' });
+    }
+
+    
 })
 
 //Admin: Update Order / Order Status - api/v1/order/:id
