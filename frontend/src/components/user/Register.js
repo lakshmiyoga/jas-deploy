@@ -3,6 +3,7 @@ import {register, clearAuthError} from "../../actions/userActions"
 import { useDispatch, useSelector } from 'react-redux';
 import {  toast } from 'react-toastify';
 import {useNavigate} from 'react-router-dom';
+import { clearError } from '../../slices/userSlice';
 
 const Register = () => {
 
@@ -17,7 +18,7 @@ const Register = () => {
     const navigate = useNavigate();
     const {loading, error, isAuthenticated} = useSelector(state => state.authState)
 
-    const hasShownToast = useRef(false);
+    // const hasShownToast = useRef(false);
 
     const onChange = (e) => {
       if(e.target.name === 'avatar') {
@@ -47,23 +48,23 @@ const Register = () => {
 
     useEffect(() => {
 
-        if(isAuthenticated && !hasShownToast.current){
+        if(isAuthenticated ){
           toast('Register successfully',{
             type:'success',
             position:"bottom-center",
-            onOpen:  () =>dispatch(clearAuthError)
+            // onOpen:  () =>dispatch(clearError())
           })
-          hasShownToast.current = true;
+          // hasShownToast.current = true;
             navigate('/');
             return
         }
-        if(error && !hasShownToast.current){
+        if(error ){
            toast.error(error,{
             position:"bottom-center", 
             type: 'error',
-            onOpen:  () =>dispatch(clearAuthError)
+            onOpen:  () =>dispatch(clearError())
         });
-        hasShownToast.current = true;
+        // hasShownToast.current = true;
         }
         return
     }, [error, isAuthenticated, dispatch, navigate])

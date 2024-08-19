@@ -18,21 +18,30 @@ import CryptoJS from 'crypto-js';
 
 const ConfirmOrder = () => {
     const dispatch = useDispatch();
-    useEffect(() => {
-        store.dispatch(loadUser());
-        store.dispatch(getProducts());
-    }, []);
+    
     const { loading: orderLoading, orderDetail, error } = useSelector(state => state.orderState);
     const { shippingInfo, items: cartItems } = useSelector(state => state.cartState);
     const { user } = useSelector(state => state.authState);
     const navigate = useNavigate();
     const [loading, setLoading] = useState(false);
+    const [dummyUser,setDummyUser] = useState(false);
     const [shippingAmount, setShippingAmount] = useState(null);
     const location = useLocation();
     const queryParams = new URLSearchParams(location.search);
     const message = queryParams.get('message');
     const [showModal, setShowModal] = useState(false);
     const [orderDescription, setOrderDescription] = useState('');
+    useEffect(() => {
+        if(!user){
+            store.dispatch(loadUser());
+            store.dispatch(getProducts());
+        }
+       
+        if(user){
+            setDummyUser(true);
+            // console.log("hello")
+        }
+    }, [user]);
 
     const shippingCharge = shippingAmount / 100;
     //  const shippingCharge = 50.00;
@@ -84,21 +93,28 @@ const ConfirmOrder = () => {
             try {
                 const response = await axios.post('/api/v1/get-quote', requestData);
                 console.log("getQuote Response", response.data)
-                if(response && response.data && response.data.vehicles[3] && response.data.vehicles[3].fare)
-                setShippingAmount(response.data.vehicles[3].fare.minor_amount)
+                if(response && response.data && response.data.vehicles[3] && response.data.vehicles[3].fare){
+                    setShippingAmount(response.data.vehicles[3].fare.minor_amount);
+                    setDummyUser(false);
+                }
+                else{
+                    navigate("/shipping")
+                }
+               
                 //    toast.error('Response:', response.data);
                 // Handle response as needed
             } catch (error) {
-                console.log(error)
+                // console.log(error)
+                navigate("/shipping")
                 toast.error(error.response.data.message);
                 // Handle error as needed
             }
         }
-        if (user) {
+        if (dummyUser) {
             fetchdata()
         }
 
-    }, [])
+    }, [dummyUser])
     useEffect(() => {
         if (!shippingInfo || !cartItems.length) {
             navigate('/shipping');
@@ -239,7 +255,9 @@ const ConfirmOrder = () => {
     }, [shippingInfo, navigate, error, message]);
 
     return (
-        <Fragment>
+    <Fragment>
+        { shippingAmount ? (
+            <Fragment>
             <MetaData title="Confirm Order" />
             <div className="products_heading">Confirm Order</div>
             <StepsCheckOut shipping confirmOrder />
@@ -319,6 +337,15 @@ const ConfirmOrder = () => {
                 )}
             </div>
         </Fragment>
+        ) : (
+            <div className="container" style={{minHeight:'25vh'}}>
+        <Loader/>
+        </div>
+        )
+
+        }
+           </Fragment>
+      
     );
 };
 const modalStyle = {

@@ -205,8 +205,10 @@ const Shipping = () => {
     const [state, setState] = useState(shippingInfo.state);
     // const [state, setState] = useState("TamilNadu");
     const [allowed,setAllowed] = useState(true);
-    const [latitude, setLatitude] = useState('12.947146336879577');
-    const [longitude, setLongitude] = useState('77.62102993895199');
+    // const [latitude, setLatitude] = useState('12.947146336879577');
+    // const [longitude, setLongitude] = useState('77.62102993895199');
+    const [latitude, setLatitude] = useState('');
+    const [longitude, setLongitude] = useState('');
     const navigate = useNavigate();
     const dispatch = useDispatch();
 
@@ -275,16 +277,21 @@ const Shipping = () => {
                     const city = components.state_district || "";
                     const state = components.state || "";
                     const country = components.country || "";
-                    // const latitude = location.geometry.lat;
-                    // const longitude = location.geometry.lng;
+                    const latitude = location.geometry.lat;
+                    const longitude = location.geometry.lng;
                     
                     setCity(city);
                     setState(state);
                     setCountry(country);
-                    // setLatitude(latitude);
-                    // setLongitude(longitude);
+                    setLatitude(latitude);
+                    setLongitude(longitude);
                 } catch (error) {
-                    toast.error("Error fetching location details. Please Provide Correct Postalcode");
+                    // toast.error("Error fetching location details. Please Provide Correct Postalcode");
+                    toast.error('Error fetching location details. Please Provide Correct Postalcode',{
+                        position:"bottom-center", 
+                        type: 'error',
+                        
+                    });
                     setCity("");
                     setState("");
                     setCountry("");
@@ -295,31 +302,41 @@ const Shipping = () => {
         fetchLocationDetails();
     }, [postalCode]);
 
-    // useEffect(() => {
-    //     const fetchGeolocation = () => {
-    //         if (navigator.geolocation) {
-    //             navigator.geolocation.getCurrentPosition(
-    //                 position => {
-    //                     const { latitude, longitude } = position.coords;
-    //                     setLatitude(latitude);
-    //                     setLongitude(longitude);
-    //                     setAllowed(true);
-    //                 },
-    //                 error => {
-    //                     if (error.code === error.PERMISSION_DENIED) {
-    //                         toast.error("Location access is required to proceed.");
-    //                        setAllowed(false);
-    //                     }
-    //                 }
-    //             );
-    //         } else  {
-    //             toast.error('Geolocation is not supported by this browser.');
-    //             setAllowed(false);
-    //         }
-    //     };
+    useEffect(() => {
+        const fetchGeolocation = () => {
+            if (navigator.geolocation) {
+                navigator.geolocation.getCurrentPosition(
+                    position => {
+                        const { latitude, longitude } = position.coords;
+                        setLatitude(latitude);
+                        setLongitude(longitude);
+                        setAllowed(true);
+                    },
+                    error => {
+                        if (error.code === error.PERMISSION_DENIED) {
+                            // toast.error("Location access is required to proceed.");
+                            toast.error('Location access is required to proceed.',{
+                                position:"bottom-center", 
+                                type: 'error',
+                                
+                            });
+                           setAllowed(false);
+                        }
+                    }
+                );
+            } else  {
+                // toast.error('Geolocation is not supported by this browser.');
+                toast.error('Geolocation is not supported by this browser.',{
+                    position:"bottom-center", 
+                    type: 'error',
+                    
+                });
+                setAllowed(false);
+            }
+        };
 
-    //     fetchGeolocation();
-    // }, [navigate]);
+        fetchGeolocation();
+    }, [navigate]);
 
 
     const submitHandler = (e) => {
@@ -329,14 +346,40 @@ const Shipping = () => {
             navigate('/order/confirm');
         }
         else if(!latitude || !longitude || !allowed){
-              toast.error("Please allow the Location for Next Step")
+            //   toast.error("Please allow the Location for Next Step")
+            toast.error('Please allow the Location for Next Step',{
+                position:"bottom-center", 
+                type: 'error',
+                
+            });
         }
         else{
-            toast.error("Please allow the Location for Next Step")
+            // toast.error("Please allow the Location for Next Step")
+            toast.error('Please allow the Location for Next Step',{
+                position:"bottom-center", 
+                type: 'error',
+                
+            });
         }
 
 
     }
+
+    const handlePhoneNumberChange = (e) => {
+        const value = e.target.value;
+      
+        if (value.length > 10) {
+          // Display a toast alert when the number exceeds 10 digits
+        //   toast.error('Phone number cannot exceed 10 digits');
+        toast.error('Phone number cannot exceed 10 digits',{
+            position:"bottom-center", 
+            type: 'error',
+            
+        });
+        } else {
+          setPhoneNo(value);
+        }
+      };
 
     return (
         <Fragment>
@@ -367,7 +410,7 @@ const Shipping = () => {
                                 id="phone_field"
                                 className="no-arrow-input form-control"
                                 value={phoneNo}
-                                onChange={(e) => setPhoneNo(e.target.value)}
+                                onChange={handlePhoneNumberChange}
                                 required
                             />
                         </div>

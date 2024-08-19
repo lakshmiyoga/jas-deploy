@@ -16,6 +16,7 @@ const NewProduct = () => {
     const [category, setCategory] = useState("");
     const [images, setImages] = useState([]);
     const [imagesPreview, setImagesPreview] = useState([]);
+    const [imagesCleared, setImagesCleared] = useState(false);
 
 
     const { loading, isProductCreated, error } = useSelector(state => state.productState)
@@ -60,8 +61,15 @@ const NewProduct = () => {
         images.forEach (image => {
             formData.append('images', image)
         })
+        formData.append('imagesCleared',imagesCleared);
         dispatch(createNewProduct(formData))
     }
+
+    const clearImagesHandler = () => {
+        setImages([]);
+        setImagesPreview([]);
+       setImagesCleared(true);
+    };
 
     useEffect(() => {
         if(isProductCreated) {
@@ -178,7 +186,8 @@ const NewProduct = () => {
                                         Choose Images
                                     </label>
                                 </div>
-                                {imagesPreview.map(image => (
+                                
+                                {/* {imagesPreview.map(image => (
                                         <img
                                             className="mt-3 mr-2"
                                             key={image}
@@ -187,7 +196,24 @@ const NewProduct = () => {
                                             width="55"
                                             height="52"
                                         />
-                                    ))}
+                                    ))} */}
+                                     {imagesPreview.length > 0 &&
+                                    <Fragment>
+                                        <span className="mr-2" onClick={clearImagesHandler} style={{ cursor: "pointer" }}>
+                                            <i className="fa fa-trash"></i>
+                                        </span>
+                                        {imagesPreview.map(image => (
+                                            <img
+                                                className="mt-3 mr-2"
+                                                key={image}
+                                                src={image}
+                                                alt={` Preview`}
+                                                width="55"
+                                                height="52"
+                                            />
+                                        ))}
+                                    </Fragment>
+                                }
                             </div>
 
 

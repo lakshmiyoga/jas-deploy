@@ -5,6 +5,7 @@ import { useDispatch, useSelector } from 'react-redux';
 import {  toast } from 'react-toastify';
 import {useLocation, useNavigate} from 'react-router-dom';
 import {Link} from 'react-router-dom';
+import { clearError } from '../../slices/authSlice';
 
 const Login = () => {
 
@@ -17,38 +18,38 @@ const Login = () => {
     const {loading, error, isAuthenticated, user} = useSelector(state => state.authState)
     // const redirect = location.search?'/'+location.search.split('=')[1]:'/';
 
-    const hasShownToast = useRef(false);
+    // const hasShownToast = useRef(false);
 
     useEffect(() => {
 
         // if(isAuthenticated){
         //     navigate('/');
         // }
-        if (isAuthenticated && !hasShownToast.current) {
+        if (isAuthenticated) {
             toast('Login successfully',{
                 type:'success',
                 position:"bottom-center",
-                onOpen:  () =>{dispatch(clearAuthError)}
+                // onOpen:  () =>{dispatch(clearError())}
               })
             if (user.role === 'admin') {
-                hasShownToast.current = true;
+                // hasShownToast.current = true;
                 navigate('/');
             } else {
-            hasShownToast.current = true;
+            // hasShownToast.current = true;
                 navigate('/');
             }
             return
         }
-        if(error && !hasShownToast.current){
+        if(error){
            toast.error(error,{
             position:"bottom-center", 
             type: 'error',
-            onOpen:  () =>{dispatch(clearAuthError)}
+            onOpen:  () =>{dispatch(clearError())}
         });
-        hasShownToast.current = true;
+        // hasShownToast.current = true;
         }
         return
-    }, [error, isAuthenticated, dispatch, navigate,clearAuthError])
+    }, [error, isAuthenticated, dispatch, navigate])
 
     const submitHandler = async(e) => {
         e.preventDefault();

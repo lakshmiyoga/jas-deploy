@@ -106,8 +106,9 @@ const userSlice = createSlice({
         },
         clearError(state, action){
             return {
-                ...state,
-                error:  null
+                loading:false,
+                error: null,
+                // user:null,
             }
         }
        

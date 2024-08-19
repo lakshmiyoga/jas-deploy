@@ -9,6 +9,12 @@ const JasInvoice = React.forwardRef(({ invoice }, ref) => {
     //   const { pickup_details, drop_details } = porterData;
     //   const { name: userName, email: userEmail } = user;
 
+    const formattedDate = new Date(invoice.createdAt).toLocaleDateString('en-GB', {
+        day: 'numeric',
+        month: 'short',
+        year: 'numeric'
+      }).replace(/ /g, '/');
+
     return (
         <div className="invoice-container" ref={ref}>
             <h1 style={{ textAlign: 'center' }}><u>INVOICE</u></h1>
@@ -16,7 +22,7 @@ const JasInvoice = React.forwardRef(({ invoice }, ref) => {
                 <div className="top-info">
                     <div>
                         <p>Invoice No: {invoice.order_id}</p>
-                        <p>Date: {invoice.createdAt}</p>
+                        <p>Date: {formattedDate}</p>
                     </div>
                 </div>
                 <div className="middle-info">
@@ -37,7 +43,7 @@ const JasInvoice = React.forwardRef(({ invoice }, ref) => {
                     <div>
                         
                         <p>Commodity</p>
-                        <p>DIVISION</p>
+                        <p>OrderID</p>
                         <p>Place of Origin of Goods </p>
                         <p>Place of Final Destination </p>
                         <p>Terms of Delivery and Payment </p>
@@ -46,10 +52,10 @@ const JasInvoice = React.forwardRef(({ invoice }, ref) => {
                     <div className="bottom-data">
                         
                         <p>VEGETABLES SUPPLY</p>
-                        <p>{invoice.user.name}</p>
+                        <p>{invoice.order_id}</p>
                         <p>Chennai - Koyembedu</p>
-                        <p>{invoice.orderDetail.shippingInfo.address}</p>
-                        <p>7 days from GRN Date</p>
+                        <p>{invoice.orderDetail.shippingInfo.city}</p>
+                        <p>Advance</p>
                         <p>9840814398,9176720068</p>
                     </div>
                 </div>

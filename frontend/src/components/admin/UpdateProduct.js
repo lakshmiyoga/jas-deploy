@@ -350,6 +350,7 @@ const UpdateProduct = () => {
                                     <option value="">Select</option>
                                     <option value="Vegetables">Vegetables</option>
                                     <option value="Fruits">Fruits</option>
+                                    <option value="Keerai">Keerai</option>
                                 </select>
                             </div>
 
