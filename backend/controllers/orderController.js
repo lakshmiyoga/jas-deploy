@@ -6,6 +6,7 @@ const nodeCron = require('node-cron');
 const nodemailer = require('nodemailer');
 const path = require('path');
 const axios = require('axios');
+const Dispatch = require("../models/dispatchModel")
 // const fetch = require('node-fetch');
 const fs = require('fs');
 const PorterModel = require('../models/porterModel');
@@ -308,7 +309,7 @@ const myOrders = catchAsyncError(async (req, res, next) => {
 
 const orders = catchAsyncError(async (req, res, next) => {
 
-    try{
+    try {
         // const { date } = req.query;
         // console.log("ordersummarydate", date);
         // const formattedDate = new Date(date).toISOString().split('T')[0];
@@ -325,24 +326,24 @@ const orders = catchAsyncError(async (req, res, next) => {
 
         const orders = await Payment.find();
 
-    let totalAmount = 0;
-    // console.log("this is sample response",JSON.stringify(orders, null, 2));
-    orders.forEach(order => {
-        totalAmount += order.totalPrice
-    })
-    res.status(200).json({
-        success: true,
-        totalAmount,
-        orders
-    })
+        let totalAmount = 0;
+        // console.log("this is sample response",JSON.stringify(orders, null, 2));
+        orders.forEach(order => {
+            totalAmount += order.totalPrice
+        })
+        res.status(200).json({
+            success: true,
+            totalAmount,
+            orders
+        })
 
     }
-    catch(error){
+    catch (error) {
         // console.error("Error fetching order summary:", error);
         // res.status(500).json({ message: 'Server Error' });
     }
 
-    
+
 })
 
 //Admin: Update Order / Order Status - api/v1/order/:id
@@ -827,5 +828,121 @@ const getRemoveResponse = catchAsyncError(async (req, res, next) => {
     }
 
 })
+
+async function checkPaymentStatus() {
+    try {
+        // Fetch orders that are still pending or in-progress
+        const orders = await PorterModel.find({
+            'porterResponse.status': { $nin: ['ended', 'cancelled'] }
+        });
+        //   console.log("orders",orders)
+        // Use for...of to handle async operations properly
+        for (const order of orders) {
+            try {
+                if(order && order.porterOrder){
+                    const apiEndpoint = `https://pfe-apigw-uat.porter.in/v1/orders/${order.porterOrder?.order_id}`;
+                
+                    const response = await axios.get(apiEndpoint, {
+                        headers: {
+                            'X-API-KEY': process.env.PORTER_API_KEY,
+                            'Content-Type': 'application/json'
+                        },
+                    });
+                    // console.log("response",response)
+    
+                    if (response) {
+                        const responseData = response.data;
+    
+                        // Update porterResponse in the database
+                        const porterResponseData = await PorterModel.findOneAndUpdate(
+                            { order_id: order.order_id },
+                            { $set: { porterResponse: responseData } },
+                            { new: true }
+                        );
+                        // console.log("porterResponseData",porterResponseData)
+    
+                        if (porterResponseData?.porterResponse?.status === 'ended') {
+                            const orderData = await Payment.findOne({ order_id: order.order_id });
+                            if (!orderData) {
+                                throw new Error(`Order not found with this id: ${order.order_id}`);
+                            }
+    
+                            await Payment.findOneAndUpdate(
+                                { order_id: order.order_id },
+                                { orderStatus: 'Delivered' },
+                                { new: true }
+                            );
+                        }
+    
+                        if (porterResponseData?.porterResponse?.status === 'cancelled') {
+                            const orderData = await Payment.findOne({ order_id: order.order_id });
+                            if (!orderData) {
+                                throw new Error(`Order not found with this id: ${order.order_id}`);
+                            }
+    
+                            await Payment.findOneAndUpdate(
+                                { order_id: order.order_id },
+                                { orderStatus: 'Cancelled' },
+                                { new: true }
+                            );
+                        }
+                    }
+                }
+               
+            } catch (error) {
+                console.error(`Error processing order ${order.order_id}:`, error.message);
+                // You might want to log the order ID and error details for better tracking
+            }
+        }
+    } catch (error) {
+        console.error('Error checking payment status:', error.message);
+    }
+}
+
+// nodeCron.schedule('* * * * *', () => {
+//     console.log('Checking payment status...');
+//     checkPaymentStatus();
+// });
+
+async function checkRefundStatus() {
+    try {
+         
+        // const refundOrder = await Dispatch.find({
+        //     totalRefundableAmount: { $gt: 0 },
+        //     refundStatus: { $regex: /^Pending$/, $options: 'i' } // 'i' makes it case-insensitive
+        //   });
+        const refundOrder = await Dispatch.find({
+            totalRefundableAmount: { $gt: 0 },
+            refundStatus: { $not: { $regex: /^(SUCCESS|FAILURE)$/i } }
+        });
+       console.log("refundOrder",refundOrder)
+          refundOrder.forEach(async (order) => {
+            const statusResponse = await juspay.order.status(order && order.order_id);
+            // console.log("statusResponse",statusResponse)
+            if (statusResponse) {
+        
+                const onepayments = await Dispatch.findOne({ "order_id":order && order.order_id });
+                if (onepayments) {
+                    const refundStatus = await Dispatch.findOneAndUpdate({ "order_id":order && order.order_id },
+                        {
+                            refundStatus: statusResponse && statusResponse.refunds && statusResponse.refunds[0].status && statusResponse.refunds[0].status,
+                            $set: { statusResponse: statusResponse }
+                        },
+                        { new: true });
+                }
+        
+            }
+          });
+        
+        
+    } catch (error) {
+        console.error('Error checking payment status:', error);
+    }
+
+}
+// nodeCron.schedule('* * * * *', () => {
+//     console.log('Checking payment status...');
+//     checkRefundStatus();
+// });
 
 module.exports = { newOrder, getSingleOrder, getQuote, porterOrder, myOrders, orders, updateOrder, deleteOrder, getOrderSummaryByDate, getUserSummaryByDate, getRemoveResponse };

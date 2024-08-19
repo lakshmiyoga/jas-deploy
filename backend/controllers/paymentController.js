@@ -2,7 +2,7 @@
 const catchAsyncError = require("../middleware/catchAsyncError");
 const ErrorHandler = require('../utils/errorHandler');
 const crypto = require("crypto");
-const fs = require('fs'); 
+const fs = require('fs');
 const path = require('path');
 const { Juspay, APIError } = require('expresscheckout-nodejs');
 const config = require('../config/config.json');
@@ -12,7 +12,17 @@ const responseModel = require('../models/responseModel');
 const CryptoJS = require('crypto-js');
 const validator = require("validator");
 const SerialNumber = require('../models/SerialNumber');
+const twilio = require('twilio');
 
+
+const accountSid = process.env.ACCOUNT_SID;
+const authToken = process.env.AUTH_TOKEN;
+const twilioPhoneNumber = process.env.TWILIO_PHONE_NUMBER;
+if (!accountSid || !authToken) {
+	throw new Error("Twilio account SID and auth token must be set as environment variables.");
+}
+
+const client = twilio(accountSid, authToken);
 
 
 const SANDBOX_BASE_URL = "https://smartgatewayuat.hdfcbank.com"
@@ -41,98 +51,99 @@ const juspay = new Juspay({
 const encryptionKey = process.env.ENCRYPTION_KEY;
 
 const encryptData = (data) => {
-    return CryptoJS.AES.encrypt(data.toString(), encryptionKey).toString();
+	return CryptoJS.AES.encrypt(data.toString(), encryptionKey).toString();
 };
 
-const decryptData = (encryptedData,key) => {
-    const bytes = CryptoJS.AES.decrypt(encryptedData, key);
-    return  bytes.toString(CryptoJS.enc.Utf8);
+const decryptData = (encryptedData, key) => {
+	const bytes = CryptoJS.AES.decrypt(encryptedData, key);
+	return bytes.toString(CryptoJS.enc.Utf8);
 };
 
-const verifySignature = (data,signature,decryptedKey) => {
-    const expectedSignature = CryptoJS.HmacSHA256(data, decryptedKey).toString();
-    return expectedSignature === signature;
+const verifySignature = (data, signature, decryptedKey) => {
+	const expectedSignature = CryptoJS.HmacSHA256(data, decryptedKey).toString();
+	return expectedSignature === signature;
 };
 
 const payment = catchAsyncError(async (req, res, next) => {
-    const {
-        user,
-        shippingInfo,
-        cartItems,
-        user_id,
-        itemsPrice: encryptedItemsPrice,
-        taxPrice,
-        shippingPrice: encryptedShippingPrice,
-        totalPrice: encryptedTotalPrice,
+	const {
+		user,
+		shippingInfo,
+		cartItems,
+		user_id,
+		itemsPrice: encryptedItemsPrice,
+		taxPrice,
+		shippingPrice: encryptedShippingPrice,
+		totalPrice: encryptedTotalPrice,
 		signature,
 		plainText,
-    } = req.body;
+	} = req.body;
+// console.log("shippingInfo",shippingInfo)
 	const decryptedKey = decryptData(plainText, encryptionKey);
 	if (!decryptedKey) {
 		return next(new ErrorHandler('Failed to decrypt the key', 400));
 	}
-    // Decrypt prices
-    const itemsPrice = decryptData(encryptedItemsPrice,decryptedKey);
-    const shippingPrice = decryptData(encryptedShippingPrice,decryptedKey);
-    const totalPrice = decryptData(encryptedTotalPrice,decryptedKey);
+	// Decrypt prices
+	const itemsPrice = decryptData(encryptedItemsPrice, decryptedKey);
+	const shippingPrice = decryptData(encryptedShippingPrice, decryptedKey);
+	const totalPrice = decryptData(encryptedTotalPrice, decryptedKey);
 
 
-    // const orderId = `order_${Date.now()}`;
+	// const orderId = `order_${Date.now()}`;
 	const now = new Date();
-const day = String(now.getDate()).padStart(2, '0'); // Ensure day is 2 digits
-const month = String(now.getMonth() + 1).padStart(2, '0'); // Ensure month is 2 digits
-const year = String(now.getFullYear()).slice(-2); // Get last 2 digits of the year
-const randomNumber = Math.floor(Math.random() * 9000) + 1000; // Generate a random 3-digit number
+	const day = String(now.getDate()).padStart(2, '0'); // Ensure day is 2 digits
+	const month = String(now.getMonth() + 1).padStart(2, '0'); // Ensure month is 2 digits
+	const year = String(now.getFullYear()).slice(-2); // Get last 2 digits of the year
+	const randomNumber = Math.floor(Math.random() * 9000) + 1000; // Generate a random 3-digit number
 
-const orderId = `order_${day}${month}${year}${randomNumber}`;
-    const amount = parseFloat(totalPrice).toFixed(2);
+	const orderId = `order_${day}${month}${year}${randomNumber}`;
+	const amount = parseFloat(totalPrice).toFixed(2);
 
-    // Validate total price
-    const calculatedTotalPrice = (parseFloat(itemsPrice) + parseFloat(shippingPrice)).toFixed(2);
-    if (calculatedTotalPrice !== amount) {
-        return next(new ErrorHandler('Price validation failed', 400));	
-    }
-	const isSignatureValid = verifySignature(`${itemsPrice}${shippingPrice}${totalPrice}`,signature,decryptedKey);
-    
-    if (!isSignatureValid) {
-        return next(new ErrorHandler('Invalid signature, possible data tampering detected', 400));
-    }
-	 // Encrypt orderId
-	 const encryptedOrderId = encryptData(orderId,encryptionKey);
+	// Validate total price
+	const calculatedTotalPrice = (parseFloat(itemsPrice) + parseFloat(shippingPrice)).toFixed(2);
+	if (calculatedTotalPrice !== amount) {
+		return next(new ErrorHandler('Price validation failed', 400));
+	}
+	const isSignatureValid = verifySignature(`${itemsPrice}${shippingPrice}${totalPrice}`, signature, decryptedKey);
 
-    // Create return URL
-    let BASE_URL = process.env.BACKEND_URL;
-    if (process.env.NODE_ENV === "production") {
-        BASE_URL = `${req.protocol}://${req.get('host')}`;
-    }
+	if (!isSignatureValid) {
+		return next(new ErrorHandler('Invalid signature, possible data tampering detected', 400));
+	}
+	// Encrypt orderId
+	const encryptedOrderId = encryptData(orderId, encryptionKey);
+
+	// Create return URL
+	let BASE_URL = process.env.BACKEND_URL;
+	if (process.env.NODE_ENV === "production") {
+		BASE_URL = `${req.protocol}://${req.get('host')}`;
+	}
 
 
-    const returnUrl = `${BASE_URL}/api/v1/paymentsuccess/${encodeURIComponent(encryptedOrderId)}`; // Adjust this URL as needed
+	const returnUrl = `${BASE_URL}/api/v1/paymentsuccess/${encodeURIComponent(encryptedOrderId)}`; // Adjust this URL as needed
 
-    try {
+	try {
 		const isOrderExist = await Payment.findOne({ order_id: orderId });
-		if(isOrderExist){
+		if (isOrderExist) {
 			return next(new ErrorHandler('Your order is already exist Please Try Again!', 400));
 		}
-		else{
+		else {
 			const currentDate = new Date();
 			const currentHour = currentDate.getHours();
-		
+
 			// Initialize orderDate and orderDescription
 			let orderDate;
 			let orderDescription;
-		
+
 			if (currentHour < 21) { // Before 9 PM
 				orderDate = new Date(currentDate);
-				orderDate.setDate(orderDate.getDate() ); // Next day
+				orderDate.setDate(orderDate.getDate() + 1); // Next day
 				orderDateDelivery = new Date(currentDate);
-				orderDateDelivery.setDate(orderDateDelivery.getDate() + 1 ); // Next day
+				orderDateDelivery.setDate(orderDateDelivery.getDate() + 1); // Next day
 				orderDescription = `The order will be delivered on this day: ${orderDateDelivery.toDateString()}`;
 			} else { // After 9 PM
 				orderDate = new Date(currentDate);
-				orderDate.setDate(orderDate.getDate() + 1); // Day after tomorrow
+				orderDate.setDate(orderDate.getDate() + 2); // Day after tomorrow
 				orderDateDelivery = new Date(currentDate);
-				orderDateDelivery.setDate(orderDateDelivery.getDate() + 2 ); // Next day
+				orderDateDelivery.setDate(orderDateDelivery.getDate() + 2); // Next day
 				orderDescription = `The order will be delivered on this day: ${orderDateDelivery.toDateString()}`;
 			}
 			const payment = new Payment({
@@ -149,9 +160,9 @@ const orderId = `order_${day}${month}${year}${randomNumber}`;
 				orderDate: orderDate, // Add the calculated orderDate
 				orderDescription: orderDescription // Add the calculated orderDescription
 			});
-	
+
 			await payment.save();
-	
+
 			const createdOrder = await Payment.findOne({ order_id: orderId });
 			if (createdOrder) {
 				const sessionResponse = await juspay.orderSession.create({
@@ -203,111 +214,150 @@ const orderId = `order_${day}${month}${year}${randomNumber}`;
 						send_sms: true
 					}
 				});
+
+				// Send OTP via Twilio
+				// client.messages.create({
+				// 	body: `Your order is placed with this Id ${orderId}`,
+				// 	from: twilioPhoneNumber,
+				// 	to: `+91${shippingInfo.phoneNo}`,
+				// })
+				// 	.then(() => {
+				// 		res.status(200).json({ message: 'OTP sent successfully', status: 200 });
+				// 	})
+				// 	.catch((error) => {
+				// 		return next(new ErrorHandler('Failed to send OTP Check the Number', 500))
+				// 	});
+				// Send OTP via Twilio
+				// client.messages.create({
+				// 	body: `Order placed with Id ${orderId}`,
+				// 	from: twilioPhoneNumber,
+				// 	to: shippingInfo.phoneNo,
+				// })
+				// 	.then(() => {
+				// 		res.status(200).json({ message: 'OTP sent successfully', status: 200 });
+				// 	})
+				// 	.catch((error) => {
+				// 		return next(new ErrorHandler('Failed to send OTP Check the Number', 500))
+				// 	});
 				return res.status(200).json({ sessionResponse });
+
 			} else {
 				return next(new ErrorHandler('Order not Created', 400));
 			}
 		}
-        
-    } catch (error) {
-        return res.redirect(`${BASE_URL}/order/confirm?message=${encodeURIComponent('Something went wrong')}`);
-    }
+
+	} catch (error) {
+		return res.redirect(`${BASE_URL}/order/confirm?message=${encodeURIComponent('Something went wrong')}`);
+	}
 });
 
 
-const handleResponse = catchAsyncError(async (req, res,next) => {
+const handleResponse = catchAsyncError(async (req, res, next) => {
 	const encryptedOrderId = req.params.id || req.params.orderId || req.params.order_id;
 
 
-    let BASE_URL = process.env.FRONTEND_URL;
+	let BASE_URL = process.env.FRONTEND_URL;
 	if (process.env.NODE_ENV === "production") {
 		BASE_URL = `${req.protocol}://${req.get('host')}`
 	}
 
-    if (!encryptedOrderId) {
-        return res.redirect(`${BASE_URL}/order/confirm?message=${encodeURIComponent('Something went wrong in orderid')}`);
-    }
+	if (!encryptedOrderId) {
+		return res.redirect(`${BASE_URL}/order/confirm?message=${encodeURIComponent('Something went wrong in orderid')}`);
+	}
 
-    // Decrypt orderId
-    const orderId = decryptData(encryptedOrderId,encryptionKey);
+	// Decrypt orderId
+	const orderId = decryptData(encryptedOrderId, encryptionKey);
 	if (!orderId) {
 		return res.redirect(`${BASE_URL}/order/confirm?message=${encodeURIComponent('Something went wrong')}`);
 	}
 
 	try {
-		const statusResponse = await Payment.findOne({order_id: orderId});
+		const statusResponse = await Payment.findOne({ order_id: orderId });
 		const sessionResponse = statusResponse.statusResponse;
 		return res.status(200).json({ sessionResponse })
-		
-		
-			} catch (error) {
-		
+
+
+	} catch (error) {
+
 		return res.redirect(`${BASE_URL}/order/confirm?message=${encodeURIComponent('Something went wrong')}`);
 	}
 });
 
 
 
-const paymentSuccess = catchAsyncError(async (req, res,next) => {
+const paymentSuccess = catchAsyncError(async (req, res, next) => {
 
 	const encryptedOrderId = req.params.orderId;
-    let BASE_URL = process.env.FRONTEND_URL;
+	let BASE_URL = process.env.FRONTEND_URL;
 	if (process.env.NODE_ENV === "production") {
 		BASE_URL = `${req.protocol}://${req.get('host')}`
 	}
 
-    if (!encryptedOrderId) {
-        return res.redirect(`${BASE_URL}/order/confirm?message=${encodeURIComponent('Something went wrong in orderid')}`);
-    }
-
-    // Decrypt orderId
-    const orderId = decryptData(encryptedOrderId,encryptionKey);
-	if (!orderId) {
-		
+	if (!encryptedOrderId) {
 		return res.redirect(`${BASE_URL}/order/confirm?message=${encodeURIComponent('Something went wrong in orderid')}`);
 	}
-	
+
+	// Decrypt orderId
+	const orderId = decryptData(encryptedOrderId, encryptionKey);
+	if (!orderId) {
+
+		return res.redirect(`${BASE_URL}/order/confirm?message=${encodeURIComponent('Something went wrong in orderid')}`);
+	}
+
 	try {
 		const statusResponse = await juspay.order.status(orderId);
-		
+
 		if (statusResponse) {
 			const response = new responseModel({ statusResponse });
-		
+
 			await response.save();
-			
+
 			const onepayments = await Payment.findOne({ order_id: orderId });
+			console.log("onepayments",onepayments)
 			if (onepayments) {
 				const paymentstatus = await Payment.findOneAndUpdate({ order_id: orderId },
 					{
 						paymentStatus: statusResponse.status,
 						$set: { statusResponse: statusResponse }
-					 },
+					},
 					{ new: true });
-					if(paymentstatus){
-					
-						return res.redirect(`${BASE_URL}/payment/confirm/${encodeURIComponent(encryptedOrderId)}`);
-						
-					}
-					else{
-						return	res.redirect(`${BASE_URL}/order/confirm?message=${encodeURIComponent('The data is not stored in db')}`);
-					}
+				if (paymentstatus) {
+                    client.messages.create({
+						body: `Your order is placed with this Id ${orderId}`,
+						from: twilioPhoneNumber,
+						to: `+91${onepayments.shippingInfo.phoneNo}`,
+					  })
+						.then(() => {
+						  // Send the OTP success response or redirect, not both
+						  return res.redirect(`${BASE_URL}/payment/confirm/${encodeURIComponent(encryptedOrderId)}`);
+						})
+						.catch((error) => {
+						  // Handle the error appropriately and send only one response
+						  return next(new ErrorHandler('Failed to send OTP. Check the number.', 500));
+						});
+					  
+
+				}
+				else {
+					return res.redirect(`${BASE_URL}/order/confirm?message=${encodeURIComponent('The data is not stored in db')}`);
+				}
 			}
 			else {
-				
-			 return	res.redirect(`${BASE_URL}/order/confirm?message=${encodeURIComponent('Something went wrong in update')}`);
-				
-			}
-			
 
-			
+				return res.redirect(`${BASE_URL}/order/confirm?message=${encodeURIComponent('Something went wrong in update')}`);
+
+			}
+
+
+
 		}
 	}
 	catch (error) {
-		
+
 		return res.redirect(`${BASE_URL}/order/confirm?message=${encodeURIComponent('Something went wrong in payment success')}`);
-		
+
 	}
-	
+
 });
 
 

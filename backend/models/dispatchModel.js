@@ -41,11 +41,11 @@ const dispatchSchema = new mongoose.Schema({
         type: mongoose.Schema.Types.Mixed,
         required: true
     },
-    // orderDate:{
-    //     type: mongoose.Schema.Types.Mixed,
-    //     default: {},
-    //     required: true, 
-    // },
+    orderDate:{
+        type: mongoose.Schema.Types.Mixed,
+        default: {},
+        required: true, 
+    },
     statusResponse: {
         type: mongoose.Schema.Types.Mixed,
         default: {},

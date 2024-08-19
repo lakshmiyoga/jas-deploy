@@ -215,7 +215,7 @@ const getCancelResponse = catchAsyncError(async (req, res, next) => {
 
 const postPackedOrder = catchAsyncError(async (req, res, next) => {
     //    console.log(req.body)
-    const { order_id, user_id, user, dispatchedTable, totalDispatchedAmount, totalRefundableAmount, updatedItems, orderDetail } = req.body;
+    const { order_id, user_id, user, dispatchedTable, totalDispatchedAmount, totalRefundableAmount, updatedItems, orderDetail,orderDate } = req.body;
     // console.log(order_id,user_id,user,dispatchedTable)
 
     const order = await Dispatch.findOne({ order_id });
@@ -231,7 +231,7 @@ const postPackedOrder = catchAsyncError(async (req, res, next) => {
             orderDetail: orderDetail,
             updatedItems: updatedItems,
             dispatchedTable: dispatchedTable,
-            // orderDate:orderDate,
+            orderDate:orderDate,
             totalDispatchedAmount: totalDispatchedAmount,
             totalRefundableAmount: totalRefundableAmount,
 
@@ -337,6 +337,19 @@ const refundOrder = catchAsyncError(async (req, res, next) => {
                                 $set: { statusResponse: statusResponse }
                             },
                             { new: true });
+                           
+                                const refundpayments = await Dispatch.findOne({ order_id });
+                                if (refundpayments) {
+                                    const refundStatus = await Dispatch.findOneAndUpdate({ order_id },
+                                        {
+                                            refundStatus: statusResponse.refunds[0].status,
+                                            $set: { statusResponse: statusResponse }
+                                        },
+                                        { new: true });
+                                   
+                                
+                        
+                            }
                         res.status(201).json({
                             success: true,
                             refundData: "Refund Initiated"
