@@ -329,18 +329,21 @@ const paymentSuccess = catchAsyncError(async (req, res, next) => {
 					  })
 						.then(() => {
 						  // Send the OTP success response or redirect, not both
-						  return res.redirect(`${BASE_URL}/payment/confirm/${encodeURIComponent(encryptedOrderId)}`);
+						//   return res.redirect(`${BASE_URL}/payment/confirm/${encodeURIComponent(encryptedOrderId)}`);
 						})
 						.catch((error) => {
 						  // Handle the error appropriately and send only one response
-						  return next(new ErrorHandler('Failed to send OTP. Check the number.', 500));
+						//   return next(new ErrorHandler('Failed to send OTP. Check the number.', 500));
 						});
 					  
 
 				}
+				
 				else {
 					return res.redirect(`${BASE_URL}/order/confirm?message=${encodeURIComponent('The data is not stored in db')}`);
 				}
+				return res.redirect(`${BASE_URL}/payment/confirm/${encodeURIComponent(encryptedOrderId)}`);
+
 			}
 			else {
 

@@ -7,6 +7,7 @@ const ErrorHandler = require('../utils/errorHandler');
 const sendEmail = require("../utils/email");
 const crypto = require('crypto');
 const nodemailer = require('nodemailer')
+const validator = require("validator");
 
 
 
@@ -14,12 +15,6 @@ const nodemailer = require('nodemailer')
 
 const userRegister = catchAsyncError(async (req, res, next) => {
   const { name, email, password } = req.body;
-
-  // if (!name || !email || !password) {
-  //   return next(new ErrorHandler('Please provide all required fields: name, email, and password', 400));
-  // }
-
-
 
   let avatar;
 
@@ -33,6 +28,23 @@ const userRegister = catchAsyncError(async (req, res, next) => {
     avatar = `${BASE_URL}/uploads/user/${req.file.originalname}`;
   }
 
+  // Name validation
+  if ( !name) {
+    return next(new ErrorHandler('Please enter Name', 400));
+  }
+  if ( name.trim().length < 2) {
+    return next(new ErrorHandler('Name must be at least 2 characters long', 400));
+  }
+
+  // Email validation
+  if (!email || !validator.isEmail(email)) {
+    return next(new ErrorHandler('Please enter a valid email', 400));
+  }
+
+  // Password validation
+  if (!password || password.length < 6) {
+    return next(new ErrorHandler('Password must be at least 6 characters long', 400));
+  }
   try {
     let user = await User.findOne({ email }).select('+password');
     if (user) {
@@ -54,7 +66,8 @@ const userRegister = catchAsyncError(async (req, res, next) => {
     await regUser.save();
     sendToken(regUser, 201, res);
   } catch (error) {
-    return next(new ErrorHandler('Internal Server Error', 500));
+    console.log("error",error)
+    return next(new ErrorHandler(error.message, 500));
 
   }
 });
@@ -65,24 +78,41 @@ const userRegister = catchAsyncError(async (req, res, next) => {
 const userLogin = catchAsyncError(async (req, res, next) => {
   const { email, password } = req.body;
   // console.log(email, password )
-  let user = await User.findOne({ email }).select('+password');
-  // console.log(user)
-  if (!user) {
-    return next(new ErrorHandler('Invalid credentials', 401));
+
+    // Email validation
+    if (!email || !validator.isEmail(email)) {
+      return next(new ErrorHandler('Please enter a valid email', 400));
+    }
+  
+    // Password validation
+    if (!password || password.length < 6) {
+      return next(new ErrorHandler('Password enter a valid password', 400));
+    }
+  try{
+    let user = await User.findOne({ email }).select('+password');
+    // console.log(user)
+    if (!user) {
+      return next(new ErrorHandler('Invalid credentials', 401));
+    }
+    // console.log(password, user.password)
+  
+    const isMatch = await bcrypt.compare(password, user.password);
+  
+    if (!isMatch) {
+      return next(new ErrorHandler('Invalid credentials', 401));
+    }
+  
+    // const token = generateToken(user);
+  
+    // res.status(201).json({ success:true, user, token});
+  
+    sendToken(user, 201, res)
+
+  }catch(error){
+    console.log("error",error)
+    return next(new ErrorHandler(error.message, 500));
   }
-  // console.log(password, user.password)
-
-  const isMatch = await bcrypt.compare(password, user.password);
-
-  if (!isMatch) {
-    return next(new ErrorHandler('Invalid credentials', 401));
-  }
-
-  // const token = generateToken(user);
-
-  // res.status(201).json({ success:true, user, token});
-
-  sendToken(user, 201, res)
+ 
 
 });
 
