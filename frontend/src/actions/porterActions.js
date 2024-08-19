@@ -48,7 +48,7 @@ export const getporterOrder = createAsyncThunk('init/order/create', async ({orde
     try {
         console.log("request_id",order_id,porterOrder_id)
       dispatch(porterOrderResponseRequest());
-      const { data } = await axios.post('/api/v1/admin/porter/createResponse', {order_id,porterOrder_id},{withCredentials: true });
+      const { data } = await axios.post('/api/v1/admin/porter/createResponse', {order_id ,porterOrder_id},{withCredentials: true });
       console.log("porterResponse",data)
       dispatch(porterOrderResponseSuccess(data));
     } catch (error) {
