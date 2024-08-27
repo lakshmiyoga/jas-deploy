@@ -25,7 +25,15 @@ const userRegister = catchAsyncError(async (req, res, next) => {
 
 
   if (req.file) {
+
+    const fileExtension = req.file.originalname.split('.').pop().toLowerCase();
+    
+    if (fileExtension !== 'jpg' && fileExtension !== 'png') {
+      return next(new ErrorHandler('Only .jpg and .png files are allowed'));
+    }
     avatar = `${BASE_URL}/uploads/user/${req.file.originalname}`;
+
+    
   }
 
   // Name validation
@@ -115,6 +123,7 @@ const userLogin = catchAsyncError(async (req, res, next) => {
  
 
 });
+
 
 //logout user
 
@@ -286,6 +295,12 @@ const updateUserProfile = catchAsyncError(async (req, res, next) => {
   }
 
   if (req.file) {
+    
+    const fileExtension = req.file.originalname.split('.').pop().toLowerCase();
+    
+    if (fileExtension !== 'jpg' && fileExtension !== 'png') {
+      return next(new ErrorHandler('Only .jpg anf .png files are allowed'));
+    }
     avatar = `${BASE_URL}/uploads/user/${req.file.originalname}`;
     newUserData = { ...newUserData, avatar }
   }
