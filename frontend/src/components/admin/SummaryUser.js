@@ -4,9 +4,12 @@ import { fetchUserSummary } from '../../actions/orderActions';
 import Loader from '../Layouts/Loader';
 import MetaData from '../Layouts/MetaData';
 import Sidebar from './Sidebar';
+import { useLocation } from 'react-router-dom';
 
 const SummaryUser = () => {
     const dispatch = useDispatch();
+    const location = useLocation();
+    sessionStorage.setItem('redirectPath', location.pathname);
     const { loading, userSummary, error } = useSelector((state) => state.orderState);
 
     // Initialize the date with the current date
@@ -23,12 +26,12 @@ const SummaryUser = () => {
 
     return (
         <div className="row">
-            <MetaData title="Order Summary" />
+            <MetaData title={`Order Summary`} />
             <div className="col-12 col-md-2">
                 <Sidebar />
             </div>
-            <div className="col-12 col-md-9">
-                <h1>User Summary for a Day</h1>
+            <div className="col-12 col-md-9 smalldevice-space ">
+                <h1 >User Summary for a Day</h1>
                 <input
                     type="date"
                     value={date}
@@ -66,15 +69,24 @@ const SummaryUser = () => {
                                             <td className="phone">{order.shippingInfo?.phoneNo || 'N/A'}</td>
                                             <td className="address">
                                                 {order.shippingInfo?.address || 'N/A'},
+                                                <br />
                                                 {order.shippingInfo?.city || 'N/A'},
+                                                <br />
                                                 {order.shippingInfo?.country || 'N/A'},
+                                                <br />
                                                 {order.shippingInfo?.postalCode || 'N/A'}
                                             </td>
                                             <td className="products">
                                                 {order.products.map((product, idx) => (
-                                                    <div key={idx}>
+                                                    <>
+                                                     <span key={idx} className="product-item">
                                                         {product.name} - {product.weight} kg - Rs. {product.price}
-                                                    </div>
+                                                       
+                                                    </span>
+                                                    <br/>
+                                                    </>
+
+                                                   
                                                 ))}
                                             </td>
                                             <td className="weight">{(order.totalWeight || 0).toFixed(2)} kg</td>

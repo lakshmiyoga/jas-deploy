@@ -3,6 +3,7 @@ import PropTypes from 'prop-types';
 // import './Stepper.css'; // Create and style this CSS as needed
 
 const Stepper = ({ currentStep }) => {
+   
     const steps = [
         { name: 'Open', value: 'open' },
         { name: 'Accepted', value: 'accepted' },

@@ -1,12 +1,15 @@
 import React, { Fragment, useState } from 'react';
 import { useSelector, useDispatch } from 'react-redux';
-import { useNavigate } from 'react-router-dom';
+import { useLocation, useNavigate } from 'react-router-dom';
 import { Link } from 'react-router-dom';
 import { decreaseCartItemQty, increaseCartItemQty, removeItemFromCart } from '../../slices/cartSlice';
+import MetaData from '../Layouts/MetaData';
 
 const Cart = () => {
     const { items } = useSelector(state => state.cartState);
     const { isAuthenticated } = useSelector(state => state.authState);
+    const location = useLocation();
+    sessionStorage.setItem('redirectPath', location.pathname);
     const dispatch = useDispatch();
     const navigate = useNavigate();
     console.log("items",items)
@@ -42,6 +45,7 @@ const Cart = () => {
 
     return (
         <Fragment>
+            <MetaData title={`Cart`}/>
             {items && items.length === 0 ? (
                 <h2 className="mt-5" style={{ display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
                     Your Cart is Empty

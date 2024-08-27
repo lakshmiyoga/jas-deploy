@@ -195,7 +195,7 @@
 import React, { useEffect, Fragment, useState } from 'react';
 import { Button } from "react-bootstrap";
 import { useDispatch, useSelector } from 'react-redux';
-import { Link } from "react-router-dom";
+import { Link, useLocation } from "react-router-dom";
 import { adminOrders as adminOrdersAction } from "../../actions/orderActions";
 import Loader from '../Layouts/Loader';
 import { MDBDataTable } from 'mdbreact';
@@ -203,8 +203,11 @@ import { toast } from 'react-toastify';
 import Sidebar from "../admin/Sidebar";
 import { clearError } from '../../slices/productsSlice';
 import { clearOrderDeleted } from "../../slices/orderSlice";
+import MetaData from '../Layouts/MetaData';
 
 const OrderList = () => {
+    const location = useLocation();
+    sessionStorage.setItem('redirectPath', location.pathname);
     const { adminOrders: orders = [], loading = true, error, isOrderDeleted } = useSelector(state => state.orderState);
     const [date, setDate] = useState(new Date().toISOString().split('T')[0]);
 
@@ -340,18 +343,22 @@ const OrderList = () => {
     }, [dispatch, error, isOrderDeleted]);
 
     return (
+        <div>
+             <MetaData title={`Order list`} />
+      
         <div className="row">
             <div className="col-12 col-md-2">
                 <Sidebar />
             </div>
-            <div className="col-12 col-md-10">
-                <h1 className="my-4">Order List</h1>
+            <div className="col-12 col-md-10 smalldevice-space">
+                <h1 className="my-4 admin-dashboard-x">Order List</h1>
                 <input
                     type="date"
                     value={date}
                     onChange={(e) => setDate(e.target.value)}
                     className="form-control mb-3 date-input"
                 />
+                <div className='mdb-table' style={{display:'flex',justifyContent:'center', alignItems:'center'}}>
                 <Fragment>
                     {loading ? <Loader /> :
                         <MDBDataTable
@@ -363,7 +370,9 @@ const OrderList = () => {
                         />
                     }
                 </Fragment>
+                </div>
             </div>
+        </div>
         </div>
     );
 };

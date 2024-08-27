@@ -1,6 +1,6 @@
 import React, { useEffect, useState } from 'react';
 import store from '../../store';
-import { Link, useParams } from 'react-router-dom';
+import { Link, useLocation, useParams } from 'react-router-dom';
 import { loadUser } from '../../actions/userActions';
 import { getProducts } from '../../actions/productsActions';
 import { orderCompleted } from "../../slices/cartSlice";
@@ -10,6 +10,8 @@ import axios from 'axios';
 const PaymentConfirm = () => {
   
   const { id } = useParams();
+  const location = useLocation();
+  sessionStorage.setItem('redirectPath', location.pathname);
   const [paymentStatus, setPaymentStatus] = useState('LOADING');
   const [paymentDetails, setPaymentDetails] = useState({});
   const dispatch = useDispatch();

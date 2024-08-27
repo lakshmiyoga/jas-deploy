@@ -1,15 +1,18 @@
 import { Fragment, useEffect, useState } from "react";
 import Sidebar from "./Sidebar";
 import { useDispatch, useSelector} from 'react-redux';
-import { useNavigate, useParams } from "react-router-dom";
+import { useLocation, useNavigate, useParams } from "react-router-dom";
 import { getUser, updateUser } from "../../actions/userActions";
 import { clearError, clearUserUpdated } from "../../slices/userSlice";
 import { toast } from "react-toastify";
+import MetaData from "../Layouts/MetaData";
 
 export default function UpdateUser () {
     const [name, setName] = useState("");
     const [email, setEmail] = useState("");
     const [role, setRole] = useState("");
+    const location = useLocation();
+    sessionStorage.setItem('redirectPath', location.pathname);
    
     const { id:userId } = useParams();
     
@@ -63,14 +66,15 @@ export default function UpdateUser () {
 
     return (
         <div className="row">
+            <MetaData title={`Update User`} />
             <div className="col-12 col-md-2">
                     <Sidebar/>
             </div>
-            <div className="col-12 col-md-10">
+            <div className="col-12 col-md-10 smalldevice-space">
                 <Fragment>
                     <div className="wrapper my-5"> 
                         <form onSubmit={submitHandler} className="shadow-lg" encType='multipart/form-data'>
-                            <h1 className="mb-4">Update User</h1>
+                            <h1 className="mb-4 admin-dashboard-x">Update User</h1>
 
                             <div className="form-group">
                             <label htmlFor="name_field">Name</label>

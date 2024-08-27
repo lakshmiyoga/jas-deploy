@@ -1,7 +1,7 @@
 import { Fragment, useEffect, useState } from "react";
 import Sidebar from "./Sidebar";
 import { useDispatch, useSelector } from 'react-redux';
-import { useNavigate, useParams } from "react-router-dom";
+import { useLocation, useNavigate, useParams } from "react-router-dom";
 import { orderDetail as orderDetailAction, updateOrder, porterOrder, RemoveOrderResponse } from "../../actions/orderActions";
 import { CancelOrderResponse, createPorterOrderResponse, getPackedOrder, getporterOrder, packedOrder } from "../../actions/porterActions";
 import { toast } from "react-toastify";
@@ -21,8 +21,11 @@ import React, { useRef } from 'react';
 import { useReactToPrint } from 'react-to-print';
 import ReactDOM from 'react-dom';
 import JasInvoice from "../Layouts/JasInvoice";
+import MetaData from "../Layouts/MetaData";
 
 const Dispatch = () => {
+    const location = useLocation();
+    sessionStorage.setItem('redirectPath', location.pathname);
     const { loading, isOrderUpdated, error, orderDetail, porterOrderDetail, orderRemoveResponse, orderRemoveError } = useSelector(state => state.orderState);
     const { products } = useSelector((state) => state.productsState);
     const { porterOrderData, porterOrderResponse, porterCancelResponse, porterCancelError, portererror, getpackedOrderData } = useSelector((state) => state.porterState);
@@ -357,13 +360,16 @@ if(refreshData){
     },[refreshData])
 
     return (
+        <div>
+             <MetaData title={`Dispatch`} />
+       
         <div className="row">
             <div className="col-12 col-md-2">
                 <Sidebar />
             </div>
             {
                 loading ? <Loader /> : (
-                    <div className="col-12 col-md-10">
+                    <div className="col-12 col-md-10 col-sm-10 smalldevice-space container order-detail-container">
                         <Fragment>
                             {/* <div className="row d-flex justify-content-around"> */}
                             <div className="col-12 col-lg-12 mt-5 order-details">
@@ -372,16 +378,29 @@ if(refreshData){
                                 <h4 className="mb-4">Shipping Info</h4>
                                 <p><b>Name:</b> {user.name}</p>
                                 <p><b>Phone:</b> {shippingInfo.phoneNo}</p>
-                                <p className="mb-4"><b>Address:</b> {shippingInfo.address}, {shippingInfo.city}, {shippingInfo.postalCode}, {shippingInfo.state} {shippingInfo.country}</p>
+                                <p><b>Address:</b>{shippingInfo.address},{shippingInfo.area},{shippingInfo.landmark},{shippingInfo.city}-{shippingInfo.postalCode}</p>
                                 <p><b>Amount:</b> Rs.{parseFloat(totalPrice).toFixed(2)}</p>
+                                <p><b>Payment Mode:</b> {orderDetail && orderDetail.statusResponse && orderDetail.statusResponse.payment_method}</p>
 
                                 <hr />
 
-                                <h4 className="my-4">Payment status</h4>
+                                <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', flexWrap: 'wrap' }}>
+                                    <div style={{ display: 'flex', alignItems: 'center' }}>
+                                        <p><b>Payment Status:</b></p>
+                                        <p className={orderDetail && orderDetail.paymentStatus && orderDetail.paymentStatus === 'CHARGED' ? 'greenColor' : 'redColor'} style={{ marginLeft: '10px' }}><b>{orderDetail ? orderDetail.paymentStatus : 'Pending'}</b></p>
+                                    </div>
+                                    <div style={{ display: 'flex', alignItems: 'center', marginRight: '50px' }}>
+                                        <p><b>Order Status:</b></p>
+                                        <p className={orderStatus && orderStatus.includes('Delivered') ? 'greenColor' : 'redColor'} style={{ marginLeft: '10px' }}><b>{orderStatus}</b></p>
+                                    </div>
+                    
+                                </div>
+
+                                {/* <h4 className="my-4">Payment status</h4>
                                 <p className={orderDetail.paymentStatus === 'CHARGED' ? 'greenColor' : 'redColor'}><b>{orderDetail.paymentStatus || 'Pending'}</b></p>
                                 <hr />
                                 <h4 className="my-4">Order Status:</h4>
-                                <p className={dropStatus.includes('Delivered') ? 'greenColor' : 'redColor'}><b>{dropStatus}</b></p>
+                                <p className={dropStatus.includes('Delivered') ? 'greenColor' : 'redColor'}><b>{dropStatus}</b></p> */}
 
                                 {porterOrderData && porterOrderData.porterResponse && (
                                     <Fragment>
@@ -512,7 +531,7 @@ if(refreshData){
 
                                                 )}
                                                 <tr>
-                                                    <td colSpan="5" style={{ textAlign: 'right' }}><strong>TotalDispatchedAmount</strong></td>
+                                                    <td colSpan="5" style={{ textAlign: 'right' }}><strong>Total Dispatched Amount</strong></td>
                                                     <td className="amount"><strong>Rs. {getpackedOrderData && getpackedOrderData.totalDispatchedAmount && getpackedOrderData.totalDispatchedAmount}</strong></td>
                                                 </tr>
 
@@ -557,6 +576,7 @@ if(refreshData){
 
 
 
+        </div>
         </div>
     );
 

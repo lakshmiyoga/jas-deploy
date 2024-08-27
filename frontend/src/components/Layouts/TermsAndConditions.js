@@ -1,11 +1,14 @@
 import React from 'react';
 import MetaData from './MetaData';
+import { useLocation } from 'react-router-dom';
 
 
 const TermsAndConditions = () => {
+  const location = useLocation();
+  sessionStorage.setItem('redirectPath', location.pathname);
   return (
     <div>
-        <MetaData title={'Buy Best Products'} />
+        <MetaData title={'Terms And Conditions'} />
       <div className="products_heading">Terms And Conditions</div>
        <div className="terms_container">
       <h3>Terms And Conditions</h3>

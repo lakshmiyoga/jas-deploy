@@ -4,10 +4,13 @@ import { fetchOrderSummary } from '../../actions/orderActions';
 import Loader from '../Layouts/Loader';
 import MetaData from '../Layouts/MetaData';
 import Sidebar from '../admin/Sidebar';
+import { useLocation } from 'react-router-dom';
 
 const OrderSummary = () => {
     const dispatch = useDispatch();
     const { loading, orderSummary, error } = useSelector((state) => state.orderState);
+    const location = useLocation();
+    sessionStorage.setItem('redirectPath', location.pathname);
 
     // Initialize the date with the current date
     const currentDate = new Date().toISOString().split('T')[0];
@@ -37,8 +40,8 @@ const OrderSummary = () => {
                 <Sidebar />
             </div>
 
-            <div className="col-12 col-md-8">
-                <h1>Order Summary for a Day</h1>
+            <div className="col-12 col-md-8 smalldevice-space ">
+                <h1 className='admin-dashboard-x'>Order Summary for a Day</h1>
                 <input
                     type="date"
                     value={date}
@@ -50,7 +53,7 @@ const OrderSummary = () => {
                 ) : error ? (
                     <p className="text-danger">{error}</p>
                 ) : (
-                    <div className="order-summary">
+                    <div className="product-table">
                         {isOrderSummaryArray && orderSummary.length === 0 ? (
                             <p>No orders found for the selected date.</p>
                         ) : (

@@ -71,14 +71,17 @@
 // export default Sidebar;
 
 
-import React, { useState } from 'react';
-import { Link, useNavigate } from 'react-router-dom';
+import React, { useEffect, useState } from 'react';
+import { Link, useLocation, useNavigate } from 'react-router-dom';
 import { NavDropdown } from 'react-bootstrap';
-import { useDispatch } from 'react-redux';
+import { useDispatch, useSelector } from 'react-redux';
 import { logout } from '../../actions/userActions';
 
 const Sidebar = () => {
     const [isActive, setIsActive] = useState(false);
+    const { user, isAuthenticated } = useSelector(state => state.authState);
+    const location = useLocation();
+    sessionStorage.setItem('redirectPath', location.pathname);
     const navigate = useNavigate();
     const dispatch = useDispatch();
 
@@ -92,18 +95,36 @@ const Sidebar = () => {
         }
     }
 
-    const logoutHandler = () => {
-        dispatch(logout);
-        navigate('/');
+    const logoutHandler = () => {   
+        
+        dispatch(logout); // Call the action as a function
         closeSidebar();
+        // sessionStorage.removeItem('redirectPath'); // Remove redirectPath
+        // navigate('/'); // Redirect to landing page
     }
+
+    useEffect(()=>{
+        if(!isAuthenticated){
+            sessionStorage.removeItem('redirectPath');
+            navigate('/');
+        }
+    },[isAuthenticated])
 
     return (
         <>
-            <button id="sidebarCollapse" onClick={toggleSidebar}>
-                <i className="fas fa-bars"></i>
-            </button>
+            {!isActive ? (
+                <button id="sidebarCollapse" onClick={toggleSidebar}>
+                    <i className="fa fa-bars"></i>
+                </button>
+            ) : (
+                <button id="sidebar-close" onClick={toggleSidebar}>
+                    <i className="fa fa-close"></i>
+                </button>
+            )
+
+            }
             <div className={`sidebar-wrapper ${isActive ? 'active' : ''}`}>
+
                 <nav id="sidebar">
                     <ul className="list-unstyled components">
                         <li>

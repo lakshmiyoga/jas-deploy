@@ -1,13 +1,129 @@
 html,
 body {
-  /* font-family:"Trebuchet MS", Helvetica, sans-serif; */
-   
-   
-  /* font-family:Verdana, Geneva, Tahoma, sans-serif; */
- 
-  /* overflow-x: hidden;
-  overflow-y: auto; */
+  min-height: 100vh;
+  max-height: auto;
+
 }
+#root{
+  position: relative;
+  min-height: 100vh;
+  max-height: auto;
+  max-width: 100vw;
+  /* overflow-x: auto; */
+  
+}
+
+/* html, body {
+  min-height: 100vh;
+  height: 100%;
+  margin: 0;
+  padding: 0;
+}
+
+#root {
+  height: 100%;
+  position: relative;
+  display: flex;
+  flex-direction: column;
+} */
+
+/* .App {
+  display: flex;
+  flex-direction: column;
+  min-height: 100vh;
+  position: relative;
+  overflow-x: hidden;
+  overflow-y: auto;
+} */
+.App{
+  font-family:Cambria, Cochin, Georgia, Times, 'Times New Roman', serif;
+  min-width: 100%;
+  max-width: 100vw;
+  display: flex;
+  flex-direction: column;
+  position: absolute;
+  min-height: 100vh;
+  max-height: auto;
+  margin: 0px;
+  padding: 0px;
+  overflow-x: hidden;
+  overflow-y: auto;
+}
+
+.header {
+  position: fixed;
+  top: 0;
+  /* left: -8px; */
+  background-color: #fff;
+  max-height: 120px;
+  overflow-y: hidden;
+  /* min-height: 120px ; */
+  overflow: visible;
+  width: 100%;
+  /* min-width: calc(100%-8px); */
+  z-index: 1000; /* Ensure the header stays above the content */
+}
+.navbar .dropdown-menu {
+  position: absolute;
+  z-index: 1050; /* Set a high z-index to ensure visibility above header */
+  /* top: 100%;  */
+  /* left: 0;
+  right: auto;
+  transform: translateY(5px); 
+  display: block;  */
+}
+
+.content {
+  position: relative;
+  min-height: calc(100vh - 120px);
+  max-height: auto;
+  max-width: 100vw;
+  /* top: 15%; */
+  margin-top: 120px;
+  flex-grow: 1;
+  /* padding-top: 70px; Adjust this value to the height of your header */
+  overflow-y: auto;
+  overflow-x: hidden;
+}
+
+
+ @media (max-width: 576px) {
+  .content {
+    position: relative;
+    height: auto;
+    /* top: 15%; */
+    margin-top: 70px;
+    flex-grow: 1;
+    /* padding-top: 70px; Adjust this value to the height of your header */
+    overflow-y: auto;
+    overflow-x: hidden;
+  }
+  .user-info{
+    max-width: 100vw;
+  }
+  
+}
+
+@media (max-width: 576px) {
+  .content {
+    position: relative;
+    height: auto;
+    /* top: 15%; */
+    margin-top: 70px;
+    flex-grow: 1;
+   max-width: 100vw;
+    /* padding-top: 70px; Adjust this value to the height of your header */
+    overflow-y: auto;
+    overflow-x: hidden;
+  }
+  .user-info{
+    max-width: 100vw;
+  }
+  
+}
+
+
+
 /* *{
   font-family:Verdana, Geneva, Tahoma, sans-serif;
 } */
@@ -28,15 +144,21 @@ body {
   border-radius: 5px;
 }
 
-.App{
+
+/* .App{
   font-family:Cambria, Cochin, Georgia, Times, 'Times New Roman', serif;
   width: 100%;
-  height: 100%;
+  display: flex;
+  flex-direction: column;
+  position: relative;
+  min-height: 100vh;
   margin: 0px;
   padding: 0px;
   overflow-x: hidden;
   overflow-y: auto;
 }
+ */
+
 
 /* Hide the default spinner controls for number inputs */
 /* input[type=number]::-webkit-inner-spin-button, 
@@ -57,6 +179,11 @@ input[type=number]::-webkit-outer-spin-button {
     -moz-appearance: textfield;
 }
 
+.custom-placeholder::placeholder {
+  font-size: 10px; /* Adjust the size as needed */
+  color: #888; /* Optional: Adjust color if needed */
+}
+
 
 
 .nav {
@@ -70,8 +197,15 @@ input[type=number]::-webkit-outer-spin-button {
   color: #f8ce0b;
 }
 
+#collapsible-nav-dropdown{
+  z-index: 9999999;
+}
 
+.dropdown-display{
+  z-index: 9999999;
+  /* position: absolute; */
 
+}
 /* .navbar-brand img{
  height:15vh;
  width:25vw;
@@ -80,7 +214,7 @@ input[type=number]::-webkit-outer-spin-button {
 } */
 .img-size{
   position: relative;
-  width: 80%;
+  max-width: 200px;
   max-height: 150px;
 }
 
@@ -260,12 +394,31 @@ input[type=number]::-webkit-outer-spin-button {
 }
 
 @media (max-width: 768px) {
+ .App{
+  font-size: 10px;
+  font-family:Cambria, Cochin, Georgia, Times, 'Times New Roman', serif;
+  min-width: 100%;
+  max-width: 100vw;
+  display: flex;
+  flex-direction: column;
+  position: relative;
+  min-height: 100vh;
+  max-height: auto;
+  margin: 0px;
+  padding: 0px;
+  overflow-x: hidden;
+  overflow-y: auto;
+ }
+}
+
+
+@media (max-width: 768px) {
   /* .card-img-top {
     height: 150px; 
   } */
 
   .card-title h2 {
-    font-size: 1.4rem;
+    font-size: 1rem;
   }
 }
 
@@ -275,7 +428,7 @@ input[type=number]::-webkit-outer-spin-button {
   } */
 
   .card-title h2 {
-    font-size: 1.4rem;
+    font-size: 1rem;
   }
 }
 
@@ -299,9 +452,9 @@ input[type=number]::-webkit-outer-spin-button {
 
 /* Footer */
 footer {
-  margin-top: 8rem;
+  margin-top: 4rem;
   color: grey;
-  bottom: 0;
+  bottom: 0px;
   width: 100%;
   position: relative;
 }
@@ -543,6 +696,16 @@ footer {
   color: white;
   margin-top: 2.5rem;
 }
+ .btn-add {
+  background-color:#02441E;
+  /* border-color: #fa9c23; */
+  color: white;
+  /* margin-top: 2.5rem; */
+  border: none;
+  padding: 7px 17px !important;
+  font-size: 10px !important;
+
+}
 
 .wrapper form a {
   font-size: 0.9rem;
@@ -574,6 +737,11 @@ footer {
 
 .btn.focus,
 .btn:focus {
+  outline: 0;
+  box-shadow: none;
+}
+.btn-add.focus,
+.btn-add:focus {
   outline: 0;
   box-shadow: none;
 }
@@ -787,14 +955,18 @@ footer {
 
 .sidebar-wrapper {
   display: flex;
+  position: relative;
   width: 100%;
   align-items: stretch;
   min-height: 100vh;
   font-weight: normal;
   margin-top: 0;
+  transition: transform 0.3s ease;
+  transform: translateX(-100%); /* Hidden by default */
   height: 100%;
   left: 0;
   top: 0;
+  margin: 0px;
   z-index: 10;
   
 }
@@ -885,8 +1057,9 @@ ul.CTAs a {
 }
 
 .table{
-  width: 100%;
+  max-width: 100%;
   position: relative;
+  font-size: 12px !important;
 
 }
 
@@ -959,13 +1132,14 @@ ul.CTAs a {
 
 .product-table {
   margin-top: 20px;
-  width:100%;
-  font-size:15px;
+  max-width:90vw;
+  font-size:12px !important;
 }
 
-@media (max-width: 767.98px) {
+@media (max-width: 1380px) {
   .product-table {
       overflow-x: auto;
+      font-size: 7px;
   }
 }
 
@@ -974,6 +1148,9 @@ ul.CTAs a {
   min-width: 80vw;
   position: relative;
 } 
+.table{
+  margin-top: 20px;
+}
 
 .table  thead th{
   background-color: #FED235;
@@ -984,23 +1161,44 @@ ul.CTAs a {
   justify-content:center; */
   height: 10vh;
   font-weight: bold;
-  font-size: 1.1rem;
+  font-size: 1rem;
   vertical-align: middle;
 }
 .table tbody td{
   text-align: center;
   /* align-items: center; */
   /* justify-content:center; */
-  font-size: 1.1rem;
+  font-size: 0.9rem;
   color: black;
   vertical-align: middle;
  
 }
+.products {
+  white-space: nowrap; /* Prevent line breaks between products */
+}
+
+.product-item {
+  margin-right: 10px; /* Add spacing between product items */
+  display: inline-block; /* Make sure each product is inline */
+}
+
 
 @media (max-width: 767.98px) {
 
   .table-responsive {
     display: block;
+  }
+  .table  thead th{
+    background-color: #FED235;
+    text-align: center;
+    /* display: flex;
+    flex-direction: row;
+    align-items: center;
+    justify-content:center; */
+    height: 10vh;
+    font-weight: bold;
+    font-size: 1rem;
+    vertical-align: middle;
   }
 
   .table-responsive td,
@@ -1009,13 +1207,30 @@ ul.CTAs a {
     width: 100%;
     text-align: left;
   }
-  
+  .btn-add{
+    padding: 10px 30px !important;
+    font-size: 13px !important;
+    border: none;
+  }
+  .btn{
+    padding: 5px 10px !important;
+    font-size: 10px !important;
+  }
   .table-responsive td {
     border: none;
     padding: 0.5rem;
     border-bottom: 1px solid #dee2e6;
     position: relative;
     
+  }
+  .table tbody td{
+    text-align: center;
+    /* align-items: center; */
+    /* justify-content:center; */
+    font-size: 0.8rem;
+    color: black;
+    vertical-align: middle;
+   
   }
   
   .table-responsive td:before {
@@ -1045,6 +1260,110 @@ ul.CTAs a {
   .table-responsive thead {
     display: none; /* Hide the table header */
   }
+  
+}
+
+@media (min-width: 420px) and (max-width: 768px){
+  .table-product{
+    max-width: 100%;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+  }
+  .table-responsive {
+    display: block;
+    max-width: 80% !important;
+  }
+  .landingpage-card{
+    max-width: 70% ;
+  }
+  .card {
+    height: 100%;
+    cursor: pointer;
+    transition: transform 0.2s ease, box-shadow 0.2s ease;
+  }
+  
+  .card:hover {
+    transform: translateY(-5px) !important;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+  }
+  
+  .card-title a {
+    color: #2e2e2e;
+  }
+  
+  .card-title a:hover {
+    color: #fa9c23;
+    text-decoration: none;
+  }
+  
+  .card-body {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    padding: 1rem;
+  }
+  
+  .card-text {
+    font-size: 1.4rem;
+  }
+  
+  .card-img-top {
+    width: 100%;
+    height: 150px; /* Fixed height for consistency */
+    /* object-fit: cover; 
+    max-height: 200px; */
+  }
+  
+
+
+}
+@media (max-width: 422px) {
+  .landingpage-card{
+    max-width: 70% !important;
+  }
+  .card {
+    height: 100%;
+    cursor: pointer;
+    transition: transform 0.2s ease, box-shadow 0.2s ease;
+  }
+  
+  .card:hover {
+    transform: translateY(-5px);
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+  }
+  
+  .card-title a {
+    color: #2e2e2e;
+  }
+  
+  .card-title a:hover {
+    color: #fa9c23;
+    text-decoration: none;
+  }
+  
+  .card-body {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    padding: 1rem;
+  }
+  
+  .card-text {
+    font-size: 1.4rem;
+  }
+  
+  .card-img-top {
+    width: 100%;
+    height: 150px; /* Fixed height for consistency */
+    /* object-fit: cover; 
+    max-height: 200px; */
+  }
+  
+
 }
 
 .footer {
@@ -1118,7 +1437,9 @@ ul.CTAs a {
 
 @media (max-width: 768px) {
   .footer-container {
-    flex-direction: column;
+    display: flex;
+    flex-direction: row;
+    flex-wrap: wrap;
     align-items: center;
     padding: 0 5%;
   }
@@ -1126,12 +1447,13 @@ ul.CTAs a {
   .footer-section {
     text-align: center;
     margin: 10px 0;
+    
   }
 
-  .footer-fruit-image-right,
+  /* .footer-fruit-image-right,
   .footer-fruit-image-left {
     display: none;
-  }
+  } */
 }
 
 .confirm-order-container {
@@ -1472,8 +1794,8 @@ color: grey;
 }
 
 .btn {
-  padding: 10px 20px;
-  font-size: 16px;
+  padding: 7px 16px;
+  font-size: 13px;
 }
 
 .btn-primary {
@@ -1507,6 +1829,20 @@ color: grey;
   border-radius: 10px;
   /* background-color: #f9f9f9; */
   /* box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1); */
+}
+
+@media (max-width:376px){
+  .delivery-details {
+    display: grid;
+    grid-template-columns: 1fr ;
+    gap: 20px;
+    margin: 20px 0;
+    padding: 20px;
+    /* border: 1px solid #ddd; */
+    border-radius: 10px;
+    /* background-color: #f9f9f9; */
+    /* box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1); */
+  }
 }
 
 .detail-column {
@@ -1620,10 +1956,11 @@ h5 {
 /* updateorder css */
 .invoice-table-container {
   margin: 20px 0;
+  overflow-x: auto;
 }
 
 .updatetable-responsive {
-  overflow-x: auto;
+  overflow-x: auto !important;
 }
 
 .updatetable {
@@ -1631,6 +1968,7 @@ h5 {
   margin-bottom: 1rem;
   color: #212529;
   border-collapse: collapse;
+  overflow-x: auto !important;
 }
 
 .updatetable th,
@@ -1676,6 +2014,7 @@ h5 {
 @media (max-width: 768px) {
   .updatetable-responsive {
       border: 0;
+      overflow-x: auto;
   }
 
   .updatetable th,
@@ -1719,6 +2058,7 @@ h5 {
       min-width: 300px;
       min-height: auto;
   }
+
 }
 
 
@@ -1839,7 +2179,7 @@ h5 {
   top: 0;
   left: 0;
   height: 100%;
-  width: 250px;
+  width: 16%;
   background-color: #343a40;
   transition: transform 0.3s ease;
   transform: translateX(-100%); /* Hidden by default */
@@ -1875,13 +2215,454 @@ h5 {
   z-index: 1100;
 }
 
+.dashboard-sidebar{
+  width: 100%;
+  display: flex;
+}
+
+
 @media (min-width: 768px) {
   .sidebar-wrapper {
-      transform: translateX(0); /* Always visible on larger screens */
+      transform: translateX(0); 
   }
 
   #sidebarCollapse {
       display: none; /* Hide the collapse button on larger screens */
   }
+  
 }
 
+@media (max-width: 768px) {
+  .sidebar-wrapper {
+    width: 250px;
+}
+
+  #sidebar-close {
+    background: #343a40;
+    color:red;
+    border: none;
+    padding: 10px;
+    cursor: pointer;
+    position: fixed;
+    top: 10px;
+    right: 20px;
+    z-index: 1100;
+  }
+  .sidebar-space{
+    margin-top: 40px;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+  }
+  
+}
+
+
+@media (max-width: 768px) {
+.admin-dashboard-x{
+  margin-left: 50px;
+}
+.smalldevice-space{
+  padding: 20px;
+}
+}
+
+@media (width: 768px) {
+  .sidebar-wrapper {
+    width: 140px;
+}
+
+
+  /* #sidebar-close {
+    background: #343a40;
+    color:red;
+    border: none;
+    padding: 10px;
+    cursor: pointer;
+    position: fixed;
+    top: 10px;
+    right: 20px;
+    z-index: 1100;
+  } */
+  .sidebar-space{
+    margin-top: 40px;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+  }
+  
+  }
+
+@media (max-width: 577px) {
+  /* Adjust Logo Size */
+  .custom-navbar .logo {
+    width: 150px;
+    height: 50px;
+    margin-left: 20px;
+    /* position: fixed; */
+  }
+  .order-detail-container{
+    max-width: 90vw;
+    
+  }
+
+  /* Align Navbar elements in one row */
+  .navbar-brand, .cart-container {
+    flex: 1;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+  }
+}
+
+@media (max-width: 577px) {
+  /* Sidebar Navigation */
+  .custom-collapse {
+    position: fixed;
+    left: -50%;
+    top: 0;
+    width: 50%;
+    height: 100vh;
+    background-color: #FED235 ;
+    transition: all 0.3s ease;
+    z-index: 1050;
+    display: flex;
+    flex-direction: column;
+    justify-content: start;
+    align-items: center;
+    overflow: hidden;
+  }
+  .navbar-link-badge{
+    display: flex;
+   flex: none;
+   margin: 0px;
+   padding: 0px;
+  }
+  .sidebar-components{
+    padding-left: 5%;
+    margin: 0px;
+    padding-top: 2%;
+    font-size: 15px;
+    font-weight: 400;
+    color: #000 !important;
+  }
+  .navbar-names{
+    color: #000;
+  }
+  .nav-link{
+    text-decoration: none;
+  }
+  .navbar-names:hover{
+    color: blue;
+    text-decoration: none;
+  }
+
+  /* When the Navbar is open */
+  .navbar-collapse.show {
+    left: 0;
+  }
+
+  .custom-placeholder::placeholder {
+    font-size: 10px; /* Adjust the size as needed */
+    color: #888; /* Optional: Adjust color if needed */
+    text-align: center;
+  }
+
+  /* Sidebar links */
+  .custom-nav {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 1.5rem;
+    margin-top: 50px;
+  }
+
+  /* Sidebar-specific styles */
+  .custom-nav .nav-link, .custom-nav .nav-item {
+    width: 100%;
+    text-align: center;
+  }
+
+  .navbar-link {
+    font-size: 1.2rem;
+    padding: 0px 5px;
+  }
+
+  .avatar-initials {
+    background-color: #02441E;
+    color: white;
+    border-radius: 50%;
+    padding: 10px;
+    position: relative;
+    left: 50%; /* Move to the center horizontally */
+    transform: translateX(-50%); /* Adjust the centering to account for the element's width */
+    margin-top: 35%; /* Adjust vertical position if needed */
+
+  }
+
+  .sidebar-username{
+     position: relative;
+     display: flex;
+    justify-content: center;
+    align-items: center;
+    margin-top: 5px;
+    font-size: 15px;
+    font-weight: 600;
+  }
+
+  #login_btn{
+    margin-top: 35%;
+    /* left: 43%; */
+    position: relative;
+    margin-bottom: 20px;
+    color:  black;
+  }
+  #login_btn :hover{
+    color: white;
+  }
+}
+
+@media (min-width: 577px) {
+  .custom-navbar .custom-collapse {
+    display: flex !important;
+  }
+
+  .custom-navbar .navbar-toggler {
+    display: none !important;
+  }
+}
+
+.custom-navbar .navbar-toggler {
+  display: block;
+  position: relative;
+}
+
+.custom-navbar .custom-collapse.show {
+  display: block;
+}
+
+@media (min-width: 577px) and (max-width: 992px) {
+    .custom-navbar .logo {
+    width: 150px;
+    height: 50px;
+  }
+  .content {
+    position: relative;
+    height: auto;
+    /* top: 15%; */
+    margin-top: 70px;
+    flex-grow: 1;
+    /* padding-top: 70px; Adjust this value to the height of your header */
+    overflow-y: auto;
+  }
+  .custom-placeholder::placeholder {
+    font-size: 10px; /* Adjust the size as needed */
+    color: #888; /* Optional: Adjust color if needed */
+    text-align: center;
+  }
+
+}
+
+@media (min-width: 576px) and (max-width: 768px) {
+  .navbar-expand-sm .container{
+    margin: 0px;
+  }
+
+}
+
+@media (max-width: 322px){
+
+  .custom-navbar .logo {
+    width: 100px;
+    height: 50px;
+    margin-left: 2px;
+  }
+
+}
+
+.dropdown-nav-menu {
+  z-index: 9999999999999;
+}
+
+@media (min-width: 576px) and (max-width: 650px) {
+  .avatar-initials {
+    width: 25px;
+    height: 25px;
+    background-color: #02441E;; /* Change this color as needed */
+    color: white;
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 15px;
+    font-weight: bold;
+  }
+  .cart-icon {
+    font-size: 1.5rem;
+    position: relative;
+  }
+  .custom-navbar .logo {
+    width: 100px;
+    height: 40px;
+    margin-left: 2px;
+  }
+}
+
+
+@media (min-width: 576px) and (max-width: 992px) {
+  .avatar-initials {
+    width: 25px;
+    height: 25px;
+    background-color: #02441E;; /* Change this color as needed */
+    color: white;
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 15px;
+    font-weight: bold;
+  }
+  .cart-icon {
+    font-size: 1.5rem;
+    position: relative;
+  }
+  .btn{
+    padding: 7px 15px;
+    font-size: 10px;
+  }
+}
+
+@media (min-width: 1249px){
+
+/* Target the table container to ensure it takes up the full width */
+.mdb-table {
+  width: 100% !important; /* Make sure the container is full width */
+  overflow-x: hidden !important; /* Prevent horizontal scrolling */
+  display: block; /* Ensure the container is a block element */
+}
+ .message-column {
+  min-width: 300px !important;
+  min-height: auto;
+}
+/* Style the table itself */
+table.dataTable {
+  width: 100% !important; /* Ensure the table is full width */
+  /* table-layout: fixed !important;  */
+  min-width: 70vw !important;
+  word-wrap: break-word !important; /* Wrap long words to fit inside cells */
+  font-size: 1vw !important; /* Adjust font size based on viewport width */
+}
+
+/* Style the table headers and cells */
+table.dataTable th, 
+table.dataTable td {
+  padding: 0.5rem !important; /* Reduce padding for better fit */
+  text-align: center !important; /* Center text in cells */
+  white-space: normal !important; /* Allow text to wrap */
+  font-size: 1vw !important;
+}
+
+/* Adjust font size for smaller screens */
+}
+
+
+@media (min-width: 419px) and (max-width: 1250px){
+
+  /* Target the table container to ensure it takes up the full width */
+  .mdb-table {
+    width: 100% !important; /* Make sure the container is full width */
+    display: block; /* Ensure the container is a block element */
+  }
+  
+  /* Style the table itself */
+  table.dataTable {
+    max-width: 100% !important; /* Ensure the table is full width */
+    min-width: 70vw !important;
+    /* word-wrap: break-word !important;  */
+    font-size: 1vw !important; /* Adjust font size based on viewport width */
+  }
+  
+  /* Style the table headers and cells */
+  table.dataTable th, 
+  table.dataTable td {
+    padding: 0.5rem !important; /* Reduce padding for better fit */
+    text-align: center !important; /* Center text in cells */
+    white-space: normal !important; /* Allow text to wrap */
+    font-size: 1.2vw !important;
+  }
+  
+  /* Adjust font size for smaller screens */
+  }
+  
+
+@media (max-width: 420px) {
+
+  /* Target the table container to ensure it takes up the full width */
+  .mdb-table {
+    width: 100% !important; /* Make sure the container is full width */
+    display: block; /* Ensure the container is a block element */
+  }
+  
+  /* Style the table itself */
+  table.dataTable {
+    max-width: 100% !important; /* Ensure the table is full width */
+    font-size: 1vw !important; /* Adjust font size based on viewport width */
+  }
+  
+  /* Style the table headers and cells */
+  table.dataTable th, 
+  table.dataTable td {
+    padding: 0.5rem !important; /* Reduce padding for better fit */
+    text-align: center !important; /* Center text in cells */
+    white-space: normal !important; /* Allow text to wrap */
+    font-size: 2vw !important;
+  }
+  .btn{
+    padding: 5px 10px;
+    font-size: 10px;
+  }
+  
+  /* Adjust font size for smaller screens */
+  }
+ /* Container styling to ensure the table fits within the viewport */
+
+ @media (min-width: 767px) and (max-width: 1110px) {
+.table-product {
+  width: 100% !important; /* Ensure the container is full width */
+  overflow-x: auto; /* Allow scrolling if necessary, but avoid it by resizing */
+  
+}
+
+/* Ensure table shrinks and adjusts based on screen size */
+.table-product table {
+  width: 100% !important; /* Make table responsive */
+  table-layout: relative; /* Fix the layout to ensure columns shrink appropriately */
+  /* font-size: 0.5vw !important; */
+}
+
+/* Ensure the images and inputs don't break the layout */
+.table-product img.img-size {
+  max-width: 150px;
+  height: auto;
+}
+
+/* Ensure columns with inputs or text wrap properly */
+.table-product th, 
+.table-product td {
+  white-space: normal !important; /* Allow text to wrap */
+  word-wrap: break-word !important; /* Break long words */
+  padding: 0.5rem; /* Reduce padding for a tighter layout */
+  font-size: 1.4vw !important;
+}
+
+/* Make inputs responsive */
+.table-product input.form-select {
+  width: 100% !important; /* Make input fields stretch to fit their cells */
+  box-sizing: border-box; /* Ensure padding doesn't affect the overall width */
+}
+
+/* Reduce the width of certain columns on smaller screens */
+
+ }

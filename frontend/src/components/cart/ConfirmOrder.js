@@ -18,7 +18,8 @@ import CryptoJS from 'crypto-js';
 
 const ConfirmOrder = () => {
     const dispatch = useDispatch();
-    
+    const location = useLocation();
+    sessionStorage.setItem('redirectPath', location.pathname);
     const { loading: orderLoading, orderDetail, error } = useSelector(state => state.orderState);
     const { shippingInfo, items: cartItems } = useSelector(state => state.cartState);
     const { user } = useSelector(state => state.authState);
@@ -26,7 +27,6 @@ const ConfirmOrder = () => {
     const [loading, setLoading] = useState(false);
     const [dummyUser,setDummyUser] = useState(false);
     const [shippingAmount, setShippingAmount] = useState(null);
-    const location = useLocation();
     const queryParams = new URLSearchParams(location.search);
     const message = queryParams.get('message');
     const [showModal, setShowModal] = useState(false);

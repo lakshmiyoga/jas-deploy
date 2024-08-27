@@ -3,7 +3,8 @@ import { useSelector, useDispatch } from 'react-redux';
 import { updateProfile, clearAuthError } from '../../actions/userActions';
 import {toast} from 'react-toastify'
 import { clearUpdateProfile } from '../../slices/authSlice';
-import { useNavigate } from 'react-router-dom';
+import { useLocation, useNavigate } from 'react-router-dom';
+import MetaData from '../Layouts/MetaData';
 
 const UpdateProfile = () => {
 
@@ -14,6 +15,8 @@ const UpdateProfile = () => {
     const [avatarPreview, setAvatarPreview] = useState("/images/default_avatar.png");
     const navigate = useNavigate()
     const dispatch = useDispatch();
+    const location = useLocation();
+    sessionStorage.setItem('redirectPath', location.pathname);
      console.log(error, user, isUpdated)
 
     const onChangeAvatar = (e) => {
@@ -63,7 +66,7 @@ const UpdateProfile = () => {
             toast(error, {
                 position: "bottom-center",
                 type: 'error',
-                onOpen: ()=> { dispatch(clearAuthError) }
+                onOpen: ()=> { dispatch(clearUpdateProfile()) }
             })
             return
         }
@@ -72,11 +75,16 @@ const UpdateProfile = () => {
 
 
   return (
+    <div>
+        <MetaData title={`Update Profile`} />
+          
+          <div className="products_heading">Update Profile</div>
+   
     <div className="row wrapper">
         
                 <div className="col-10 col-lg-5">
                     <form onSubmit={submitHandler} className="shadow-lg mt-0" encType='multipart/form-data'>
-                        <h1 className="mt-2 mb-5">Update Profile</h1>
+                        <h3 className="mt-2 mb-5">Update Profile</h3>
 
                         <div className="form-group">
                             <label htmlFor="email_field">Name</label>
@@ -132,6 +140,7 @@ const UpdateProfile = () => {
                         <button type="submit" className="btn update-btn btn-block mt-4 mb-3" >Update</button>
                     </form>
                 </div>
+            </div>
             </div>
   )
 }

@@ -3,11 +3,15 @@ import axios from 'axios';
 import { toast } from 'react-toastify';
 import Loader from '../Layouts/Loader';
 import Sidebar from '../admin/Sidebar'; // Assuming Sidebar component is in this path
+import { useLocation } from 'react-router-dom';
+import MetaData from '../Layouts/MetaData';
 
 const UpdatePrice = () => {
     const [items, setItems] = useState([]);
     const [file, setFile] = useState(null);
     const [loading, setloading] = useState(false);
+    const location = useLocation();
+    sessionStorage.setItem('redirectPath', location.pathname);
 
     const handleFileChange = (e) => {
         setFile(e.target.files[0]);
@@ -68,12 +72,13 @@ const UpdatePrice = () => {
 
     return (
         <div className="container-fluid" style={{ height: 'auto' }}>
+            <MetaData title={`Update Price`} />
             <div className="row">
                 <div className="col-12 col-md-2 p-0">
                     <Sidebar />
                 </div>
-                <div className="col-12 col-md-10">
-                    <h3 className="my-4">Product Price Upload</h3>
+                <div className="col-12 col-md-10 smalldevice-space">
+                    <h3 className="my-4 admin-dashboard-x">Product Price Upload</h3>
                     <Fragment>
                         {
                             loading ? <Loader /> : (

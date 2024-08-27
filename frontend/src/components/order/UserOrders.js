@@ -1,17 +1,41 @@
-import { Fragment, useEffect } from 'react'
+import { Fragment, useEffect, useState } from 'react'
 import MetaData from '../Layouts/MetaData';
 import { MDBDataTable } from 'mdbreact'
 import { useDispatch, useSelector } from 'react-redux';
 import { userOrders as userOrdersAction } from '../../actions/orderActions';
-import { Link } from 'react-router-dom';
+import { Link, useLocation } from 'react-router-dom';
 import Loader from '../Layouts/Loader';
+import { loadUser } from '../../actions/userActions';
+import store from '../../store';
+import { getProducts } from '../../actions/productsActions';
 
 export default function UserOrders() {
+    
     const {loading, userOrders = [] } = useSelector(state => state.orderState)
     const dispatch = useDispatch();
+    const [dummyUser,setDummyUser] = useState(false);
+
+    const location = useLocation();
+     sessionStorage.setItem('redirectPath', location.pathname);
+    // const { user } = useSelector(state => state.authState);
+
+    // useEffect(() => {
+    //     if(!user){
+    //         store.dispatch(loadUser());
+    //         store.dispatch(getProducts());
+    //     }
+       
+    //     if(user){
+    //         setDummyUser(true)
+    //         // console.log("hello")
+    //     }
+    // }, [user]);
 
     useEffect(() => {
-        dispatch(userOrdersAction())
+        // if(dummyUser){
+            dispatch(userOrdersAction())
+        // }
+       
     }, [])
 
     const setOrders = () => {
@@ -76,9 +100,9 @@ export default function UserOrders() {
 
     return (
         <Fragment>
-            <MetaData title="My Orders" />
+            <MetaData title={`My Orders`} />
             <div className="products_heading">Orders</div>
-            <div className='container'>
+            <div className='container mdb-table'>
             <Fragment>
                     {loading ? <Loader /> :
                         <MDBDataTable

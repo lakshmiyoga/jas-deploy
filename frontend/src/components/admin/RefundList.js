@@ -1,7 +1,7 @@
 import React, { useEffect, Fragment, useState } from 'react';
 import { Button } from "react-bootstrap";
 import { useDispatch, useSelector } from 'react-redux';
-import { Link } from "react-router-dom";
+import { Link, useLocation } from "react-router-dom";
 import { deleteOrder, adminOrders as adminOrdersAction } from "../../actions/orderActions"
 import { allPackedOrder, getporterOrder, updatedPackedOrder } from "../../actions/porterActions"
 import Loader from '../Layouts/Loader';
@@ -10,9 +10,12 @@ import { toast } from 'react-toastify';
 import Sidebar from "../admin/Sidebar";
 import { clearError } from '../../slices/productsSlice';
 import { clearOrderDeleted } from "../../slices/orderSlice";
+import MetaData from '../Layouts/MetaData';
 
 const RefundList = () => {
     // const { adminOrders: orders = [], error, isOrderDeleted }  = useSelector(state => state.orderState);
+    const location = useLocation();
+    sessionStorage.setItem('redirectPath', location.pathname);
     const { loading, allpackedOrderData: orders = [], allpackedOrderError,updatepackedOrderData :orderslist = []  } = useSelector(state => state.porterState);
     console.log("allpackedOrderData", orders, allpackedOrderError);
 
@@ -193,11 +196,14 @@ const RefundList = () => {
     // }, [])
 
     return (
+        <div>
+            <MetaData title={`Refund List`} />
+       
         <div className="row">
             <div className="col-12 col-md-2">
                 <Sidebar />
             </div>
-            <div className="col-12 col-md-10">
+            <div className="col-12 col-md-10 smalldevice-space container">
                 <h1 className="my-4">Refund List</h1>
                 <input
                     type="date"
@@ -205,6 +211,7 @@ const RefundList = () => {
                     onChange={(e) => setDate(e.target.value)}
                     className="form-control mb-3 date-input"
                 />
+                  <div className='mdb-table'  style={{display:'flex',justifyContent:'center', alignItems:'center'}}>
                 <Fragment>
                     {loading ? <Loader /> :
                          (
@@ -219,7 +226,9 @@ const RefundList = () => {
 
                     }
                 </Fragment>
+                </div>
             </div>
+        </div>
         </div>
     );
 };

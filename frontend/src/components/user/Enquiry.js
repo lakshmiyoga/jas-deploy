@@ -3,7 +3,7 @@ import { postEnquiryDetails } from '../../actions/enquiryActions'
 import MetaData from '../Layouts/MetaData'
 import { useDispatch, useSelector } from 'react-redux'
 import {  toast } from 'react-toastify';
-import { useNavigate } from 'react-router-dom';
+import { useLocation, useNavigate } from 'react-router-dom';
 import NumberInput from '../Layouts/NumberInput';
 import { clearEnquiryDeleted ,clearEnquiry} from '../../slices/enquirySlice';
 
@@ -17,6 +17,8 @@ const Enquiry = () => {
 // console.log("formdata",formData)
     const dispatch = useDispatch();
     const navigate = useNavigate();
+    const location = useLocation();
+    sessionStorage.setItem('redirectPath', location.pathname);
     const { loading, error,isSubmitted} = useSelector(state => state.enquiryState);
 
     // const hasShownToast = useRef(false);

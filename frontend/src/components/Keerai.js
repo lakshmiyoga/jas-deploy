@@ -13,6 +13,7 @@ import Card from 'react-bootstrap/Card';
 
 const Keerai = () => {
     const location = useLocation();
+    sessionStorage.setItem('redirectPath', location.pathname);
   const { category } = location.state || { category: 'Keerai' };
     const { products, loading, error } = useSelector((state) => state.productsState);
     const [keyword, setKeyword] = useState("")
@@ -65,7 +66,7 @@ const Keerai = () => {
                         sortedKeerai.length === 0 ? (
                             <h2 style={{ textAlign: 'center' }}>Product not found</h2>
                         ) : (
-                            <section id="products" className="container mt-5">
+                            <section id="products" className="container">
                                 <div className="row">
                                     {/* {vegetable && vegetable.map(product => (
 

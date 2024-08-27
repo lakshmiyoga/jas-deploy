@@ -8,11 +8,14 @@ import Loader from '../Layouts/Loader';
 import { getEnquiryDetails, deleteEnquiryDetails } from '../../actions/enquiryActions';
 import { createNewProduct } from '../../actions/productsActions';
 import { clearProductDeleted, clearError} from '../../slices/productSlice';
-import { Link } from "react-router-dom";
+import { Link, useLocation } from "react-router-dom";
 import { deleteProduct, getAdminProducts } from '../../actions/productsActions';
 import { clearEnquiryDeleted } from '../../slices/enquirySlice';
+import MetaData from '../Layouts/MetaData';
 
 const EnquiryRequest = () => {
+  const location = useLocation();
+  sessionStorage.setItem('redirectPath', location.pathname);
     // const { products = [], loading = true, error } = useSelector(state => state.productsState);
     // const { isProductDeleted, error: productError } = useSelector(state => state.productState);
     const { isEnquiryDeleted, error,loading = true, enquiry=[] } = useSelector(state => state.enquiryState);
@@ -200,15 +203,20 @@ const EnquiryRequest = () => {
 
 
     return (
+      <div>
+         <MetaData title={`Enquiry Request`} />
+     
         <div className="row">
             <div className="col-12 col-md-2">
                 <Sidebar />
             </div>
-            <div className="col-12 col-md-10 col-sm-6">
-                <h1 className="my-4">Enquiry List</h1>
+            <div className="col-12 col-md-10 smalldevice-space">
+                <h1 className="my-4 admin-dashboard-x">Enquiry List</h1>
+                <div className='mdb-table' style={{display:'flex',justifyContent:'center', alignItems:'center'}}>
                 <Fragment>
                     {loading ? <Loader /> :
-                        <div className="product-table-wrapper">
+                        // <div className="product-table-wrapper">
+                          
                         <MDBDataTable
                             data={setEnquiryDetails()}
                             bordered
@@ -216,9 +224,10 @@ const EnquiryRequest = () => {
                             hover
                             className="px-3 product-table "
                         />
-                    </div>
+                    //  </div>
                     }
                 </Fragment>
+                </div>
             </div>
 
             {showModal && (
@@ -242,6 +251,7 @@ const EnquiryRequest = () => {
                     </div>
                 </div>
             )}
+        </div>
         </div>
     )
 }

@@ -2,11 +2,15 @@ import React, { useEffect, useState } from 'react'
 import { updatePassword as updatePasswordAction, clearAuthError } from '../../actions/userActions'
 import { useDispatch, useSelector } from 'react-redux'
 import {toast} from 'react-toastify'
+import { useLocation } from 'react-router-dom'
+import MetaData from '../Layouts/MetaData'
 
 const UpdatePassword = () => {
 
     const [oldPassword, setOldPassword] =useState("")
     const [password, setPassword] =useState("")
+    const location = useLocation();
+    sessionStorage.setItem('redirectPath', location.pathname);
 
     const dispatch =useDispatch();
     const {isUpdated, error} = useSelector(state => state.authState)
@@ -44,10 +48,16 @@ const UpdatePassword = () => {
     },[isUpdated, error, dispatch])
 
   return (
-    <div className="row wrapper">
+    <div>
+         <MetaData title={`Update Password`} />
+          
+          <div className="products_heading">Update Password</div>
+   
+   
+    <div className="row wrapper mt-0">
     <div className="col-10 col-lg-5">
         <form onSubmit={submitHandler} className="shadow-lg">
-            <h1 className="mt-2 mb-5">Update Password</h1>
+            <h3 className="mt-2 mb-5">Update Password</h3>
             <div className="form-group">
                 <label htmlFor="old_password_field">Old Password</label>
                 <input
@@ -73,6 +83,7 @@ const UpdatePassword = () => {
             <button type="submit" className="btn update-btn btn-block mt-4 mb-3">Update Password</button>
         </form>
     </div>
+</div>
 </div>
   )
 }

@@ -112,7 +112,8 @@ const authSlice = createSlice({
         clearUpdateProfile(state, action) {
             return {
                 ...state,
-                isUpdated: false
+                isUpdated: false,
+                error:null
             }
         },
 
