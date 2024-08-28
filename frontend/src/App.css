@@ -2539,7 +2539,7 @@ h5 {
 /* Target the table container to ensure it takes up the full width */
 .mdb-table {
   width: 100% !important; /* Make sure the container is full width */
-  overflow-x: hidden !important; /* Prevent horizontal scrolling */
+  overflow-x: auto !important; /* Prevent horizontal scrolling */
   display: block; /* Ensure the container is a block element */
 }
  .message-column {

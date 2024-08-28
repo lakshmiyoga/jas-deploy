@@ -73,25 +73,32 @@ function App() {
     // if(!redirectPath){
     //     sessionStorage.setItem('redirectPath', '/');
     // }
-    console.log("redirectPath",redirectPath)
-    useEffect(() => {
-        store.dispatch(loadUser());
-    }, [])
+    console.log("redirectPath", redirectPath)
+
 
     const { isAuthenticated, loading, user } = useSelector(state => state.authState);
     const { product, loading: productLoading } = useSelector((state) => state.productState)
-
+    useEffect(() => {
+        if (!isAuthenticated) {
+            store.dispatch(loadUser());
+        }
+    }, [isAuthenticated]);
 
 
     // let isAdminRoute = true;
 
     useEffect(() => {
         if (isAuthenticated) {
-            if (redirectPath) {
-            const redirectPath = sessionStorage.getItem('redirectPath') || '/';
-            return navigate(redirectPath);
-            // sessionStorage.removeItem('redirectPath');
-            }
+            // if (redirectPath) {
+                // const redirectPath = sessionStorage.getItem('redirectPath') || '/';
+                // return navigate(redirectPath);
+                const redirectPath = sessionStorage.getItem('redirectPath');
+                if (redirectPath && location.pathname !== redirectPath) {
+                    sessionStorage.removeItem('redirectPath');
+                    navigate(redirectPath, { replace: true });
+                }
+                // sessionStorage.removeItem('redirectPath');
+            // }
         }
         // if (redirectPath) {
         //     const redirectPath = sessionStorage.getItem('redirectPath') || '/';
@@ -103,8 +110,14 @@ function App() {
         // }
 
         // store.dispatch(loadUser());
-        store.dispatch(getProducts());
-    }, [isAuthenticated, redirectPath]);
+        // store.dispatch(getProducts());
+    }, [isAuthenticated, navigate]);
+
+    useEffect(() => {
+        if (!product) {
+            store.dispatch(getProducts());
+        }
+    }, []);
 
 
 

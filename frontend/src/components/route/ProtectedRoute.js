@@ -28,6 +28,7 @@ export default function ProtectedRoute({ children, isAdmin }) {
             // const redirectPath = sessionStorage.getItem('redirectPath') || '/';
             // navigate(redirectPath);
             // sessionStorage.removeItem('redirectPath');
+            sessionStorage.removeItem('redirectPath');
             return children;
             
             // sessionStorage.removeItem('redirectPath');
@@ -35,27 +36,50 @@ export default function ProtectedRoute({ children, isAdmin }) {
 
         } else {
             const redirectPath = sessionStorage.getItem('redirectPath') || '/';
-           return navigate(redirectPath);
+        //    return navigate(redirectPath);
+            return <Navigate to={redirectPath} replace />;
             // sessionStorage.removeItem('redirectPath');
             // return <Navigate to="/" />;
             
         }
     }
 
-   
-    // if (!isAdmin) {
-    //     if (user && user.role === 'admin') {
-    //         const redirectPath = sessionStorage.getItem('redirectPath') || '/';
-    //         return navigate(redirectPath);
-    //         // return children;
-    //         // return <Navigate to="/admin/dashboard" />
-    //     } else {
-    //         const redirectPath = sessionStorage.getItem('redirectPath') || '/';
-    //        return navigate(redirectPath);
-    //         // return <Navigate to="/" />;
-    //     }
-    // }
-
 
     return children;
 }
+
+// import { useEffect } from 'react';
+// import { useSelector } from 'react-redux';
+// import { Navigate, useLocation, useNavigate } from 'react-router-dom';
+// import Loader from '../Layouts/Loader';
+
+// export default function ProtectedRoute({ children, isAdmin }) {
+//     const { isAuthenticated, loading, user } = useSelector(state => state.authState);
+//     const location = useLocation();
+//     const navigate = useNavigate();
+
+//     useEffect(() => {
+//         if (!loading && isAuthenticated) {
+//             const redirectPath = sessionStorage.getItem('redirectPath');
+//             if (redirectPath && location.pathname !== redirectPath) {
+//                 sessionStorage.removeItem('redirectPath');
+//                 navigate(redirectPath, { replace: true });
+//             }
+//         }
+//     }, [loading, isAuthenticated, location.pathname, navigate]);
+
+//     if (loading) {
+//         return <Loader />;
+//     }
+
+//     if (isAdmin && user && user.role !== 'admin') {
+//         return <Navigate to="/" replace />;
+//     }
+
+//     if (!isAuthenticated) {
+//         sessionStorage.setItem('redirectPath', location.pathname);
+//         return <Navigate to="/login" replace />;
+//     }
+
+//     return children;
+// }

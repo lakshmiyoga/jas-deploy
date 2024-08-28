@@ -191,6 +191,8 @@ import MetaData from '../Layouts/MetaData';
 // export default UpdateProduct;
 
 const UpdateProduct = () => {
+    // const location = useLocation();
+    // sessionStorage.setItem('redirectPath', location.pathname);
 
     const [formData, setFormData] = useState({
         englishName: "",
@@ -201,14 +203,17 @@ const UpdateProduct = () => {
         imagesPreview: [],
         imagesCleared: false
     });
-    const location = useLocation();
-    sessionStorage.setItem('redirectPath', location.pathname);
+   
     // console.log(formData)
 
     const { id } = useParams();
     const { loading, isProductUpdated, error, product } = useSelector((state) => state.productState);
     const dispatch = useDispatch();
     const navigate = useNavigate();
+
+    console.log(isProductUpdated,error,product)
+
+    
 
     useEffect(() => {
         if (product && product._id) {
@@ -275,15 +280,41 @@ const UpdateProduct = () => {
     };
 
     useEffect(() => {
+        if (product && product._id !== id) {
+            dispatch(getProduct(id));
+        }
+    }, [dispatch, id, product]);
+
+    // useEffect(() => {
+    //     if (isProductUpdated) {
+    //         toast('Product updated successfully!', {
+    //             type: 'success',
+    //             position: "bottom-center",
+    //             onOpen: () => dispatch(clearProductUpdated())
+    //         });
+    //     navigate('/admin/products');
+    //     }
+
+    //     if (error) {
+    //         toast(error, {
+    //             position: "bottom-center",
+    //             type: 'error',
+    //             onOpen: () => dispatch(clearError())
+    //         });
+    //     }
+
+    //     dispatch(getProduct(id));
+    // }, [dispatch, isProductUpdated, error]);
+    useEffect(() => {
         if (isProductUpdated) {
             toast('Product updated successfully!', {
                 type: 'success',
                 position: "bottom-center",
                 onOpen: () => dispatch(clearProductUpdated())
             });
-        navigate('/admin/products');
+            navigate('/admin/products');
         }
-
+    
         if (error) {
             toast(error, {
                 position: "bottom-center",
@@ -291,9 +322,7 @@ const UpdateProduct = () => {
                 onOpen: () => dispatch(clearError())
             });
         }
-
-        dispatch(getProduct(id));
-    }, [dispatch, isProductUpdated, error, id]);
+    }, [dispatch, isProductUpdated, error, navigate]);
 
     return (
         <div className="row">
