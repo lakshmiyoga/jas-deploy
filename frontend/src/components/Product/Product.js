@@ -2,11 +2,15 @@ import React, { useState } from 'react';
 import { useDispatch } from 'react-redux';
 import { toast } from 'react-toastify';
 import { addCartItem } from '../../actions/cartActions';
+import NumberInput from '../Layouts/NumberInput';
+import { useLocation } from 'react-router-dom';
 
 const Product = ({ products, category }) => {
     const [weight, setWeight] = useState({});
     const [quantity, setQuantity] = useState(1);
     const dispatch = useDispatch();
+    const location = useLocation();
+    sessionStorage.setItem('redirectPath', location.pathname);
 
     console.log("products",products)
 
@@ -70,7 +74,7 @@ const Product = ({ products, category }) => {
     };
 
     return (
-        <div className="container mt-5">
+        <div className="container mt-2  table-product">
             <div className="table-responsive">
                 <table className="table table-bordered">
                     <thead>
@@ -89,7 +93,7 @@ const Product = ({ products, category }) => {
                         {products && products.map((product, index) => (
                             <tr key={product._id}>
                                 <td className="serial-number">{index + 1}</td>
-                                <td className="Products Image" style={{ width: '15rem' }}>
+                                <td className="products-image">
                                     {product.images[0] && product.images[0].image && (
                                         <img
                                             className="img-size"
@@ -120,8 +124,8 @@ const Product = ({ products, category }) => {
                                     </select>
                                 </td> */}
                                 <td className="Weight">
-                                    <input
-                                        list={`weight-options-${product._id}`}
+                                    <NumberInput
+                                        // list={`weight-options-${product._id}`}
                                         value={weight[product._id] || ''}
                                         onChange={(e) => handleWeightChange(product._id, e.target.value)}
                                         onFocus={(e) => {
@@ -130,8 +134,8 @@ const Product = ({ products, category }) => {
                                         onBlur={(e) => {
                                             setTimeout(() => e.target.removeAttribute('list'), 100);
                                         }}
-                                        className="form-select no-arrow-input form-control"
-                                        placeholder="Select/type weight in Kg"
+                                        className="form-select no-arrow-input form-control custom-placeholder"
+                                        placeholder={product && product.category === 'Keerai'?"Select/type Piece":"Select/type weight in Kg"}
                                         // step="0.01"
                                         // min="0.25"
                                         type="number"
@@ -153,7 +157,7 @@ const Product = ({ products, category }) => {
                                 <td className="Stock">{product.stocks}</td>
                                 <td className="Add to Cart">
                                     <button
-                                        className="btn d-inline ml-4"
+                                        className="btn-add "
                                         onClick={() => handleAddToCart(product)}
                                         style={{
                                             backgroundColor: "#02441E",

@@ -2,11 +2,12 @@ import React, { Fragment } from 'react';
 import Sidebar from '../admin/Sidebar';
 import { useState, useEffect } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
-import {  useNavigate, useParams } from "react-router-dom";
+import {  useLocation, useNavigate, useParams } from "react-router-dom";
 import { updateProduct } from '../../actions/productsActions';
 import { clearProductUpdated, clearError } from '../../slices/productSlice';
 import { toast } from 'react-toastify';
 import { getProduct } from '../../actions/productAction';
+import MetaData from '../Layouts/MetaData';
 
 // const UpdateProduct = () => {
 //     const [name, setName] = useState("");
@@ -200,6 +201,8 @@ const UpdateProduct = () => {
         imagesPreview: [],
         imagesCleared: false
     });
+    const location = useLocation();
+    sessionStorage.setItem('redirectPath', location.pathname);
     // console.log(formData)
 
     const { id } = useParams();
@@ -294,14 +297,15 @@ const UpdateProduct = () => {
 
     return (
         <div className="row">
+            <MetaData title={`Update Product`} />
             <div className="col-12 col-md-2">
                 <Sidebar />
             </div>
-            <div className="col-12 col-md-10">
+            <div className="col-12 col-md-10 smalldevice-space">
                 <Fragment>
                     <div className="wrapper mt-0">
                         <form onSubmit={handleSubmit} className="shadow-lg" encType='multipart/form-data'>
-                            <h1 className="mb-4">Update Product</h1>
+                            <h1 className="mb-4 admin-dashboard-x">Update Product</h1>
 
                             <div className="form-group">
                                 <label htmlFor="name">English Name</label>

@@ -1,15 +1,18 @@
 import { Fragment, useEffect, useState } from "react";
 import { Button } from "react-bootstrap";
 import { useDispatch, useSelector } from "react-redux";
-import { Link } from "react-router-dom";
+import { Link, useLocation } from "react-router-dom";
 import { deleteUser, getUsers } from "../../actions/userActions";
 import { clearError, clearUserDeleted } from "../../slices/userSlice";
 import Loader from '../Layouts/Loader';
 import { MDBDataTable } from 'mdbreact';
 import { toast } from 'react-toastify';
 import Sidebar from "./Sidebar";
+import MetaData from "../Layouts/MetaData";
 
 export default function UserList() {
+    const location = useLocation();
+    sessionStorage.setItem('redirectPath', location.pathname);
     const { users = [], loading = true, error, isUserDeleted } = useSelector(state => state.userState);
     const dispatch = useDispatch();
     const [showModal, setShowModal] = useState(false);
@@ -111,11 +114,13 @@ export default function UserList() {
 
     return (
         <div className="row">
+            <MetaData title={`User List`} />
             <div className="col-12 col-md-2">
                 <Sidebar />
             </div>
-            <div className="col-12 col-md-10">
-                <h1 className="my-4">User List</h1>
+            <div className="col-12 col-md-10 smalldevice-space">
+                <h1 className="my-4 admin-dashboard-x">User List</h1>
+                <div className='mdb-table' style={{display:'flex',justifyContent:'center', alignItems:'center'}}>
                 <Fragment>
                     {loading ? <Loader /> :
                         <MDBDataTable
@@ -127,6 +132,7 @@ export default function UserList() {
                         />
                     }
                 </Fragment>
+                </div>
             </div>
 
             {showModal && (

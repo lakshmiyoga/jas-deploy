@@ -2,14 +2,16 @@ import React, { Fragment } from 'react'
 import Sidebar from '../admin/Sidebar'
 import { useState, useEffect } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
-import { useNavigate } from "react-router-dom";
+import { useLocation, useNavigate } from "react-router-dom";
 import { createNewProduct } from '../../actions/productsActions';
 import { clearProductCreated, clearError} from '../../slices/productSlice';
 import {  toast } from 'react-toastify';
+import MetaData from '../Layouts/MetaData';
 
 
 const NewProduct = () => {
-
+    const location = useLocation();
+    sessionStorage.setItem('redirectPath', location.pathname);
     const [englishName, setEnglishName] = useState("");
     const [tamilName, setTamilName] = useState("");
     const [price, setPrice] = useState("");
@@ -93,11 +95,14 @@ const NewProduct = () => {
     }, [isProductCreated, error, dispatch, navigate])
 
     return (
+        <div>
+             <MetaData title={`New Product`} />
+       
         <div className="row">
             <div className="col-12 col-md-2">
                 <Sidebar />
             </div>
-            <div className="col-12 col-md-10">
+            <div className="col-12 col-md-10 smalldevice-space">
                 <Fragment>
                     <div className="wrapper mt-0">
                         <form onSubmit={submitHandler}  className="shadow-lg" encType='multipart/form-data'>
@@ -230,6 +235,7 @@ const NewProduct = () => {
                     </div>
                 </Fragment>
             </div>
+        </div>
         </div>
 
     )

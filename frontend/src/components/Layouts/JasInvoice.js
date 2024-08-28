@@ -21,7 +21,7 @@ const JasInvoice = React.forwardRef(({ invoice }, ref) => {
             <div className="invoice-header">
                 <div className="top-info">
                     <div>
-                        <p>Invoice No: {invoice.order_id}</p>
+                        <p>Invoice No: {invoice.invoiceNumber}</p>
                         <p>Date: {formattedDate}</p>
                     </div>
                 </div>
@@ -35,7 +35,7 @@ const JasInvoice = React.forwardRef(({ invoice }, ref) => {
                     <div>
                         <h3><u>Buyer</u></h3>
                         <p>{invoice.user.name}</p>
-                        <p>{invoice.orderDetail.shippingInfo.address}</p>
+                        <p>{invoice.orderDetail.shippingInfo.address},{invoice.orderDetail.shippingInfo.area}</p>
                         <p>{invoice.orderDetail.shippingInfo.city}-{invoice.orderDetail.shippingInfo.postalCode}</p>
                     </div>
                 </div>
@@ -54,7 +54,7 @@ const JasInvoice = React.forwardRef(({ invoice }, ref) => {
                         <p>VEGETABLES SUPPLY</p>
                         <p>{invoice.order_id}</p>
                         <p>Chennai - Koyembedu</p>
-                        <p>{invoice.orderDetail.shippingInfo.city}</p>
+                        <p>{invoice.orderDetail.shippingInfo.city}-{invoice.orderDetail.shippingInfo.area}</p>
                         <p>Advance</p>
                         <p>9840814398,9176720068</p>
                     </div>

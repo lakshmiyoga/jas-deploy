@@ -223,9 +223,39 @@ const postPackedOrder = catchAsyncError(async (req, res, next) => {
     if (order) {
         return next(new ErrorHandler(` Dispatch Order already exist with this id: ${order_id}`, 404))
     }
+
+    // const generateInvoiceNumber = async () => {
+    //     try {
+            // Fetch the last order
+            const lastOrder = await Dispatch.findOne().sort({ _id: -1 }).exec();
+    
+            let newInvoiceNumber;
+            const prefix = "JAS";
+            const year = new Date().getFullYear();
+            const fiscalYear = `${year % 100}-${(year + 1) % 100}`;
+    
+            if (lastOrder && lastOrder.invoiceNumber) {
+                // Extract the number from the last invoice number
+                const lastInvoiceNumber = lastOrder.invoiceNumber.split('/')[1];
+                const nextInvoiceNumber = parseInt(lastInvoiceNumber, 10) + 1;
+    
+                newInvoiceNumber = `${prefix}/${nextInvoiceNumber}/${fiscalYear}`;
+            } else {
+                // No last order found, start with invoice number 1
+                newInvoiceNumber = `${prefix}/1/${fiscalYear}`;
+            }
+    
+    //         return newInvoiceNumber;
+    //     } catch (error) {
+    //         console.error('Error generating invoice number:', error);
+    //         throw error;
+    //     }
+    // };
+
     try {
         const packedOrder = new Dispatch({
             order_id: order_id,
+            invoiceNumber: newInvoiceNumber,
             user_id: user_id,
             user: user,
             orderDetail: orderDetail,

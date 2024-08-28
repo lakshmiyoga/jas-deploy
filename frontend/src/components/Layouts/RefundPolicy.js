@@ -1,12 +1,15 @@
 import React from 'react';
 import MetaData from './MetaData';
+import { useLocation } from 'react-router-dom';
 
 
 const RefundPolicy = () => {
+  const location = useLocation();
+  sessionStorage.setItem('redirectPath', location.pathname);
   return (
 
     <div>
-        <MetaData title={'Buy Best Products'} />
+        <MetaData title={'Privacy Policy'} />
       <div className="products_heading">Privacy Policy</div>
     <div className="refund-policy-container">
       <h3>Refund Policy</h3>

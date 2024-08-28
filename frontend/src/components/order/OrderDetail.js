@@ -1,6 +1,6 @@
 import { Fragment, useEffect, useState } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
-import { Link, useParams } from 'react-router-dom';
+import { Link, useLocation, useParams } from 'react-router-dom';
 import Loader from '../Layouts/Loader';
 import { orderDetail as orderDetailAction } from '../../actions/orderActions';
 import { CancelOrderResponse, createPorterOrderResponse, getPackedOrder, getporterOrder, packedOrder } from "../../actions/porterActions";
@@ -20,6 +20,8 @@ export default function OrderDetail() {
     const { id } = useParams();
     const [payment, setPayment] = useState(null)
     const invoiceRef = useRef();
+    const location = useLocation();
+    sessionStorage.setItem('redirectPath', location.pathname);
     console.log("orderDetail", orderDetail)
     console.log("getpackedOrderData", getpackedOrderData)
     console.log("orderItems", orderItems)
@@ -50,7 +52,7 @@ export default function OrderDetail() {
             {loading ? <Loader /> : (
                 <Fragment>
                     <div className="products_heading">Order Details</div>
-                    <div className="container ">
+                    <div className="container order-detail-container">
 
                         <div className="row d-flex justify-content-between" id='order_summary'>
                             <div className="col-12 col-lg-12 mt-5 order-details">
@@ -60,7 +62,7 @@ export default function OrderDetail() {
                                 <h4 className="mb-4">Shipping Info</h4>
                                 <p><b>Name:</b> {user.name}</p>
                                 <p><b>Phone:</b> {shippingInfo.phoneNo}</p>
-                                <p><b>Address:</b>{shippingInfo.address}, {shippingInfo.city}-{shippingInfo.postalCode}</p>
+                                <p><b>Address:</b>{shippingInfo.address},{shippingInfo.area},{shippingInfo.landmark},{shippingInfo.city}-{shippingInfo.postalCode}</p>
                                 <p><b>Amount:</b> {totalPrice} Rs</p>
                                 <p><b>Payment Mode:</b> {orderDetail && orderDetail.statusResponse && orderDetail.statusResponse.payment_method}</p>
 
@@ -218,7 +220,7 @@ export default function OrderDetail() {
                                     </div>
                                 </div>
                                 <div>
-                                    {getpackedOrderData && (
+                                    {orderStatus && orderStatus === 'Delivered' && (
                                         <div style={{ marginTop: '20px' }}>
                                             <button onClick={handlePrint} className='btn btn-primary'>Download Invoice</button>
                                             {ReactDOM.createPortal(

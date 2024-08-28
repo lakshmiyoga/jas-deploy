@@ -1,11 +1,14 @@
 import React,{useState} from 'react'
 import axios from 'axios';
+import { useLocation } from 'react-router-dom';
 
 const Refund = () => {
     const [orderId, setOrderId] = useState('');
     const [status, setStatus] = useState('');
     const [amount, setAmount] = useState('');
     const [errorMessage, setErrorMessage] = useState('');
+    const location = useLocation();
+    sessionStorage.setItem('redirectPath', location.pathname);
 
     const handleRefund = async () => {
         try {

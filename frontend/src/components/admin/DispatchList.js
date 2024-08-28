@@ -1,7 +1,7 @@
 import React, { useEffect, Fragment , useState} from 'react';
 import { Button } from "react-bootstrap";
 import { useDispatch, useSelector } from 'react-redux';
-import { Link } from "react-router-dom";
+import { Link, useLocation } from "react-router-dom";
 import { deleteOrder, adminOrders as adminOrdersAction, updateadminOrders } from "../../actions/orderActions"
 import {orderDetail as orderDetailAction } from '../../actions/orderActions';
 import Loader from '../Layouts/Loader';
@@ -10,8 +10,11 @@ import { toast } from 'react-toastify';
 import Sidebar from "../admin/Sidebar";
 import { clearError } from '../../slices/productsSlice';
 import { clearOrderDeleted ,adminOrderClear} from "../../slices/orderSlice";
+import MetaData from '../Layouts/MetaData';
 
 const DispatchList = () => {
+    const location = useLocation();
+    sessionStorage.setItem('redirectPath', location.pathname);
     const { adminOrders: orders = [], loading, error, isOrderDeleted ,updateadminOrders:orderlist=[]}  = useSelector(state => state.orderState);
     console.log(orders);
     
@@ -199,18 +202,22 @@ const DispatchList = () => {
 //   },[])
 
     return (
+        <div>
+            <MetaData title={`Dispatch List`} />
+       
         <div className="row">
             <div className="col-12 col-md-2">
                 <Sidebar />
             </div>
-            <div className="col-12 col-md-10">
-                <h1 className="my-4">Dispatch List</h1>
+            <div className="col-12 col-md-10 smalldevice-space">
+                <h1 className="my-4 admin-dashboard-x">Dispatch List</h1>
                 <input
                     type="date"
                     value={date}
                     onChange={(e) => setDate(e.target.value)}
                     className="form-control mb-3 date-input"
                 />
+                 <div className='mdb-table' style={{display:'flex',justifyContent:'center', alignItems:'center'}}>
                 <Fragment>
                     {loading ? <Loader /> :
                     orders && (
@@ -225,7 +232,9 @@ const DispatchList = () => {
                       
                     }
                 </Fragment>
+                </div>
             </div>
+        </div>
         </div>
     );
 };

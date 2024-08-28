@@ -2,8 +2,9 @@ import React, {  useState , useEffect,useRef} from 'react'
 import {register, clearAuthError} from "../../actions/userActions"
 import { useDispatch, useSelector } from 'react-redux';
 import {  toast } from 'react-toastify';
-import {useNavigate} from 'react-router-dom';
+import {useLocation, useNavigate} from 'react-router-dom';
 import { clearError } from '../../slices/userSlice';
+import MetaData from '../Layouts/MetaData';
 
 const Register = () => {
 
@@ -12,6 +13,10 @@ const Register = () => {
         email: "",
         password: ""
     });
+    // const location = useLocation();
+    // sessionStorage.setItem('redirectPath', location.pathname);
+    // const location = useLocation();
+    // sessionStorage.setItem('redirectPath', location.pathname);
     const [avatar, setAvatar] = useState("");
     const [avatarPreview, setAvatarPreview] = useState("/images/default_avatar.png");
     const dispatch = useDispatch();
@@ -71,10 +76,15 @@ const Register = () => {
 
 
   return (
+    <div>
+      <MetaData title={`Register`} />
+          
+          <div className="products_heading">Register</div>
+    
     <div className="row wrapper mt-0">
     <div className="col-10 col-lg-5">
     <form onSubmit={submitHandler}className="shadow-lg" encType='multipart/form-data'>
-        <h1 className="mb-3">Register</h1>
+        <h3 className="mb-3">Register</h3>
 
       <div className="form-group">
         <label htmlFor="email_field">Name</label>
@@ -142,6 +152,7 @@ const Register = () => {
         </button>
       </form>
       </div>
+</div>
 </div>
   )
 }

@@ -1,7 +1,7 @@
 import React, { useEffect, Fragment, useState } from 'react';
 import { Button } from "react-bootstrap";
 import { useDispatch, useSelector } from 'react-redux';
-import { Link } from "react-router-dom";
+import { Link, useLocation } from "react-router-dom";
 import { deleteProduct, getAdminProducts } from '../../actions/productsActions';
 import Loader from '../Layouts/Loader';
 import { MDBDataTable } from 'mdbreact';
@@ -9,11 +9,15 @@ import { toast } from 'react-toastify';
 import Sidebar from "../admin/Sidebar";
 import { clearError } from '../../slices/productsSlice';
 import { clearProductDeleted } from "../../slices/productSlice";
+import MetaData from '../Layouts/MetaData';
 
 const ProductList = () => {
+    // const location = useLocation();
+    // sessionStorage.setItem('redirectPath', location.pathname);
     const { products = [], loading = true, error } = useSelector(state => state.productsState);
     const { isProductDeleted, error: productError } = useSelector(state => state.productState);
     const dispatch = useDispatch();
+    
 
     const [showModal, setShowModal] = useState(false);
     const [productToDelete, setProductToDelete] = useState(null);
@@ -101,12 +105,16 @@ const ProductList = () => {
     };
 
     return (
+        <div>
+            <MetaData title={`Product List`} />
+      
         <div className="row">
             <div className="col-12 col-md-2">
                 <Sidebar />
             </div>
-            <div className="col-12 col-md-8 container">
-                <h1 className="my-4">Product List</h1>
+            <div className="col-12 col-md-10 smalldevice-space">
+                <h1 className="my-4 admin-dashboard-x">Product List</h1>
+                <div className='mdb-table ' style={{display:'flex',justifyContent:'center', alignItems:'center'}}>
                 <Fragment>
                     {loading ? <Loader /> :
                         <MDBDataTable
@@ -118,6 +126,7 @@ const ProductList = () => {
                         />
                     }
                 </Fragment>
+                </div>
             </div>
 
             {showModal && (
@@ -141,6 +150,7 @@ const ProductList = () => {
                     </div>
                 </div>
             )}
+        </div>
         </div>
     )
 }

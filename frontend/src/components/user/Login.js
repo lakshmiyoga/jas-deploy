@@ -11,9 +11,10 @@ const Login = () => {
 
     const [email, setEmail] = useState("");
     const [password, setPassword] = useState("");
+    // const location = useLocation();
+    // sessionStorage.setItem('redirectPath', location.pathname);
     const dispatch = useDispatch();
     const navigate = useNavigate();
-    const location = useLocation();
 
     const {loading, error, isAuthenticated, user} = useSelector(state => state.authState)
     // const redirect = location.search?'/'+location.search.split('=')[1]:'/';
@@ -33,10 +34,16 @@ const Login = () => {
               })
             if (user.role === 'admin') {
                 // hasShownToast.current = true;
+                const redirectPath = sessionStorage.getItem('redirectPath') || '/';
+                navigate(redirectPath);
                 navigate('/');
             } else {
             // hasShownToast.current = true;
-                navigate('/');
+            const redirectPath = sessionStorage.getItem('redirectPath') || '/';
+            navigate(redirectPath);
+            // sessionStorage.removeItem('redirectPath'); 
+            navigate('/');
+                
             }
             return
         }
@@ -53,16 +60,18 @@ const Login = () => {
 
     const submitHandler = async(e) => {
         e.preventDefault();
+        sessionStorage.removeItem('redirectPath');
         dispatch(login({email, password}));
     }
     // console.log(email, password);
     return (
         <div >
             <MetaData title={`Login`} />
+            <div className="products_heading">Login</div>
             <div className="row wrapper">
                 <div className="col-10 col-lg-5" >
                     <form onSubmit={submitHandler} className="shadow-lg mt-0">
-                        <h1 className="mb-3">Login</h1>
+                        <h3 className="mb-3">Login</h3>
                         <div className="form-group">
                             <label htmlFor="email_field">Email</label>
                             <input

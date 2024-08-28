@@ -538,6 +538,7 @@ const sendEmaildata = async (orderSummary) => {
 
 nodeCron.schedule('0 21 * * *', async () => {
     const date = new Date();
+    date.setDate(date.getDate() + 1);
     const formattedDate = date.toISOString().split('T')[0]; // Get YYYY-MM-DD format
 
     let BASE_URL;
@@ -761,6 +762,7 @@ const sendEmail = async (userSummary) => {
 
 nodeCron.schedule('00 21 * * *', async () => {
     const date = new Date();
+    date.setDate(date.getDate() + 1);
     const formattedDate = date.toISOString().split('T')[0]; // Get YYYY-MM-DD format
     console.log(formattedDate);
 
@@ -899,10 +901,10 @@ async function checkPaymentStatus() {
     }
 }
 
-// nodeCron.schedule('* * * * *', () => {
-//     console.log('Checking payment status...');
-//     checkPaymentStatus();
-// });
+nodeCron.schedule('* * * * *', () => {
+    console.log('Checking payment status...');
+    checkPaymentStatus();
+});
 
 async function checkRefundStatus() {
     try {
@@ -940,9 +942,9 @@ async function checkRefundStatus() {
     }
 
 }
-// nodeCron.schedule('* * * * *', () => {
-//     console.log('Checking payment status...');
-//     checkRefundStatus();
-// });
+nodeCron.schedule('* * * * *', () => {
+    console.log('Checking payment status...');
+    checkRefundStatus();
+});
 
 module.exports = { newOrder, getSingleOrder, getQuote, porterOrder, myOrders, orders, updateOrder, deleteOrder, getOrderSummaryByDate, getUserSummaryByDate, getRemoveResponse };

@@ -17,6 +17,7 @@ import Card from 'react-bootstrap/Card';
 
 const Fruits = () => {
     const location = useLocation();
+    sessionStorage.setItem('redirectPath', location.pathname);
     const { category } = location.state || { category: 'Fruits' };
     // const dispatch = useDispatch();
     const { products, loading, error } = useSelector((state) => state.productsState);
@@ -71,7 +72,7 @@ const Fruits = () => {
                         sortedFruits.length === 0 ? (
                             <h2 style={{ textAlign: 'center' }}>Product not found</h2>
                         ) : (
-                            <section id="products" className="container mt-5">
+                            <section id="products" className="container">
                                 <div className="row">
                                     {/* {fruits && fruits.map(product => (
 

@@ -1,16 +1,20 @@
 import { useEffect, useState} from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 import { resetPassword, clearAuthError } from '../../actions/userActions';
-import {useNavigate, useParams} from 'react-router-dom';
+import {useLocation, useNavigate, useParams} from 'react-router-dom';
 import { toast } from 'react-toastify';
+import MetaData from '../Layouts/MetaData';
 
 const ResetPassword = () => {
 
     const [password, setPassword] = useState("");
     const [confirmPassword, setConfirmPassword] = useState("");
+    const location = useLocation();
+    sessionStorage.setItem('redirectPath', location.pathname);
     const dispatch = useDispatch();
     const { isAuthenticated, error }  = useSelector(state => state.authState)
     const navigate = useNavigate();
+
     const { token } = useParams();
 
     const submitHandler  = (e) => {
@@ -42,6 +46,11 @@ const ResetPassword = () => {
     },[isAuthenticated, error, dispatch, navigate])
 
   return (
+    <div>
+         <MetaData title={`Reset Password`} />
+          
+          <div className="products_heading">Reset Password</div>
+   
     <div className="row wrapper">
             <div className="col-10 col-lg-5">
                 <form onSubmit={submitHandler} className="shadow-lg">
@@ -78,6 +87,7 @@ const ResetPassword = () => {
 
                 </form>
             </div>
+        </div>
         </div>
   )
 }

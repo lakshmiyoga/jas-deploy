@@ -1,11 +1,14 @@
 import React from 'react';
 import MetaData from './MetaData';
+import { useLocation } from 'react-router-dom';
 
 
 const About = () => {
+  const location = useLocation();
+  sessionStorage.setItem('redirectPath', location.pathname);
   return (
     <div>
-      <MetaData title={'Buy Best Products'} />
+      <MetaData title={'About Us'} />
       <div className="products_heading">About Us</div>
       
       <div className='about_container'>

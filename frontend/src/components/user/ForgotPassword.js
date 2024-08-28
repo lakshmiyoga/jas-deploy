@@ -2,10 +2,14 @@ import React, { useState , useEffect} from 'react'
 import { useDispatch, useSelector } from 'react-redux'
 import { forgotPassword, clearAuthError } from '../../actions/userActions'
 import {toast} from 'react-toastify'
+import { useLocation } from 'react-router-dom'
+import MetaData from '../Layouts/MetaData'
 
 const ForgotPassword = () => {
 
     const [email, setEmail] = useState("")
+    const location = useLocation();
+    sessionStorage.setItem('redirectPath', location.pathname);
     const dispatch = useDispatch()
     const { error, message } = useSelector(state => state.authState);
 
@@ -37,10 +41,15 @@ const ForgotPassword = () => {
     }, [message, error, dispatch])
 
   return (
+    <div>
+        <MetaData title={`Forgot Password`} />
+            <div className="products_heading">Forgot Password</div>
+
+    
     <div className="row wrapper">
                 <div className="col-10 col-lg-5">
                     <form onSubmit={submitHandler} className="shadow-lg">
-                        <h1 className="mb-3">Forgot Password</h1>
+                        <h3 className="mb-3">Forgot Password</h3>
                         <div className="form-group">
                             <label htmlFor="email_field">Enter Email</label>
                             <input
@@ -61,6 +70,7 @@ const ForgotPassword = () => {
 
                     </form>
                 </div>
+            </div>
             </div>
   )
 }

@@ -1,7 +1,7 @@
 import React, { useEffect, Fragment } from 'react';
 import { Button } from "react-bootstrap";
 import { useDispatch, useSelector } from 'react-redux';
-import { Link } from "react-router-dom";
+import { Link, useLocation } from "react-router-dom";
 import { deleteOrder, adminOrders as adminOrdersAction } from "../../actions/orderActions"
 import Loader from '../Layouts/Loader';
 import { MDBDataTable } from 'mdbreact';
@@ -9,8 +9,11 @@ import { toast } from 'react-toastify';
 import Sidebar from "../admin/Sidebar";
 import { clearError } from '../../slices/productsSlice';
 import { clearOrderDeleted } from "../../slices/orderSlice";
+import MetaData from '../Layouts/MetaData';
 
 const PaymentList = () => {
+    const location = useLocation();
+    sessionStorage.setItem('redirectPath', location.pathname);
     const { adminOrders: orders = [], loading = true, error, isOrderDeleted }  = useSelector(state => state.orderState);
     const dispatch = useDispatch();
 
@@ -74,7 +77,7 @@ const PaymentList = () => {
                 //         </Button>
                 //     </Fragment>
                 // )
-                actions: <Link to={`/order/${order.order_id}`} className="btn btn-primary" >
+                actions: <Link to={`/admin/order/${order.order_id}`} className="btn btn-primary" >
                     <i className='fa fa-eye'></i>
                 </Link>
             });
@@ -110,12 +113,16 @@ const PaymentList = () => {
     }, [dispatch, error, isOrderDeleted]);
 
     return (
+        <div>
+             <MetaData title={`Payment List`} />
+       
         <div className="row">
             <div className="col-12 col-md-2">
                 <Sidebar />
             </div>
-            <div className="col-12 col-md-10">
-                <h1 className="my-4">Payment List</h1>
+            <div className="col-12 col-md-10 smalldevice-space">
+                <h1 className="my-4 admin-dashboard-x">Payment List</h1>
+                <div className='mdb-table' style={{display:'flex',justifyContent:'center', alignItems:'center'}}>
                 <Fragment>
                     {loading ? <Loader /> :
                         <MDBDataTable
@@ -127,7 +134,9 @@ const PaymentList = () => {
                         />
                     }
                 </Fragment>
+                </div>
             </div>
+        </div>
         </div>
     );
 };

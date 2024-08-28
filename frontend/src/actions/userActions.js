@@ -99,7 +99,9 @@ export const login = createAsyncThunk('post/login', async ({email,password},{dis
 export const logout =  async (dispatch) => {
 
   try {
+   
       await axios.get(`/api/v1/logout`);
+      sessionStorage.removeItem('redirectPath');
       dispatch(logoutSuccess())
   } catch (error) {
       dispatch(logoutFail())
