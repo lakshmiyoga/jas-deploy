@@ -901,10 +901,10 @@ async function checkPaymentStatus() {
     }
 }
 
-nodeCron.schedule('* * * * *', () => {
-    console.log('Checking payment status...');
-    checkPaymentStatus();
-});
+// nodeCron.schedule('* * * * *', () => {
+//     console.log('Checking payment status...');
+//     checkPaymentStatus();
+// });
 
 async function checkRefundStatus() {
     try {
@@ -942,9 +942,9 @@ async function checkRefundStatus() {
     }
 
 }
-nodeCron.schedule('* * * * *', () => {
-    console.log('Checking payment status...');
-    checkRefundStatus();
-});
+// nodeCron.schedule('* * * * *', () => {
+//     console.log('Checking Refund status...');
+//     checkRefundStatus();
+// });
 
 module.exports = { newOrder, getSingleOrder, getQuote, porterOrder, myOrders, orders, updateOrder, deleteOrder, getOrderSummaryByDate, getUserSummaryByDate, getRemoveResponse };
