@@ -5,7 +5,7 @@ import { useLocation, useNavigate, useParams } from "react-router-dom";
 import { orderDetail as orderDetailAction, updateOrder, porterOrder, RemoveOrderResponse } from "../../actions/orderActions";
 import { CancelOrderResponse, createPorterOrderResponse, getPackedOrder, getporterOrder, initRefund, packedOrder } from "../../actions/porterActions";
 import { toast } from "react-toastify";
-import { clearOrderUpdated, clearError, adminOrderRemoveClearError } from "../../slices/orderSlice";
+import { clearOrderUpdated, clearError, adminOrderRemoveClearError, orderDetailClear } from "../../slices/orderSlice";
 import { clearRefundError } from "../../slices/porterSlice";
 import { Link } from "react-router-dom";
 import { v4 as uuidv4 } from 'uuid';
@@ -50,6 +50,8 @@ const RefundOrder = () => {
             setEditableWeights(orderItems.map(item => item.productWeight))
         }
     }, [orderDetail]);
+
+   
 
 
     // const handleItemSelection = (index) => {
@@ -321,17 +323,31 @@ const RefundOrder = () => {
                 onOpen: () => { dispatch(clearRefundError()) }
             });
         }
-
+        // dispatch(porterClearData())
+        // dispatch(porterClearResponse());
         dispatch(orderDetailAction(id));
         dispatch(getPackedOrder({ order_id: id }))
-
-        dispatch(porterClearData())
-        dispatch(createPorterOrderResponse({ order_id: id, porterOrder_id: porterOrderData?.porterOrder?.order_id }))
         dispatch(getporterOrder({ order_id: id }))
 
-    }, [dispatch, id, refreshData, porterOrderDetail, error,refundData,refundError]);
+        // dispatch(createPorterOrderResponse({ order_id: id, porterOrder_id: porterOrderData?.porterOrder?.order_id }))
+        setRefreshData(true)
+        // dispatch(getporterOrder({ order_id: id }))
 
+    }, [dispatch, id, porterOrderDetail, error,refundData,refundError]);
 
+    useEffect(()=>{
+        if(porterOrderData && refreshData){
+        dispatch(createPorterOrderResponse({ order_id: porterOrderData && porterOrderData.order_id, porterOrder_id: porterOrderData?.porterOrder?.order_id }))
+        }
+    },[porterOrderData])
+
+    useEffect(()=>{
+    if(refreshData && porterOrderResponse){
+        dispatch(porterClearData())
+        dispatch(getporterOrder({ order_id: id }))
+        setRefreshData(false)
+    }
+        },[refreshData,porterOrderResponse])
     return (
         <div>
             <MetaData title={`Refund Order`} />

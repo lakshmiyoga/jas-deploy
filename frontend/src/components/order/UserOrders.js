@@ -44,32 +44,32 @@ export default function UserOrders() {
                 {
                     label: 'S.No',
                     field: 's_no',
-                    sort: 'asc'
+                    sort: 'disabled'
                 },
                 {
                     label: "Order ID",
                     field: 'id',
-                    sort: "asc"
+                    sort: "disabled"
                 },
                 {
                     label: "Number of Items",
                     field: 'numOfItems',
-                    sort: "asc"
+                    sort: "disabled"
                 },
                 {
                     label: "Amount",
                     field: 'amount',
-                    sort: "asc"
+                    sort: "disabled"
                 },
                 {
                     label: "Status",
                     field: 'status',
-                    sort: "asc"
+                    sort: "disabled"
                 },
                 {
                     label: "Actions",
                     field: 'actions',
-                    sort: "asc"
+                    sort: "disabled"
                 }
             ],
             rows: []

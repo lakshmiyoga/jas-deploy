@@ -9,8 +9,9 @@ import { MDBDataTable } from 'mdbreact';
 import { toast } from 'react-toastify';
 import Sidebar from "../admin/Sidebar";
 import { clearError } from '../../slices/productsSlice';
-import { clearOrderDeleted ,adminOrderClear} from "../../slices/orderSlice";
+import { clearOrderDeleted ,adminOrderClear, orderDetailClear} from "../../slices/orderSlice";
 import MetaData from '../Layouts/MetaData';
+import { porterClearData, porterClearResponse } from '../../slices/porterSlice';
 
 const DispatchList = () => {
     const location = useLocation();
@@ -30,59 +31,63 @@ const DispatchList = () => {
     const [refresh,setRefresh]=useState(false);
     const [pageloading, setPageLoading] = useState(true)
 
-
+    useEffect(() => {
+        dispatch(orderDetailClear());
+        dispatch(porterClearData());
+        dispatch(porterClearResponse());
+    }, [])
     const setOrders = () => {
         const data = {
             columns: [
                 {
                     label: 'S.No',
                     field: 's_no',
-                    sort: 'asc'
+                    sort: 'disabled'
                 },
                 {
                     label: 'ID',
                     field: 'id',
-                    sort: 'asc'
+                    sort: 'disabled'
                 },
                 {
                     label: 'Name',
                     field: 'name',
-                    sort: 'asc'
+                    sort: 'disabled'
                 },
                 {
                     label: 'Phone.No',
                     field: 'phone_no',
-                    sort: 'asc'
+                    sort: 'disabled'
                 },
                 {
                     label: 'Email',
                     field: 'email',
-                    sort: 'asc'
+                    sort: 'disabled'
                 },
                 // {
                 //     label: 'Number of Items',
                 //     field: 'noOfItems',
-                //     sort: 'asc'
+                //     sort: 'disabled'
                 // },
                 {
                     label: 'Amount',
                     field: 'amount',
-                    sort: 'asc'
+                    sort: 'disabled'
                 },
                 {
                     label: 'OrderStatus',
                     field: 'orderstatus',
-                    sort: 'asc'
+                    sort: 'disabled'
                 },
                 {
                     label: 'PaymentStatus',
                     field: 'paymentstatus',
-                    sort: 'asc'
+                    sort: 'disabled'
                 },
                 {
                     label: 'Actions',
                     field: 'actions',
-                    sort: 'asc'
+                    sort: 'disabled'
                 }
             ],
             rows: []
@@ -114,10 +119,10 @@ const DispatchList = () => {
                 // noOfItems: order.orderItems.length,
                 amount: `Rs.${order.totalPrice}`,
                 orderstatus: (
-                    <p className={order.orderStatus && order.orderStatus.includes('Delivered') ? 'greenColor' : 'redColor' } ><p>{order.orderStatus}</p></p>
+                    <div className={order.orderStatus && order.orderStatus.includes('Delivered') ? 'greenColor' : 'redColor' } >{order.orderStatus}</div>
                 ),
                 paymentstatus: (
-                    <p className='greenColor'><p>{order.paymentStatus}</p></p>
+                    <div className='greenColor'>{order.paymentStatus}</div>
                 ),
                 actions: (
                     <Fragment>

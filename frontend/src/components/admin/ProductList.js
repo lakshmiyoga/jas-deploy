@@ -28,22 +28,22 @@ const ProductList = () => {
                 {
                     label: 'S.No',
                     field: 's_no',
-                    sort: 'asc'
+                    sort: 'disabled'
                 },
                 {
                     label: 'Name',
                     field: 'name',
-                    sort: 'asc'
+                    sort: 'disabled'
                 },
                 {
                     label: 'Price',
                     field: 'price',
-                    sort: 'asc'
+                    sort: 'disabled'
                 },
                 {
                     label: 'Actions',
                     field: 'actions',
-                    sort: 'asc'
+                    sort: 'disabled'
                 }
             ],
             rows: []
@@ -118,6 +118,7 @@ const ProductList = () => {
                 <Fragment>
                     {loading ? <Loader /> :
                         <MDBDataTable
+                            
                             data={setProducts()}
                             bordered
                             noBottomColumns

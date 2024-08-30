@@ -26,27 +26,27 @@ export default function UserList() {
                 {
                     label: 'S.No',
                     field: 's_no',
-                    sort: 'asc'
+                    sort: 'disabled'
                 },
                 {
                     label: 'Name',
                     field: 'name',
-                    sort: 'asc'
+                    sort: 'disabled'
                 },
                 {
                     label: 'Email',
                     field: 'email',
-                    sort: 'asc'
+                    sort: 'disabled'
                 },
                 {
                     label: 'Role',
                     field: 'role',
-                    sort: 'asc'
+                    sort: 'disabled'
                 },
                 {
                     label: 'Actions',
                     field: 'actions',
-                    sort: 'asc'
+                    sort: 'disabled'
                 }
             ],
             rows: []

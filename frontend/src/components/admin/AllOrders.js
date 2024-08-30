@@ -10,7 +10,7 @@
 // import { clearError } from '../../slices/productsSlice';
 // import { clearOrderDeleted } from "../../slices/orderSlice";
 
-// const OrderList = () => {
+// const AllOrders = () => {
 //     const { adminOrders: orders = [], loading = true, error, isOrderDeleted } = useSelector(state => state.orderState);
 //     console.log("orders", orders);
 
@@ -34,52 +34,52 @@
 //                 {
 //                     label: 'S.No',
 //                     field: 's_no',
-//                     sort: 'disabled'
+//                     sort: 'asc'
 //                 },
 //                 {
 //                     label: 'ID',
 //                     field: 'id',
-//                     sort: 'disabled'
+//                     sort: 'asc'
 //                 },
 //                 {
 //                     label: 'Name',
 //                     field: 'name',
-//                     sort: 'disabled'
+//                     sort: 'asc'
 //                 },
 //                 {
 //                     label: 'Phone.No',
 //                     field: 'phone_no',
-//                     sort: 'disabled'
+//                     sort: 'asc'
 //                 },
 //                 {
 //                     label: 'Email',
 //                     field: 'email',
-//                     sort: 'disabled'
+//                     sort: 'asc'
 //                 },
 //                 // {
 //                 //     label: 'Number of Items',
 //                 //     field: 'noOfItems',
-//                 //     sort: 'disabled'
+//                 //     sort: 'asc'
 //                 // },
 //                 {
 //                     label: 'Amount',
 //                     field: 'amount',
-//                     sort: 'disabled'
+//                     sort: 'asc'
 //                 },
 //                 {
 //                     label: 'OrderStatus',
 //                     field: 'orderstatus',
-//                     sort: 'disabled'
+//                     sort: 'asc'
 //                 },
 //                 {
 //                     label: 'PaymentStatus',
 //                     field: 'paymentstatus',
-//                     sort: 'disabled'
+//                     sort: 'asc'
 //                 },
 //                 {
 //                     label: 'Actions',
 //                     field: 'actions',
-//                     sort: 'disabled'
+//                     sort: 'asc'
 //                 }
 //             ],
 //             rows: []
@@ -191,7 +191,9 @@
 //     );
 // };
 
-// export default OrderList;
+// export default AllOrders;
+
+
 import React, { useEffect, Fragment, useState } from 'react';
 import { Button } from "react-bootstrap";
 import { useDispatch, useSelector } from 'react-redux';
@@ -202,23 +204,18 @@ import { MDBDataTable } from 'mdbreact';
 import { toast } from 'react-toastify';
 import Sidebar from "../admin/Sidebar";
 import { clearError } from '../../slices/productsSlice';
-import { clearOrderDeleted, orderDetailClear } from "../../slices/orderSlice";
+import { clearOrderDeleted } from "../../slices/orderSlice";
 import MetaData from '../Layouts/MetaData';
-import { porterClearData, porterClearResponse } from '../../slices/porterSlice';
 
-const OrderList = () => {
+const AllOrders = () => {
     const location = useLocation();
     sessionStorage.setItem('redirectPath', location.pathname);
     const { adminOrders: orders = [], loading = true, error, isOrderDeleted } = useSelector(state => state.orderState);
-    const [date, setDate] = useState(new Date().toISOString().split('T')[0]);
+    // const [date, setDate] = useState(new Date().toISOString().split('T')[0]);
+    const [date, setDate] = useState('');
+    console.log("allorders",orders)
 
     const dispatch = useDispatch();
-    useEffect(()=>{
-        dispatch(orderDetailClear());
-       dispatch(porterClearData());
-       dispatch(porterClearResponse());
-    },[])
-
 
     const setOrders = () => {
         const data = {
@@ -226,80 +223,70 @@ const OrderList = () => {
                 {
                     label: 'S.No',
                     field: 's_no',
-                    sort: 'disabled'
+                    sort: 'asc'
                 },
                 {
                     label: 'ID',
                     field: 'id',
-                    sort: 'disabled'
+                    sort: 'asc'
                 },
                 {
                     label: 'Name',
                     field: 'name',
-                    sort: 'disabled'
+                    sort: 'asc'
                 },
                 {
                     label: 'Phone.No',
                     field: 'phone_no',
-                    sort: 'disabled'
+                    sort: 'asc'
                 },
                 {
                     label: 'Email',
                     field: 'email',
-                    sort: 'disabled'
+                    sort: 'asc'
                 },
                 {
                     label: 'Amount',
                     field: 'amount',
-                    sort: 'disabled'
+                    sort: 'asc'
                 },
                 {
                     label: 'OrderStatus',
                     field: 'orderstatus',
-                    sort: 'disabled'
+                    sort: 'asc'
                 },
                 {
                     label: 'PaymentStatus',
                     field: 'paymentstatus',
-                    sort: 'disabled'
+                    sort: 'asc'
                 },
                 {
                     label: 'Actions',
                     field: 'actions',
-                    sort: 'disabled'
+                    sort: 'asc'
                 }
             ],
             rows: []
         };
 
-        // Filter orders by selected date and specific conditions
-        const filteredOrders = orders.filter(order => {
+         // Sort orders by creation date (newest first)
+         const sortedOrders = [...orders].sort((a, b) => new Date(b.createdAt) - new Date(a.createdAt));
+
+          // Filter orders by selected date and specific conditions
+          const filteredOrders = sortedOrders.filter(order => {
             if (!order.orderDate) return false;
 
             // Parse order date and match it with the selected date
             const orderDate = new Date(order.orderDate).toISOString().split('T')[0];
-            const matchesDate = orderDate === date;
+            const matchesDate = date ? orderDate === date : true; // Match only if date is set
             const matchesStatus = order.paymentStatus === 'CHARGED' && (order.orderStatus === 'Processing' || order.orderStatus === 'Packed');
 
             return matchesDate && matchesStatus;
         });
-
-        // If no orders match the criteria, show "No data available"
-        // if (filteredOrders.length === 0) {
-        //     data.rows.push({
-        //         s_no: '-',
-        //         id: '-',
-        //         name: 'No data available',
-        //         phone_no: '-',
-        //         email: '-',
-        //         amount: '-',
-        //         orderstatus: '-',
-        //         paymentstatus: '-',
-        //         actions: '-'
-        //     });
-        // } else {
+       
             // Map the filtered orders to table rows
-            filteredOrders.sort((a, b) => new Date(b.createdAt) - new Date(a.createdAt)).forEach((order, index) => {
+            // sortedOrders.sort((a, b) => new Date(b.createdAt) - new Date(a.createdAt)).forEach((order, index) => {
+                 filteredOrders.forEach((order, index) => {
                 data.rows.push({
                     s_no: index + 1,
                     id: order.order_id,
@@ -308,14 +295,14 @@ const OrderList = () => {
                     email: order.user.email,
                     amount: `Rs.${order.totalPrice}`,
                     orderstatus: (
-                        <div className={order.orderStatus.includes('Delivered') ? 'greenColor' : 'redColor'}>
+                        <p className={order.orderStatus.includes('Delivered') ? 'greenColor' : 'redColor'}>
                             {order.orderStatus}
-                        </div>
+                        </p>
                     ),
                     paymentstatus: (
-                        <div className='greenColor'>
+                        <p className='greenColor'>
                             {order.paymentStatus}
-                        </div>
+                        </p>
                     ),
                     actions: (
                         <Fragment>
@@ -358,7 +345,7 @@ const OrderList = () => {
                 <Sidebar />
             </div>
             <div className="col-12 col-md-10 smalldevice-space">
-                <h1 className="my-4 admin-dashboard-x">Order List</h1>
+                <h1 className="my-4 admin-dashboard-x">All Orders</h1>
                 <input
                     type="date"
                     value={date}
@@ -384,5 +371,5 @@ const OrderList = () => {
     );
 };
 
-export default OrderList;
+export default AllOrders;
 

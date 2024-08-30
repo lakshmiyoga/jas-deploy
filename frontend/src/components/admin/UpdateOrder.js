@@ -301,7 +301,7 @@ const UpdateOrder = () => {
             orderDetail: orderDetail,
             updatedItems: updatedItems,
             dispatchedTable: dispatchedTable,
-            orderDate:orderDetail.orderDate,
+            orderDate: orderDetail.orderDate,
             totalDispatchedAmount: totalDispatchedAmount,
             totalRefundableAmount: totalRefundableAmount
         };
@@ -376,29 +376,39 @@ const UpdateOrder = () => {
 
         //     fetchData();
         // }
-        dispatch(porterClearData())
-        dispatch(createPorterOrderResponse({ order_id: porterOrderData && porterOrderData.order_id, porterOrder_id: porterOrderData?.porterOrder?.order_id }))
-        dispatch(getporterOrder({ order_id: id }))
         setRefreshData(true)
 
-    }, [dispatch, id, porterOrderDetail, error,packedOrderData]);
+    }, [dispatch, id, porterOrderDetail, error, packedOrderData]);
+    useEffect(() => {
+        if (porterOrderData && refreshData) {
+            dispatch(createPorterOrderResponse({ order_id: porterOrderData && porterOrderData.order_id, porterOrder_id: porterOrderData?.porterOrder?.order_id }))
+        }
+    }, [porterOrderData])
 
     useEffect(() => {
-        const handlePorterOrder = async () => {
-            if (porterOrderResponse || refreshData) {
-                await dispatch(porterClearResponse());
-                await dispatch(porterClearData());
-                await dispatch(getporterOrder({ order_id: id }));
-            }
-        };
+        if (refreshData && porterOrderResponse) {
+            dispatch(porterClearData())
+            dispatch(getporterOrder({ order_id: id }))
+            setRefreshData(false)
+        }
+    }, [refreshData, porterOrderResponse])
 
-        handlePorterOrder();
-    }, [porterOrderResponse, refreshData])
+    // useEffect(() => {
+    //     const handlePorterOrder = async () => {
+    //         if (porterOrderResponse || refreshData) {
+    //             await dispatch(porterClearResponse());
+    //             await dispatch(porterClearData());
+    //             await dispatch(getporterOrder({ order_id: id }));
+    //         }
+    //     };
+
+    //     handlePorterOrder();
+    // }, [porterOrderResponse, refreshData])
 
     return (
-        
+
         <div className="row">
-             <MetaData title={`Update Order`} />
+            <MetaData title={`Update Order`} />
             <div className="col-12 col-md-2">
                 <Sidebar />
             </div>
@@ -428,7 +438,7 @@ const UpdateOrder = () => {
                                         <p><b>Order Status:</b></p>
                                         <p className={orderStatus && orderStatus.includes('Delivered') ? 'greenColor' : 'redColor'} style={{ marginLeft: '10px' }}><b>{orderStatus}</b></p>
                                     </div>
-                    
+
                                 </div>
 
                                 {/* <h4 className="my-4">Payment status</h4>
