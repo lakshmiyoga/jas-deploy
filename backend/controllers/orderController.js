@@ -831,27 +831,252 @@ const getRemoveResponse = catchAsyncError(async (req, res, next) => {
 
 })
 
+// async function checkPaymentStatus() {
+//     try {
+//         // Fetch orders that are still pending or in-progress
+//         const orders = await PorterModel.find({
+//             'porterResponse.status': { $nin: ['ended', 'cancelled'] }
+//         });
+//         //   console.log("orders",orders)
+//         // Use for...of to handle async operations properly
+//         for (const order of orders) {
+//             try {
+//                 if(order && order.porterOrder){
+//                     const apiEndpoint = `https://pfe-apigw-uat.porter.in/v1/orders/${order.porterOrder?.order_id}`;
+                
+//                     const response = await axios.get(apiEndpoint, {
+//                         headers: {
+//                             'X-API-KEY': process.env.PORTER_API_KEY,
+//                             'Content-Type': 'application/json'
+//                         },
+//                     });
+//                     // console.log("response",response)
+    
+//                     if (response) {
+//                         const responseData = response.data;
+    
+//                         // Update porterResponse in the database
+//                         const porterResponseData = await PorterModel.findOneAndUpdate(
+//                             { order_id: order.order_id },
+//                             { $set: { porterResponse: responseData } },
+//                             { new: true }
+//                         );
+//                         // console.log("porterResponseData",porterResponseData)
+    
+//                         if (porterResponseData?.porterResponse?.status === 'ended') {
+//                             const orderData = await Payment.findOne({ order_id: order.order_id });
+//                             if (!orderData) {
+//                                 throw new Error(`Order not found with this id: ${order.order_id}`);
+//                             }
+    
+//                             await Payment.findOneAndUpdate(
+//                                 { order_id: order.order_id },
+//                                 { orderStatus: 'Delivered' },
+//                                 { new: true }
+//                             );
+//                         }
+    
+//                         if (porterResponseData?.porterResponse?.status === 'cancelled') {
+//                             const orderData = await Payment.findOne({ order_id: order.order_id });
+//                             if (!orderData) {
+//                                 throw new Error(`Order not found with this id: ${order.order_id}`);
+//                             }
+    
+//                             await Payment.findOneAndUpdate(
+//                                 { order_id: order.order_id },
+//                                 { orderStatus: 'Cancelled' },
+//                                 { new: true }
+//                             );
+//                         }
+//                     }
+//                 }
+               
+//             } catch (error) {
+//                 console.error(`Error processing order ${order.order_id}:`, error.message);
+//                 // You might want to log the order ID and error details for better tracking
+//             }
+//         }
+//     } catch (error) {
+//         console.error('Error checking payment status:', error.message);
+//     }
+// }
+
+// nodeCron.schedule('* * * * *', () => {
+//     console.log('Checking payment status...');
+//     checkPaymentStatus();
+// });
+
+// async function checkRefundStatus() {
+//     try {
+         
+//         // const refundOrder = await Dispatch.find({
+//         //     totalRefundableAmount: { $gt: 0 },
+//         //     refundStatus: { $regex: /^Pending$/, $options: 'i' } // 'i' makes it case-insensitive
+//         //   });
+//         const refundOrder = await Dispatch.find({
+//             totalRefundableAmount: { $gt: 0 },
+//             refundStatus: { $not: { $regex: /^(SUCCESS|FAILURE)$/i } }
+//         });
+//        console.log("refundOrder",refundOrder)
+//           refundOrder.forEach(async (order) => {
+//             const statusResponse = await juspay.order.status(order && order.order_id);
+//             // console.log("statusResponse",statusResponse)
+//             if (statusResponse) {
+        
+//                 const onepayments = await Dispatch.findOne({ "order_id":order && order.order_id });
+//                 if (onepayments) {
+//                     const refundStatus = await Dispatch.findOneAndUpdate({ "order_id":order && order.order_id },
+//                         {
+//                             refundStatus: statusResponse && statusResponse.refunds && statusResponse.refunds[0].status && statusResponse.refunds[0].status,
+//                             $set: { statusResponse: statusResponse }
+//                         },
+//                         { new: true });
+//                 }
+        
+//             }
+//           });
+        
+        
+//     } catch (error) {
+//         console.error('Error checking payment status:', error);
+//     }
+
+// }
+// nodeCron.schedule('* * * * *', () => {
+//     console.log('Checking payment status...');
+//     checkRefundStatus();
+// });
+
+// async function checkPaymentStatus() {
+//     try {
+//         // Fetch orders that are still pending or in-progress
+//         const orders = await PorterModel.find({
+//             'porterResponse.status': { $nin: ['ended', 'cancelled', 'Processing', 'Packed'] }
+//         });
+
+//         // Use Promise.all to handle async operations concurrently
+//         await Promise.all(orders.map(async (order) => {
+//             try {
+//                 if (order && order.porterOrder) {
+//                     const apiEndpoint = `https://pfe-apigw-uat.porter.in/v1/orders/${order.porterOrder.order_id}`;
+                
+//                     const response = await axios.get(apiEndpoint, {
+//                         headers: {
+//                             'X-API-KEY': process.env.PORTER_API_KEY,
+//                             'Content-Type': 'application/json'
+//                         },
+//                     });
+
+//                     if (response) {
+//                         const responseData = response.data;
+    
+//                         // Update porterResponse in the database
+//                         const porterResponseData = await PorterModel.findOneAndUpdate(
+//                             { order_id: order.order_id },
+//                             { $set: { porterResponse: responseData } },
+//                             { new: true }
+//                         );
+//                         // console.log("porterResponseData",porterResponseData)
+    
+//                         if (porterResponseData?.porterResponse?.status === 'ended') {
+//                             const orderData = await Payment.findOne({ order_id: order.order_id });
+//                             if (!orderData) {
+//                                 throw new Error(`Order not found with this id: ${order.order_id}`);
+//                             }
+    
+//                             await Payment.findOneAndUpdate(
+//                                 { order_id: order.order_id },
+//                                 { orderStatus: 'Delivered' },
+//                                 { new: true }
+//                             );
+//                         }
+    
+//                         if (porterResponseData?.porterResponse?.status === 'cancelled') {
+//                             const orderData = await Payment.findOne({ order_id: order.order_id });
+//                             if (!orderData) {
+//                                 throw new Error(`Order not found with this id: ${order.order_id}`);
+//                             }
+    
+//                             await Payment.findOneAndUpdate(
+//                                 { order_id: order.order_id },
+//                                 { orderStatus: 'Cancelled' },
+//                                 { new: true }
+//                             );
+//                         }
+//                     }
+//                 }
+//             } catch (error) {
+//                 console.error(`Error processing order ${order.order_id}:`, error);
+//                 // Log the order ID and error details for better tracking
+//             }
+//         }));
+//         console.log("Payment Updation completed !!!!!!!!!!!!!!!!!!!!!!!!")
+//     } catch (error) {
+//         console.error('Error checking payment status:', error);
+//     }
+// }
+// async function checkRefundStatus() {
+//     try {
+//         const refundOrders = await Dispatch.find({
+//             totalRefundableAmount: { $gt: 0 },
+//             refundStatus: { $not: { $regex: /^(SUCCESS|FAILURE)$/i } }
+//         });
+
+//         // Process each order asynchronously
+//         await Promise.all(refundOrders.map(async (order) => {
+//             try {
+//                 const statusResponse = await juspay.order.status(order.order_id);
+//                 if (statusResponse) {
+//                     const onepayments = await Dispatch.findOne({ "order_id":order && order.order_id });
+//                     if(onepayments){
+//                         await Dispatch.findOneAndUpdate(
+//                             { order_id: order.order_id },
+//                             {
+//                                 refundStatus: statusResponse.refunds?.[0]?.status || 'UNKNOWN',
+//                                 $set: { statusResponse: statusResponse }
+//                             },
+//                             { new: true }
+//                         );
+//                     }
+//                     }
+                  
+//             } catch (error) {
+//                 console.error(`Error checking refund order ${order.order_id}:`, error);
+//             }
+//         }));
+//     } catch (error) {
+//         console.error('Error checking refund status:', error);
+//     }
+// }
 async function checkPaymentStatus() {
     try {
         // Fetch orders that are still pending or in-progress
         const orders = await PorterModel.find({
-            'porterResponse.status': { $nin: ['ended', 'cancelled'] }
+            'porterResponse.status': { $nin: ['ended', 'cancelled', 'Processing', 'Packed'] }
         });
-        //   console.log("orders",orders)
-        // Use for...of to handle async operations properly
-        for (const order of orders) {
+
+        // Use Promise.all to handle async operations concurrently
+        await Promise.all(orders.map(async (order) => {
             try {
-                if(order && order.porterOrder){
-                    const apiEndpoint = `https://pfe-apigw-uat.porter.in/v1/orders/${order.porterOrder?.order_id}`;
-                
-                    const response = await axios.get(apiEndpoint, {
-                        headers: {
-                            'X-API-KEY': process.env.PORTER_API_KEY,
-                            'Content-Type': 'application/json'
-                        },
-                    });
-                    // console.log("response",response)
-    
+                if (order && order.porterOrder) {
+                    const apiEndpoint = `https://pfe-apigw-uat.porter.in/v1/orders/${order.porterOrder.order_id}`;
+                    
+                    let response;
+                    for (let attempt = 0; attempt < 3; attempt++) { // Retry up to 3 times
+                        try {
+                            response = await axios.get(apiEndpoint, {
+                                headers: {
+                                    'X-API-KEY': process.env.PORTER_API_KEY,
+                                    'Content-Type': 'application/json'
+                                },
+                            });
+                            if (response) break; // Exit loop on success
+                        } catch (error) {
+                            if (attempt === 2 || !isRetryableError(error)) throw error; // Throw error if last attempt or non-retryable error
+                            console.warn(`Attempt ${attempt + 1} failed for order ${order.order_id}, retrying...`);
+                        }
+                    }
+
                     if (response) {
                         const responseData = response.data;
     
@@ -861,8 +1086,7 @@ async function checkPaymentStatus() {
                             { $set: { porterResponse: responseData } },
                             { new: true }
                         );
-                        // console.log("porterResponseData",porterResponseData)
-    
+
                         if (porterResponseData?.porterResponse?.status === 'ended') {
                             const orderData = await Payment.findOne({ order_id: order.order_id });
                             if (!orderData) {
@@ -890,61 +1114,71 @@ async function checkPaymentStatus() {
                         }
                     }
                 }
-               
             } catch (error) {
                 console.error(`Error processing order ${order.order_id}:`, error.message);
-                // You might want to log the order ID and error details for better tracking
+                // Log the order ID and error details for better tracking
             }
-        }
+        }));
+        console.log("Payment Updation completed !!!!!!!!!!!!!!!!!!!!!!!!")
     } catch (error) {
         console.error('Error checking payment status:', error.message);
     }
 }
 
-nodeCron.schedule('* * * * *', () => {
-    console.log('Checking payment status...');
-    checkPaymentStatus();
-});
-
 async function checkRefundStatus() {
     try {
-         
-        // const refundOrder = await Dispatch.find({
-        //     totalRefundableAmount: { $gt: 0 },
-        //     refundStatus: { $regex: /^Pending$/, $options: 'i' } // 'i' makes it case-insensitive
-        //   });
-        const refundOrder = await Dispatch.find({
+        const refundOrders = await Dispatch.find({
             totalRefundableAmount: { $gt: 0 },
             refundStatus: { $not: { $regex: /^(SUCCESS|FAILURE)$/i } }
         });
-       console.log("refundOrder",refundOrder)
-          refundOrder.forEach(async (order) => {
-            const statusResponse = await juspay.order.status(order && order.order_id);
-            // console.log("statusResponse",statusResponse)
-            if (statusResponse) {
-        
-                const onepayments = await Dispatch.findOne({ "order_id":order && order.order_id });
-                if (onepayments) {
-                    const refundStatus = await Dispatch.findOneAndUpdate({ "order_id":order && order.order_id },
-                        {
-                            refundStatus: statusResponse && statusResponse.refunds && statusResponse.refunds[0].status && statusResponse.refunds[0].status,
-                            $set: { statusResponse: statusResponse }
-                        },
-                        { new: true });
-                }
-        
-            }
-          });
-        
-        
-    } catch (error) {
-        console.error('Error checking payment status:', error);
-    }
 
+        await Promise.all(refundOrders.map(async (order) => {
+            try {
+                let statusResponse;
+                for (let attempt = 0; attempt < 3; attempt++) { // Retry up to 3 times
+                    try {
+                        statusResponse = await juspay.order.status(order.order_id);
+                        if (statusResponse) break; // Exit loop on success
+                    } catch (error) {
+                        if (attempt === 2 || !isRetryableError(error)) throw error; // Throw error if last attempt or non-retryable error
+                        console.warn(`Attempt ${attempt + 1} failed for order ${order.order_id}, retrying...`);
+                    }
+                }
+
+                if (statusResponse) {
+                    const onepayment = await Dispatch.findOne({ "order_id": order.order_id });
+                    if (onepayment) {
+                        await Dispatch.findOneAndUpdate(
+                            { order_id: order.order_id },
+                            {
+                                refundStatus: statusResponse.refunds?.[0]?.status || 'PROCESSING',
+                                $set: { statusResponse: statusResponse }
+                            },
+                            { new: true }
+                        );
+                    }
+                }
+
+            } catch (error) {
+                console.error(`Error checking refund order ${order.order_id}:`, error);
+            }
+        }));
+        console.log("Refund Updation completed !!!!!!!!!!!!!!!!!!!!!!!!")
+    } catch (error) {
+        console.error('Error checking refund status:', error);
+    }
 }
+
+// Utility function to determine if the error is retryable
+function isRetryableError(error) {
+    return error.raw && error.raw.includes('504');
+}
+
 nodeCron.schedule('* * * * *', () => {
-    console.log('Checking payment status...');
+    console.log('Checking Refund and payment status...');
+    checkPaymentStatus();
     checkRefundStatus();
 });
+
 
 module.exports = { newOrder, getSingleOrder, getQuote, porterOrder, myOrders, orders, updateOrder, deleteOrder, getOrderSummaryByDate, getUserSummaryByDate, getRemoveResponse };
