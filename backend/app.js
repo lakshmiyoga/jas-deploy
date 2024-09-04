@@ -12,8 +12,13 @@ app.use(cookieParser());
 app.use(express.urlencoded({ extended: true }));
 app.use("/uploads", express.static(path.join(__dirname,"uploads")))
 
+let BASE_URL = process.env.FRONTEND_URL;
+if (process.env.NODE_ENV === "production") {
+    BASE_URL = `${req.protocol}://${req.get('host')}`
+}
+
 const corsOptions = {
-    origin: "http://localhost:3000",
+    origin: BASE_URL,
     credentials: true,
 };
 
