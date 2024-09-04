@@ -12,7 +12,25 @@ app.use(cookieParser());
 app.use(express.urlencoded({ extended: true }));
 app.use("/uploads", express.static(path.join(__dirname,"uploads")))
 
+// let BASE_URL = process.env.FRONTEND_URL;
+// if (process.env.NODE_ENV === "production") {
+//     app.use((req, res, next) => {
+//         BASE_URL = `${req.protocol}://${req.get('host')}`;
+//         next();
+//     });
+// }
+
+// const corsOptions = {
+//     origin: `${BASE_URL}`,
+//     methods: ['GET', 'POST', 'PUT', 'DELETE', 'OPTIONS'],
+//     credentials: true,
+//     allowedHeaders: ['Content-Type', 'Authorization'],
+// };
+
+// app.use(cors(corsOptions));
 let BASE_URL = process.env.FRONTEND_URL;
+
+// In production, determine the correct BASE_URL dynamically
 if (process.env.NODE_ENV === "production") {
     app.use((req, res, next) => {
         BASE_URL = `${req.protocol}://${req.get('host')}`;
@@ -20,11 +38,30 @@ if (process.env.NODE_ENV === "production") {
     });
 }
 
+// List of allowed origins
+const allowedOrigins = [
+    'https://jasfruitsandvegetables.in', // Production domain
+    'http://44.205.39.93' // Test domain (HTTP)
+];
+
 const corsOptions = {
-    origin: `${BASE_URL}`,
+    origin: function (origin, callback) {
+        // Allow requests with no origin (like mobile apps or curl requests) or from allowed origins
+        if (!origin || allowedOrigins.includes(origin)) {
+            callback(null, true);
+        } else {
+            callback(new Error('Not allowed by CORS'));
+        }
+    },
     methods: ['GET', 'POST', 'PUT', 'DELETE', 'OPTIONS'],
     credentials: true,
-    allowedHeaders: ['Content-Type', 'Authorization'],
+    allowedHeaders: [
+        'Content-Type',           // JSON and other content types
+        'Authorization',          // Auth headers
+        'X-Requested-With',       // Ajax requests
+        'Accept',                 // For accepting different content types
+        'multipart/form-data'     // For file uploads
+    ],
 };
 
 app.use(cors(corsOptions));
