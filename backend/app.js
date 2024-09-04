@@ -14,11 +14,14 @@ app.use("/uploads", express.static(path.join(__dirname,"uploads")))
 
 let BASE_URL = process.env.FRONTEND_URL;
 if (process.env.NODE_ENV === "production") {
-    BASE_URL = `${req.protocol}://${req.get('host')}`
+    app.use((req, res, next) => {
+        BASE_URL = `${req.protocol}://${req.get('host')}`;
+        next();
+    });
 }
 
 const corsOptions = {
-    origin: BASE_URL,
+    origin: `${BASE_URL}`,
     credentials: true,
 };
 
