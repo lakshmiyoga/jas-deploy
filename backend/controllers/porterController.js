@@ -50,10 +50,7 @@ const getSinglePorterOrder = catchAsyncError(async (req, res, next) => {
     if (!order) {
         return next(new ErrorHandler(`Order not found with this id: ${order_id}`, 404))
     }
-    res.status(200).json({
-        success: true,
-        porterOrder: order
-    })
+  
     const statusResponse = await juspay.order.status(order_id);
 
     if (statusResponse) {
@@ -62,11 +59,11 @@ const getSinglePorterOrder = catchAsyncError(async (req, res, next) => {
         if (onepayments) {
             const refundStatus = await Dispatch.findOneAndUpdate({ order_id },
                 {
-                    refundStatus: statusResponse.refunds[0].status,
+                    refundStatus: statusResponse && statusResponse.refunds && statusResponse.refunds[0].status,
                     $set: { statusResponse: statusResponse }
                 },
                 { new: true });
-                res.status(200).json({
+               return res.status(200).json({
                     success: true,
                     porterOrder: order
                 })  
@@ -74,8 +71,13 @@ const getSinglePorterOrder = catchAsyncError(async (req, res, next) => {
         }
 
     }
+   return res.status(200).json({
+        success: true,
+        porterOrder: order
+    })
    
 })
+
 
 const getPorterResponse = catchAsyncError(async (req, res, next) => {
     //    console.log(req.params)
@@ -282,8 +284,8 @@ const postPackedOrder = catchAsyncError(async (req, res, next) => {
                 { new: true }
             );
 
-            console.log("packedOrder", packedOrder)
-            res.status(200).json({
+            // console.log("packedOrder", packedOrder)
+           return res.status(200).json({
                 success: true,
                 packedOrderData: packedOrder
             })
@@ -301,7 +303,7 @@ const getPackedOrder = catchAsyncError(async (req, res, next) => {
     console.log("req.body", req.body);
     const { order_id } = req.body;
 
-    console.log("order_id", order_id);
+    // console.log("order_id", order_id);
 
     if (!order_id) {
         return next(new ErrorHandler(`Order not found with this id: ${order_id}`, 404))
@@ -310,7 +312,7 @@ const getPackedOrder = catchAsyncError(async (req, res, next) => {
 
     const getpackedOrderData = await Dispatch.findOne({ order_id })
 
-    res.status(201).json({
+   return res.status(201).json({
         success: true,
         getpackedOrderData
     })
@@ -321,7 +323,7 @@ const getAllPackedOrder = catchAsyncError(async (req, res, next) => {
 
     try {
         const allpackedOrderData = await Dispatch.find({});
-        console.log("allpackedOrderData", allpackedOrderData)
+        // console.log("allpackedOrderData", allpackedOrderData)
         return res.status(201).json({
             success: true,
             allpackedOrderData
@@ -333,7 +335,7 @@ const getAllPackedOrder = catchAsyncError(async (req, res, next) => {
 })
 
 const refundOrder = catchAsyncError(async (req, res, next) => {
-    console.log("req.body", req.body);
+    // console.log("req.body", req.body);
     const { order_id, RefundableAmount } = req.body;
 
     console.log("order_id", order_id, RefundableAmount);
@@ -353,7 +355,7 @@ const refundOrder = catchAsyncError(async (req, res, next) => {
             order_id: order_id,
             amount: RefundableAmount,
         };
-        console.log("refundPayload", refundPayload);
+        // console.log("refundPayload", refundPayload);
         if (RefundableAmount > 0) {
             const refundResponse = await juspay.order.refund(order_id, refundPayload);
             if (refundResponse) {
@@ -380,7 +382,7 @@ const refundOrder = catchAsyncError(async (req, res, next) => {
                                 
                         
                             }
-                        res.status(201).json({
+                       return res.status(201).json({
                             success: true,
                             refundData: "Refund Initiated"
                         })
@@ -391,7 +393,7 @@ const refundOrder = catchAsyncError(async (req, res, next) => {
 
     } catch (error) {
         console.log(error)
-        // return next(new ErrorHandler(error.response.data.message, error.response.status))
+        return next(new ErrorHandler(error.response.data.message, error.response.status))
     }
 
 })

@@ -106,6 +106,13 @@ const orderSlice = createSlice({
                 error: action.payload
             }
         },
+        orderDetailClear(state, action) {
+            return {
+                ...state,
+                loading: false,
+                orderDetail: {}
+            }
+        },
         adminOrdersRequest(state, action) {
             return {
                 ...state,
@@ -350,7 +357,8 @@ export const {
     updateadminOrdersFail,
     updateadminOrdersRequest,
     updateadminOrdersSuccess,
-    adminOrderClear
+    adminOrderClear,
+    orderDetailClear
 
  } = actions;
 

@@ -139,20 +139,20 @@ const Header = () => {
             {/* {
       !openSide && ( */}
             <Nav className="me-auto custom-nav" style={{ display: 'flex', gap: '1rem', justifyContent: 'flex-end', alignItems: 'center',minWidth:'100%' }}>
-              <Nav.Link>
+              {/* <Nav.Link> */}
                 <Link to="/" className="navbar-link">HOME</Link>
-              </Nav.Link>
-              <Nav.Link>
+              {/* </Nav.Link> */}
+              {/* <Nav.Link> */}
                 <Link to="/about" className="navbar-link">ABOUT US</Link>
-              </Nav.Link>
+              {/* </Nav.Link> */}
               <NavDropdown title={<div className="d-inline-flex align-items-center dropdown-display">ORDER NOW</div>} id="collapsible-nav-dropdown">
                 <NavDropdown.Item className='dropdown-display' onClick={() => navigate('/vegetables')}>Vegetables</NavDropdown.Item>
                 <NavDropdown.Item className='dropdown-display' onClick={() => navigate('/fruits')}>Fruits</NavDropdown.Item>
                 <NavDropdown.Item className='dropdown-display' onClick={() => navigate('/keerai')}>Keerai</NavDropdown.Item>
               </NavDropdown>
-              <Nav.Link>
+              {/* <Nav.Link> */}
                 <Link to="/enquiry" className="navbar-link">CONTACT</Link>
-              </Nav.Link>
+              {/* </Nav.Link> */}
 
               {isAuthenticated ? (
                 <NavDropdown title={<div className="d-inline-flex align-items-center"><div className="avatar-initials">{getInitials(user.name)}</div></div>} id="collapsible-nav-dropdown" className='dropdown-nav-menu'>
@@ -166,17 +166,17 @@ const Header = () => {
                   <NavDropdown.Item onClick={logoutHandler}>Logout</NavDropdown.Item>
                 </NavDropdown>
               ) : (
-                <Nav.Link>
+                // <Nav.Link>
                   <Link to="/login" className="navbar-link" id="login_btn">LOGIN</Link>
-                </Nav.Link>
+                // </Nav.Link>
               )}
 
-              <Nav.Link>
+              {/* <Nav.Link> */}
                 <Link to="/cart" className="navbar-link cart-container">
                   <i className="fa fa-shopping-cart cart-icon"></i>
                   <span className="badge bg-secondary ml-1" id="cart_count">{cartItems.length}</span>
                 </Link>
-              </Nav.Link>
+              {/* </Nav.Link> */}
             </Nav>
             {/* )
     } */}
@@ -225,9 +225,9 @@ const Header = () => {
 
 
                 ) : (
-                  <Nav.Link>
+                  // <Nav.Link>
                     <Link to="/login" className="navbar-link" id="login_btn">LOGIN</Link>
-                  </Nav.Link>
+                  // </Nav.Link>
                 )
               }
               
@@ -236,28 +236,28 @@ const Header = () => {
               {
                 isAuthenticated && (
                   <>
-                    <Nav.Link>
+                    {/* <Nav.Link> */}
                       <Link to="/myprofile" className="navbar-names">Profile</Link>
-                    </Nav.Link>
-                    <Nav.Link>
+                    {/* </Nav.Link> */}
+                    {/* <Nav.Link> */}
                       <Link to="/orders" className="navbar-names">Orders</Link>
-                    </Nav.Link>
+                    {/* </Nav.Link> */}
                   </>
 
                 )
               }
 
-              <Nav.Link>
+              {/* <Nav.Link> */}
                 <Link to="/about" className="navbar-names">AboutUs</Link>
-              </Nav.Link>
-              <Nav.Link>
+              {/* </Nav.Link> */}
+              {/* <Nav.Link> */}
                 <Link to="/enquiry" className="navbar-names">ContactUs</Link>
-              </Nav.Link>
+              {/* </Nav.Link> */}
               {
                 isAuthenticated && (
-                  <Nav.Link>
+                  // <Nav.Link>
                     <Link onClick={logoutHandler} className="navbar-names">Logout</Link>
-                  </Nav.Link>
+                  // </Nav.Link>
                 )
               }
               </div>

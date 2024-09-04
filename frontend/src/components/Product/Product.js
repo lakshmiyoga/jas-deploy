@@ -102,10 +102,10 @@ const Product = ({ products, category }) => {
                                         />
                                     )}
                                 </td>
-                                <td className="Products Name">
+                                <td className="Products Name" style={{fontSize:'17px'}}>
                                     {capitalizeFirstLetter(product.englishName)}/{capitalizeFirstLetter(product.tamilName)}
                                 </td>
-                                <td className="Price">Rs.{product.price}
+                                <td className="Price" style={{whiteSpace:'nowrap'}}>Rs.{product.price}
                                     {product.category === 'Keerai' ? '(per piece)' : '(per kg)'}</td>
                                 {/* <td className="Weight">
                                     <select

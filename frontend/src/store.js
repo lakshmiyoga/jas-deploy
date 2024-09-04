@@ -22,9 +22,16 @@ const reducer = combineReducers({
 
 })
 
+// const store = configureStore({
+//     reducer,
+//     // middleware:[thunk],
+// })
 const store = configureStore({
     reducer,
-    // middleware:[thunk],
-})
+    middleware: (getDefaultMiddleware) =>
+      getDefaultMiddleware({
+        serializableCheck: false, // Disables the serializable state check middleware
+      }),
+  });
 
 export default  store;

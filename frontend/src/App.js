@@ -78,11 +78,19 @@ function App() {
 
     const { isAuthenticated, loading, user } = useSelector(state => state.authState);
     const { product, loading: productLoading } = useSelector((state) => state.productState)
+
+    useEffect(() => {
+        store.dispatch(getProducts());
+    }, [])
+
     useEffect(() => {
         if (!isAuthenticated) {
             store.dispatch(loadUser());
         }
-    }, [isAuthenticated]);
+        if (!product) {
+            store.dispatch(getProducts());
+        }
+    }, [isAuthenticated, product]);
 
 
     // let isAdminRoute = true;
@@ -90,14 +98,14 @@ function App() {
     useEffect(() => {
         if (isAuthenticated) {
             // if (redirectPath) {
-                // const redirectPath = sessionStorage.getItem('redirectPath') || '/';
-                // return navigate(redirectPath);
-                const redirectPath = sessionStorage.getItem('redirectPath');
-                if (redirectPath && location.pathname !== redirectPath) {
-                    sessionStorage.removeItem('redirectPath');
-                    navigate(redirectPath, { replace: true });
-                }
-                // sessionStorage.removeItem('redirectPath');
+            // const redirectPath = sessionStorage.getItem('redirectPath') || '/';
+            // return navigate(redirectPath);
+            const redirectPath = sessionStorage.getItem('redirectPath');
+            if (redirectPath && location.pathname !== redirectPath) {
+                sessionStorage.removeItem('redirectPath');
+                navigate(redirectPath, { replace: true });
+            }
+            // sessionStorage.removeItem('redirectPath');
             // }
         }
         // if (redirectPath) {
@@ -113,11 +121,11 @@ function App() {
         // store.dispatch(getProducts());
     }, [isAuthenticated, navigate]);
 
-    useEffect(() => {
-        if (!product) {
-            store.dispatch(getProducts());
-        }
-    }, []);
+    // useEffect(() => {
+    //     if (!product) {
+    //         store.dispatch(getProducts());
+    //     }
+    // }, [product]);
 
 
 

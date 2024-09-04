@@ -5,7 +5,7 @@ import { useLocation, useNavigate, useParams } from "react-router-dom";
 import { orderDetail as orderDetailAction, updateOrder, porterOrder, RemoveOrderResponse } from "../../actions/orderActions";
 import { CancelOrderResponse, createPorterOrderResponse, getPackedOrder, getporterOrder, packedOrder } from "../../actions/porterActions";
 import { toast } from "react-toastify";
-import { clearOrderUpdated, clearError, adminOrderRemoveClearError } from "../../slices/orderSlice";
+import { clearOrderUpdated, clearError, adminOrderRemoveClearError, orderDetailClear } from "../../slices/orderSlice";
 import { Link } from "react-router-dom";
 import { v4 as uuidv4 } from 'uuid';
 import {
@@ -59,9 +59,11 @@ const Dispatch = () => {
         }
     }, [orderDetail]);
 
-    useEffect(() => {
-        dispatch(porterClearData())
-    }, [])
+    // useEffect(() => {
+    //     dispatch(orderDetailClear());
+    //     dispatch(porterClearData());
+    //     dispatch(porterClearResponse());
+    // }, [])
 
 
     const handleItemSelection = (index) => {
@@ -322,8 +324,9 @@ const Dispatch = () => {
             });
         }
         // dispatch(clearError()) 
+        // dispatch(porterClearResponse());
         dispatch(orderDetailAction(id));
-        dispatch(getporterOrder({ order_id: id }))
+            dispatch(getporterOrder({ order_id: id }))
         dispatch(getPackedOrder({ order_id: id }))
 
         // if (refreshData) {
@@ -344,20 +347,26 @@ const Dispatch = () => {
         // dispatch(createPorterOrderResponse({ order_id: id, porterOrder_id: porterOrderData?.porterOrder?.order_id }))
         // dispatch(getporterOrder({ order_id: id }))
 
-        dispatch(porterClearData())
-        dispatch(createPorterOrderResponse({ order_id: porterOrderData && porterOrderData.order_id, porterOrder_id: porterOrderData?.porterOrder?.order_id }))
-        dispatch(getporterOrder({ order_id: id }))
+        // dispatch(porterClearData())
+
+        // dispatch(getporterOrder({ order_id: id }))
         setRefreshData(true)
 
     }, [dispatch, id, porterOrderDetail, error]);
+
+    useEffect(()=>{
+        if(porterOrderData && refreshData){
+        dispatch(createPorterOrderResponse({ order_id: porterOrderData && porterOrderData.order_id, porterOrder_id: porterOrderData?.porterOrder?.order_id }))
+        }
+    },[porterOrderData])
     
     useEffect(()=>{
-if(refreshData){
+if(refreshData && porterOrderResponse){
     dispatch(porterClearData())
     dispatch(getporterOrder({ order_id: id }))
     setRefreshData(false)
 }
-    },[refreshData])
+    },[refreshData,porterOrderResponse])
 
     return (
         <div>
