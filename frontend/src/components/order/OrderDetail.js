@@ -9,6 +9,7 @@ import JasInvoice from '../Layouts/JasInvoice';
 import React, { useRef } from 'react';
 import { useReactToPrint } from 'react-to-print';
 import ReactDOM from 'react-dom';
+import { porterClearData } from '../../slices/porterSlice';
 
 
 export default function OrderDetail() {
@@ -21,31 +22,36 @@ export default function OrderDetail() {
     const [payment, setPayment] = useState(null)
     const invoiceRef = useRef();
     const location = useLocation();
+    const [refreshData, setRefreshData] = useState(false)
     sessionStorage.setItem('redirectPath', location.pathname);
-    console.log("orderDetail", orderDetail)
-    console.log("getpackedOrderData", getpackedOrderData)
-    console.log("orderItems", orderItems)
+  
 
     useEffect(() => {
         dispatch(orderDetailAction(id));
         dispatch(getPackedOrder({ order_id: id }))
-
-
-        // async function fetchdata(){
-        //     const url =` /api/v1/handleJuspayResponse/${id}`;
-        //     const {data} = await  axios.get(url,{ withCredentials: true });
-        //     // console.log(data)
-        //     if(data){
-        //         setPayment(data.statusResponse);
-        //     }
-        // }
-        // fetchdata()
-
+        dispatch(getporterOrder({ order_id: id }))
+        setRefreshData(true)
     }, [id])
+    useEffect(()=>{
+        if(porterOrderData && refreshData){
+        dispatch(createPorterOrderResponse({ order_id: porterOrderData && porterOrderData.order_id, porterOrder_id: porterOrderData?.porterOrder?.order_id }))
+        }
+    },[porterOrderData])
+    
+    useEffect(()=>{
+if(refreshData && porterOrderResponse){
+    // dispatch(porterClearData())
+    dispatch(getporterOrder({ order_id: id }))
+    setRefreshData(false)
+}
+    },[refreshData,porterOrderResponse])
 
     const handlePrint = useReactToPrint({
         content: () => invoiceRef.current,
     });
+    console.log("orderDetail", orderDetail)
+    console.log("getpackedOrderData", getpackedOrderData)
+    console.log("orderItems", orderItems)
 
     return (
         <Fragment>

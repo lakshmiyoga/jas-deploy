@@ -8,6 +8,8 @@ import Loader from '../Layouts/Loader';
 import { loadUser } from '../../actions/userActions';
 import store from '../../store';
 import { getProducts } from '../../actions/productsActions';
+import { orderDetailClear } from '../../slices/orderSlice';
+import { porterClearData, porterClearResponse } from '../../slices/porterSlice';
 
 export default function UserOrders() {
     
@@ -17,6 +19,11 @@ export default function UserOrders() {
 
     const location = useLocation();
      sessionStorage.setItem('redirectPath', location.pathname);
+     useEffect(() => {
+        dispatch(orderDetailClear());
+        dispatch(porterClearData());
+        dispatch(porterClearResponse());
+    }, [])
     // const { user } = useSelector(state => state.authState);
 
     // useEffect(() => {

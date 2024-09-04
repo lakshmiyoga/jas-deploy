@@ -23,7 +23,7 @@ import ReactDOM from 'react-dom';
 import JasInvoice from "../Layouts/JasInvoice";
 import MetaData from "../Layouts/MetaData";
 
-const Dispatch = () => {
+const Dispatch = ({isActive,setIsActive}) => {
     const location = useLocation();
     sessionStorage.setItem('redirectPath', location.pathname);
     const { loading, isOrderUpdated, error, orderDetail, porterOrderDetail, orderRemoveResponse, orderRemoveError } = useSelector(state => state.orderState);
@@ -326,7 +326,7 @@ const Dispatch = () => {
         // dispatch(clearError()) 
         // dispatch(porterClearResponse());
         dispatch(orderDetailAction(id));
-            dispatch(getporterOrder({ order_id: id }))
+        dispatch(getporterOrder({ order_id: id }))
         dispatch(getPackedOrder({ order_id: id }))
 
         // if (refreshData) {
@@ -362,7 +362,7 @@ const Dispatch = () => {
     
     useEffect(()=>{
 if(refreshData && porterOrderResponse){
-    dispatch(porterClearData())
+    // dispatch(porterClearData())
     dispatch(getporterOrder({ order_id: id }))
     setRefreshData(false)
 }
@@ -374,7 +374,9 @@ if(refreshData && porterOrderResponse){
        
         <div className="row">
             <div className="col-12 col-md-2">
-                <Sidebar />
+            <div style={{display:'flex',flexDirection:'row',position:'fixed',top:'0px',zIndex:99999,backgroundColor:'#fff',minWidth:'100%'}}>
+                <Sidebar isActive={isActive} setIsActive={setIsActive}/>
+                </div>
             </div>
             {
                 loading ? <Loader /> : (

@@ -125,7 +125,7 @@ const Product = ({ products, category }) => {
                                 </td> */}
                                 <td className="Weight">
                                     <NumberInput
-                                        // list={`weight-options-${product._id}`}
+                                        list={`weight-options-${product._id}`}
                                         value={weight[product._id] || ''}
                                         onChange={(e) => handleWeightChange(product._id, e.target.value)}
                                         onFocus={(e) => {

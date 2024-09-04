@@ -13,7 +13,7 @@ import { clearOrderDeleted ,adminOrderClear, orderDetailClear} from "../../slice
 import MetaData from '../Layouts/MetaData';
 import { porterClearData, porterClearResponse } from '../../slices/porterSlice';
 
-const DispatchList = () => {
+const DispatchList = ({isActive,setIsActive}) => {
     const location = useLocation();
     sessionStorage.setItem('redirectPath', location.pathname);
     const { adminOrders: orders = [], loading, error, isOrderDeleted ,updateadminOrders:orderlist=[]}  = useSelector(state => state.orderState);
@@ -212,7 +212,9 @@ const DispatchList = () => {
        
         <div className="row">
             <div className="col-12 col-md-2">
-                <Sidebar />
+            <div style={{display:'flex',flexDirection:'row',position:'fixed',top:'0px',zIndex:99999,backgroundColor:'#fff',minWidth:'100%'}}>
+                <Sidebar isActive={isActive} setIsActive={setIsActive}/>
+                </div>
             </div>
             <div className="col-12 col-md-10 smalldevice-space">
                 <h1 className="my-4 admin-dashboard-x">Dispatch List</h1>

@@ -10,7 +10,7 @@ import { toast } from 'react-toastify';
 import Sidebar from "./Sidebar";
 import MetaData from "../Layouts/MetaData";
 
-export default function UserList() {
+export default function UserList({isActive,setIsActive}) {
     const location = useLocation();
     sessionStorage.setItem('redirectPath', location.pathname);
     const { users = [], loading = true, error, isUserDeleted } = useSelector(state => state.userState);
@@ -116,7 +116,9 @@ export default function UserList() {
         <div className="row">
             <MetaData title={`User List`} />
             <div className="col-12 col-md-2">
-                <Sidebar />
+            <div style={{display:'flex',flexDirection:'row',position:'fixed',top:'0px',zIndex:99999,backgroundColor:'#fff',minWidth:'100%'}}>
+                <Sidebar isActive={isActive} setIsActive={setIsActive}/>
+                </div>
             </div>
             <div className="col-12 col-md-10 smalldevice-space">
                 <h1 className="my-4 admin-dashboard-x">User List</h1>

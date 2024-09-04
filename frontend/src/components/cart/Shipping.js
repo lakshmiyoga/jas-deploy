@@ -461,7 +461,7 @@ const Shipping = () => {
         }
         else if (!latitude || !longitude || !allowed) {
             //   toast.error("Please allow the Location for Next Step")
-            toast.error('Please allow the Location for Next Step', {
+            toast.error('Please allow the Location to Proceed', {
                 position: "bottom-center",
                 type: 'error',
 
@@ -469,7 +469,7 @@ const Shipping = () => {
         }
         else {
             // toast.error("Please allow the Location for Next Step")
-            toast.error('Please allow the Location for Next Step', {
+            toast.error('Please allow the Location to Proceed', {
                 position: "bottom-center",
                 type: 'error',
 
@@ -609,7 +609,7 @@ const Shipping = () => {
                         </div>
                         {!allowed && !latitude && !longitude && (
                             <div className="alert alert-danger" role="alert">
-                                Location access is required to proceed. Please Allow Location for this Site to Continue {' '}
+                                Location access is required to proceed. Please Allow Location for this Site and Refresh the Page to Continue {' '}
                                 {/* <button
                                     className="btn btn-link"
                                     onClick={handleRetryLocationAccess}

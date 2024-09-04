@@ -1,14 +1,14 @@
-import React, {useState, useEffect} from 'react'
+import React, { useState, useEffect } from 'react'
 import { useSelector, useDispatch } from 'react-redux';
 import { updateProfile, clearAuthError } from '../../actions/userActions';
-import {toast} from 'react-toastify'
+import { toast } from 'react-toastify'
 import { clearUpdateProfile } from '../../slices/authSlice';
 import { useLocation, useNavigate } from 'react-router-dom';
 import MetaData from '../Layouts/MetaData';
 
 const UpdateProfile = () => {
 
-    const {  error, user, isUpdated } = useSelector(state => state.authState);
+    const { error, user, isUpdated } = useSelector(state => state.authState);
     const [name, setName] = useState("");
     const [email, setEmail] = useState("");
     const [avatar, setAvatar] = useState("");
@@ -17,84 +17,84 @@ const UpdateProfile = () => {
     const dispatch = useDispatch();
     const location = useLocation();
     sessionStorage.setItem('redirectPath', location.pathname);
-     console.log(error, user, isUpdated)
+    console.log(error, user, isUpdated)
 
     const onChangeAvatar = (e) => {
         const reader = new FileReader();
         reader.onload = () => {
-             if(reader.readyState === 2) {
-                 setAvatarPreview(reader.result);
-                 setAvatar(e.target.files[0])
-             }
+            if (reader.readyState === 2) {
+                setAvatarPreview(reader.result);
+                setAvatar(e.target.files[0])
+            }
         }
 
 
         reader.readAsDataURL(e.target.files[0])
     }
 
-    const submitHandler  = (e) =>{
+    const submitHandler = (e) => {
         e.preventDefault();
         const formData = new FormData();
         formData.append('name', name)
         formData.append('email', email)
         formData.append('avatar', avatar);
         dispatch(updateProfile(formData))
-        
+
     }
 
     useEffect(() => {
-        if(user) {
+        if (user) {
             setName(user.name);
             setEmail(user.email);
-            if(user.avatar) {
+            if (user.avatar) {
                 setAvatarPreview(user.avatar)
             }
         }
 
-        if(isUpdated) {
-            toast('Profile updated successfully',{
+        if (isUpdated) {
+            toast('Profile updated successfully', {
                 type: 'success',
                 position: "bottom-center",
-                onOpen: () => {dispatch(clearUpdateProfile())}
-                
+                onOpen: () => { dispatch(clearUpdateProfile()) }
+
             })
             navigate('/myProfile')
             return;
         }
 
-        if(error)  {
+        if (error) {
             toast(error, {
                 position: "bottom-center",
                 type: 'error',
-                onOpen: ()=> { dispatch(clearUpdateProfile()) }
+                onOpen: () => { dispatch(clearUpdateProfile()) }
             })
             return
         }
-    },[user, isUpdated, error, dispatch])
+    }, [user, isUpdated, error, dispatch])
 
 
 
-  return (
-    <div>
-        <MetaData title={`Update Profile`} />
-          
-          <div className="products_heading">Update Profile</div>
-   
-    <div className="row wrapper">
-        
+    return (
+        <div>
+            <MetaData title={`Update Profile`} />
+
+            <div className="products_heading">Update Profile</div>
+
+            <div className="row wrapper">
+
                 <div className="col-10 col-lg-5">
                     <form onSubmit={submitHandler} className="shadow-lg mt-0" encType='multipart/form-data'>
                         <h3 className="mt-2 mb-5">Update Profile</h3>
 
                         <div className="form-group">
                             <label htmlFor="email_field">Name</label>
-                            <input 
-								type="name" 
-								id="name_field" 
-								className="form-control"
+                            <input
+                                type="name"
+                                id="name_field"
+                                className="form-control"
                                 name='name'
                                 value={name}
-                                onChange={(e)=>setName(e.target.value)}
+                                onChange={(e) => setName(e.target.value)}
                             />
                         </div>
 
@@ -106,7 +106,7 @@ const UpdateProfile = () => {
                                 className="form-control"
                                 name='email'
                                 value={email}
-                                onChange={(e)=>setEmail(e.target.value)}
+                                onChange={(e) => setEmail(e.target.value)}
                             />
                         </div>
 
@@ -129,10 +129,12 @@ const UpdateProfile = () => {
                                         className='custom-file-input'
                                         id='customFile'
                                         onChange={onChangeAvatar}
+                                        accept='.jpg, .jpeg, .png' // Accepts only jpg, jpeg, and png files
+                                        multiple={false}           // Ensures only one file can be selected
                                     />
                                     <label className='custom-file-label' htmlFor='customFile'>
                                         Choose Avatar
-                                </label>
+                                    </label>
                                 </div>
                             </div>
                         </div>
@@ -141,8 +143,8 @@ const UpdateProfile = () => {
                     </form>
                 </div>
             </div>
-            </div>
-  )
+        </div>
+    )
 }
 
 export default UpdateProfile

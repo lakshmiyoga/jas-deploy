@@ -148,7 +148,7 @@ const getQuote = catchAsyncError(async (req, res, next) => {
 const porterOrder = catchAsyncError(async (req, res, next) => {
     //    console.log(req.params)
     const { order_id, request_id, user, user_id, porterData, updatedItems, detailedTable, totalRefundableAmount } = req.body;
-    console.log("req.body", req.body)
+    // console.log("req.body", req.body)
     const apiEndpoint = 'https://pfe-apigw-uat.porter.in/v1/orders/create';
 
     const porterOrderExist = await PorterModel.findOne({ order_id });
@@ -177,7 +177,7 @@ const porterOrder = catchAsyncError(async (req, res, next) => {
                     totalRefundableAmount: totalRefundableAmount
 
                 });
-                console.log("Data", Data)
+                // console.log("Data", Data)
                 await Data.save();
                 if (Data) {
                     const onepayments = await PorterModel.findOne({ request_id: porterOrder && porterOrder.request_id });
@@ -269,6 +269,7 @@ const porterOrder = catchAsyncError(async (req, res, next) => {
                 //   return res.status(500).json({ message: 'Error sending data', error });
             }
         } catch (error) {
+            console.log(error)
             return next(new ErrorHandler(error.response.data.message, error.response.status));
         }
 
@@ -324,14 +325,14 @@ const orders = catchAsyncError(async (req, res, next) => {
         // }).select('orderItems shippingInfo user user_id itemsPrice taxPrice shippingPrice totalPrice order_id paymentStatus orderStatus createdAt').exec();
         // console.log("Fetched orders:", orders);
 
-        const orders = await Payment.find();
+        const orders = await Payment.find({});
 
         let totalAmount = 0;
         // console.log("this is sample response",JSON.stringify(orders, null, 2));
         orders.forEach(order => {
             totalAmount += order.totalPrice
         })
-        res.status(200).json({
+       return res.status(200).json({
             success: true,
             totalAmount,
             orders
@@ -340,7 +341,7 @@ const orders = catchAsyncError(async (req, res, next) => {
     }
     catch (error) {
         // console.error("Error fetching order summary:", error);
-        // res.status(500).json({ message: 'Server Error' });
+       return next(new ErrorHandler(`Something Went Wrong Please Try Again!!!!`, 400));
     }
 
 
@@ -1060,7 +1061,6 @@ async function checkPaymentStatus() {
             try {
                 if (order && order.porterOrder) {
                     const apiEndpoint = `https://pfe-apigw-uat.porter.in/v1/orders/${order.porterOrder.order_id}`;
-                    
                     let response;
                     for (let attempt = 0; attempt < 3; attempt++) { // Retry up to 3 times
                         try {
@@ -1070,6 +1070,7 @@ async function checkPaymentStatus() {
                                     'Content-Type': 'application/json'
                                 },
                             });
+                            // console.log("response",response)
                             if (response) break; // Exit loop on success
                         } catch (error) {
                             if (attempt === 2 || !isRetryableError(error)) throw error; // Throw error if last attempt or non-retryable error
@@ -1115,13 +1116,13 @@ async function checkPaymentStatus() {
                     }
                 }
             } catch (error) {
-                console.error(`Error processing order ${order.order_id}:`, error.message);
+                console.error(`Error processing order ${order.order_id}:`, error);
                 // Log the order ID and error details for better tracking
             }
         }));
         console.log("Payment Updation completed !!!!!!!!!!!!!!!!!!!!!!!!")
     } catch (error) {
-        console.error('Error checking payment status:', error.message);
+        console.error('Error checking payment status:', error);
     }
 }
 
@@ -1174,11 +1175,11 @@ function isRetryableError(error) {
     return error.raw && error.raw.includes('504');
 }
 
-nodeCron.schedule('* * * * *', () => {
-    console.log('Checking Refund and payment status...');
-    checkPaymentStatus();
-    checkRefundStatus();
-});
+// nodeCron.schedule('* * * * *', () => {
+//     console.log('Checking Refund and payment status...');
+//     checkPaymentStatus();
+//     checkRefundStatus();
+// });
 
 
 module.exports = { newOrder, getSingleOrder, getQuote, porterOrder, myOrders, orders, updateOrder, deleteOrder, getOrderSummaryByDate, getUserSummaryByDate, getRemoveResponse };

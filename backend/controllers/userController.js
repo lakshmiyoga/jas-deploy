@@ -255,7 +255,7 @@ const changePassword = catchAsyncError(async (req, res, next) => {
   user.password = await bcrypt.hash(req.body.password, salt);
   await user.save();
 
-  res.status(200).json({
+  return res.status(200).json({
     success: true,
   });
 });
@@ -267,7 +267,7 @@ const getUserProfile = catchAsyncError(async (req, res, next) => {
   const user = await User.findById(req.user._id)
   // console.log(user)
   if (user) {
-    res.status(200).json({
+    return res.status(200).json({
       success: true,
       user
     })
@@ -298,8 +298,8 @@ const updateUserProfile = catchAsyncError(async (req, res, next) => {
     
     const fileExtension = req.file.originalname.split('.').pop().toLowerCase();
     
-    if (fileExtension !== 'jpg' && fileExtension !== 'png') {
-      return next(new ErrorHandler('Only .jpg anf .png files are allowed'));
+    if (fileExtension !== 'jpg' && fileExtension !== 'png' && fileExtension !== 'jpeg') {
+      return next(new ErrorHandler('Only .jpg and .jpeg and .png files are allowed'));
     }
     avatar = `${BASE_URL}/uploads/user/${req.file.originalname}`;
     newUserData = { ...newUserData, avatar }
@@ -320,7 +320,7 @@ const updateUserProfile = catchAsyncError(async (req, res, next) => {
     return next(new ErrorHandler('User not found'));
   }
   // console.log(user)
-  res.status(200).json({
+  return res.status(200).json({
     success: true,
     user
   })
@@ -329,7 +329,7 @@ const updateUserProfile = catchAsyncError(async (req, res, next) => {
 //Admin: Get All Users - /api/v1/admin/users
 const getAllUsers = catchAsyncError(async (req, res, next) => {
   const users = await User.find();
-  res.status(200).json({
+  return res.status(200).json({
     success: true,
     users
   })
@@ -341,7 +341,7 @@ const getUser = catchAsyncError(async (req, res, next) => {
   if (!user) {
     return next(new ErrorHandler(`User not found with this id ${req.params.id}`))
   }
-  res.status(200).json({
+  return res.status(200).json({
     success: true,
     user
   })
@@ -361,7 +361,7 @@ const updateUser = catchAsyncError(async (req, res, next) => {
     runValidators: true,
   })
 
-  res.status(200).json({
+  return res.status(200).json({
     success: true,
     user
   })
@@ -374,7 +374,7 @@ const deleteUser = catchAsyncError(async (req, res, next) => {
     return next(new ErrorHandler(`User not found with this id ${req.params.id}`));
   }
   await User.deleteOne({ _id: req.params.id });
-  res.status(200).json({
+  return res.status(200).json({
     success: true,
   });
 });

@@ -6,7 +6,7 @@ import Sidebar from '../admin/Sidebar'; // Assuming Sidebar component is in this
 import { useLocation } from 'react-router-dom';
 import MetaData from '../Layouts/MetaData';
 
-const UpdatePrice = () => {
+const UpdatePrice = ({isActive,setIsActive}) => {
     const [items, setItems] = useState([]);
     const [file, setFile] = useState(null);
     const [loading, setloading] = useState(false);
@@ -75,7 +75,9 @@ const UpdatePrice = () => {
             <MetaData title={`Update Price`} />
             <div className="row">
                 <div className="col-12 col-md-2 p-0">
-                    <Sidebar />
+                <div style={{display:'flex',flexDirection:'row',position:'fixed',top:'0px',zIndex:99999,backgroundColor:'#fff',minWidth:'100%'}}>
+                    <Sidebar isActive={isActive} setIsActive={setIsActive}/>
+                    </div>
                 </div>
                 <div className="col-12 col-md-10 smalldevice-space">
                     <h3 className="my-4 admin-dashboard-x">Product Price Upload</h3>

@@ -9,7 +9,7 @@ import {  toast } from 'react-toastify';
 import MetaData from '../Layouts/MetaData';
 
 
-const NewProduct = () => {
+const NewProduct = ({isActive,setIsActive}) => {
     const location = useLocation();
     sessionStorage.setItem('redirectPath', location.pathname);
     const [englishName, setEnglishName] = useState("");
@@ -100,7 +100,9 @@ const NewProduct = () => {
        
         <div className="row">
             <div className="col-12 col-md-2">
-                <Sidebar />
+            <div style={{display:'flex',flexDirection:'row',position:'fixed',top:'0px',zIndex:99999,backgroundColor:'#fff',minWidth:'100%'}}>
+                <Sidebar isActive={isActive} setIsActive={setIsActive}/>
+                </div>
             </div>
             <div className="col-12 col-md-10 smalldevice-space">
                 <Fragment>
@@ -183,6 +185,7 @@ const NewProduct = () => {
                                         type='file'
                                         name='product_images'
                                         className='custom-file-input'
+                                        accept='.jpg, .jpeg, .png' // Accepts only jpg, jpeg, and png files
                                         id='customFile'
                                         multiple
                                         onChange={onImagesChange}

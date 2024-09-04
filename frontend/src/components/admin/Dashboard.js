@@ -8,14 +8,13 @@ import {adminOrders as adminOrdersAction} from '../../actions/orderActions'
 import {Link, useLocation} from 'react-router-dom'
 import { getEnquiryDetails } from '../../actions/enquiryActions';
  
-const Dashboard = () => {
+const Dashboard = ({isActive,setIsActive}) => {
  
     const { products = [] } = useSelector( state => state.productsState);
     const {enquiry =[]} = useSelector(state => state.enquiryState);
     const { users = [] } = useSelector( state => state.userState);
     const { adminOrders = [] } = useSelector( state => state.orderState);
     const dispatch = useDispatch();
-
 
     let totalAmount = 0;
     if (adminOrders.length > 0) {
@@ -28,7 +27,7 @@ const Dashboard = () => {
     useEffect( () => {
         dispatch(getAdminProducts());
         dispatch(getEnquiryDetails());
-        // dispatch(getUsers());
+        dispatch(getUsers());
         dispatch(adminOrdersAction());
      }, [dispatch])
  
@@ -119,9 +118,11 @@ const Dashboard = () => {
 <div className="container-fluid">
   <div className="row">
     <div className="col-md-2 col-12">
-      <Sidebar />
+    <div style={{display:'flex',flexDirection:'row',position:'fixed',top:'0px',zIndex:99999,backgroundColor:'#fff',minWidth:'100%'}}>
+      <Sidebar isActive={isActive} setIsActive={setIsActive}/>
+      </div>
     </div>
-    <div className="col-md-10 col-12 smalldevice-space">
+    <div className="col-md-10 col-12 smalldevice-space-dashboard">
 
       <h1 className="my-2 admin-dashboard-x">Dashboard</h1>
 
@@ -166,7 +167,7 @@ const Dashboard = () => {
                 <b>{adminOrders.length}</b>
               </div>
             </div>
-            <Link className="card-footer text-white clearfix small z-1" to="/admin/orders">
+            <Link className="card-footer text-white clearfix small z-1" to="/admin/allorders">
               <span className="float-left">View Details</span>
               <span className="float-right">
                 <i className="fa fa-angle-right"></i>

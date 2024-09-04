@@ -79,8 +79,7 @@ export const orderDetail = createAsyncThunk('order/orderDetail', async (id, { di
     dispatch(orderDetailRequest());
     const { data } = await axios.get(`/api/v1/order/${id}`);
     console.log(data)
-    dispatch(orderDetailSuccess(data));
-   
+    dispatch(orderDetailSuccess(data));  
   } catch (error) {
     dispatch(orderDetailFail(error.response.data.message));
   }
