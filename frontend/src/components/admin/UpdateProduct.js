@@ -285,6 +285,12 @@ const UpdateProduct = ({isActive,setIsActive}) => {
         }
     }, [dispatch, id, product]);
 
+    useEffect(() => {
+        if (!product) {
+            dispatch(getProduct(id));
+        }
+    }, [dispatch, id]);
+
     // useEffect(() => {
     //     if (isProductUpdated) {
     //         toast('Product updated successfully!', {
