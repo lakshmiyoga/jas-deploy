@@ -22,7 +22,9 @@ if (process.env.NODE_ENV === "production") {
 
 const corsOptions = {
     origin: `${BASE_URL}`,
+    methods: ['GET', 'POST', 'PUT', 'DELETE', 'OPTIONS'],
     credentials: true,
+    allowedHeaders: ['Content-Type', 'Authorization'],
 };
 
 app.use(cors(corsOptions));

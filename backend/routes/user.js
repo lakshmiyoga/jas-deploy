@@ -28,7 +28,7 @@ router.put('/update', isAuthenticateUser,upload.single('avatar'), updateUserProf
 //Admin routes
 router.get('/admin/users',isAuthenticateUser,authorizeRoles('admin'), getAllUsers);
 router.get('/admin/user/:id',isAuthenticateUser,authorizeRoles('admin'), getUser)
-router.put('/admin/user/:id',isAuthenticateUser,authorizeRoles('admin'), updateUser)
+router.put('/admin/user/:id',isAuthenticateUser,authorizeRoles('admin'),upload.none(), updateUser)
 router.delete('/admin/user/:id',isAuthenticateUser,authorizeRoles('admin'), deleteUser);
 
 
