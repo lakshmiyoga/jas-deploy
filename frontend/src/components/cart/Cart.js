@@ -94,13 +94,13 @@ const Cart = () => {
                             
                             <div className="row d-flex justify-content-center">
                                 <div className="col-12 col-lg-8 my-4 float-left">
-                                    <div id="order_summary">
+                                    {/* <div id="order_summary">
                                         <h4>Delivery Offers<span><i className='fa fa-truck' style={{ paddingLeft: '20px' }}></i></span></h4>
                                         <hr />
                                         <p>50% discount on delivery for all orders above Rs.500</p>
                                         <hr />
                                         <p>Free delivery for all orders above Rs.1000</p>
-                                    </div>
+                                    </div> */}
                                 </div>
                                 <div className="col-12 col-lg-4 my-4 float-right">
                                     <div id="order_summary">
