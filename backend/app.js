@@ -1,24 +1,21 @@
 const express = require("express");
 const app = express();
 const errorMiddleware = require("./middleware/error")
-const  cookieParser = require('cookie-parser')
+const cookieParser = require('cookie-parser')
 const cors = require('cors');
-const path =require('path')
+const path = require('path')
 const dotenv = require('dotenv');
-dotenv.config({path:path.join(__dirname,"config/config.env")});
+dotenv.config({ path: path.join(__dirname, "config/config.env") });
 
 app.use(express.json());
 app.use(cookieParser());
 app.use(express.urlencoded({ extended: true }));
-app.use("/uploads", express.static(path.join(__dirname,"uploads")))
+app.use("/uploads", express.static(path.join(__dirname, "uploads")))
 
 // let BASE_URL = process.env.FRONTEND_URL;
 // if (process.env.NODE_ENV === "production") {
-//     app.use((req, res, next) => {
-//         BASE_URL = `${req.protocol}://${req.get('host')}`;
-//         next();
-//     });
-// }
+//     BASE_URL = req.secure ? 'https://jasfruitsandvegetables.in':`${req.protocol}://${req.get('host')}`
+//   }
 
 // const corsOptions = {
 //     origin: `${BASE_URL}`,
@@ -28,43 +25,72 @@ app.use("/uploads", express.static(path.join(__dirname,"uploads")))
 // };
 
 // app.use(cors(corsOptions));
-let BASE_URL = process.env.FRONTEND_URL;
 
-// In production, determine the correct BASE_URL dynamically
-if (process.env.NODE_ENV === "production") {
-    app.use((req, res, next) => {
-        BASE_URL = `${req.protocol}://${req.get('host')}`;
-        next();
-    });
-}
+app.use((req, res, next) => {
+    let baseUrl;
 
-// List of allowed origins
-const allowedOrigins = [
-    'https://jasfruitsandvegetables.in', // Production domain
-    'http://44.205.39.93' // Test domain (HTTP)
-];
+    if (process.env.NODE_ENV === "production") {
+        baseUrl = req.secure ? 'https://jasfruitsandvegetables.in' : `${req.protocol}://${req.get('host')}`;
+    } else {
+        baseUrl = process.env.FRONTEND_URL || 'http://localhost:3000'; // Default for development
+    }
 
-const corsOptions = {
-    origin: function (origin, callback) {
-        // Allow requests with no origin (like mobile apps or curl requests) or from allowed origins
-        if (!origin || allowedOrigins.includes(origin)) {
-            callback(null, true);
-        } else {
-            callback(new Error('Not allowed by CORS'));
-        }
-    },
-    methods: ['GET', 'POST', 'PUT', 'DELETE', 'OPTIONS'],
-    credentials: true,
-    allowedHeaders: [
-        'Content-Type',           // JSON and other content types
-        'Authorization',          // Auth headers
-        'X-Requested-With',       // Ajax requests
-        'Accept',                 // For accepting different content types
-        'multipart/form-data'     // For file uploads
-    ],
-};
+    // Set CORS options dynamically
+    const corsOptions = {
+        origin: baseUrl,
+        methods: ['GET', 'POST', 'PUT', 'DELETE', 'OPTIONS'],
+        credentials: true,
+        allowedHeaders: [
+            'Content-Type',           // JSON and other content types
+            'Authorization',          // Auth headers
+            'X-Requested-With',       // Ajax requests
+            'Accept',                 // For accepting different content types
+            'multipart/form-data'     // For file uploads
+        ],
+    };
+    console.log("baseurl",baseUrl)
+    // Apply CORS options for this request
+    cors(corsOptions)(req, res, next);
+});
 
-app.use(cors(corsOptions));
+// let BASE_URL = process.env.FRONTEND_URL;
+
+// // In production, determine the correct BASE_URL dynamically
+// if (process.env.NODE_ENV === "production") {
+//     app.use((req, res, next) => {
+//         BASE_URL = `${req.protocol}://${req.get('host')}`;
+//         next();
+//     });
+// }
+
+// // List of allowed origins
+// const allowedOrigins = [
+//     'https://jasfruitsandvegetables.in', // Production domain
+//     'http://44.205.39.93' // Test domain (HTTP)
+// ];
+
+// const corsOptions = {
+//     origin: function (origin, callback) {
+//         console.log('Request Origin:', origin); // Log the request origin
+//         // Allow requests with no origin (like mobile apps or curl requests) or from allowed origins
+//         if (!origin || allowedOrigins.includes(origin)) {
+//             callback(null, true);
+//         } else {
+//             callback(new Error('Not allowed by CORS'));
+//         }
+//     },
+//     methods: ['GET', 'POST', 'PUT', 'DELETE', 'OPTIONS'],
+//     credentials: true,
+//     allowedHeaders: [
+//         'Content-Type',           // JSON and other content types
+//         'Authorization',          // Auth headers
+//         'X-Requested-With',       // Ajax requests
+//         'Accept',                 // For accepting different content types
+//         'multipart/form-data'     // For file uploads
+//     ],
+// };
+
+// app.use(cors(corsOptions));
 
 
 // const port = 3000;
@@ -91,22 +117,22 @@ const products = require('./routes/product')
 const user = require('./routes/user');
 const order = require('./routes/order');
 const porter = require('./routes/porter');
-const  payment  = require("./routes/payment");
+const payment = require("./routes/payment");
 const itemsRouter = require('./routes/item');
-const  enquiry  = require("./routes/enquiry");
+const enquiry = require("./routes/enquiry");
 
 app.use('/api/v1', products);
-app.use('/api/v1',user);
-app.use('/api/v1',order);
-app.use('/api/v1',payment);
+app.use('/api/v1', user);
+app.use('/api/v1', order);
+app.use('/api/v1', payment);
 app.use('/api/v1', itemsRouter);
-app.use('/api/v1',enquiry);
-app.use('/api/v1',porter);
+app.use('/api/v1', enquiry);
+app.use('/api/v1', porter);
 
 
-if(process.env.NODE_ENV === "production") {
+if (process.env.NODE_ENV === "production") {
     app.use(express.static(path.join(__dirname, '../frontend/build')));
-    app.get('*', (req, res) =>{
+    app.get('*', (req, res) => {
         res.sendFile(path.resolve(__dirname, '../frontend/build/index.html'))
     })
 }
@@ -115,7 +141,7 @@ app.use(errorMiddleware);
 app.use((err, req, res, next) => {
     console.error(err.stack); // Log error details
     res.status(500).send('Something broke!'); // Send error response
-  });
+});
 
 
 module.exports = app;
