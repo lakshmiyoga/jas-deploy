@@ -349,22 +349,28 @@ const getUser = catchAsyncError(async (req, res, next) => {
 
 //Admin: Update User - api/v1/admin/user/:id
 const updateUser = catchAsyncError(async (req, res, next) => {
-  console.log(req.body)
+  console.log("userdata",req.body)
   const newUserData = {
     name: req.body.name,
     email: req.body.email,
     role: req.body.role
   }
-
+try{
   const user = await User.findByIdAndUpdate(req.params.id, newUserData, {
     new: true,
     runValidators: true,
   })
-
+  // console.log(user)
   return res.status(200).json({
     success: true,
     user
   })
+}catch(error){
+  console.log(error )
+}
+ 
+
+ 
 })
 
 //Admin: Delete User - api/v1/admin/user/:id

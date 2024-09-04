@@ -28,7 +28,7 @@ export default function UpdateUser ({isActive,setIsActive}) {
         formData.append('email' , email);
         formData.append('role' , role);
         dispatch(updateUser({userId, formData}))
-        console.log(userId, formData)
+        // console.log(userId, formData)
     }
 
     useEffect(() => {
