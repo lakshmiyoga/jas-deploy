@@ -6,7 +6,7 @@ import MetaData from '../Layouts/MetaData';
 import Sidebar from './Sidebar';
 import { useLocation } from 'react-router-dom';
 
-const SummaryUser = () => {
+const SummaryUser = ({isActive,setIsActive}) => {
     const dispatch = useDispatch();
     const location = useLocation();
     sessionStorage.setItem('redirectPath', location.pathname);
@@ -28,10 +28,12 @@ const SummaryUser = () => {
         <div className="row">
             <MetaData title={`Order Summary`} />
             <div className="col-12 col-md-2">
-                <Sidebar />
+            <div style={{display:'flex',flexDirection:'row',position:'fixed',top:'0px',zIndex:99999,backgroundColor:'#fff',minWidth:'100%'}}>
+                <Sidebar isActive={isActive} setIsActive={setIsActive}/>
+                </div>
             </div>
-            <div className="col-12 col-md-9 smalldevice-space ">
-                <h1 >User Summary for a Day</h1>
+            <div className="col-12 col-md-9 smalldevice-space-summary ">
+                <h1 className='admin-dashboard-x'>User Summary for a Day</h1>
                 <input
                     type="date"
                     value={date}
@@ -43,11 +45,12 @@ const SummaryUser = () => {
                 ) : error ? (
                     <p className="text-danger">{error}</p>
                 ) : (
-                    <div className="product-table">
+                    <div className="container cart-detail-container">
                         {userSummary.length === 0 ? (
                             <p>No user found for the selected date.</p>
                         ) : (
-                            <table className="table table-bordered">
+                            <div className="updatetable-responsive">
+                            <table className="updatetable updatetable-bordered">
                                 <thead>
                                     <tr>
                                         <th className="s-no">S.No</th>
@@ -100,6 +103,7 @@ const SummaryUser = () => {
                                     </tr>
                                 </tbody>
                             </table>
+                            </div>
                         )}
                     </div>
                 )}

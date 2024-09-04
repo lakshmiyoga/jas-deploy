@@ -23,7 +23,7 @@ import ReactDOM from 'react-dom';
 import JasInvoice from "../Layouts/JasInvoice";
 import MetaData from "../Layouts/MetaData";
 
-const UpdateOrder = () => {
+const UpdateOrder = ({isActive,setIsActive}) => {
     const location = useLocation();
     sessionStorage.setItem('redirectPath', location.pathname);
     const { loading, isOrderUpdated, error, orderDetail, porterOrderDetail, orderRemoveResponse, orderRemoveError } = useSelector(state => state.orderState);
@@ -387,7 +387,7 @@ const UpdateOrder = () => {
 
     useEffect(() => {
         if (refreshData && porterOrderResponse) {
-            dispatch(porterClearData())
+            // dispatch(porterClearData())
             dispatch(getporterOrder({ order_id: id }))
             setRefreshData(false)
         }
@@ -410,7 +410,9 @@ const UpdateOrder = () => {
         <div className="row">
             <MetaData title={`Update Order`} />
             <div className="col-12 col-md-2">
-                <Sidebar />
+            <div style={{display:'flex',flexDirection:'row',position:'fixed',top:'0px',zIndex:99999,backgroundColor:'#fff',minWidth:'100%'}}>
+                <Sidebar isActive={isActive} setIsActive={setIsActive}/>
+                </div>
             </div>
             {
                 loading ? <Loader /> : (

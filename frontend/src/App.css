@@ -53,6 +53,23 @@ body {
   /* background-color: #FFFFE0; */
 }
 
+.App-blure {
+  font-family: Cambria, Cochin, Georgia, Times, 'Times New Roman', serif;
+  min-width: 100%;
+  max-width: 100vw;
+  display: flex;
+  flex-direction: column;
+  position: absolute;
+  min-height: 100vh;
+  max-height: auto;
+  margin: 0px;
+  padding: 0px;
+  overflow-x: hidden;
+  overflow-y: hidden;
+  /* background-color: #FFFFE0; */
+}
+
+
 .header {
   position: fixed;
   top: 0;
@@ -92,6 +109,20 @@ body {
   overflow-x: hidden;
 }
 
+.content-blure{
+  position: relative;
+  min-height: calc(100vh - 120px);
+  max-height: auto;
+  max-width: 100vw;
+  /* top: 15%; */
+  margin-top: 120px;
+  flex-grow: 1;
+  /* padding-top: 70px; Adjust this value to the height of your header */
+  overflow-y: hidden !important;
+  overflow-x: hidden;
+}
+
+
 
 @media (max-width: 576px) {
   .content {
@@ -100,27 +131,20 @@ body {
     /* top: 15%; */
     margin-top: 70px;
     flex-grow: 1;
+    max-width: 100vw;
     /* padding-top: 70px; Adjust this value to the height of your header */
     overflow-y: auto;
     overflow-x: hidden;
   }
-
-  .user-info {
-    max-width: 100vw;
-  }
-
-}
-
-@media (max-width: 576px) {
-  .content {
-    position: relative;
-    height: auto;
+  .content-blure {
+    position: absolute;
+    max-height: 100vh;
     /* top: 15%; */
     margin-top: 70px;
     flex-grow: 1;
     max-width: 100vw;
     /* padding-top: 70px; Adjust this value to the height of your header */
-    overflow-y: auto;
+    overflow-y: hidden !important;
     overflow-x: hidden;
   }
 
@@ -684,6 +708,8 @@ footer {
   color: inherit;
   text-decoration: none;
   align-items: center;
+  color: #000;
+  font-weight: 500;
 }
 
 .cart-container {
@@ -1033,6 +1059,10 @@ footer {
 .order-confirm p,
 .order-details p {
   margin-left: 1.5rem;
+  max-width: 100%;
+  display: flex;
+  flex-direction: column;
+  
 }
 
 .update-btn {
@@ -1077,7 +1107,6 @@ footer {
   top: 0;
   margin: 0px;
   z-index: 10;
-
 }
 
 
@@ -1219,7 +1248,7 @@ ul.CTAs a {
   color: #fdcc0d;
 }
 
-.review_user {
+.review_user { 
   font-size: 0.8rem;
   color: grey;
 }
@@ -2017,20 +2046,20 @@ ul.CTAs a {
   grid-template-columns: 1fr 1fr;
   gap: 20px;
   margin: 20px 0;
-  padding: 20px;
+  /* padding: 20px; */
   /* border: 1px solid #ddd; */
   border-radius: 10px;
   /* background-color: #f9f9f9; */
   /* box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1); */
 }
 
-@media (max-width:376px) {
+@media (max-width:460px) {
   .delivery-details {
     display: grid;
     grid-template-columns: 1fr;
-    gap: 20px;
+    gap: 0px;
     margin: 20px 0;
-    padding: 20px;
+    padding: 0px;
     /* border: 1px solid #ddd; */
     border-radius: 10px;
     /* background-color: #f9f9f9; */
@@ -2211,6 +2240,7 @@ h5 {
 .updatetable thead th {
   vertical-align: middle;
   border-bottom: 2px solid #dee2e6;
+  background-color: #FED235;
   /* display: flex;
   flex-direction: row;
   justify-content: center;
@@ -2448,16 +2478,19 @@ h5 {
 }
 
 #sidebarCollapse {
-  background: #343a40;
-  color: #ffffff;
-  border: none;
-  padding: 10px;
+  background: #ffffff  ;
+  color: black;
+  border: #FED235;
+  outline: none;
+  padding: 5px;
+  max-height: 50%;
   cursor: pointer;
   position: fixed;
-  top: 10px;
+  /* top: 10px; */
   left: 10px;
   z-index: 1100;
 }
+
 
 .dashboard-sidebar {
   width: 100%;
@@ -2477,9 +2510,36 @@ h5 {
 
 }
 
+.overlay {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background: rgba(0, 0, 0, 0.5);
+  z-index: 1040;
+}
+
+/* Blur effect styling */
+.blur-effect {
+  filter: blur(5px);
+  pointer-events: none;
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  z-index: 1030;
+}
+
+/* Disable scrolling when the sidebar is active */
+body.no-scroll {
+  overflow: hidden;
+}
 @media (max-width: 768px) {
   .sidebar-wrapper {
-    width: 250px;
+    width: 50%;
+    z-index: 999999;
   }
 
   #sidebar-close {
@@ -2507,13 +2567,28 @@ h5 {
 
 @media (max-width: 767.98px) {
   .admin-dashboard-x {
-    margin-left: 50px;
-    font-size: 20px;
+    /* margin-left: 50px; */
+    font-size: 30px;
+    /* align-items: center; */
+  }
+  .smalldevice-space-dashboard{
+    padding: 20px;
+    margin-top: 75px;
   }
 
   .smalldevice-space {
     padding: 20px;
+    margin-top: 35px;
   }
+  .smalldevice-space-summary{
+    padding: 20px !important;
+    margin-top: 65px !important;
+  }
+}
+
+.smalldevice-space-summary{
+  padding: 20px;
+  margin-top: 10px;
 }
 
 @media (min-width: 768px) and (max-width: 992px) {
@@ -2554,7 +2629,9 @@ h5 {
   }
 
 }
-
+.ordersummary-detail-container {
+  max-width: 70vw;
+}
 @media (max-width: 577px) {
 
   /* Adjust Logo Size */
@@ -2567,7 +2644,14 @@ h5 {
 
   .order-detail-container {
     max-width: 90vw;
+  }
 
+  .cart-detail-container {
+    max-width: 80vw;
+  }
+
+  .ordersummary-detail-container {
+    max-width: 80vw;
   }
 
   /* Align Navbar elements in one row */
@@ -2578,6 +2662,13 @@ h5 {
     justify-content: space-between;
     align-items: center;
   }
+  /* .navbar-brand,
+  .cart-container :hover{
+    color: #FED235;
+  } */
+  .cart-container:hover .cart-icon {
+    color: #FED235; /* Change the icon color to yellow on hover */
+}
 }
 
 @media (max-width: 577px) {
@@ -2590,15 +2681,42 @@ h5 {
     width: 50%;
     height: 100vh;
     background-color: #FED235;
-    transition: all 0.3s ease;
+    transition: left 0.3s ease; /* Smooth transition for sliding */
     z-index: 1050;
     display: flex;
     flex-direction: column;
     justify-content: start;
-    align-items: center;
+    /* align-items: center; */
+    overflow: hidden;
+  }
+  .custom-collapse.open {
+    left: 0; /* Slide the sidebar in */
+  }
+  .custom-collapse-close {
+    position: absolute;
+    left: -50%; /* Slide the sidebar out */
+    transition: left 1s ease; /* Smooth transition for sliding out */
+    height: 0vh;
     overflow: hidden;
   }
 
+/* Apply a blur effect to the rest of the content when the sidebar is open */
+.blur-effect {
+  filter: blur(4px);
+  pointer-events: none; /* Disable clicks */
+}
+
+/* Dark overlay background when sidebar is open */
+.overlay {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100vh;
+  background-color: rgba(0, 0, 0, 0.5);
+  z-index: 1049; /* Lower than the sidebar but higher than the rest of the content */
+  display: block;
+}
   .navbar-link-badge {
     display: flex;
     flex: none;
@@ -2607,6 +2725,8 @@ h5 {
   }
 
   .sidebar-components {
+    display: flex;
+    flex-direction: column;
     padding-left: 5%;
     margin: 0px;
     padding-top: 2%;
@@ -2617,6 +2737,7 @@ h5 {
 
   .navbar-names {
     color: #000;
+    margin-bottom: 3px;
   }
 
   .nav-link {
@@ -2660,6 +2781,9 @@ h5 {
   .navbar-link {
     font-size: 1.2rem;
     padding: 0px 5px;
+  }
+  .navbar-link:hover{
+    color: white;
   }
 
   .avatar-initials {
@@ -2756,7 +2880,7 @@ h5 {
 
   .custom-navbar .logo {
     width: 100px;
-    height: 50px;
+    height: 40px;
     margin-left: 2px;
   }
 
@@ -2771,7 +2895,6 @@ h5 {
     width: 25px;
     height: 25px;
     background-color: #02441E;
-    ;
     /* Change this color as needed */
     color: white;
     border-radius: 50%;
@@ -2787,9 +2910,13 @@ h5 {
     position: relative;
   }
 
+  .cart-icon :hover{
+    color: #FED235;
+  }
+
   .custom-navbar .logo {
-    width: 100px;
-    height: 40px;
+    width: 150px;
+    height: 50px;
     margin-left: 2px;
   }
 }
@@ -2814,6 +2941,9 @@ h5 {
   .cart-icon {
     font-size: 1.5rem;
     position: relative;
+  }
+  .cart-icon :hover{
+    color: #FED235;
   }
 
   .btn {
@@ -3049,6 +3179,27 @@ h5 {
 
 }
  
-.products-image{
+/* .products-image{
   background-color: #FFFFE0;
-} 
+}  */
+
+.sidebar-closed {
+  transform: translateX(-100%);
+}
+
+.blur-background {
+  filter: blur(5px);
+  pointer-events: none;
+}
+
+.no-interaction {
+  pointer-events: none;
+}
+
+.logo-admin{
+  max-width: 90%;
+  height: auto;
+  margin-top: 10px;
+  /* margin: 0px; */
+  padding: 0px;
+}

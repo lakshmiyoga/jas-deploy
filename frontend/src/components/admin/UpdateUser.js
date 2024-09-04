@@ -7,7 +7,7 @@ import { clearError, clearUserUpdated } from "../../slices/userSlice";
 import { toast } from "react-toastify";
 import MetaData from "../Layouts/MetaData";
 
-export default function UpdateUser () {
+export default function UpdateUser ({isActive,setIsActive}) {
     const [name, setName] = useState("");
     const [email, setEmail] = useState("");
     const [role, setRole] = useState("");
@@ -68,7 +68,9 @@ export default function UpdateUser () {
         <div className="row">
             <MetaData title={`Update User`} />
             <div className="col-12 col-md-2">
-                    <Sidebar/>
+            <div style={{display:'flex',flexDirection:'row',position:'fixed',top:'0px',zIndex:99999,backgroundColor:'#fff',minWidth:'100%'}}>
+                    <Sidebar isActive={isActive} setIsActive={setIsActive}/>
+                    </div>
             </div>
             <div className="col-12 col-md-10 smalldevice-space">
                 <Fragment>

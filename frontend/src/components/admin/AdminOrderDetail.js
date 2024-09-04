@@ -9,10 +9,11 @@ import JasInvoice from '../Layouts/JasInvoice';
 import React, { useRef } from 'react';
 import { useReactToPrint } from 'react-to-print';
 import ReactDOM from 'react-dom';
+import Sidebar from './Sidebar';
 import { porterClearData } from '../../slices/porterSlice';
 
 
-export default function OrderDetail() {
+export default function AdminOrderDetail({isActive,setIsActive}) {
     const { orderDetail, loading } = useSelector(state => state.orderState)
     const { shippingInfo = {}, user = {}, orderStatus = "Processing", orderItems = [], totalPrice = 0, paymentInfo = {} } = orderDetail;
     const { porterOrderData, porterOrderResponse, porterCancelResponse, porterCancelError, portererror, getpackedOrderData } = useSelector((state) => state.porterState);
@@ -22,16 +23,18 @@ export default function OrderDetail() {
     const [payment, setPayment] = useState(null)
     const invoiceRef = useRef();
     const location = useLocation();
-    const [refreshData, setRefreshData] = useState(false)
     sessionStorage.setItem('redirectPath', location.pathname);
-  
+    const [refreshData, setRefreshData] = useState(false)
+    console.log("orderDetail", orderDetail)
+    console.log("getpackedOrderData", getpackedOrderData)
+    console.log("orderItems", orderItems)
 
     useEffect(() => {
         dispatch(orderDetailAction(id));
         dispatch(getPackedOrder({ order_id: id }))
         dispatch(getporterOrder({ order_id: id }))
         setRefreshData(true)
-    }, [id])
+    }, [dispatch, id])
     useEffect(()=>{
         if(porterOrderData && refreshData){
         dispatch(createPorterOrderResponse({ order_id: porterOrderData && porterOrderData.order_id, porterOrder_id: porterOrderData?.porterOrder?.order_id }))
@@ -45,23 +48,22 @@ if(refreshData && porterOrderResponse){
     setRefreshData(false)
 }
     },[refreshData,porterOrderResponse])
-
     const handlePrint = useReactToPrint({
         content: () => invoiceRef.current,
     });
-    console.log("orderDetail", orderDetail)
-    console.log("getpackedOrderData", getpackedOrderData)
-    console.log("orderItems", orderItems)
 
     return (
-        <Fragment>
-            {loading ? <Loader /> : (
-                <Fragment>
-                    <div className="products_heading">Order Details</div>
-                    <div className="container order-detail-container">
-
-                        <div className="row d-flex justify-content-between" id='order_summary'>
-                            <div className="col-12 col-lg-12 mt-5 order-details">
+                <div className="row">
+                <div className="col-12 col-md-2">
+                <div style={{display:'flex',flexDirection:'row',position:'fixed',top:'0px',zIndex:99999,backgroundColor:'#fff',minWidth:'100%'}}>
+                    <Sidebar isActive={isActive} setIsActive={setIsActive} />
+                    </div>
+                    </div>
+                    {
+                loading ? <Loader /> : (
+                    <div className="col-12 col-md-10 smalldevice-space container order-detail-container">
+        
+                        <div className="col-12 col-lg-12 mt-5 order-details">
 
                                 <h1>Order # {orderDetail.order_id}</h1>
 
@@ -244,12 +246,10 @@ if(refreshData && porterOrderResponse){
 
 
                             </div>
-                        </div>
                     </div>
-                </Fragment>
-            )
+                    )}
+               
 
-            }
-        </Fragment>
+</div>          
     )
 }

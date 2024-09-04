@@ -53,10 +53,11 @@ const Cart = () => {
             ) : (
                 <Fragment>
                     <div className="products_heading">Cart</div>
-                    <div className="container mt-5">
-                        <div className="table-responsive">
+                    <div className="container cart-detail-container mt-5 " >
+                        <div className="" >
                             <h2 className="mt-5">Your Cart: <b>{items.length}</b></h2>
-                            <table className="table table-bordered">
+                            <div className="updatetable-responsive">
+                            <table className="updatetable updatetable-bordered">
                                 <thead>
                                     <tr>
                                         <th>S.No</th>
@@ -89,6 +90,7 @@ const Cart = () => {
                                 </tbody>
                                
                             </table>
+                            </div>
                             
                             <div className="row d-flex justify-content-center">
                                 <div className="col-12 col-lg-8 my-4 float-left">

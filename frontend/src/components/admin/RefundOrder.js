@@ -20,7 +20,7 @@ import NumberInput from "../Layouts/NumberInput";
 import Loader from "../Layouts/Loader";
 import MetaData from "../Layouts/MetaData";
 
-const RefundOrder = () => {
+const RefundOrder = ({isActive,setIsActive}) => {
     const location = useLocation();
     sessionStorage.setItem('redirectPath', location.pathname);
     const { loading, isOrderUpdated, error, orderDetail, porterOrderDetail, orderRemoveResponse, orderRemoveError } = useSelector(state => state.orderState);
@@ -343,7 +343,7 @@ const RefundOrder = () => {
 
     useEffect(()=>{
     if(refreshData && porterOrderResponse){
-        dispatch(porterClearData())
+        // dispatch(porterClearData())
         dispatch(getporterOrder({ order_id: id }))
         setRefreshData(false)
     }
@@ -354,7 +354,9 @@ const RefundOrder = () => {
       
         <div className="row">
             <div className="col-12 col-md-2">
-                <Sidebar />
+            <div style={{display:'flex',flexDirection:'row',position:'fixed',top:'0px',zIndex:99999,backgroundColor:'#fff',minWidth:'100%'}}>
+                <Sidebar isActive={isActive} setIsActive={setIsActive}/>
+                </div>
             </div>
             {
                 loading ? <Loader /> : (

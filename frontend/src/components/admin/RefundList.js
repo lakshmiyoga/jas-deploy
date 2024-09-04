@@ -13,7 +13,7 @@ import { clearOrderDeleted, orderDetailClear } from "../../slices/orderSlice";
 import MetaData from '../Layouts/MetaData';
 import { porterClearData, porterClearResponse } from '../../slices/porterSlice';
 
-const RefundList = () => {
+const RefundList = ({isActive,setIsActive}) => {
     // const { adminOrders: orders = [], error, isOrderDeleted }  = useSelector(state => state.orderState);
     const location = useLocation();
     sessionStorage.setItem('redirectPath', location.pathname);
@@ -207,7 +207,9 @@ const RefundList = () => {
        
         <div className="row">
             <div className="col-12 col-md-2">
-                <Sidebar />
+            <div style={{display:'flex',flexDirection:'row',position:'fixed',top:'0px',zIndex:99999,backgroundColor:'#fff',minWidth:'100%'}}>
+                <Sidebar isActive={isActive} setIsActive={setIsActive}/>
+                </div>
             </div>
             <div className="col-12 col-md-10 smalldevice-space container">
                 <h1 className="my-4">Refund List</h1>
