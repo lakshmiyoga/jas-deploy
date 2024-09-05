@@ -53,48 +53,16 @@ app.use("/uploads", express.static(path.join(__dirname, "uploads")))
 //     cors(corsOptions)(req, res, next);
 // });
 
-// app.set('trust proxy', true);  // Trust the proxy
-
-// app.use((req, res, next) => {
-//     let baseUrl;
-
-//     if (process.env.NODE_ENV === "production") {
-//         const protocol = req.headers['x-forwarded-proto'] || req.protocol;
-//         baseUrl = protocol === 'https' ? 'https://jasfruitsandvegetables.in' : `http://${req.get('host')}`;
-//     } else {
-//         baseUrl = process.env.FRONTEND_URL || 'http://localhost:3000'; // Default for development
-//     }
-
-//     // Set CORS options dynamically
-//     const corsOptions = {
-//         origin: baseUrl,
-//         methods: ['GET', 'POST', 'PUT', 'DELETE', 'OPTIONS'],
-//         credentials: true,
-//         allowedHeaders: [
-//             'Content-Type',           // JSON and other content types
-//             'Authorization',          // Auth headers
-//             'X-Requested-With',       // Ajax requests
-//             'Accept',                 // For accepting different content types
-//             'multipart/form-data'     // For file uploads
-//         ],
-//     };
-//     console.log("baseurl", baseUrl);  // Logging the base URL
-
-//     // Apply CORS options for this request
-//     cors(corsOptions)(req, res, next);
-// });
-
 app.use((req, res, next) => {
-    // console.log(req)
     let baseUrl;
 
     if (process.env.NODE_ENV === "production") {
-        baseUrl = req.secure ? 'https://jasfruitsandvegetables.in' : `http://${req.get('host')}`;
+        const protocol = req.headers['x-forwarded-proto'] || req.protocol;
+        baseUrl = protocol === 'https' ? 'https://jasfruitsandvegetables.in' : `http://${req.get('host')}`;
     } else {
-        baseUrl = process.env.FRONTEND_URL || 'http://localhost:3000';
+        baseUrl = process.env.FRONTEND_URL || 'http://localhost:3000'; // Default for development
     }
 
-    // CORS options
     const corsOptions = {
         origin: baseUrl,
         methods: ['GET', 'POST', 'PUT', 'DELETE', 'OPTIONS'],
@@ -113,6 +81,36 @@ app.use((req, res, next) => {
 });
 
 app.set('trust proxy', true);  // Trust the proxy
+
+// app.use((req, res, next) => {
+//     // console.log(req)
+//     let baseUrl;
+
+//     if (process.env.NODE_ENV === "production") {
+//         baseUrl = req.secure ? 'https://jasfruitsandvegetables.in' : `http://${req.get('host')}`;
+//     } else {
+//         baseUrl = process.env.FRONTEND_URL || 'http://localhost:3000';
+//     }
+
+//     // CORS options
+//     const corsOptions = {
+//         origin: baseUrl,
+//         methods: ['GET', 'POST', 'PUT', 'DELETE', 'OPTIONS'],
+//         credentials: true,
+//         allowedHeaders: [
+//             'Content-Type',
+//             'Authorization',
+//             'X-Requested-With',
+//             'Accept',
+//             'multipart/form-data'
+//         ],
+//     };
+//     console.log("CORS baseurl:", baseUrl);
+
+//     cors(corsOptions)(req, res, next);
+// });
+
+// app.set('trust proxy', true);  // Trust the proxy
 
 // const port = 3000;
 
