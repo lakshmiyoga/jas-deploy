@@ -246,11 +246,11 @@ const AllOrders = ({ isActive, setIsActive }) => {
                         {order.orderStatus}
                     </p>
                 ),
-                paymentstatus: (
-                    <p className='greenColor'>
-                        {order.paymentStatus}
-                    </p>
-                ),
+               paymentstatus: (
+                <p style={{ color: order && order.paymentStatus === 'CHARGED' ? 'green' : 'red' }}>
+                    {order && order.paymentStatus}
+                </p>
+            ),
                 actions: (
                     <Fragment>
                         <Link to={`/admin/orderdetail/${order.order_id}`} className="btn btn-primary py-1 px-2 ml-2">
@@ -293,7 +293,7 @@ const AllOrders = ({ isActive, setIsActive }) => {
                     </div>
                 </div>
                 <div className="col-12 col-md-10 smalldevice-space">
-                    <h1 className="my-4 admin-dashboard-x">All Orders</h1>
+                    <h1 className="mb-4 admin-dashboard-x">All Orders</h1>
                     <input
                         type="date"
                         value={date}

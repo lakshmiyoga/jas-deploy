@@ -53,7 +53,7 @@ const Register = () => {
 
     useEffect(() => {
 
-        if(isAuthenticated ){
+        if(isAuthenticated){
           toast('Register successfully',{
             type:'success',
             position:"bottom-center",

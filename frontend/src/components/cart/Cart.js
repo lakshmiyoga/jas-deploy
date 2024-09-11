@@ -4,6 +4,7 @@ import { useLocation, useNavigate } from 'react-router-dom';
 import { Link } from 'react-router-dom';
 import { decreaseCartItemQty, increaseCartItemQty, removeItemFromCart } from '../../slices/cartSlice';
 import MetaData from '../Layouts/MetaData';
+import { toast } from 'react-toastify';
 
 const Cart = () => {
     const { items } = useSelector(state => state.cartState);
@@ -37,11 +38,24 @@ const Cart = () => {
     const handleConfirmDelete = () => {
         dispatch(removeItemFromCart(productToDelete));
         setShowModal(false);
+        toast.success('Item removed from Cart', {
+            position: "bottom-center",
+            type: 'success',
+        });
     };
 
     const handleCancelDelete = () => {
         setShowModal(false);
     };
+
+    const capitalizeFirstLetter = (str) => {
+        return str
+            .toLowerCase()
+            .split(' ')
+            .map(word => word.charAt(0).toUpperCase() + word.slice(1))
+            .join(' ');
+    };
+
 
     return (
         <Fragment>
@@ -71,10 +85,10 @@ const Cart = () => {
                                 <tbody>
                                     
                                     {items.map((item, index) => (
-                                        
+                                       
                                         <tr key={item.product}>
                                             <td>{index + 1}</td>
-                                            <td>{item.name}</td>
+                                            <td>{capitalizeFirstLetter(item.name)} </td>
                                             <td>RS.{(item.price).toFixed(2)}</td>
                                             <td>{item.productWeight}</td>
                                             <td>Rs.{(item.price * item.productWeight).toFixed(2)}</td>

@@ -33,26 +33,57 @@ const NewProduct = ({isActive,setIsActive}) => {
     const dispatch = useDispatch();
 
 
+    // const onImagesChange = (e) => {
+    //     const files = Array.from(e.target.files);
+
+    //     files.forEach(file => {
+            
+    //         const reader = new FileReader();
+
+    //         reader.onload = () => {
+    //             if(reader.readyState === 2 ) {
+    //                 setImagesPreview(oldArray => [...oldArray, reader.result])
+    //                 setImages(oldArray => [...oldArray, file])
+    //             }
+    //         }
+
+    //         reader.readAsDataURL(file)
+
+
+    //     })
+    // }
+
     const onImagesChange = (e) => {
         const files = Array.from(e.target.files);
-
+        const maxSize = 5 * 1024 * 1024; // 10 MB in bytes
+        let totalSize = 0;
+    
+        // Calculate the total size of all selected files
         files.forEach(file => {
-            
+            totalSize += file.size;
+        });
+    
+        // Check if the total size exceeds the maximum allowed size
+        if (totalSize > maxSize) {
+            toast.error('The total size of all selected images exceeds the 5MB limit.');
+            return; // Stop further execution if total size exceeds the limit
+        }
+    
+        // Proceed with setting images if total size is within the limit
+        files.forEach(file => {
             const reader = new FileReader();
-
+    
             reader.onload = () => {
-                if(reader.readyState === 2 ) {
-                    setImagesPreview(oldArray => [...oldArray, reader.result])
-                    setImages(oldArray => [...oldArray, file])
+                if (reader.readyState === 2) {
+                    setImagesPreview(oldArray => [...oldArray, reader.result]);
+                    setImages(oldArray => [...oldArray, file]);
                 }
-            }
-
-            reader.readAsDataURL(file)
-
-
-        })
-    }
-
+            };
+    
+            reader.readAsDataURL(file);
+        });
+    };
+    
     const submitHandler = (e) => {
         e.preventDefault();
         const formData = new FormData();
@@ -178,7 +209,7 @@ const NewProduct = ({isActive,setIsActive}) => {
               </div> */}
 
                             <div className='form-group'>
-                                <label>Images</label>
+                                <label>Images  (*Size should be within 5mb) </label>
 
                                 <div className='custom-file'>
                                     <input

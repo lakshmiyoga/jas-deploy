@@ -217,7 +217,7 @@ const DispatchList = ({isActive,setIsActive}) => {
                 </div>
             </div>
             <div className="col-12 col-md-10 smalldevice-space">
-                <h1 className="my-4 admin-dashboard-x">Dispatch List</h1>
+                <h1 className="mb-4 admin-dashboard-x">Dispatch List</h1>
                 <input
                     type="date"
                     value={date}

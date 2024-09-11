@@ -23,6 +23,7 @@ export default function UserOrders() {
         dispatch(orderDetailClear());
         dispatch(porterClearData());
         dispatch(porterClearResponse());
+        dispatch(userOrdersAction())
     }, [])
     // const { user } = useSelector(state => state.authState);
 
@@ -37,13 +38,6 @@ export default function UserOrders() {
     //         // console.log("hello")
     //     }
     // }, [user]);
-
-    useEffect(() => {
-        // if(dummyUser){
-            dispatch(userOrdersAction())
-        // }
-       
-    }, [])
 
     const setOrders = () => {
         const data = {
@@ -109,9 +103,9 @@ export default function UserOrders() {
         <Fragment>
             <MetaData title={`My Orders`} />
             <div className="products_heading">Orders</div>
-            <div className='container mdb-table'>
+            {loading ? <Loader /> :  <div className='container mdb-table'>
             <Fragment>
-                    {loading ? <Loader /> :
+                    {/* {loading ? <Loader /> : */}
                         <MDBDataTable
                             data={setOrders()}
                             bordered
@@ -119,9 +113,10 @@ export default function UserOrders() {
                             className="px-3 product-table"
                             noBottomColumns
                         />
-                    }
+                    {/* } */}
                 </Fragment>
-            </div>
+            </div> }
         </Fragment>
     )
 }
+

@@ -229,11 +229,11 @@ const ConfirmOrder = () => {
         if (currentHour < 21) { // Before 9 PM
             orderDate = new Date(currentDate);
             orderDate.setDate(orderDate.getDate() + 1); // Next day
-            setOrderDescription(`The order will be delivered on this day: ${orderDate.toDateString()}`);
+            setOrderDescription(`The order will be delivered on : ${orderDate.toDateString()}`);
         } else { // After 9 PM
             orderDate = new Date(currentDate);
             orderDate.setDate(orderDate.getDate() + 2); // Day after tomorrow
-            setOrderDescription(`The order will be delivered on this day: ${orderDate.toDateString()}`);
+            setOrderDescription(`The order will be delivered on : ${orderDate.toDateString()}`);
         }
     
         setShowModal(true);
@@ -256,13 +256,13 @@ const ConfirmOrder = () => {
 
     return (
     <Fragment>
-        { shippingAmount ? (
+        {/* { shippingAmount ? ( */}
             <Fragment>
             <MetaData title="Confirm Order" />
             <div className="products_heading">Confirm Order</div>
             <StepsCheckOut shipping confirmOrder />
             <div className="container confirm-order-container">
-                {loading ? <Loader /> : (
+                {loading || !shippingAmount ? <Loader /> : (
                     <div className="row justify-content-center">
                         <div className="col-12 col-lg-8 mt-5 order-confirm" id='order_summary'>
                             <h4 className="mb-3">Shipping Info</h4>
@@ -283,7 +283,7 @@ const ConfirmOrder = () => {
                                                 <Link to={`/product/${item.product}`}>{item.name}</Link>
                                             </div>
                                             <div className="col-4 col-lg-5">
-                                                <p>{item.productWeight} x Rs.{item.price} = <b>Rs.{(item.productWeight * item.price).toFixed(2)}</b></p>
+                                                <div>{item.productWeight} x Rs.{item.price} = <b>Rs.{(item.productWeight * item.price).toFixed(2)}</b></div>
                                             </div>
                                         </div>
                                     </div>
@@ -337,13 +337,13 @@ const ConfirmOrder = () => {
                 )}
             </div>
         </Fragment>
-        ) : (
+        {/* ) : (
             <div className="container" style={{minHeight:'25vh'}}>
         <Loader/>
         </div>
         )
 
-        }
+        } */}
            </Fragment>
       
     );

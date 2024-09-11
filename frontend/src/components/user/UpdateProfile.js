@@ -19,18 +19,46 @@ const UpdateProfile = () => {
     sessionStorage.setItem('redirectPath', location.pathname);
     console.log(error, user, isUpdated)
 
+    // const onChangeAvatar = (e) => {
+        
+    //     const reader = new FileReader();
+    //     reader.onload = () => {
+    //         if (reader.readyState === 2) {
+    //             setAvatarPreview(reader.result);
+    //             setAvatar(e.target.files[0])
+    //         }
+    //     }
+
+
+    //     reader.readAsDataURL(e.target.files[0])
+    // }
+
     const onChangeAvatar = (e) => {
+        const file = e.target.files[0];
+        const fileSizeLimit = 1 * 1024 * 1024; // 1 MB
+
+        if (file && file.size > fileSizeLimit) {
+            toast('The size of selected images exceeds the 1MB limit.', {
+                type: 'error',
+                position: "bottom-center"
+            });
+            e.target.value = ''; // Clear the file input
+            return;
+        }
+
         const reader = new FileReader();
         reader.onload = () => {
             if (reader.readyState === 2) {
                 setAvatarPreview(reader.result);
-                setAvatar(e.target.files[0])
+                setAvatar(file);
             }
+        };
+
+        if (file) {
+            reader.readAsDataURL(file);
         }
+    };
 
-
-        reader.readAsDataURL(e.target.files[0])
-    }
 
     const submitHandler = (e) => {
         e.preventDefault();
@@ -111,7 +139,7 @@ const UpdateProfile = () => {
                         </div>
 
                         <div className='form-group'>
-                            <label htmlFor='avatar_upload'>Avatar</label>
+                            <label htmlFor='avatar_upload'>Avatar (*Size should be within 1mb)</label>
                             <div className='d-flex align-items-center'>
                                 <div>
                                     <figure className='avatar mr-3 item-rtl'>

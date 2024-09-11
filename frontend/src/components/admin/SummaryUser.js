@@ -33,7 +33,7 @@ const SummaryUser = ({isActive,setIsActive}) => {
                 </div>
             </div>
             <div className="col-12 col-md-9 smalldevice-space-summary ">
-                <h1 className='admin-dashboard-x'>User Summary for a Day</h1>
+                <h1 className='mb-4 admin-dashboard-x'>User Summary for a Day</h1>
                 <input
                     type="date"
                     value={date}
@@ -47,7 +47,7 @@ const SummaryUser = ({isActive,setIsActive}) => {
                 ) : (
                     <div className="container cart-detail-container">
                         {userSummary.length === 0 ? (
-                            <p>No user found for the selected date.</p>
+                            <p>No user data found for the selected date.</p>
                         ) : (
                             <div className="updatetable-responsive">
                             <table className="updatetable updatetable-bordered">

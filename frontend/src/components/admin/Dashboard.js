@@ -115,16 +115,16 @@ const Dashboard = ({isActive,setIsActive}) => {
         //         </div>
         //     </div>
         // </div>
-<div className="container-fluid">
+<div >
   <div className="row">
     <div className="col-md-2 col-12">
     <div style={{display:'flex',flexDirection:'row',position:'fixed',top:'0px',zIndex:99999,backgroundColor:'#fff',minWidth:'100%'}}>
       <Sidebar isActive={isActive} setIsActive={setIsActive}/>
       </div>
     </div>
-    <div className="col-md-10 col-12 smalldevice-space-dashboard">
+    <div className="col-md-10 col-12 smalldevice-space-dashboard ">
 
-      <h1 className="my-2 admin-dashboard-x">Dashboard</h1>
+      <h1 className="mb-4 admin-dashboard-x">Dashboard</h1>
 
       {/* Total Amount Card */}
       <div className="row " >

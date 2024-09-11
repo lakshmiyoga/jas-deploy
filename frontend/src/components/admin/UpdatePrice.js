@@ -13,8 +13,21 @@ const UpdatePrice = ({isActive,setIsActive}) => {
     const location = useLocation();
     sessionStorage.setItem('redirectPath', location.pathname);
 
+    // const handleFileChange = (e) => {
+    //     setFile(e.target.files[0]);
+    // };
+
     const handleFileChange = (e) => {
-        setFile(e.target.files[0]);
+        const selectedFile = e.target.files[0];
+        const maxSize = 10 * 1024 * 1024; // 10 MB in bytes
+
+        if (selectedFile.size > maxSize) {
+            toast.error('The file size exceeds the 10MB limit.');
+            setFile(null); // Reset the file state
+            return
+        } else {
+            setFile(selectedFile);
+        }
     };
 
     const handleUpload = async () => {
@@ -80,15 +93,15 @@ const UpdatePrice = ({isActive,setIsActive}) => {
                     </div>
                 </div>
                 <div className="col-12 col-md-10 smalldevice-space">
-                    <h3 className="my-4 admin-dashboard-x">Product Price Upload</h3>
+                    <h3 className="mb-4 admin-dashboard-x">Product Price Upload</h3>
                     <Fragment>
                         {
                             loading ? <Loader /> : (
-                                <div className="row" style={{marginTop:'10%'}}>
+                                <div className="row" style={{marginTop:'5%'}}>
                                     <div className="col-12 col-md-6 mb-4 ">
                                         <div className="card update_price h-100" >
                                             <div className="card-body">
-                                                <h5 className="card-title ml-3">Import Product Details Info</h5>
+                                                <h5 className="card-title ml-3">Import Product Details Info (*File size should be within 10mb)</h5>
                                                 <div className="mb-3 d-flex flex-column align-items-center ml-3">
                                                     <input type="file" onChange={handleFileChange} className="form-control mb-2" />
                                                     <button className="btn btn-success" onClick={handleUpload}>Upload Price</button>

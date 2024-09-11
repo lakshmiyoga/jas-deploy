@@ -45,7 +45,7 @@ const OrderSummary = ({isActive,setIsActive}) => {
             </div>
 
             <div className="col-12 col-md-10 smalldevice-space-summary" >
-                <h1 className='admin-dashboard-x'>Order Summary for a Day</h1>
+                <h1 className='admin-dashboard-x mb-4'>Order Summary for a Day</h1>
                 <input
                     type="date"
                     value={date}

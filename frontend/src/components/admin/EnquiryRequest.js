@@ -213,7 +213,7 @@ const EnquiryRequest = ({isActive,setIsActive}) => {
                 </div>
             </div>
             <div className="col-12 col-md-10 smalldevice-space">
-                <h1 className="my-4 admin-dashboard-x">Enquiry List</h1>
+                <h1 className="mb-4 admin-dashboard-x">Enquiry List</h1>
                 <div className='mdb-table' style={{display:'flex',justifyContent:'center', alignItems:'center'}}>
                 <Fragment>
                     {loading ? <Loader /> :

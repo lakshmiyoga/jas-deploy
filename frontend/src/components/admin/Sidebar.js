@@ -248,6 +248,9 @@ const Sidebar = ({ isActive, setIsActive }) => {
                             <Link to="/admin/dispatch" onClick={closeSidebar}><i className="fa fa-truck"></i> Dispatch</Link>
                         </li>
                         <li>
+                            <Link to="/admin/analysis" onClick={closeSidebar}><i className="fa fa-pie-chart"></i> Analysis</Link>
+                        </li>
+                        <li>
                             <Link to="/admin/refund" onClick={closeSidebar}><i className="fa fa-reply"></i> Refund</Link>
                         </li>
                         <li>

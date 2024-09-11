@@ -23,7 +23,7 @@ import ReactDOM from 'react-dom';
 import JasInvoice from "../Layouts/JasInvoice";
 import MetaData from "../Layouts/MetaData";
 
-const UpdateOrder = ({isActive,setIsActive}) => {
+const UpdateOrder = ({ isActive, setIsActive }) => {
     const location = useLocation();
     sessionStorage.setItem('redirectPath', location.pathname);
     const { loading, isOrderUpdated, error, orderDetail, porterOrderDetail, orderRemoveResponse, orderRemoveError } = useSelector(state => state.orderState);
@@ -410,8 +410,8 @@ const UpdateOrder = ({isActive,setIsActive}) => {
         <div className="row">
             <MetaData title={`Update Order`} />
             <div className="col-12 col-md-2">
-            <div style={{display:'flex',flexDirection:'row',position:'fixed',top:'0px',zIndex:99999,backgroundColor:'#fff',minWidth:'100%'}}>
-                <Sidebar isActive={isActive} setIsActive={setIsActive}/>
+                <div style={{ display: 'flex', flexDirection: 'row', position: 'fixed', top: '0px', zIndex: 99999, backgroundColor: '#fff', minWidth: '100%' }}>
+                    <Sidebar isActive={isActive} setIsActive={setIsActive} />
                 </div>
             </div>
             {
@@ -425,9 +425,22 @@ const UpdateOrder = ({isActive,setIsActive}) => {
                                 <h4 className="mb-4">Shipping Info</h4>
                                 <p><b>Name:</b> {user.name}</p>
                                 <p><b>Phone:</b> {shippingInfo.phoneNo}</p>
-                                <p><b>Address:</b>{shippingInfo.address},{shippingInfo.area},{shippingInfo.landmark},{shippingInfo.city}-{shippingInfo.postalCode}</p>
+                                <p>
+                                    <b>Address:</b>
+                                    {shippingInfo.address && `${shippingInfo.address},`}
+                                    {shippingInfo.area && `${shippingInfo.area},`}
+                                    {shippingInfo.landmark && `${shippingInfo.landmark},`}
+                                    {shippingInfo.city && `${shippingInfo.city}`}
+                                    {shippingInfo.postalCode && `-${shippingInfo.postalCode}`}
+                                </p>
+
                                 <p><b>Amount:</b> Rs.{parseFloat(totalPrice).toFixed(2)}</p>
-                                <p><b>Payment Mode:</b> {orderDetail && orderDetail.statusResponse && orderDetail.statusResponse.payment_method}</p>
+                                {orderDetail && orderDetail.statusResponse && orderDetail.statusResponse.payment_method && (
+                                    <p><b>Payment Mode:</b> {orderDetail && orderDetail.statusResponse && orderDetail.statusResponse.payment_method}</p>
+
+                                )
+
+                                }
 
                                 <hr />
 

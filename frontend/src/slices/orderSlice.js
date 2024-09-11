@@ -14,6 +14,7 @@ const orderSlice = createSlice({
         isOrderUpdated: false,
         orderSummary: [],
         userSummary: [],
+        totalOrders:null,
         error: null,
     },
     reducers: {
@@ -76,7 +77,8 @@ const orderSlice = createSlice({
             return {
                 ...state,
                 loading: false,
-                userOrders: action.payload.orders
+                userOrders: action.payload.orders,
+                totalOrders:action.payload.totalOrders,
             }
         },
         userOrdersFail(state, action) {

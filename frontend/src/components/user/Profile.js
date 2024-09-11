@@ -18,7 +18,7 @@ const Profile = () => {
 
             <div className="row justify-content-around mt-5 user-info">
 
-                <div className="col-12 col-md-3">
+                <div className="col-12 col-md-3 " style={{display:'flex',flexDirection:'column',alignItems:'center',justifyContent:'center'}}>
                     <figure className='avatar avatar-profile'>
                         <img className="rounded-circle img-fluid" src={user && user.avatar ? user.avatar : '/images/default_avatar.png'} alt='avatar' />
                     </figure>
@@ -27,14 +27,14 @@ const Profile = () => {
                     </Link>
                 </div>
 
-                <div className="col-12  col-md-5">
-                    <h4>Full Name: {user && user.name}</h4>
+                <div className="col-12  col-md-5" style={{display:'flex',flexDirection:'column',alignItems:'center',justifyContent:'center'}} >
+                    <h5>Full Name: {user && user.name}</h5>
                     {/* <p>{user.name}</p> */}
 
-                    <h4>Email Address: {user && user.email}</h4>
+                    <h5>Email Address: {user && user.email}</h5>
                     {/* <p>{user.email}</p> */}
 
-                    <h4>Joined: {String(user && user.createdAt).substring(0, 10)}</h4>
+                    <h5>Joined: {String(user && user.createdAt).substring(0, 10)}</h5>
                     {/* <p>{String(user.createdAt).substring(0,10)}</p> */}
 
                     <Link to="/orders" className="btn btn-danger btn-block mt-5" id="orders">

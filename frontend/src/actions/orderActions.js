@@ -74,6 +74,8 @@ export const userOrders = createAsyncThunk('order/userOrders', async (_, { dispa
   }
 });
 
+
+
 export const orderDetail = createAsyncThunk('order/orderDetail', async (id, { dispatch }) => {
   try {
     dispatch(orderDetailRequest());
@@ -89,7 +91,7 @@ export const adminOrders = createAsyncThunk('order/adminOrders', async (_, { dis
   try {
     dispatch(adminOrdersRequest());
     const { data } = await axios.get('/api/v1/admin/orders',{ withCredentials: true })
-    console.log(data)
+    // console.log(data)
     dispatch(adminOrdersSuccess(data));
   } catch (error) {
     dispatch(adminOrdersFail(error.response.data.message));

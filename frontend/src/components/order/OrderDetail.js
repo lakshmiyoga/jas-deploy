@@ -24,7 +24,7 @@ export default function OrderDetail() {
     const location = useLocation();
     const [refreshData, setRefreshData] = useState(false)
     sessionStorage.setItem('redirectPath', location.pathname);
-  
+
 
     useEffect(() => {
         dispatch(orderDetailAction(id));
@@ -32,19 +32,19 @@ export default function OrderDetail() {
         dispatch(getporterOrder({ order_id: id }))
         setRefreshData(true)
     }, [id])
-    useEffect(()=>{
-        if(porterOrderData && refreshData){
-        dispatch(createPorterOrderResponse({ order_id: porterOrderData && porterOrderData.order_id, porterOrder_id: porterOrderData?.porterOrder?.order_id }))
+    useEffect(() => {
+        if (porterOrderData && refreshData) {
+            dispatch(createPorterOrderResponse({ order_id: porterOrderData && porterOrderData.order_id, porterOrder_id: porterOrderData?.porterOrder?.order_id }))
         }
-    },[porterOrderData])
-    
-    useEffect(()=>{
-if(refreshData && porterOrderResponse){
-    // dispatch(porterClearData())
-    dispatch(getporterOrder({ order_id: id }))
-    setRefreshData(false)
-}
-    },[refreshData,porterOrderResponse])
+    }, [porterOrderData])
+
+    useEffect(() => {
+        if (refreshData && porterOrderResponse) {
+            // dispatch(porterClearData())
+            dispatch(getporterOrder({ order_id: id }))
+            setRefreshData(false)
+        }
+    }, [refreshData, porterOrderResponse])
 
     const handlePrint = useReactToPrint({
         content: () => invoiceRef.current,
@@ -55,9 +55,10 @@ if(refreshData && porterOrderResponse){
 
     return (
         <Fragment>
-            {loading ? <Loader /> : (
-                <Fragment>
-                    <div className="products_heading">Order Details</div>
+            {/* {loading ? <Loader /> : ( */}
+            <Fragment>
+                <div className="products_heading">Order Details</div>
+                {loading ? <Loader /> : (
                     <div className="container order-detail-container">
 
                         <div className="row d-flex justify-content-between" id='order_summary'>
@@ -68,9 +69,22 @@ if(refreshData && porterOrderResponse){
                                 <h4 className="mb-4">Shipping Info</h4>
                                 <p><b>Name:</b> {user.name}</p>
                                 <p><b>Phone:</b> {shippingInfo.phoneNo}</p>
-                                <p><b>Address:</b>{shippingInfo.address},{shippingInfo.area},{shippingInfo.landmark},{shippingInfo.city}-{shippingInfo.postalCode}</p>
+                                <p>
+                                    <b>Address:</b>
+                                    {shippingInfo.address && `${shippingInfo.address},`}
+                                    {shippingInfo.area && `${shippingInfo.area},`}
+                                    {shippingInfo.landmark && `${shippingInfo.landmark},`}
+                                    {shippingInfo.city && `${shippingInfo.city}`}
+                                    {shippingInfo.postalCode && `-${shippingInfo.postalCode}`}
+                                </p>
+
                                 <p><b>Amount:</b> {totalPrice} Rs</p>
-                                <p><b>Payment Mode:</b> {orderDetail && orderDetail.statusResponse && orderDetail.statusResponse.payment_method}</p>
+                                {orderDetail && orderDetail.statusResponse && orderDetail.statusResponse.payment_method && (
+                                    <p><b>Payment Mode:</b> {orderDetail && orderDetail.statusResponse && orderDetail.statusResponse.payment_method}</p>
+
+                                )
+
+                                }
 
                                 <hr />
 
@@ -81,9 +95,9 @@ if(refreshData && porterOrderResponse){
                                     </div>
                                     <div style={{ display: 'flex', alignItems: 'center', margin: '10px' }}>
                                         <p><b>Order Status:</b></p>
-                                        <p className={orderStatus && orderStatus.includes('Delivered') ? 'greenColor' : 'redColor'} style={{ marginLeft: '10px' }}><b>{orderStatus}</b></p>
+                                        <p className={orderStatus && orderStatus.includes('Delivered') ? 'greenColor' : 'redColor'} style={{ marginLeft: '10px' }}><b>{orderDetail && orderDetail.paymentStatus && orderDetail.paymentStatus === 'CHARGED' ? orderStatus : 'Cancelled'}</b></p>
                                     </div>
-                                    {getpackedOrderData && (
+                                    {getpackedOrderData && getpackedOrderData.totalRefundableAmount > 0 && (
                                         <div style={{ display: 'flex', alignItems: 'center', margin: '10px' }}>
                                             <p><b>Refund Status:</b></p>
                                             <p className={getpackedOrderData.refundStatus && getpackedOrderData.refundStatus.includes('SUCCESS') ? 'greenColor' : 'redColor'} style={{ marginLeft: '10px' }}><b>{getpackedOrderData.refundStatus}</b></p>
@@ -93,24 +107,24 @@ if(refreshData && porterOrderResponse){
                                 <hr />
                                 <h4 className="my-4">Order Items:</h4>
                                 {/* <div className="cart-item my-1">
-                  {orderItems && orderItems.map((item, index) => (
-                      <div className="row my-5" key={index}>
-                          <div className="col-4 col-lg-2">
-                              <img src={item.image} alt={item.name} height="45" width="65" />
-                          </div>
+{orderItems && orderItems.map((item, index) => (
+<div className="row my-5" key={index}>
+   <div className="col-4 col-lg-2">
+       <img src={item.image} alt={item.name} height="45" width="65" />
+   </div>
 
-                          <div className="col-5 col-lg-2">
-                              <Link to={`/product/${item.product}`}>{item.name}</Link>
-                          </div>
+   <div className="col-5 col-lg-2">
+       <Link to={`/product/${item.product}`}>{item.name}</Link>
+   </div>
 
 
-                          <div className="col-4 col-lg-4 mt-4 mt-lg-0">
-                              <p> Rs.{item.price} x {item.productWeight}  = Rs.{(item.productWeight * item.price).toFixed(2)}</p>
-                          </div>
-                      </div>
-                  ))}
+   <div className="col-4 col-lg-4 mt-4 mt-lg-0">
+       <p> Rs.{item.price} x {item.productWeight}  = Rs.{(item.productWeight * item.price).toFixed(2)}</p>
+   </div>
+</div>
+))}
 
-              </div> */}
+</div> */}
 
                                 <div className="invoice-table-container">
                                     <div className="updatetable-responsive">
@@ -246,10 +260,12 @@ if(refreshData && porterOrderResponse){
                             </div>
                         </div>
                     </div>
-                </Fragment>
-            )
+                )}
 
-            }
+            </Fragment>
+            {/* )
+
+            } */}
         </Fragment>
     )
 }

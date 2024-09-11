@@ -63,6 +63,7 @@ import { useSelector } from 'react-redux';
 import Loader from './components/Layouts/Loader';
 import AllOrders from './components/admin/AllOrders';
 import AdminOrderDetail from './components/admin/AdminOrderDetail';
+import Analysis from './components/admin/Analysis';
 
 function App() {
     const location = useLocation();
@@ -201,6 +202,7 @@ function App() {
                                     <Route path='/admin/user/:id' element={<ProtectedRoute isAdmin={true}><UpdateUser isActive={isActive} setIsActive={setIsActive}/></ProtectedRoute>} />
                                     <Route path='/admin/products/updateprice' element={<ProtectedRoute isAdmin={true}><UpdatePrice isActive={isActive} setIsActive={setIsActive}/></ProtectedRoute>} />
                                     <Route path='/admin/orders' element={<ProtectedRoute isAdmin={true}><OrderList isActive={isActive} setIsActive={setIsActive}/></ProtectedRoute>} />
+                                    <Route path='/admin/analysis' element={<ProtectedRoute isAdmin={true}><Analysis isActive={isActive} setIsActive={setIsActive}/></ProtectedRoute>} />
                                     <Route path='/admin/order/:id' element={<ProtectedRoute isAdmin={true}><UpdateOrder isActive={isActive} setIsActive={setIsActive}/></ProtectedRoute>} />
                                     <Route path='/admin/order-summary' element={<ProtectedRoute isAdmin={true}><OrderSummary isActive={isActive} setIsActive={setIsActive}/></ProtectedRoute>} />
                                     <Route path='/admin/user-summary' element={<ProtectedRoute isAdmin={true}><SummaryUser isActive={isActive} setIsActive={setIsActive}/></ProtectedRoute>} />

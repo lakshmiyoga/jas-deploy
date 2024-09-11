@@ -235,26 +235,61 @@ const UpdateProduct = ({isActive,setIsActive}) => {
         });
     };
 
+    // const handleImagesChange = (e) => {
+    //     const files = Array.from(e.target.files);
+
+    //     files.forEach(file => {
+    //         const reader = new FileReader();
+
+    //         reader.onload = () => {
+    //             if (reader.readyState === 2) {
+    //                 setFormData({
+    //                     ...formData,
+    //                     imagesPreview: [...formData.imagesPreview, reader.result],
+    //                     images: [...formData.images, file]
+    //                 });
+    //             }
+    //         };
+
+    //         reader.readAsDataURL(file);
+    //     });
+    // };
+
     const handleImagesChange = (e) => {
         const files = Array.from(e.target.files);
-
+        const maxSize = 5 * 1024 * 1024; // 10 MB in bytes
+        let totalSize = 0;
+    
+        // Calculate total size of all selected files
+        files.forEach(file => {
+            totalSize += file.size;
+        });
+    
+        // Check if total size exceeds the maximum allowed size
+        if (totalSize > maxSize) {
+            toast.error('The total size of all selected images exceeds the 5MB limit.');
+            return; // Stop further execution if total size exceeds the limit
+        }
+    
+        // Proceed with setting images if total size is within the limit
         files.forEach(file => {
             const reader = new FileReader();
-
+    
             reader.onload = () => {
                 if (reader.readyState === 2) {
-                    setFormData({
-                        ...formData,
-                        imagesPreview: [...formData.imagesPreview, reader.result],
-                        images: [...formData.images, file]
-                    });
+                    setFormData(prevState => ({
+                        ...prevState,
+                        imagesPreview: [...prevState.imagesPreview, reader.result],
+                        images: [...prevState.images, file]
+                    }));
                 }
             };
-
+    
             reader.readAsDataURL(file);
         });
     };
-
+    
+    
     const clearImagesHandler = () => {
         setFormData({
             ...formData,
@@ -396,7 +431,7 @@ const UpdateProduct = ({isActive,setIsActive}) => {
                             </div>
 
                             <div className='form-group'>
-                                <label>Images</label>
+                                <label>Images (*Size should be within 5mb) </label>
                                 <div className='custom-file'>
                                     <input
                                         type='file'
