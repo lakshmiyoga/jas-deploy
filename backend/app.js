@@ -29,29 +29,6 @@ app.use("/uploads", express.static(path.join(__dirname, "uploads")))
 // app.use((req, res, next) => {
 //     let baseUrl;
 
-//     if (process.env.NODE_ENV === "production") {
-//         baseUrl = req.secure ? 'https://jasfruitsandvegetables.in' : `${req.protocol}://${req.get('host')}`;
-//     } else {
-//         baseUrl = process.env.FRONTEND_URL || 'http://localhost:3000'; // Default for development
-//     }
-
-//     // Set CORS options dynamically
-//     const corsOptions = {
-//         origin: baseUrl,
-//         methods: ['GET', 'POST', 'PUT', 'DELETE', 'OPTIONS'],
-//         credentials: true,
-//         allowedHeaders: [
-//             'Content-Type',           // JSON and other content types
-//             'Authorization',          // Auth headers
-//             'X-Requested-With',       // Ajax requests
-//             'Accept',                 // For accepting different content types
-//             'multipart/form-data'     // For file uploads
-//         ],
-//     };
-//     console.log("baseurl",baseUrl)
-//     // Apply CORS options for this request
-//     cors(corsOptions)(req, res, next);
-// });
 app.set('trust proxy', true);
 
 // CORS setup
