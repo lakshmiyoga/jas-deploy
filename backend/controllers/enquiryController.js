@@ -31,7 +31,7 @@ const createEnquiry = catchAsyncError(async(req, res, next)=>{
         // Validate mobile
         const mobileRegex = /^[0-9]{10}$/; // Adjust regex as per your mobile number format
         if (!mobile || !mobileRegex.test(mobile)) {
-            return next(new ErrorHandler('Please enter 10-digit mobile number', 400));
+            return next(new ErrorHandler('Please enter valid mobile number', 400));
         }
 
         // Validate message

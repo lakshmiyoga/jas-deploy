@@ -80,7 +80,7 @@ app.use((req, res, next) => {
         ],
     };
 
-    console.log("baseurl", baseUrl);
+    // console.log("baseurl", baseUrl);
     // Apply CORS options for this request
     cors(corsOptions)(req, res, next);
 });
@@ -111,6 +111,7 @@ const porter = require('./routes/porter');
 const payment = require("./routes/payment");
 const itemsRouter = require('./routes/item');
 const enquiry = require("./routes/enquiry");
+const analysis = require("./routes/analysis");
 
 app.use('/api/v1', products);
 app.use('/api/v1', user);
@@ -119,6 +120,7 @@ app.use('/api/v1', payment);
 app.use('/api/v1', itemsRouter);
 app.use('/api/v1', enquiry);
 app.use('/api/v1', porter);
+app.use('/api/v1', analysis);
 
 
 if (process.env.NODE_ENV === "production") {

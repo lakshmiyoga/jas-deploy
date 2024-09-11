@@ -313,7 +313,7 @@ const paymentSuccess = catchAsyncError(async (req, res, next) => {
 			await response.save();
 
 			const onepayments = await Payment.findOne({ order_id: orderId });
-			console.log("onepayments",onepayments)
+			// console.log("onepayments",onepayments)
 			if (onepayments) {
 				const paymentstatus = await Payment.findOneAndUpdate({ order_id: orderId },
 					{
@@ -321,7 +321,8 @@ const paymentSuccess = catchAsyncError(async (req, res, next) => {
 						$set: { statusResponse: statusResponse }
 					},
 					{ new: true });
-				if (paymentstatus) {
+					// console.log("paymentstatus",paymentstatus)
+				if (paymentstatus && paymentstatus.statusResponse && paymentstatus.statusResponse.status === 'CHARGED' ) {
                     client.messages.create({
 						body: `Your order is placed with this Id ${orderId}`,
 						from: twilioPhoneNumber,
@@ -339,9 +340,9 @@ const paymentSuccess = catchAsyncError(async (req, res, next) => {
 
 				}
 				
-				else {
-					return res.redirect(`${BASE_URL}/order/confirm?message=${encodeURIComponent('The data is not stored in db')}`);
-				}
+				// else {
+				// 	return res.redirect(`${BASE_URL}/order/confirm?message=${encodeURIComponent('The data is not stored in db')}`);
+				// }
 				return res.redirect(`${BASE_URL}/payment/confirm/${encodeURIComponent(encryptedOrderId)}`);
 
 			}

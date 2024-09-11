@@ -297,10 +297,14 @@ const porterOrder = catchAsyncError(async (req, res, next) => {
 
 const myOrders = catchAsyncError(async (req, res, next) => {
     // console.log(req)
-    const orders = await Payment.find({ 'user_id': req.user.id });
+    const now = new Date();
+    const oneWeekAgo = new Date();
+    oneWeekAgo.setDate(now.getDate() - 7);
+
+    const orders = await Payment.find({ 'user_id': req.user.id, createdAt: { $gte: oneWeekAgo } });
     // const orders = await Order.find();
     // console.log(orders)
-    res.status(200).json({
+    return res.status(200).json({
         success: true,
         orders
     })
@@ -325,14 +329,18 @@ const orders = catchAsyncError(async (req, res, next) => {
         // }).select('orderItems shippingInfo user user_id itemsPrice taxPrice shippingPrice totalPrice order_id paymentStatus orderStatus createdAt').exec();
         // console.log("Fetched orders:", orders);
 
-        const orders = await Payment.find({});
+        const now = new Date();
+        const oneMonthAgo = new Date();
+        oneMonthAgo.setMonth(now.getMonth() - 1);
+
+        const orders = await Payment.find({ createdAt: { $gte: oneMonthAgo } });
 
         let totalAmount = 0;
         // console.log("this is sample response",JSON.stringify(orders, null, 2));
         orders.forEach(order => {
             totalAmount += order.totalPrice
         })
-       return res.status(200).json({
+        return res.status(200).json({
             success: true,
             totalAmount,
             orders
@@ -341,7 +349,7 @@ const orders = catchAsyncError(async (req, res, next) => {
     }
     catch (error) {
         // console.error("Error fetching order summary:", error);
-       return next(new ErrorHandler(`Something Went Wrong Please Try Again!!!!`, 400));
+        return next(new ErrorHandler(`Something Went Wrong Please Try Again!!!!`, 400));
     }
 
 
@@ -844,7 +852,7 @@ const getRemoveResponse = catchAsyncError(async (req, res, next) => {
 //             try {
 //                 if(order && order.porterOrder){
 //                     const apiEndpoint = `https://pfe-apigw-uat.porter.in/v1/orders/${order.porterOrder?.order_id}`;
-                
+
 //                     const response = await axios.get(apiEndpoint, {
 //                         headers: {
 //                             'X-API-KEY': process.env.PORTER_API_KEY,
@@ -852,10 +860,10 @@ const getRemoveResponse = catchAsyncError(async (req, res, next) => {
 //                         },
 //                     });
 //                     // console.log("response",response)
-    
+
 //                     if (response) {
 //                         const responseData = response.data;
-    
+
 //                         // Update porterResponse in the database
 //                         const porterResponseData = await PorterModel.findOneAndUpdate(
 //                             { order_id: order.order_id },
@@ -863,26 +871,26 @@ const getRemoveResponse = catchAsyncError(async (req, res, next) => {
 //                             { new: true }
 //                         );
 //                         // console.log("porterResponseData",porterResponseData)
-    
+
 //                         if (porterResponseData?.porterResponse?.status === 'ended') {
 //                             const orderData = await Payment.findOne({ order_id: order.order_id });
 //                             if (!orderData) {
 //                                 throw new Error(`Order not found with this id: ${order.order_id}`);
 //                             }
-    
+
 //                             await Payment.findOneAndUpdate(
 //                                 { order_id: order.order_id },
 //                                 { orderStatus: 'Delivered' },
 //                                 { new: true }
 //                             );
 //                         }
-    
+
 //                         if (porterResponseData?.porterResponse?.status === 'cancelled') {
 //                             const orderData = await Payment.findOne({ order_id: order.order_id });
 //                             if (!orderData) {
 //                                 throw new Error(`Order not found with this id: ${order.order_id}`);
 //                             }
-    
+
 //                             await Payment.findOneAndUpdate(
 //                                 { order_id: order.order_id },
 //                                 { orderStatus: 'Cancelled' },
@@ -891,7 +899,7 @@ const getRemoveResponse = catchAsyncError(async (req, res, next) => {
 //                         }
 //                     }
 //                 }
-               
+
 //             } catch (error) {
 //                 console.error(`Error processing order ${order.order_id}:`, error.message);
 //                 // You might want to log the order ID and error details for better tracking
@@ -909,7 +917,7 @@ const getRemoveResponse = catchAsyncError(async (req, res, next) => {
 
 // async function checkRefundStatus() {
 //     try {
-         
+
 //         // const refundOrder = await Dispatch.find({
 //         //     totalRefundableAmount: { $gt: 0 },
 //         //     refundStatus: { $regex: /^Pending$/, $options: 'i' } // 'i' makes it case-insensitive
@@ -923,7 +931,7 @@ const getRemoveResponse = catchAsyncError(async (req, res, next) => {
 //             const statusResponse = await juspay.order.status(order && order.order_id);
 //             // console.log("statusResponse",statusResponse)
 //             if (statusResponse) {
-        
+
 //                 const onepayments = await Dispatch.findOne({ "order_id":order && order.order_id });
 //                 if (onepayments) {
 //                     const refundStatus = await Dispatch.findOneAndUpdate({ "order_id":order && order.order_id },
@@ -933,11 +941,11 @@ const getRemoveResponse = catchAsyncError(async (req, res, next) => {
 //                         },
 //                         { new: true });
 //                 }
-        
+
 //             }
 //           });
-        
-        
+
+
 //     } catch (error) {
 //         console.error('Error checking payment status:', error);
 //     }
@@ -960,7 +968,7 @@ const getRemoveResponse = catchAsyncError(async (req, res, next) => {
 //             try {
 //                 if (order && order.porterOrder) {
 //                     const apiEndpoint = `https://pfe-apigw-uat.porter.in/v1/orders/${order.porterOrder.order_id}`;
-                
+
 //                     const response = await axios.get(apiEndpoint, {
 //                         headers: {
 //                             'X-API-KEY': process.env.PORTER_API_KEY,
@@ -970,7 +978,7 @@ const getRemoveResponse = catchAsyncError(async (req, res, next) => {
 
 //                     if (response) {
 //                         const responseData = response.data;
-    
+
 //                         // Update porterResponse in the database
 //                         const porterResponseData = await PorterModel.findOneAndUpdate(
 //                             { order_id: order.order_id },
@@ -978,26 +986,26 @@ const getRemoveResponse = catchAsyncError(async (req, res, next) => {
 //                             { new: true }
 //                         );
 //                         // console.log("porterResponseData",porterResponseData)
-    
+
 //                         if (porterResponseData?.porterResponse?.status === 'ended') {
 //                             const orderData = await Payment.findOne({ order_id: order.order_id });
 //                             if (!orderData) {
 //                                 throw new Error(`Order not found with this id: ${order.order_id}`);
 //                             }
-    
+
 //                             await Payment.findOneAndUpdate(
 //                                 { order_id: order.order_id },
 //                                 { orderStatus: 'Delivered' },
 //                                 { new: true }
 //                             );
 //                         }
-    
+
 //                         if (porterResponseData?.porterResponse?.status === 'cancelled') {
 //                             const orderData = await Payment.findOne({ order_id: order.order_id });
 //                             if (!orderData) {
 //                                 throw new Error(`Order not found with this id: ${order.order_id}`);
 //                             }
-    
+
 //                             await Payment.findOneAndUpdate(
 //                                 { order_id: order.order_id },
 //                                 { orderStatus: 'Cancelled' },
@@ -1040,7 +1048,7 @@ const getRemoveResponse = catchAsyncError(async (req, res, next) => {
 //                         );
 //                     }
 //                     }
-                  
+
 //             } catch (error) {
 //                 console.error(`Error checking refund order ${order.order_id}:`, error);
 //             }
@@ -1080,7 +1088,7 @@ async function checkPaymentStatus() {
 
                     if (response) {
                         const responseData = response.data;
-    
+
                         // Update porterResponse in the database
                         const porterResponseData = await PorterModel.findOneAndUpdate(
                             { order_id: order.order_id },
@@ -1093,20 +1101,20 @@ async function checkPaymentStatus() {
                             if (!orderData) {
                                 throw new Error(`Order not found with this id: ${order.order_id}`);
                             }
-    
+
                             await Payment.findOneAndUpdate(
                                 { order_id: order.order_id },
                                 { orderStatus: 'Delivered' },
                                 { new: true }
                             );
                         }
-    
+
                         if (porterResponseData?.porterResponse?.status === 'cancelled') {
                             const orderData = await Payment.findOne({ order_id: order.order_id });
                             if (!orderData) {
                                 throw new Error(`Order not found with this id: ${order.order_id}`);
                             }
-    
+
                             await Payment.findOneAndUpdate(
                                 { order_id: order.order_id },
                                 { orderStatus: 'Cancelled' },
