@@ -1,5 +1,6 @@
 const express = require('express');
-const Item = require('../models/productModel');
+// const Item = require('../models/productModel');
+const Item = require('../models/allProductModel');
 const { Parser } = require('json2csv');
 const csvtojson = require('csvtojson');
 const catchAsyncError = require('../middleware/catchAsyncError');
@@ -23,7 +24,7 @@ const catchAsyncError = require('../middleware/catchAsyncError');
 //     }
 // });
 const downloadPrice = async (req, res) => {
-    const items = await Item.find({}, { _id: 1, englishName: 1, price: 1 ,stocks:1});
+    const items = await Item.find({}, { _id: 1, englishName: 1,buyingPrice:1, price: 1 ,stocks:1});
 
     if (req.query.format === 'csv') {
         // Adding an extra field for the index
@@ -31,11 +32,12 @@ const downloadPrice = async (req, res) => {
             index: index + 1,
             // _id: item._id,
             name: item.englishName,
+            buyingPrice:item.buyingPrice,
             price: item.price,
             stocks:item.stocks,
         }));
 
-        const fields = ['index', 'name', 'price', 'stocks' ];
+        const fields = ['index', 'name','buyingPrice', 'price', 'stocks' ];
         const json2csvParser = new Parser({ fields });
         const csv = json2csvParser.parse(itemsWithIndex);
 
@@ -55,8 +57,8 @@ const uploadPrice = catchAsyncError( async (req, res) => {
         const csvData = await csvtojson().fromString(req.file.buffer.toString());
 
         for (const itemData of csvData) {
-            const { _id, price,stocks,name } = itemData;
-            await Item.updateOne({ englishName:name }, { $set: { price,stocks } });
+            const { _id,buyingPrice, price,stocks,name } = itemData;
+            await Item.updateOne({ englishName:name }, { $set: {buyingPrice,price,stocks } });
         }
 
         return res.status(200).json({ message: 'Prices updated successfully' });
