@@ -125,6 +125,7 @@ body {
 
 
 @media (max-width: 576px) {
+
   .content {
     position: relative;
     height: auto;
@@ -161,22 +162,22 @@ body {
 } */
 
 ::-webkit-scrollbar-track {
-  background-color: #f5f5f5;
-  cursor: pointer;
+  background-color: #f5f5f5 !important;
+  cursor: pointer !important;
 }
 
 ::-webkit-scrollbar {
-  cursor: pointer;
-  width: 8px;
-  background-color: #f5f5f5;
+  cursor: pointer !important;
+  width: 8px !important;
+  background-color: #f5f5f5 !important;
 }
 
 ::-webkit-scrollbar-thumb {
-  background-color: #FED235;
-  border: 0px;
-  cursor: pointer;
-  background-clip: padding-box;
-  border-radius: 5px;
+  background-color: #FED235 !important;
+  border: 0px !important;
+  cursor: pointer !important;
+  background-clip: padding-box !important;
+  border-radius: 5px !important;
 }
 
 
@@ -346,6 +347,7 @@ input[type=number]::-webkit-outer-spin-button {
 }
 
 @media (max-width: 767.98px) {
+  
   .custom-select {
 
     width: 80px;
@@ -825,6 +827,17 @@ footer {
 
 .btn-add {
   background-color: #02441E;
+  /* border-color: #fa9c23; */
+  color: white;
+  /* margin-top: 2.5rem; */
+  border: none;
+  padding: 7px 17px !important;
+  font-size: 10px !important;
+
+}
+
+.btn-add-no {
+  background-color: #2b6c46;
   /* border-color: #fa9c23; */
   color: white;
   /* margin-top: 2.5rem; */
@@ -2567,6 +2580,10 @@ body.no-scroll {
 
 }
 
+.smalldevice-space-dashboard{
+  padding: 30px;
+}
+
 
 @media (max-width: 767.98px) {
   .admin-dashboard-x {
@@ -2597,7 +2614,7 @@ body.no-scroll {
 @media (min-width: 768px) and (max-width: 992px) {
   .admin-dashboard-x {
     font-size: 30px;
-    margin-left: 20px;
+    /* margin-left: 20px; */
   }
 }
 
