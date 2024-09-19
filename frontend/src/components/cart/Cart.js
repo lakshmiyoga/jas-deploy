@@ -4,6 +4,7 @@ import { useLocation, useNavigate } from 'react-router-dom';
 import { Link } from 'react-router-dom';
 import { decreaseCartItemQty, increaseCartItemQty, removeItemFromCart } from '../../slices/cartSlice';
 import MetaData from '../Layouts/MetaData';
+import { toast } from 'react-toastify';
 
 const Cart = () => {
     const { items } = useSelector(state => state.cartState);
@@ -37,11 +38,24 @@ const Cart = () => {
     const handleConfirmDelete = () => {
         dispatch(removeItemFromCart(productToDelete));
         setShowModal(false);
+        toast.success('Item removed from Cart', {
+            position: "bottom-center",
+            type: 'success',
+        });
     };
 
     const handleCancelDelete = () => {
         setShowModal(false);
     };
+
+    const capitalizeFirstLetter = (str) => {
+        return str
+            .toLowerCase()
+            .split(' ')
+            .map(word => word.charAt(0).toUpperCase() + word.slice(1))
+            .join(' ');
+    };
+
 
     return (
         <Fragment>
@@ -53,10 +67,11 @@ const Cart = () => {
             ) : (
                 <Fragment>
                     <div className="products_heading">Cart</div>
-                    <div className="container mt-5">
-                        <div className="table-responsive">
+                    <div className="container cart-detail-container mt-5 " >
+                        <div className="" >
                             <h2 className="mt-5">Your Cart: <b>{items.length}</b></h2>
-                            <table className="table table-bordered">
+                            <div className="updatetable-responsive">
+                            <table className="updatetable updatetable-bordered">
                                 <thead>
                                     <tr>
                                         <th>S.No</th>
@@ -70,10 +85,10 @@ const Cart = () => {
                                 <tbody>
                                     
                                     {items.map((item, index) => (
-                                        
+                                       
                                         <tr key={item.product}>
                                             <td>{index + 1}</td>
-                                            <td>{item.name}</td>
+                                            <td>{capitalizeFirstLetter(item.name)} </td>
                                             <td>RS.{(item.price).toFixed(2)}</td>
                                             <td>{item.productWeight}</td>
                                             <td>Rs.{(item.price * item.productWeight).toFixed(2)}</td>
@@ -89,16 +104,17 @@ const Cart = () => {
                                 </tbody>
                                
                             </table>
+                            </div>
                             
                             <div className="row d-flex justify-content-center">
                                 <div className="col-12 col-lg-8 my-4 float-left">
-                                    <div id="order_summary">
+                                    {/* <div id="order_summary">
                                         <h4>Delivery Offers<span><i className='fa fa-truck' style={{ paddingLeft: '20px' }}></i></span></h4>
                                         <hr />
                                         <p>50% discount on delivery for all orders above Rs.500</p>
                                         <hr />
                                         <p>Free delivery for all orders above Rs.1000</p>
-                                    </div>
+                                    </div> */}
                                 </div>
                                 <div className="col-12 col-lg-4 my-4 float-right">
                                     <div id="order_summary">

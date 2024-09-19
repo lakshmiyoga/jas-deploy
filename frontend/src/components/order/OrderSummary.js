@@ -6,7 +6,7 @@ import MetaData from '../Layouts/MetaData';
 import Sidebar from '../admin/Sidebar';
 import { useLocation } from 'react-router-dom';
 
-const OrderSummary = () => {
+const OrderSummary = ({isActive,setIsActive}) => {
     const dispatch = useDispatch();
     const { loading, orderSummary, error } = useSelector((state) => state.orderState);
     const location = useLocation();
@@ -34,14 +34,18 @@ const OrderSummary = () => {
     }
 
     return (
+        <div>
+        <MetaData title={`OrderSummary`} />
         <div className="row">
-            <MetaData title="Order Summary" />
+            {/* <MetaData title="Order Summary" /> */}
             <div className="col-12 col-md-2">
-                <Sidebar />
+            <div style={{display:'flex',flexDirection:'row',position:'fixed',top:'0px',zIndex:99999,backgroundColor:'#fff',minWidth:'100%'}}>
+                <Sidebar isActive={isActive} setIsActive={setIsActive}/>
+                </div>
             </div>
 
-            <div className="col-12 col-md-8 smalldevice-space ">
-                <h1 className='admin-dashboard-x'>Order Summary for a Day</h1>
+            <div className="col-12 col-md-10 smalldevice-space-summary" >
+                <h1 className='admin-dashboard-x mb-4'>Order Summary for a Day</h1>
                 <input
                     type="date"
                     value={date}
@@ -53,11 +57,12 @@ const OrderSummary = () => {
                 ) : error ? (
                     <p className="text-danger">{error}</p>
                 ) : (
-                    <div className="product-table">
+                    <div className="container ordersummary-detail-container">
                         {isOrderSummaryArray && orderSummary.length === 0 ? (
                             <p>No orders found for the selected date.</p>
                         ) : (
-                            <table className="table table-bordered">
+                            <div className="updatetable-responsive">
+                            <table className="updatetable updatetable-bordered">
                                 <thead>
                                     <tr>
                                         <th>S.NO</th>
@@ -84,10 +89,12 @@ const OrderSummary = () => {
                                     </tr>
                                 </tbody>
                             </table>
+                            </div>
                         )}
                     </div>
                 )}
             </div>
+        </div>
         </div>
     );
 };

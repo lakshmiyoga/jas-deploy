@@ -13,7 +13,7 @@ import { deleteProduct, getAdminProducts } from '../../actions/productsActions';
 import { clearEnquiryDeleted } from '../../slices/enquirySlice';
 import MetaData from '../Layouts/MetaData';
 
-const EnquiryRequest = () => {
+const EnquiryRequest = ({isActive,setIsActive}) => {
   const location = useLocation();
   sessionStorage.setItem('redirectPath', location.pathname);
     // const { products = [], loading = true, error } = useSelector(state => state.productsState);
@@ -208,10 +208,12 @@ const EnquiryRequest = () => {
      
         <div className="row">
             <div className="col-12 col-md-2">
-                <Sidebar />
+            <div style={{display:'flex',flexDirection:'row',position:'fixed',top:'0px',zIndex:99999,backgroundColor:'#fff',minWidth:'100%'}}>
+                <Sidebar isActive={isActive} setIsActive={setIsActive}/>
+                </div>
             </div>
             <div className="col-12 col-md-10 smalldevice-space">
-                <h1 className="my-4 admin-dashboard-x">Enquiry List</h1>
+                <h1 className="mb-4 admin-dashboard-x">Enquiry List</h1>
                 <div className='mdb-table' style={{display:'flex',justifyContent:'center', alignItems:'center'}}>
                 <Fragment>
                     {loading ? <Loader /> :

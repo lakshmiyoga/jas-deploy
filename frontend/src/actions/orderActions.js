@@ -74,13 +74,14 @@ export const userOrders = createAsyncThunk('order/userOrders', async (_, { dispa
   }
 });
 
+
+
 export const orderDetail = createAsyncThunk('order/orderDetail', async (id, { dispatch }) => {
   try {
     dispatch(orderDetailRequest());
     const { data } = await axios.get(`/api/v1/order/${id}`);
     console.log(data)
-    dispatch(orderDetailSuccess(data));
-   
+    dispatch(orderDetailSuccess(data));  
   } catch (error) {
     dispatch(orderDetailFail(error.response.data.message));
   }
@@ -90,7 +91,7 @@ export const adminOrders = createAsyncThunk('order/adminOrders', async (_, { dis
   try {
     dispatch(adminOrdersRequest());
     const { data } = await axios.get('/api/v1/admin/orders',{ withCredentials: true })
-    console.log(data)
+    // console.log(data)
     dispatch(adminOrdersSuccess(data));
   } catch (error) {
     dispatch(adminOrdersFail(error.response.data.message));

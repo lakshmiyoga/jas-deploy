@@ -102,10 +102,10 @@ const Product = ({ products, category }) => {
                                         />
                                     )}
                                 </td>
-                                <td className="Products Name">
+                                <td className="Products Name" style={{fontSize:'17px'}}>
                                     {capitalizeFirstLetter(product.englishName)}/{capitalizeFirstLetter(product.tamilName)}
                                 </td>
-                                <td className="Price">Rs.{product.price}
+                                <td className="Price" style={{whiteSpace:'nowrap'}}>Rs.{product.price}
                                     {product.category === 'Keerai' ? '(per piece)' : '(per kg)'}</td>
                                 {/* <td className="Weight">
                                     <select
@@ -156,7 +156,7 @@ const Product = ({ products, category }) => {
                                 </td>
                                 <td className="Stock">{product.stocks}</td>
                                 <td className="Add to Cart">
-                                    <button
+                                    {/* <button
                                         className="btn-add "
                                         onClick={() => handleAddToCart(product)}
                                         style={{
@@ -166,6 +166,19 @@ const Product = ({ products, category }) => {
                                             cursor: product.stocks === 'Available' ? 'pointer' : 'not-allowed'
                                         }}
                                         disabled={product.stocks === 'Not Available'}
+                                    >
+                                        Add
+                                    </button> */}
+                                    <button
+                                        className={product.stocks === 'Stock'?"btn-add": "btn-add-no"}
+                                        onClick={() => handleAddToCart(product)}
+                                        style={{
+                                            backgroundColor: product.stocks === 'Stock'? "#02441E":"",
+                                            color: "white",
+                                            borderRadius: "40px",
+                                            cursor: product.stocks === 'Stock' ? 'pointer' : 'not-allowed'
+                                        }}
+                                        disabled={product.stocks === 'No Stock'}
                                     >
                                         Add
                                     </button>

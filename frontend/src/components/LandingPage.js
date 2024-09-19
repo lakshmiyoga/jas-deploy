@@ -49,9 +49,9 @@ const LandingPage = () => {
                     </div>
                  
                   <div className="card-body d-flex flex-column">
-                    <h5 className="card-title">
-                      <h2>Vegetables</h2>
-                    </h5>
+                    {/* <h5 className="card-title"> */}
+                      <h3 className="card-title">Vegetables</h3>
+                    {/* </h5> */}
                   </div>
                 </div>
                 </Link>
@@ -71,9 +71,9 @@ const LandingPage = () => {
                     </div>
                  
                   <div className="card-body d-flex flex-column">
-                    <h5 className="card-title">
-                      <h2>Fruits</h2>
-                    </h5>
+                    {/* <h5 className="card-title"> */}
+                      <h3 className="card-title">Fruits</h3>
+                    {/* </h5> */}
                   </div>
                 </div>
                 </Link>
@@ -93,9 +93,9 @@ const LandingPage = () => {
                   </div>
                   
                   <div className="card-body d-flex flex-column">
-                    <h5 className="card-title">
-                      <h2>Keerai</h2>
-                    </h5>
+                    {/* <h5 className="card-title"> */}
+                      <h3 className="card-title">Keerai</h3>
+                    {/* </h5> */}
                   </div>
                 </div>
                 </Link>

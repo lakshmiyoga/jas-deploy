@@ -70,7 +70,7 @@ const Enquiry = () => {
                 <div className="col-10 col-lg-5">
                     <form onSubmit={submitHandler} className="border" style={{ marginTop: "0px" }}>
                         <div className="form-group">
-                            <label htmlFor="name_field">Name</label>
+                            <label htmlFor="name_field">Name <span style={{color:'red'}}>*</span></label>
                             <input
                                 type="text"
                                 id="name_field"
@@ -82,7 +82,7 @@ const Enquiry = () => {
                         </div>
 
                         <div className="form-group">
-                            <label htmlFor="email_field">Email</label>
+                            <label htmlFor="email_field">Email <span style={{color:'red'}}>*</span></label>
                             <input
                                 type="email"
                                 id="email_field"
@@ -94,7 +94,7 @@ const Enquiry = () => {
                         </div>
 
                         <div className="form-group">
-                            <label htmlFor="phone_field">Mobile</label>
+                            <label htmlFor="phone_field">Mobile <span style={{color:'red'}}>*</span></label>
                             <NumberInput
                                 id="mobile_field"
                                 name="mobile"
@@ -105,7 +105,7 @@ const Enquiry = () => {
                         </div>
 
                         <div className="form-group">
-                            <label htmlFor="message_field">Message</label>
+                            <label htmlFor="message_field">Message <span style={{color:'red'}}>*</span></label>
                             <textarea
                                 id="message_field"
                                 name="message"

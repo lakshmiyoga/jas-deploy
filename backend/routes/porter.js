@@ -13,8 +13,8 @@ const router = express.Router();
 
 //Admin Routes
 
-router.post('/admin/porter/orders',isAuthenticateUser,authorizeRoles('admin'), getSinglePorterOrder)
-router.post('/admin/porter/createResponse',isAuthenticateUser,authorizeRoles('admin'), getPorterResponse)
+router.post('/admin/porter/orders',isAuthenticateUser, getSinglePorterOrder)
+router.post('/admin/porter/createResponse',isAuthenticateUser, getPorterResponse)
 router.post('/admin/porter/cancelOrder',isAuthenticateUser,authorizeRoles('admin'), getCancelResponse)
 router.post('/admin/packedOrder',isAuthenticateUser,authorizeRoles('admin'), postPackedOrder)
 router.post('/admin/getPackedOrder',isAuthenticateUser, getPackedOrder)

@@ -25,26 +25,26 @@ const ConfirmOrder = () => {
     const { user } = useSelector(state => state.authState);
     const navigate = useNavigate();
     const [loading, setLoading] = useState(false);
-    const [dummyUser,setDummyUser] = useState(false);
+    const [dummyUser, setDummyUser] = useState(false);
     const [shippingAmount, setShippingAmount] = useState(null);
     const queryParams = new URLSearchParams(location.search);
     const message = queryParams.get('message');
     const [showModal, setShowModal] = useState(false);
     const [orderDescription, setOrderDescription] = useState('');
     useEffect(() => {
-        if(!user){
+        if (!user) {
             store.dispatch(loadUser());
             store.dispatch(getProducts());
         }
-       
-        if(user){
+
+        if (user) {
             setDummyUser(true);
             // console.log("hello")
         }
     }, [user]);
 
-    const shippingCharge = shippingAmount / 100;
-    //  const shippingCharge = 50.00;
+    // const shippingCharge = shippingAmount / 100;
+     const shippingCharge = 1.00;
     console.log("shippingCharge", shippingCharge)
     const subtotal = cartItems.reduce((acc, item) => acc + item.price * item.productWeight, 0).toFixed(2);
     const total = (parseFloat(subtotal) + shippingCharge).toFixed(2);
@@ -93,14 +93,14 @@ const ConfirmOrder = () => {
             try {
                 const response = await axios.post('/api/v1/get-quote', requestData);
                 console.log("getQuote Response", response.data)
-                if(response && response.data && response.data.vehicles[3] && response.data.vehicles[3].fare){
+                if (response && response.data && response.data.vehicles[3] && response.data.vehicles[3].fare) {
                     setShippingAmount(response.data.vehicles[3].fare.minor_amount);
                     setDummyUser(false);
                 }
-                else{
+                else {
                     navigate("/shipping")
                 }
-               
+
                 //    toast.error('Response:', response.data);
                 // Handle response as needed
             } catch (error) {
@@ -150,18 +150,18 @@ const ConfirmOrder = () => {
     const processPayment = async () => {
         setLoading(true);
         const randomKey = staticKeys[Math.floor(Math.random() * staticKeys.length)];
-        const encryptData = (data,randomKey) => {
+        const encryptData = (data, randomKey) => {
             return CryptoJS.AES.encrypt(data.toString(), randomKey).toString();
         };
-        const generateSignature = (data,randomKey) => {
+        const generateSignature = (data, randomKey) => {
             return CryptoJS.HmacSHA256(data, randomKey).toString();
         };
-        const encryptedItemsPrice = encryptData(subtotal,randomKey);
-        const encryptedShippingPrice = encryptData(shippingCharge,randomKey);
-        const encryptedTotalPrice = encryptData(total,randomKey);
-        const signature = generateSignature(`${subtotal}${shippingCharge}${total}`,randomKey);
-         // Encrypt the selected random key with your master encryption key
-         const plainText = CryptoJS.AES.encrypt(randomKey, encryptionKey).toString();
+        const encryptedItemsPrice = encryptData(subtotal, randomKey);
+        const encryptedShippingPrice = encryptData(shippingCharge, randomKey);
+        const encryptedTotalPrice = encryptData(total, randomKey);
+        const signature = generateSignature(`${subtotal}${shippingCharge}${total}`, randomKey);
+        // Encrypt the selected random key with your master encryption key
+        const plainText = CryptoJS.AES.encrypt(randomKey, encryptionKey).toString();
 
         const reqdata = {
             shippingInfo,
@@ -181,7 +181,7 @@ const ConfirmOrder = () => {
         try {
             const orderUrl = '/api/v1/payment/orders';
             const { data } = await axios.post(orderUrl, reqdata, { withCredentials: true });
-            console.log("response data",data.sessionResponse)
+            console.log("response data", data.sessionResponse)
             if (data && data.sessionResponse) {
                 const order = {
                     order_id: data.sessionResponse.order_id,
@@ -204,7 +204,7 @@ const ConfirmOrder = () => {
             if (data && data.sessionResponse) {
                 const payloadAmount = parseFloat(data.sessionResponse.sdk_payload.payload.amount).toFixed(2);
                 const totalAmount = parseFloat(total).toFixed(2);
-            
+
                 if (payloadAmount === totalAmount) {
                     initPayment(data.sessionResponse);
                 } else {
@@ -214,9 +214,9 @@ const ConfirmOrder = () => {
             }
         } catch (error) {
             // console.log(error)
-            if(error && error.response && error.response.data  && error.response.data.message){
+            if (error && error.response && error.response.data && error.response.data.message) {
                 toast.error(error && error.response.data.message)
-             }
+            }
             setLoading(false);
             setShowModal(false);
         }
@@ -229,19 +229,19 @@ const ConfirmOrder = () => {
         if (currentHour < 21) { // Before 9 PM
             orderDate = new Date(currentDate);
             orderDate.setDate(orderDate.getDate() + 1); // Next day
-            setOrderDescription(`The order will be delivered on this day: ${orderDate.toDateString()}`);
+            setOrderDescription(`The order will be delivered on : ${orderDate.toDateString()}`);
         } else { // After 9 PM
             orderDate = new Date(currentDate);
             orderDate.setDate(orderDate.getDate() + 2); // Day after tomorrow
-            setOrderDescription(`The order will be delivered on this day: ${orderDate.toDateString()}`);
+            setOrderDescription(`The order will be delivered on : ${orderDate.toDateString()}`);
         }
-    
+
         setShowModal(true);
     };
-    const handleCancelModal= () =>{
+    const handleCancelModal = () => {
         setShowModal(false);
     }
-    
+
     useEffect(() => {
         if (shippingInfo) {
             validateShipping(shippingInfo, navigate);
@@ -255,97 +255,105 @@ const ConfirmOrder = () => {
     }, [shippingInfo, navigate, error, message]);
 
     return (
-    <Fragment>
-        { shippingAmount ? (
+        <Fragment>
+            {/* { shippingAmount ? ( */}
             <Fragment>
-            <MetaData title="Confirm Order" />
-            <div className="products_heading">Confirm Order</div>
-            <StepsCheckOut shipping confirmOrder />
-            <div className="container confirm-order-container">
-                {loading ? <Loader /> : (
-                    <div className="row justify-content-center">
-                        <div className="col-12 col-lg-8 mt-5 order-confirm" id='order_summary'>
-                            <h4 className="mb-3">Shipping Info</h4>
-                            <p><b>Name:</b> {user && user.name}</p>
-                            <p><b>Phone:</b> {shippingInfo.phoneNo}</p>
-                            <p className="mb-4"><b>Address:</b> {`${shippingInfo.address}, ${shippingInfo.city}- ${shippingInfo.postalCode}`}</p>
-                            <hr />
-                            <h4 className="mt-4">Your Cart Items:</h4>
-                            <hr />
-                            {cartItems.map(item => (
-                                <Fragment key={item.product}>
-                                    <div className="cart-item my-1">
-                                        <div className="row">
-                                            <div className="col-4 col-lg-2">
-                                                <img src={item.image} alt={item.name} height="45" width="65" />
-                                            </div>
-                                            <div className="col-4 col-lg-4">
-                                                <Link to={`/product/${item.product}`}>{item.name}</Link>
-                                            </div>
-                                            <div className="col-4 col-lg-5">
-                                                <p>{item.productWeight} x Rs.{item.price} = <b>Rs.{(item.productWeight * item.price).toFixed(2)}</b></p>
+                <MetaData title="Confirm Order" />
+                <div className="products_heading">Confirm Order</div>
+                <StepsCheckOut shipping confirmOrder />
+                <div className="container confirm-order-container">
+                    {loading || !shippingAmount ? <Loader /> : (
+                        <div className="row justify-content-center">
+                            <div className="col-12 col-lg-8 mt-5 order-confirm" id='order_summary'>
+                                <h4 className="mb-3">Shipping Info</h4>
+                                <p><b>Name:</b> {user && user.name}</p>
+                                <p><b>Phone:</b> {shippingInfo.phoneNo}</p>
+                                {/* <p className="mb-4"><b>Address:</b> {`${shippingInfo.address},${shippingInfo.landmark},${shippingInfo.area}, ${shippingInfo.city}- ${shippingInfo.postalCode}`}</p> */}
+                                <p className="mb-4">
+                                    <b>Address:</b>
+                                    {shippingInfo.address && `${shippingInfo.address},`}
+                                    {shippingInfo.area && `${shippingInfo.area},`}
+                                    {shippingInfo.landmark && `${shippingInfo.landmark},`}
+                                    {shippingInfo.city && `${shippingInfo.city}`}
+                                    {shippingInfo.postalCode && `-${shippingInfo.postalCode}`}
+                                </p>
+                                <hr />
+                                <h4 className="mt-4">Your Cart Items:</h4>
+                                <hr />
+                                {cartItems.map(item => (
+                                    <Fragment key={item.product}>
+                                        <div className="cart-item my-1">
+                                            <div className="row">
+                                                <div className="col-4 col-lg-2">
+                                                    <img src={item.image} alt={item.name} height="45" width="65" />
+                                                </div>
+                                                <div className="col-4 col-lg-4">
+                                                    <Link to={`/product/${item.product}`}>{item.name}</Link>
+                                                </div>
+                                                <div className="col-4 col-lg-5">
+                                                    <div>{item.productWeight} x Rs.{item.price} = <b>Rs.{(item.productWeight * item.price).toFixed(2)}</b></div>
+                                                </div>
                                             </div>
                                         </div>
-                                    </div>
+                                        <hr />
+                                    </Fragment>
+                                ))}
+                            </div>
+                            <div className="col-12 col-lg-3 my-4">
+                                <div id="order_summary">
+                                    <h4>Order Summary</h4>
                                     <hr />
-                                </Fragment>
-                            ))}
-                        </div>
-                        <div className="col-12 col-lg-3 my-4">
-                            <div id="order_summary">
-                                <h4>Order Summary</h4>
-                                <hr />
-                                <p>Subtotal: <span className="order-summary-values">Rs.{subtotal}</span></p>
-                                <p>Shipping: <span className="order-summary-values">Rs.{shippingCharge && shippingCharge.toFixed(2)}</span></p>
-                                <hr />
-                                <p>Total: <span className="order-summary-values">Rs.{total}</span></p>
-                                <hr />
-                                {shippingCharge ? (
-                                    <button id="checkout_btn" className="btn btn-primary btn-block" onClick={handelopenModal} disabled={loading}>
-                                        Proceed to Payment
-                                    </button>
-                                ) : (
-                                    <button id="checkout_btn" className="btn btn-block" disabled>
-                                        Proceed to Payment
-                                    </button>
-                                )}
-                                {showModal && (
-                        <div className="modal" tabIndex="-1" role="dialog" style={modalStyle}>
-                            <div className="modal-dialog" role="document">
-                                <div className="modal-content">
-                                    <div className="modal-header">
-                                        <h5 className="modal-title">Confirm Order</h5>
-                                        <button type="button" className="close" onClick={handleCancelModal}>
-                                            <span aria-hidden="true">&times;</span>
+                                    <p>Subtotal: <span className="order-summary-values">Rs.{subtotal}</span></p>
+                                    <p>Shipping: <span className="order-summary-values">Rs.{shippingCharge && shippingCharge.toFixed(2)}</span></p>
+                                    <hr />
+                                    <p>Total: <span className="order-summary-values">Rs.{total}</span></p>
+                                    <hr />
+                                    {shippingCharge ? (
+                                        <button id="checkout_btn" className="btn btn-primary btn-block" onClick={handelopenModal} disabled={loading}>
+                                            Proceed to Payment
                                         </button>
-                                    </div>
-                                    <div className="modal-body">
-                                        <p>{orderDescription && orderDescription}</p>
-                                    </div>
-                                    <div className="modal-footer">
-                                        <button type="button" className="btn btn-secondary" onClick={handleCancelModal}>Cancel</button>
-                                        <button type="button" className="btn btn-success" onClick={processPayment}>Continue</button>
-                                    </div>
+                                    ) : (
+                                        <button id="checkout_btn" className="btn btn-block" disabled>
+                                            Proceed to Payment
+                                        </button>
+                                    )}
+                                    {showModal && (
+                                        <div className="modal" tabIndex="-1" role="dialog" style={modalStyle}>
+                                            <div className="modal-dialog" role="document">
+                                                <div className="modal-content">
+                                                    <div className="modal-header">
+                                                        <h5 className="modal-title">Confirm Order</h5>
+                                                        <button type="button" className="close" onClick={handleCancelModal}>
+                                                            <span aria-hidden="true">&times;</span>
+                                                        </button>
+                                                    </div>
+                                                    <div className="modal-body">
+                                                        <p>{orderDescription && orderDescription}</p>
+                                                    </div>
+                                                    <div className="modal-footer">
+                                                        <button type="button" className="btn btn-secondary" onClick={handleCancelModal}>Cancel</button>
+                                                        <button type="button" className="btn btn-success" onClick={processPayment}>Continue</button>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    )}
+
                                 </div>
                             </div>
                         </div>
                     )}
-
-                            </div>
-                        </div>
-                    </div>
-                )}
-            </div>
-        </Fragment>
-        ) : (
+                </div>
+            </Fragment>
+            {/* ) : (
             <div className="container" style={{minHeight:'25vh'}}>
         <Loader/>
         </div>
         )
 
-        }
-           </Fragment>
-      
+        } */}
+        </Fragment>
+
     );
 };
 const modalStyle = {

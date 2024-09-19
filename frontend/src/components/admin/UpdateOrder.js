@@ -23,7 +23,7 @@ import ReactDOM from 'react-dom';
 import JasInvoice from "../Layouts/JasInvoice";
 import MetaData from "../Layouts/MetaData";
 
-const UpdateOrder = () => {
+const UpdateOrder = ({ isActive, setIsActive }) => {
     const location = useLocation();
     sessionStorage.setItem('redirectPath', location.pathname);
     const { loading, isOrderUpdated, error, orderDetail, porterOrderDetail, orderRemoveResponse, orderRemoveError } = useSelector(state => state.orderState);
@@ -301,7 +301,7 @@ const UpdateOrder = () => {
             orderDetail: orderDetail,
             updatedItems: updatedItems,
             dispatchedTable: dispatchedTable,
-            orderDate:orderDetail.orderDate,
+            orderDate: orderDetail.orderDate,
             totalDispatchedAmount: totalDispatchedAmount,
             totalRefundableAmount: totalRefundableAmount
         };
@@ -376,31 +376,43 @@ const UpdateOrder = () => {
 
         //     fetchData();
         // }
-        dispatch(porterClearData())
-        dispatch(createPorterOrderResponse({ order_id: porterOrderData && porterOrderData.order_id, porterOrder_id: porterOrderData?.porterOrder?.order_id }))
-        dispatch(getporterOrder({ order_id: id }))
         setRefreshData(true)
 
-    }, [dispatch, id, porterOrderDetail, error,packedOrderData]);
+    }, [dispatch, id, porterOrderDetail, error, packedOrderData]);
+    useEffect(() => {
+        if (porterOrderData && refreshData) {
+            dispatch(createPorterOrderResponse({ order_id: porterOrderData && porterOrderData.order_id, porterOrder_id: porterOrderData?.porterOrder?.order_id }))
+        }
+    }, [porterOrderData])
 
     useEffect(() => {
-        const handlePorterOrder = async () => {
-            if (porterOrderResponse || refreshData) {
-                await dispatch(porterClearResponse());
-                await dispatch(porterClearData());
-                await dispatch(getporterOrder({ order_id: id }));
-            }
-        };
+        if (refreshData && porterOrderResponse) {
+            // dispatch(porterClearData())
+            dispatch(getporterOrder({ order_id: id }))
+            setRefreshData(false)
+        }
+    }, [refreshData, porterOrderResponse])
 
-        handlePorterOrder();
-    }, [porterOrderResponse, refreshData])
+    // useEffect(() => {
+    //     const handlePorterOrder = async () => {
+    //         if (porterOrderResponse || refreshData) {
+    //             await dispatch(porterClearResponse());
+    //             await dispatch(porterClearData());
+    //             await dispatch(getporterOrder({ order_id: id }));
+    //         }
+    //     };
+
+    //     handlePorterOrder();
+    // }, [porterOrderResponse, refreshData])
 
     return (
-        
+
         <div className="row">
-             <MetaData title={`Update Order`} />
+            <MetaData title={`Update Order`} />
             <div className="col-12 col-md-2">
-                <Sidebar />
+                <div style={{ display: 'flex', flexDirection: 'row', position: 'fixed', top: '0px', zIndex: 99999, backgroundColor: '#fff', minWidth: '100%' }}>
+                    <Sidebar isActive={isActive} setIsActive={setIsActive} />
+                </div>
             </div>
             {
                 loading ? <Loader /> : (
@@ -413,9 +425,22 @@ const UpdateOrder = () => {
                                 <h4 className="mb-4">Shipping Info</h4>
                                 <p><b>Name:</b> {user.name}</p>
                                 <p><b>Phone:</b> {shippingInfo.phoneNo}</p>
-                                <p><b>Address:</b>{shippingInfo.address},{shippingInfo.area},{shippingInfo.landmark},{shippingInfo.city}-{shippingInfo.postalCode}</p>
+                                <p>
+                                    <b>Address:</b>
+                                    {shippingInfo.address && `${shippingInfo.address},`}
+                                    {shippingInfo.area && `${shippingInfo.area},`}
+                                    {shippingInfo.landmark && `${shippingInfo.landmark},`}
+                                    {shippingInfo.city && `${shippingInfo.city}`}
+                                    {shippingInfo.postalCode && `-${shippingInfo.postalCode}`}
+                                </p>
+
                                 <p><b>Amount:</b> Rs.{parseFloat(totalPrice).toFixed(2)}</p>
-                                <p><b>Payment Mode:</b> {orderDetail && orderDetail.statusResponse && orderDetail.statusResponse.payment_method}</p>
+                                {orderDetail && orderDetail.statusResponse && orderDetail.statusResponse.payment_method && (
+                                    <p><b>Payment Mode:</b> {orderDetail && orderDetail.statusResponse && orderDetail.statusResponse.payment_method}</p>
+
+                                )
+
+                                }
 
                                 <hr />
 
@@ -428,7 +453,7 @@ const UpdateOrder = () => {
                                         <p><b>Order Status:</b></p>
                                         <p className={orderStatus && orderStatus.includes('Delivered') ? 'greenColor' : 'redColor'} style={{ marginLeft: '10px' }}><b>{orderStatus}</b></p>
                                     </div>
-                    
+
                                 </div>
 
                                 {/* <h4 className="my-4">Payment status</h4>

@@ -8,14 +8,20 @@ import { MDBDataTable } from 'mdbreact';
 import { toast } from 'react-toastify';
 import Sidebar from "../admin/Sidebar";
 import { clearError } from '../../slices/productsSlice';
-import { clearOrderDeleted } from "../../slices/orderSlice";
+import { clearOrderDeleted, orderDetailClear } from "../../slices/orderSlice";
 import MetaData from '../Layouts/MetaData';
+import { porterClearData, porterClearResponse } from '../../slices/porterSlice';
 
-const PaymentList = () => {
+const PaymentList = ({isActive,setIsActive}) => {
     const location = useLocation();
     sessionStorage.setItem('redirectPath', location.pathname);
     const { adminOrders: orders = [], loading = true, error, isOrderDeleted }  = useSelector(state => state.orderState);
     const dispatch = useDispatch();
+    useEffect(() => {
+        dispatch(orderDetailClear());
+        dispatch(porterClearData());
+        dispatch(porterClearResponse());
+    }, [])
 
     const setOrders = () => {
         const data = {
@@ -23,32 +29,32 @@ const PaymentList = () => {
                 {
                     label: 'S.No',
                     field: 's_no',
-                    sort: 'asc'
+                    sort: 'disabled'
                 },
                 {
                     label: 'ID',
                     field: 'id',
-                    sort: 'asc'
+                    sort: 'disabled'
                 },
                 {
                     label: 'Number of Items',
                     field: 'noOfItems',
-                    sort: 'asc'
+                    sort: 'disabled'
                 },
                 {
                     label: 'Amount',
                     field: 'amount',
-                    sort: 'asc'
+                    sort: 'disabled'
                 },
                 {
                     label: 'PaymentStatus',
                     field: 'paymentstatus',
-                    sort: 'asc'
+                    sort: 'disabled'
                 },
                 {
                     label: 'Actions',
                     field: 'actions',
-                    sort: 'asc'
+                    sort: 'disabled'
                 }
             ],
             rows: []
@@ -77,7 +83,7 @@ const PaymentList = () => {
                 //         </Button>
                 //     </Fragment>
                 // )
-                actions: <Link to={`/admin/order/${order.order_id}`} className="btn btn-primary" >
+                actions: <Link to={`/admin/orderdetail/${order.order_id}`} className="btn btn-primary" >
                     <i className='fa fa-eye'></i>
                 </Link>
             });
@@ -118,10 +124,12 @@ const PaymentList = () => {
        
         <div className="row">
             <div className="col-12 col-md-2">
-                <Sidebar />
+            <div style={{display:'flex',flexDirection:'row',position:'fixed',top:'0px',zIndex:99999,backgroundColor:'#fff',minWidth:'100%'}}>
+                <Sidebar isActive={isActive} setIsActive={setIsActive}/>
+                </div>
             </div>
             <div className="col-12 col-md-10 smalldevice-space">
-                <h1 className="my-4 admin-dashboard-x">Payment List</h1>
+                <h1 className="mb-4 admin-dashboard-x">Payment List</h1>
                 <div className='mdb-table' style={{display:'flex',justifyContent:'center', alignItems:'center'}}>
                 <Fragment>
                     {loading ? <Loader /> :

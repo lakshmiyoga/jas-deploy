@@ -1,132 +1,210 @@
-// import React from 'react';
-// import { Link, useNavigate } from 'react-router-dom';
+
+
+// import React, { useEffect, useState } from 'react';
+// import { Link, useLocation, useNavigate } from 'react-router-dom';
 // import { NavDropdown } from 'react-bootstrap';
+// import { useDispatch, useSelector } from 'react-redux';
 // import { logout } from '../../actions/userActions';
-// import { useDispatch} from 'react-redux';
 
-
-// const Sidebar = () => {
+// const Sidebar = ({isActive,setIsActive}) => {
+//     // const [isActive, setIsActive] = useState(false);
+//     const { user, isAuthenticated } = useSelector(state => state.authState);
+//     const location = useLocation();
+//     sessionStorage.setItem('redirectPath', location.pathname);
 //     const navigate = useNavigate();
 //     const dispatch = useDispatch();
-//     const logoutHandler = () => {
-//         dispatch(logout);
-//         navigate('/')
-//       }
+
+//     const toggleSidebar = () => {
+//         setIsActive(!isActive);
+//     }
+
+//     const closeSidebar = () => {
+//         if (window.innerWidth < 768) {
+//             setIsActive(false);
+//         }
+//     }
+
+//     const logoutHandler = () => {   
+
+//         dispatch(logout); // Call the action as a function
+//         closeSidebar();
+//         // sessionStorage.removeItem('redirectPath'); // Remove redirectPath
+//         // navigate('/'); // Redirect to landing page
+//     }
+
+//     useEffect(()=>{
+//         if(!isAuthenticated){
+//             sessionStorage.removeItem('redirectPath');
+//             navigate('/');
+//         }
+//     },[isAuthenticated])
 
 //     return (
-//         <div className="sidebar-wrapper">
-//             <nav id="sidebar">
-//                 <ul className="list-unstyled components">
-//                     <li>
-//                         <Link to='/admin/dashboard'><i className='fas fa-tachometer-alt'></i> Dashboard</Link>
-//                     </li>
+//         <>
+//             {!isActive ? (
+//                 <button id="sidebarCollapse" onClick={toggleSidebar}>
+//                     <i className="fa fa-bars"></i>
+//                 </button>
+//             ) : (
+//                 <button id="sidebar-close" onClick={toggleSidebar}>
+//                     <i className="fa fa-close"></i>
+//                 </button>
+//             )
 
-//                     <li>
-//                         <NavDropdown title={<i className='fa fa-product-hunt'> Product</i>}>
-//                             <NavDropdown.Item onClick={() => navigate('/admin/products')}> <i className='fa fa-shopping-basket product-dropdown'> All</i></NavDropdown.Item>
-//                             <NavDropdown.Item onClick={() => navigate('/admin/products/create')}> <i className='fa fa-plus product-dropdown'> Create </i></NavDropdown.Item>
-//                             <NavDropdown.Item onClick={() => navigate('/admin/products/updateprice')}> <i className='fa fa-upload product-dropdown'> UpdatePrice </i></NavDropdown.Item>
-//                         </NavDropdown>
-//                     </li>
+//             }
+//             <div className={`sidebar-wrapper ${isActive ? 'active' : ''}`}>
 
-//                     <li>
-//                         <NavDropdown title={<i className='fa fa-shopping-basket'> Orders</i>}>
-//                             <NavDropdown.Item onClick={() => navigate('/admin/orders')}> <i className='fa fa-list'> Order List</i></NavDropdown.Item>
-//                             <NavDropdown.Item onClick={() => navigate('/admin/order-summary')}> <i className='fa fa-file-text'> Order Summary </i></NavDropdown.Item>     
-//                         </NavDropdown>
-//                     </li>
+//                 <nav id="sidebar">
+//                     <ul className="list-unstyled components">
+//                         <li>
+//                             <Link to='/admin/dashboard' onClick={closeSidebar}><i className='fas fa-tachometer-alt'></i> Dashboard</Link>
+//                         </li>
+//                         <li>
+//                             <NavDropdown title={<i className='fa fa-product-hunt'> Product</i>}>
+//                                 <NavDropdown.Item onClick={() => { navigate('/admin/products'); closeSidebar(); }}>
+//                                     <i className='fa fa-shopping-basket product-dropdown'> All</i>
+//                                 </NavDropdown.Item>
+//                                 <NavDropdown.Item onClick={() => { navigate('/admin/products/create'); closeSidebar(); }}>
+//                                     <i className='fa fa-plus product-dropdown'> Create </i>
+//                                 </NavDropdown.Item>
+//                                 <NavDropdown.Item onClick={() => { navigate('/admin/products/updateprice'); closeSidebar(); }}>
+//                                     <i className='fa fa-upload product-dropdown'> UpdatePrice </i>
+//                                 </NavDropdown.Item>
+//                             </NavDropdown>
+//                         </li>
+//                         <li>
+//                             <NavDropdown title={<i className='fa fa-shopping-basket'> Orders</i>}>
+//                                 <NavDropdown.Item onClick={() => { navigate('/admin/orders'); closeSidebar(); }}>
+//                                     <i className='fa fa-list'> Order List</i>
+//                                 </NavDropdown.Item>
+//                                 <NavDropdown.Item onClick={() => { navigate('/admin/order-summary'); closeSidebar(); }}>
+//                                     <i className='fa fa-file-text'> Order Summary </i>
+//                                 </NavDropdown.Item>
+//                             </NavDropdown>
+//                         </li>
+//                         <li>
+//                             <NavDropdown title={<i className="fa fa-users"> Users</i>}>
+//                                 <NavDropdown.Item onClick={() => { navigate('/admin/users'); closeSidebar(); }}>
+//                                     <i className='fa fa-list'> User List</i>
+//                                 </NavDropdown.Item>
+//                                 <NavDropdown.Item onClick={() => { navigate('/admin/user-summary'); closeSidebar(); }}>
+//                                     <i className='fa fa-file-text'> User Summary </i>
+//                                 </NavDropdown.Item>
+//                             </NavDropdown>
+//                         </li>
+//                         <li>
+//                             <Link to="/admin/payments" onClick={closeSidebar}><i className="fa fa-credit-card"></i> Payments</Link>
+//                         </li>
+//                         <li>
+//                             <Link to="/admin/dispatch" onClick={closeSidebar}><i className="fa fa-truck"></i> Dispatch</Link>
+//                         </li>
+//                         <li>
+//                             <Link to="/admin/refund" onClick={closeSidebar}><i className="fa fa-reply"></i> Refund</Link>
+//                         </li>
+//                         <li>
+//                             <Link onClick={logoutHandler}><i className="fa fa-sign-out"></i> Logout</Link>
+//                         </li>
+//                     </ul>
+//                 </nav>
+//             </div>
+//             {isActive && (
+//           <>
+//             <div className="overlay" onClick={closeSidebar}></div>
+//             <div className="blur-effect"></div>
+//           </>
+//         )}
 
-//                     {/* <li>
-//                         <Link to='/admin/orders'><i className='fa fa-shopping-basket'></i> Orders</Link>
-//                     </li> */}
-
-//                     <li>
-//                         {/* <Link to='/admin/users'><i className='fa fa-users'></i> Users</Link> */}
-
-//                         <NavDropdown title={<i className="fa fa-users"> Users</i>}>
-//                             <NavDropdown.Item onClick={() => navigate('/admin/users')}> <i className='fa fa-list'> User List</i></NavDropdown.Item>
-//                             <NavDropdown.Item onClick={() => navigate('/admin/user-summary')}> <i className='fa fa-file-text'> User Summary </i></NavDropdown.Item>     
-//                         </NavDropdown>
-//                     </li>
-//                     <li>
-//                         <Link to="/admin/payments"><i className="fa fa-credit-card"></i> Payments</Link>
-//                     </li>
-//                     <li>
-//                         <Link to="/admin/dispatch"><i className="fa fa-truck"></i> Dispatch</Link>
-
-//                     </li>
-//                     <li>
-//                         <Link to="/admin/refund"><i className="fa fa-reply"></i> Refund</Link>
-//                     </li>
-
-//                     <li>
-//                         <Link onClick={logoutHandler}><i className="fa fa-sign-out"></i> Logout</Link>
-//                     </li>
-//                 </ul>
-//             </nav>
-//         </div>
-//     )
+//         </>
+//     );
 // }
 
 // export default Sidebar;
 
-
 import React, { useEffect, useState } from 'react';
 import { Link, useLocation, useNavigate } from 'react-router-dom';
-import { NavDropdown } from 'react-bootstrap';
+import { Container, NavDropdown, Navbar } from 'react-bootstrap';
 import { useDispatch, useSelector } from 'react-redux';
 import { logout } from '../../actions/userActions';
 
-const Sidebar = () => {
-    const [isActive, setIsActive] = useState(false);
+const Sidebar = ({ isActive, setIsActive }) => {
     const { user, isAuthenticated } = useSelector(state => state.authState);
+    const useWindowWidth = () => {
+        const [windowWidth, setWindowWidth] = useState(window.innerWidth);
+
+        useEffect(() => {
+            const handleResize = () => setWindowWidth(window.innerWidth);
+
+            window.addEventListener('resize', handleResize);
+
+            // Cleanup event listener on component unmount
+            return () => window.removeEventListener('resize', handleResize);
+        }, []);
+
+        return windowWidth;
+    };
+    const windowWidth = useWindowWidth();
     const location = useLocation();
-    sessionStorage.setItem('redirectPath', location.pathname);
     const navigate = useNavigate();
     const dispatch = useDispatch();
+    const [refresh,setRefresh]=useState(false);
+
+    sessionStorage.setItem('redirectPath', location.pathname);
 
     const toggleSidebar = () => {
         setIsActive(!isActive);
     }
 
     const closeSidebar = () => {
-        if (window.innerWidth < 768) {
-            setIsActive(false);
-        }
+        setIsActive(false);
     }
 
-    const logoutHandler = () => {   
-        
+    const logoutHandler = () => {
         dispatch(logout); // Call the action as a function
         closeSidebar();
-        // sessionStorage.removeItem('redirectPath'); // Remove redirectPath
-        // navigate('/'); // Redirect to landing page
+        setRefresh(true)
     }
 
-    useEffect(()=>{
-        if(!isAuthenticated){
+    useEffect(() => {
+        if (!isAuthenticated && refresh) {
             sessionStorage.removeItem('redirectPath');
             navigate('/');
         }
-    },[isAuthenticated])
+    }, [isAuthenticated, navigate,refresh]);
+
+    useEffect(() => {
+        if (isActive) {
+            document.body.classList.add('no-scroll');
+        } else {
+            document.body.classList.remove('no-scroll');
+        }
+    }, [isActive]);
 
     return (
         <>
             {!isActive ? (
-                <button id="sidebarCollapse" onClick={toggleSidebar}>
+                <button id="sidebarCollapse" onClick={toggleSidebar} style={{ zIndex: '99999', border: 'none', position: 'relative', fontSize: '20px' }}>
                     <i className="fa fa-bars"></i>
                 </button>
             ) : (
-                <button id="sidebar-close" onClick={toggleSidebar}>
+                <button id="sidebar-close" onClick={toggleSidebar} style={{ zIndex: '99999', border: 'none', fontSize: '20px' }}>
                     <i className="fa fa-close"></i>
                 </button>
-            )
-
-            }
+            )}
             <div className={`sidebar-wrapper ${isActive ? 'active' : ''}`}>
-
                 <nav id="sidebar">
+                {windowWidth > 767 && (
+                            // <Navbar collapseOnSelect expand="sm" className="bg-body-tertiary custom-navbar">
+                            //     <Container >
+                            //         <Navbar.Brand>
+                                        <Link to="/">
+                                            <img className="logo-admin" src="/images/logo.png" alt="logo" />
+                                        </Link>
+                            //         </Navbar.Brand>
+                            //     </Container>
+                            // </Navbar>
+                        )}
                     <ul className="list-unstyled components">
+                       
                         <li>
                             <Link to='/admin/dashboard' onClick={closeSidebar}><i className='fas fa-tachometer-alt'></i> Dashboard</Link>
                         </li>
@@ -170,6 +248,9 @@ const Sidebar = () => {
                             <Link to="/admin/dispatch" onClick={closeSidebar}><i className="fa fa-truck"></i> Dispatch</Link>
                         </li>
                         <li>
+                            <Link to="/admin/analysis" onClick={closeSidebar}><i className="fa fa-pie-chart"></i> Analysis</Link>
+                        </li>
+                        <li>
                             <Link to="/admin/refund" onClick={closeSidebar}><i className="fa fa-reply"></i> Refund</Link>
                         </li>
                         <li>
@@ -178,6 +259,24 @@ const Sidebar = () => {
                     </ul>
                 </nav>
             </div>
+            {windowWidth < 768 && (
+                <Navbar collapseOnSelect expand="sm" className="bg-body-tertiary custom-navbar">
+                    {/* <Container > */}
+                        <Navbar.Brand>
+                            <Link to="/">
+                                <img width="300px" height="90px" className="logo" src="/images/logo.png" alt="logo" />
+                            </Link>
+                        </Navbar.Brand>
+                    {/* </Container> */}
+                </Navbar>
+            )}
+
+            {isActive && (
+                <>
+                    <div className="overlay" onClick={closeSidebar}></div>
+                    <div className="blur-effect"></div>
+                </>
+            )}
         </>
     );
 }

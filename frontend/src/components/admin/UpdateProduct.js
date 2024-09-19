@@ -190,19 +190,22 @@ import MetaData from '../Layouts/MetaData';
 
 // export default UpdateProduct;
 
-const UpdateProduct = () => {
+const UpdateProduct = ({isActive,setIsActive}) => {
+    // const location = useLocation();
+    // sessionStorage.setItem('redirectPath', location.pathname);
 
     const [formData, setFormData] = useState({
         englishName: "",
         tamilName:"",
+        buyingPrice:"",
         price: "",
         category: "",
+        stocks:"",
         images: [],
         imagesPreview: [],
         imagesCleared: false
     });
-    const location = useLocation();
-    sessionStorage.setItem('redirectPath', location.pathname);
+   
     // console.log(formData)
 
     const { id } = useParams();
@@ -210,14 +213,20 @@ const UpdateProduct = () => {
     const dispatch = useDispatch();
     const navigate = useNavigate();
 
+    console.log(isProductUpdated,error,product)
+
+    
+
     useEffect(() => {
         if (product && product._id) {
             setFormData({
                 ...formData,
                 englishName: product.englishName,
                 tamilName: product.tamilName,
+                buyingPrice: product.buyingPrice,
                 price: product.price,
                 category: product.category,
+                stocks: product.stocks,
                 imagesPreview: product.images.map(image => image.image)
             });
         }
@@ -230,26 +239,61 @@ const UpdateProduct = () => {
         });
     };
 
+    // const handleImagesChange = (e) => {
+    //     const files = Array.from(e.target.files);
+
+    //     files.forEach(file => {
+    //         const reader = new FileReader();
+
+    //         reader.onload = () => {
+    //             if (reader.readyState === 2) {
+    //                 setFormData({
+    //                     ...formData,
+    //                     imagesPreview: [...formData.imagesPreview, reader.result],
+    //                     images: [...formData.images, file]
+    //                 });
+    //             }
+    //         };
+
+    //         reader.readAsDataURL(file);
+    //     });
+    // };
+
     const handleImagesChange = (e) => {
         const files = Array.from(e.target.files);
-
+        const maxSize = 5 * 1024 * 1024; // 10 MB in bytes
+        let totalSize = 0;
+    
+        // Calculate total size of all selected files
+        files.forEach(file => {
+            totalSize += file.size;
+        });
+    
+        // Check if total size exceeds the maximum allowed size
+        if (totalSize > maxSize) {
+            toast.error('The total size of all selected images exceeds the 5MB limit.');
+            return; // Stop further execution if total size exceeds the limit
+        }
+    
+        // Proceed with setting images if total size is within the limit
         files.forEach(file => {
             const reader = new FileReader();
-
+    
             reader.onload = () => {
                 if (reader.readyState === 2) {
-                    setFormData({
-                        ...formData,
-                        imagesPreview: [...formData.imagesPreview, reader.result],
-                        images: [...formData.images, file]
-                    });
+                    setFormData(prevState => ({
+                        ...prevState,
+                        imagesPreview: [...prevState.imagesPreview, reader.result],
+                        images: [...prevState.images, file]
+                    }));
                 }
             };
-
+    
             reader.readAsDataURL(file);
         });
     };
-
+    
+    
     const clearImagesHandler = () => {
         setFormData({
             ...formData,
@@ -266,8 +310,10 @@ const UpdateProduct = () => {
         const formDataToSend = new FormData();
         formDataToSend.append('englishName', formData.englishName);
         formDataToSend.append('tamilName', formData.tamilName);
+        formDataToSend.append('buyingPrice', formData.buyingPrice);
         formDataToSend.append('price', formData.price);
         formDataToSend.append('category', formData.category);
+        formDataToSend.append('stocks', formData.stocks);
         formData.images.forEach(image => formDataToSend.append('images', image));
         formDataToSend.append('imagesCleared', formData.imagesCleared);
         // console.log(formDataToSend)
@@ -275,15 +321,47 @@ const UpdateProduct = () => {
     };
 
     useEffect(() => {
+        if (product && product._id !== id) {
+            dispatch(getProduct(id));
+        }
+    }, [dispatch, id, product]);
+
+    useEffect(() => {
+        if (!product) {
+            dispatch(getProduct(id));
+        }
+    }, [dispatch, id]);
+
+    // useEffect(() => {
+    //     if (isProductUpdated) {
+    //         toast('Product updated successfully!', {
+    //             type: 'success',
+    //             position: "bottom-center",
+    //             onOpen: () => dispatch(clearProductUpdated())
+    //         });
+    //     navigate('/admin/products');
+    //     }
+
+    //     if (error) {
+    //         toast(error, {
+    //             position: "bottom-center",
+    //             type: 'error',
+    //             onOpen: () => dispatch(clearError())
+    //         });
+    //     }
+
+    //     dispatch(getProduct(id));
+    // }, [dispatch, isProductUpdated, error]);
+    useEffect(() => {
         if (isProductUpdated) {
             toast('Product updated successfully!', {
                 type: 'success',
                 position: "bottom-center",
                 onOpen: () => dispatch(clearProductUpdated())
             });
-        navigate('/admin/products');
+            navigate('/admin/products');
         }
-
+    
         if (error) {
             toast(error, {
                 position: "bottom-center",
@@ -291,15 +369,15 @@ const UpdateProduct = () => {
                 onOpen: () => dispatch(clearError())
             });
         }
-
-        dispatch(getProduct(id));
-    }, [dispatch, isProductUpdated, error, id]);
+    }, [dispatch, isProductUpdated, error, navigate]);
 
     return (
         <div className="row">
             <MetaData title={`Update Product`} />
             <div className="col-12 col-md-2">
-                <Sidebar />
+            <div style={{display:'flex',flexDirection:'row',position:'fixed',top:'0px',zIndex:99999,backgroundColor:'#fff',minWidth:'100%'}}>
+                <Sidebar isActive={isActive} setIsActive={setIsActive}/>
+                </div>
             </div>
             <div className="col-12 col-md-10 smalldevice-space">
                 <Fragment>
@@ -331,7 +409,19 @@ const UpdateProduct = () => {
                             </div>
 
                             <div className="form-group">
-                                <label htmlFor="price">Price</label>
+                                <label htmlFor="buyingPrice">Buying Price</label>
+                                <input
+                                    type="text"
+                                    id="buyingPrice"
+                                    name="buyingPrice"
+                                    className="form-control"
+                                    value={formData.buyingPrice}
+                                    onChange={handleChange}
+                                />
+                            </div>
+
+                            <div className="form-group">
+                                <label htmlFor="price"> Selling Price</label>
                                 <input
                                     type="text"
                                     id="price"
@@ -358,12 +448,29 @@ const UpdateProduct = () => {
                                 </select>
                             </div>
 
+                            <div className="form-group">
+                                <label htmlFor="stocks"> Stocks</label>
+                                <select
+                                    type="text"
+                                    id="stocks"
+                                    name="stocks"
+                                    className="form-control"
+                                    value={formData.stocks}
+                                    onChange={handleChange}
+                                >
+                                <option value="">Select</option>
+                                    <option value="Stock">Stock</option>
+                                    <option value="No Stock">No Stock</option>
+                                </select>
+                            </div>
+
                             <div className='form-group'>
-                                <label>Images</label>
+                                <label>Images (*Size should be within 5mb) </label>
                                 <div className='custom-file'>
                                     <input
                                         type='file'
                                         name='product_images'
+                                        accept='.jpg, .jpeg, .png' // Accepts only jpg, jpeg, and png files
                                         className='custom-file-input'
                                         id='images'
                                         multiple

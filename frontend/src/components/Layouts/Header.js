@@ -12,7 +12,7 @@ import NavDropdown from 'react-bootstrap/NavDropdown';
 // import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 // import { faShoppingCart } from '@fortawesome/free-solid-svg-icons';
 
-const Header = () => {
+const Header = ({openSide,setOpenSide}) => {
 
   const useWindowWidth = () => {
     const [windowWidth, setWindowWidth] = useState(window.innerWidth);
@@ -33,20 +33,23 @@ const Header = () => {
   const { items: cartItems } = useSelector(state => state.cartState);
   const dispatch = useDispatch();
   const navigate = useNavigate();
+  const [refresh,setRefresh]=useState(false);
   const logoutHandler = () => {
+    setOpenSide(!openSide);
     dispatch(logout);
-    sessionStorage.removeItem('redirectPath');
-    navigate('/')
+    setRefresh(true);
+    // sessionStorage.removeItem('redirectPath');
+    // navigate('/')
   }
 
-  // useEffect(()=>{
-  //   if(!isAuthenticated){
-  //     sessionStorage.removeItem('redirectPath');
-  //     navigate('/');
-  // }
-  // },[isAuthenticated])
+  useEffect(()=>{
+    if(!isAuthenticated && refresh){
+      sessionStorage.removeItem('redirectPath');
+      navigate('/');
+  }
+  },[isAuthenticated,refresh])
 
-  const [openSide, setOpenSide] = useState(false);
+  // const [openSide, setOpenSide] = useState(false);
   const changeToggle = () => {
     setOpenSide(!openSide);
   }
@@ -114,6 +117,7 @@ const Header = () => {
     //   </Container>
     // </Navbar>
     // <div style={{position:'fixed' }}>
+    <>
     <Navbar collapseOnSelect expand="sm" className="bg-body-tertiary custom-navbar">
       {windowWidth > 576 ? (
         <Container>
@@ -139,20 +143,20 @@ const Header = () => {
             {/* {
       !openSide && ( */}
             <Nav className="me-auto custom-nav" style={{ display: 'flex', gap: '1rem', justifyContent: 'flex-end', alignItems: 'center',minWidth:'100%' }}>
-              <Nav.Link>
+              {/* <Nav.Link> */}
                 <Link to="/" className="navbar-link">HOME</Link>
-              </Nav.Link>
-              <Nav.Link>
+              {/* </Nav.Link> */}
+              {/* <Nav.Link> */}
                 <Link to="/about" className="navbar-link">ABOUT US</Link>
-              </Nav.Link>
-              <NavDropdown title={<div className="d-inline-flex align-items-center dropdown-display">ORDER NOW</div>} id="collapsible-nav-dropdown">
+              {/* </Nav.Link> */}
+              <NavDropdown title={<div className="d-inline-flex align-items-center dropdown-display navbar-link">ORDER NOW</div>} id="collapsible-nav-dropdown">
                 <NavDropdown.Item className='dropdown-display' onClick={() => navigate('/vegetables')}>Vegetables</NavDropdown.Item>
                 <NavDropdown.Item className='dropdown-display' onClick={() => navigate('/fruits')}>Fruits</NavDropdown.Item>
                 <NavDropdown.Item className='dropdown-display' onClick={() => navigate('/keerai')}>Keerai</NavDropdown.Item>
               </NavDropdown>
-              <Nav.Link>
+              {/* <Nav.Link> */}
                 <Link to="/enquiry" className="navbar-link">CONTACT</Link>
-              </Nav.Link>
+              {/* </Nav.Link> */}
 
               {isAuthenticated ? (
                 <NavDropdown title={<div className="d-inline-flex align-items-center"><div className="avatar-initials">{getInitials(user.name)}</div></div>} id="collapsible-nav-dropdown" className='dropdown-nav-menu'>
@@ -166,17 +170,17 @@ const Header = () => {
                   <NavDropdown.Item onClick={logoutHandler}>Logout</NavDropdown.Item>
                 </NavDropdown>
               ) : (
-                <Nav.Link>
+                // <Nav.Link>
                   <Link to="/login" className="navbar-link" id="login_btn">LOGIN</Link>
-                </Nav.Link>
+                // </Nav.Link>
               )}
 
-              <Nav.Link>
+              {/* <Nav.Link> */}
                 <Link to="/cart" className="navbar-link cart-container">
                   <i className="fa fa-shopping-cart cart-icon"></i>
                   <span className="badge bg-secondary ml-1" id="cart_count">{cartItems.length}</span>
                 </Link>
-              </Nav.Link>
+              {/* </Nav.Link> */}
             </Nav>
             {/* )
     } */}
@@ -187,9 +191,9 @@ const Header = () => {
         <Container >
           <Navbar.Brand>
             {/* <Navbar.Toggle aria-controls="responsive-navbar-nav" style={{zIndex:'99999',border:'none'}} onClick={changeToggle}/> */}
-            <Navbar.Toggle
+            <div
               aria-controls="responsive-navbar-nav"
-              style={{ zIndex: '99999', border: 'none', position: 'relative' }}
+              style={{ zIndex: '99999', border: 'none', position: 'relative',cursor:'pointer' }}
               onClick={changeToggle}
             >
               {openSide ? (
@@ -197,7 +201,7 @@ const Header = () => {
               ) : (
                 <i className="fa fa-bars"></i>  // Bars icon when closed
               )}
-            </Navbar.Toggle>
+            </div>
             <Link to="/" className="navbar-brand">
               <img width="300px" height="90px" className="logo" src="/images/logo.png" alt="logo" />
             </Link>
@@ -206,7 +210,7 @@ const Header = () => {
             <i className="fa fa-shopping-cart cart-icon"></i>
             <span className="badge bg-secondary ml-1" id="cart_count">{cartItems.length}</span>
           </Link>
-          <Navbar.Collapse id="responsive-navbar-nav" className="custom-collapse">
+          <div  className={`${openSide ?"custom-collapse open":"custom-collapse-close"}`}>
             {/* {
       !openSide && ( */}
             <Nav style={{ display: 'flex', flexDirection: 'column' }}>
@@ -225,39 +229,42 @@ const Header = () => {
 
 
                 ) : (
-                  <Nav.Link>
-                    <Link to="/login" className="navbar-link" id="login_btn">LOGIN</Link>
-                  </Nav.Link>
+                  // <Nav.Link>
+                    <Link to="/login" className="navbar-link" id="login_btn"  onClick={changeToggle}>LOGIN <i className="fa fa-sign-in" style={{marginLeft:'3px'}}></i></Link>
+                  // </Nav.Link>
                 )
               }
               
-              <div className='sidebar-components'>
+              <div className='sidebar-components' >
+              {/* <div className={`${openSide ? 'sidebar-open sidebar-components' : 'sidebar-closed sidebar-components'}`} > */}
+
+             
               <hr style={{width:'90%',marginLeft:'2px',height: '1px', backgroundColor: 'grey', border: 'none'}}></hr>
               {
                 isAuthenticated && (
                   <>
-                    <Nav.Link>
-                      <Link to="/myprofile" className="navbar-names">Profile</Link>
-                    </Nav.Link>
-                    <Nav.Link>
-                      <Link to="/orders" className="navbar-names">Orders</Link>
-                    </Nav.Link>
+                    {/* <Nav.Link> */}
+                      <Link to="/myprofile" className="navbar-names"  onClick={changeToggle}>Profile</Link>
+                    {/* </Nav.Link> */}
+                    {/* <Nav.Link> */}
+                      <Link to="/orders" className="navbar-names"  onClick={changeToggle}>Orders</Link>
+                    {/* </Nav.Link> */}
                   </>
 
                 )
               }
 
-              <Nav.Link>
-                <Link to="/about" className="navbar-names">AboutUs</Link>
-              </Nav.Link>
-              <Nav.Link>
-                <Link to="/enquiry" className="navbar-names">ContactUs</Link>
-              </Nav.Link>
+              {/* <Nav.Link> */}
+                <Link to="/about" className="navbar-names"  onClick={changeToggle}>AboutUs</Link>
+              {/* </Nav.Link> */}
+              {/* <Nav.Link> */}
+                <Link to="/enquiry" className="navbar-names"  onClick={changeToggle}>ContactUs</Link>
+              {/* </Nav.Link> */}
               {
                 isAuthenticated && (
-                  <Nav.Link>
-                    <Link onClick={logoutHandler} className="navbar-names">Logout</Link>
-                  </Nav.Link>
+                  // <Nav.Link>
+                    <Link onClick={logoutHandler} className="navbar-names">Logout<i className="fa fa-sign-out" style={{marginLeft:'3px'}}></i></Link>
+                  // </Nav.Link>
                 )
               }
               </div>
@@ -267,13 +274,20 @@ const Header = () => {
             {/* )
     } */}
 
-          </Navbar.Collapse>
+          </div>
+          {openSide && (
+          <>
+            <div className="overlay" onClick={changeToggle}></div>
+            <div className="blur-effect"></div>
+          </>
+        )}
         </Container>
 
       )}
 
     </Navbar>
-    // </div>
+        
+  </>
 
   );
 

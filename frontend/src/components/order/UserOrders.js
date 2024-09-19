@@ -8,6 +8,8 @@ import Loader from '../Layouts/Loader';
 import { loadUser } from '../../actions/userActions';
 import store from '../../store';
 import { getProducts } from '../../actions/productsActions';
+import { orderDetailClear } from '../../slices/orderSlice';
+import { porterClearData, porterClearResponse } from '../../slices/porterSlice';
 
 export default function UserOrders() {
     
@@ -17,6 +19,12 @@ export default function UserOrders() {
 
     const location = useLocation();
      sessionStorage.setItem('redirectPath', location.pathname);
+     useEffect(() => {
+        dispatch(orderDetailClear());
+        dispatch(porterClearData());
+        dispatch(porterClearResponse());
+        dispatch(userOrdersAction())
+    }, [])
     // const { user } = useSelector(state => state.authState);
 
     // useEffect(() => {
@@ -31,45 +39,38 @@ export default function UserOrders() {
     //     }
     // }, [user]);
 
-    useEffect(() => {
-        // if(dummyUser){
-            dispatch(userOrdersAction())
-        // }
-       
-    }, [])
-
     const setOrders = () => {
         const data = {
             columns: [
                 {
                     label: 'S.No',
                     field: 's_no',
-                    sort: 'asc'
+                    sort: 'disabled'
                 },
                 {
                     label: "Order ID",
                     field: 'id',
-                    sort: "asc"
+                    sort: "disabled"
                 },
                 {
-                    label: "Number of Items",
+                    label: "No of Items",
                     field: 'numOfItems',
-                    sort: "asc"
+                    sort: "disabled"
                 },
                 {
                     label: "Amount",
                     field: 'amount',
-                    sort: "asc"
+                    sort: "disabled"
                 },
                 {
                     label: "Status",
                     field: 'status',
-                    sort: "asc"
+                    sort: "disabled"
                 },
                 {
                     label: "Actions",
                     field: 'actions',
-                    sort: "asc"
+                    sort: "disabled"
                 }
             ],
             rows: []
@@ -102,9 +103,9 @@ export default function UserOrders() {
         <Fragment>
             <MetaData title={`My Orders`} />
             <div className="products_heading">Orders</div>
-            <div className='container mdb-table'>
+            {loading ? <Loader /> :  <div className='container mdb-table'>
             <Fragment>
-                    {loading ? <Loader /> :
+                    {/* {loading ? <Loader /> : */}
                         <MDBDataTable
                             data={setOrders()}
                             bordered
@@ -112,9 +113,10 @@ export default function UserOrders() {
                             className="px-3 product-table"
                             noBottomColumns
                         />
-                    }
+                    {/* } */}
                 </Fragment>
-            </div>
+            </div> }
         </Fragment>
     )
 }
+

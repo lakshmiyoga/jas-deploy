@@ -8,6 +8,7 @@ const nodemailer = require('nodemailer');
 const path = require('path');
 const axios = require('axios');
 const porterModel = require('../models/porterModel');
+// const porterModel = require('../models/allProductModel');
 // const fetch = require('node-fetch');
 const fs = require('fs');
 const { Juspay, APIError } = require('expresscheckout-nodejs');
@@ -27,7 +28,7 @@ const paymentPageClientId = config.PAYMENT_PAGE_CLIENT_ID; // used in orderSessi
 
 const juspay = new Juspay({
     merchantId: config.MERCHANT_ID,
-    baseUrl: SANDBOX_BASE_URL, // Using sandbox base URL for testing
+    baseUrl: PRODUCTION_BASE_URL, // Using sandbox base URL for testing
     jweAuth: {
         keyId: config.KEY_UUID,
         publicKey,
@@ -39,21 +40,19 @@ const juspay = new Juspay({
 //get single order for user 
 
 const getSinglePorterOrder = catchAsyncError(async (req, res, next) => {
-    //    console.log(req.params)
+    console.log("req.body", req.body); // Log request body
     const { order_id } = req.body;
+    console.log("order_id", order_id); // Log order_id
     // if (!order_id) {
-    //     return next(new ErrorHandler(`Order not found`, 404))
+    //     return next(new ErrorHandler(`Order id not found`, 404))
     // }
-    // console.log(req.body)
+    // console.log("req.body",req.body)
     const order = await porterModel.findOne({ order_id });
-    // console.log(order)
+    console.log("order",order)
     if (!order) {
         return next(new ErrorHandler(`Order not found with this id: ${order_id}`, 404))
     }
-    res.status(200).json({
-        success: true,
-        porterOrder: order
-    })
+  
     const statusResponse = await juspay.order.status(order_id);
 
     if (statusResponse) {
@@ -62,11 +61,11 @@ const getSinglePorterOrder = catchAsyncError(async (req, res, next) => {
         if (onepayments) {
             const refundStatus = await Dispatch.findOneAndUpdate({ order_id },
                 {
-                    refundStatus: statusResponse.refunds[0].status,
+                    refundStatus: statusResponse && statusResponse.refunds && statusResponse.refunds[0].status,
                     $set: { statusResponse: statusResponse }
                 },
                 { new: true });
-                res.status(200).json({
+               return res.status(200).json({
                     success: true,
                     porterOrder: order
                 })  
@@ -74,8 +73,66 @@ const getSinglePorterOrder = catchAsyncError(async (req, res, next) => {
         }
 
     }
+   return res.status(200).json({
+        success: true,
+        porterOrder: order
+    })
    
 })
+
+// const getSinglePorterOrder = catchAsyncError(async (req, res, next) => {
+//     console.log("req.body", req.body); // Log request body
+//     const { order_id } = req.body;
+//     console.log("order_id", order_id); // Log order_id
+    
+//     if (!order_id) {
+//         return next(new ErrorHandler(`Order ID is missing`, 400));
+//     }
+    
+//     console.log("Type of order_id:", typeof order_id);
+//     console.log("Length of order_id:", order_id.length);
+
+//     // Try raw MongoDB query for debugging purposes
+//     // const rawQuery = await mongoose.connection.db.collection('porterModel').findOne({ order_id: String(order_id) });
+//     // console.log("Raw MongoDB Query Result:", rawQuery);
+    
+//     const order = await porterModel.findOne({ order_id: String(order_id) });
+//     console.log("order", order);
+
+//     if (!order) {
+//         return next(new ErrorHandler(`Order not found with this id: ${order_id}`, 404));
+//     }
+
+//     const statusResponse = await juspay.order.status(order_id);
+
+//     if (statusResponse) {
+//         const onepayments = await Dispatch.findOne({ order_id });
+
+//         if (onepayments) {
+//             const refundStatus = await Dispatch.findOneAndUpdate(
+//                 { order_id },
+//                 {
+//                     refundStatus: statusResponse?.refunds?.[0]?.status,
+//                     $set: { statusResponse }
+//                 },
+//                 { new: true }
+//             );
+
+//             return res.status(200).json({
+//                 success: true,
+//                 porterOrder: order
+//             });
+//         }
+//     }
+
+//     return res.status(200).json({
+//         success: true,
+//         porterOrder: order
+//     });
+// });
+
+
+
 
 const getPorterResponse = catchAsyncError(async (req, res, next) => {
     //    console.log(req.params)
@@ -282,8 +339,8 @@ const postPackedOrder = catchAsyncError(async (req, res, next) => {
                 { new: true }
             );
 
-            console.log("packedOrder", packedOrder)
-            res.status(200).json({
+            // console.log("packedOrder", packedOrder)
+           return res.status(200).json({
                 success: true,
                 packedOrderData: packedOrder
             })
@@ -301,7 +358,7 @@ const getPackedOrder = catchAsyncError(async (req, res, next) => {
     console.log("req.body", req.body);
     const { order_id } = req.body;
 
-    console.log("order_id", order_id);
+    // console.log("order_id", order_id);
 
     if (!order_id) {
         return next(new ErrorHandler(`Order not found with this id: ${order_id}`, 404))
@@ -310,7 +367,7 @@ const getPackedOrder = catchAsyncError(async (req, res, next) => {
 
     const getpackedOrderData = await Dispatch.findOne({ order_id })
 
-    res.status(201).json({
+   return res.status(201).json({
         success: true,
         getpackedOrderData
     })
@@ -321,7 +378,7 @@ const getAllPackedOrder = catchAsyncError(async (req, res, next) => {
 
     try {
         const allpackedOrderData = await Dispatch.find({});
-        console.log("allpackedOrderData", allpackedOrderData)
+        // console.log("allpackedOrderData", allpackedOrderData)
         return res.status(201).json({
             success: true,
             allpackedOrderData
@@ -333,7 +390,7 @@ const getAllPackedOrder = catchAsyncError(async (req, res, next) => {
 })
 
 const refundOrder = catchAsyncError(async (req, res, next) => {
-    console.log("req.body", req.body);
+    // console.log("req.body", req.body);
     const { order_id, RefundableAmount } = req.body;
 
     console.log("order_id", order_id, RefundableAmount);
@@ -353,7 +410,7 @@ const refundOrder = catchAsyncError(async (req, res, next) => {
             order_id: order_id,
             amount: RefundableAmount,
         };
-        console.log("refundPayload", refundPayload);
+        // console.log("refundPayload", refundPayload);
         if (RefundableAmount > 0) {
             const refundResponse = await juspay.order.refund(order_id, refundPayload);
             if (refundResponse) {
@@ -380,7 +437,7 @@ const refundOrder = catchAsyncError(async (req, res, next) => {
                                 
                         
                             }
-                        res.status(201).json({
+                       return res.status(201).json({
                             success: true,
                             refundData: "Refund Initiated"
                         })
@@ -391,7 +448,7 @@ const refundOrder = catchAsyncError(async (req, res, next) => {
 
     } catch (error) {
         console.log(error)
-        // return next(new ErrorHandler(error.response.data.message, error.response.status))
+        return next(new ErrorHandler(error.response.data.message, error.response.status))
     }
 
 })

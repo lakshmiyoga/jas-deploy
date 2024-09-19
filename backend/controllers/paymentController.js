@@ -38,7 +38,7 @@ const paymentPageClientId = config.PAYMENT_PAGE_CLIENT_ID; // used in orderSessi
 
 const juspay = new Juspay({
 	merchantId: config.MERCHANT_ID,
-	baseUrl: SANDBOX_BASE_URL, // Using sandbox base URL for testing
+	baseUrl: PRODUCTION_BASE_URL, // Using sandbox base URL for testing
 	jweAuth: {
 		keyId: config.KEY_UUID,
 		publicKey,
@@ -313,7 +313,7 @@ const paymentSuccess = catchAsyncError(async (req, res, next) => {
 			await response.save();
 
 			const onepayments = await Payment.findOne({ order_id: orderId });
-			console.log("onepayments",onepayments)
+			// console.log("onepayments",onepayments)
 			if (onepayments) {
 				const paymentstatus = await Payment.findOneAndUpdate({ order_id: orderId },
 					{
@@ -321,7 +321,8 @@ const paymentSuccess = catchAsyncError(async (req, res, next) => {
 						$set: { statusResponse: statusResponse }
 					},
 					{ new: true });
-				if (paymentstatus) {
+					// console.log("paymentstatus",paymentstatus)
+				if (paymentstatus && paymentstatus.statusResponse && paymentstatus.statusResponse.status === 'CHARGED' ) {
                     client.messages.create({
 						body: `Your order is placed with this Id ${orderId}`,
 						from: twilioPhoneNumber,
@@ -333,15 +334,16 @@ const paymentSuccess = catchAsyncError(async (req, res, next) => {
 						})
 						.catch((error) => {
 						  // Handle the error appropriately and send only one response
-						//   return next(new ErrorHandler('Failed to send OTP. Check the number.', 500));
+						  console.log(error)
+						  return next(new ErrorHandler('Failed to send OTP. Check the number.', 500));
 						});
 					  
 
 				}
 				
-				else {
-					return res.redirect(`${BASE_URL}/order/confirm?message=${encodeURIComponent('The data is not stored in db')}`);
-				}
+				// else {
+				// 	return res.redirect(`${BASE_URL}/order/confirm?message=${encodeURIComponent('The data is not stored in db')}`);
+				// }
 				return res.redirect(`${BASE_URL}/payment/confirm/${encodeURIComponent(encryptedOrderId)}`);
 
 			}

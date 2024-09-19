@@ -9,10 +9,11 @@ import { MDBDataTable } from 'mdbreact';
 import { toast } from 'react-toastify';
 import Sidebar from "../admin/Sidebar";
 import { clearError } from '../../slices/productsSlice';
-import { clearOrderDeleted } from "../../slices/orderSlice";
+import { clearOrderDeleted, orderDetailClear } from "../../slices/orderSlice";
 import MetaData from '../Layouts/MetaData';
+import { porterClearData, porterClearResponse } from '../../slices/porterSlice';
 
-const RefundList = () => {
+const RefundList = ({isActive,setIsActive}) => {
     // const { adminOrders: orders = [], error, isOrderDeleted }  = useSelector(state => state.orderState);
     const location = useLocation();
     sessionStorage.setItem('redirectPath', location.pathname);
@@ -28,6 +29,11 @@ const RefundList = () => {
 
     const [date, setDate] = useState(formattedCurrentDate);
     const [refresh, setRefresh] = useState(false);
+    useEffect(()=>{
+        dispatch(orderDetailClear());
+       dispatch(porterClearData());
+       dispatch(porterClearResponse());
+    },[])
 
 
     const setOrders = () => {
@@ -36,52 +42,52 @@ const RefundList = () => {
                 {
                     label: 'S.No',
                     field: 's_no',
-                    sort: 'asc'
+                    sort: 'disabled'
                 },
                 {
                     label: 'ID',
                     field: 'id',
-                    sort: 'asc'
+                    sort: 'disabled'
                 },
                 {
                     label: 'Name',
                     field: 'name',
-                    sort: 'asc'
+                    sort: 'disabled'
                 },
                 {
                     label: 'Phone.No',
                     field: 'phone_no',
-                    sort: 'asc'
+                    sort: 'disabled'
                 },
                 {
                     label: 'Email',
                     field: 'email',
-                    sort: 'asc'
+                    sort: 'disabled'
                 },
                 // {
                 //     label: 'Number of Items',
                 //     field: 'noOfItems',
-                //     sort: 'asc'
+                //     sort: 'disabled'
                 // },
                 // {
                 //     label: 'Amount',
                 //     field: 'amount',
-                //     sort: 'asc'
+                //     sort: 'disabled'
                 // },
                 {
                     label: 'RefundStatus',
                     field: 'refundstatus',
-                    sort: 'asc'
+                    sort: 'disabled'
                 },
                 // {
                 //     label: 'PaymentStatus',
                 //     field: 'paymentstatus',
-                //     sort: 'asc'
+                //     sort: 'disabled'
                 // },
                 {
                     label: 'Actions',
                     field: 'actions',
-                    sort: 'asc'
+                    sort: 'disabled'
                 }
             ],
             rows: []
@@ -114,7 +120,7 @@ const RefundList = () => {
                 // noOfItems: order.orderItems.length,
                 // amount: `Rs.${order.totalPrice}`,
                 refundstatus: (
-                    <p className={order.refundStatus && order.refundStatus.includes('SUCCESS') ? 'greenColor' : 'redColor'} ><p>{order.refundStatus}</p></p>
+                    <div className={order.refundStatus && order.refundStatus.includes('SUCCESS') ? 'greenColor' : 'redColor'} >{order.refundStatus}</div>
                 ),
                 // paymentstatus: (
                 //     <p className='greenColor'><p>{order.paymentStatus}</p></p>
@@ -201,10 +207,12 @@ const RefundList = () => {
        
         <div className="row">
             <div className="col-12 col-md-2">
-                <Sidebar />
+            <div style={{display:'flex',flexDirection:'row',position:'fixed',top:'0px',zIndex:99999,backgroundColor:'#fff',minWidth:'100%'}}>
+                <Sidebar isActive={isActive} setIsActive={setIsActive}/>
+                </div>
             </div>
             <div className="col-12 col-md-10 smalldevice-space container">
-                <h1 className="my-4">Refund List</h1>
+                <h1 className="mb-4">Refund List</h1>
                 <input
                     type="date"
                     value={date}

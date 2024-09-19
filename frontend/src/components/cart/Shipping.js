@@ -210,6 +210,7 @@ const Shipping = () => {
     const [phoneNo, setPhoneNo] = useState(shippingInfo.phoneNo);
     const [postalCode, setPostalCode] = useState(shippingInfo.postalCode);
     const [country, setCountry] = useState(shippingInfo.country);
+    const [hasExceeded, setHasExceeded] = useState(false);
     // const [country, setCountry] = useState("India")
     const [state, setState] = useState(shippingInfo.state);
     // const [state, setState] = useState("TamilNadu");
@@ -218,8 +219,9 @@ const Shipping = () => {
     // const [longitude, setLongitude] = useState('77.62102993895199');
     const [latitude, setLatitude] = useState(null);
     const [longitude, setLongitude] = useState(null);
-    const [showModal, setShowModal] = useState(true);
+    const [showModal, setShowModal] = useState(false);
     const [isButtonDisabled, setIsButtonDisabled] = useState(false);
+    const [hasExceededPostalCode, setHasExceededPostalCode] = useState(false);
     const navigate = useNavigate();
     const dispatch = useDispatch();
 
@@ -461,7 +463,7 @@ const Shipping = () => {
         }
         else if (!latitude || !longitude || !allowed) {
             //   toast.error("Please allow the Location for Next Step")
-            toast.error('Please allow the Location for Next Step', {
+            toast.error('Please allow the Location to Proceed', {
                 position: "bottom-center",
                 type: 'error',
 
@@ -469,7 +471,7 @@ const Shipping = () => {
         }
         else {
             // toast.error("Please allow the Location for Next Step")
-            toast.error('Please allow the Location for Next Step', {
+            toast.error('Please allow the Location to Proceed', {
                 position: "bottom-center",
                 type: 'error',
 
@@ -483,17 +485,37 @@ const Shipping = () => {
         const value = e.target.value;
 
         if (value.length > 10) {
-            // Display a toast alert when the number exceeds 10 digits
-            //   toast.error('Phone number cannot exceed 10 digits');
-            toast.error('Phone number cannot exceed 10 digits', {
-                position: "bottom-center",
-                type: 'error',
-
-            });
+            if (!hasExceeded) {
+                toast.error('Phone number cannot exceed 10 digits', {
+                    position: "bottom-center",
+                    type: 'error',
+                });
+                setHasExceeded(true);
+            }
         } else {
+            setHasExceeded(false);
             setPhoneNo(value);
         }
     };
+
+
+const handlePostalCodeChange = (e) => {
+    const value = e.target.value;
+
+    if (value.length > 6) {
+        if (!hasExceededPostalCode) {
+            toast.error('Postal code cannot exceed 6 digits', {
+                position: "bottom-center",
+                type: 'error',
+            });
+            setHasExceededPostalCode(true);
+        }
+    } else {
+        setHasExceededPostalCode(false);
+        setPostalCode(value);
+    }
+};
+
 
     const handleCancelDelete = () => {
         setShowModal(false);
@@ -508,9 +530,9 @@ const Shipping = () => {
             <div className="row wrapper">
                 <div className="col-10 col-lg-5">
                     <form onSubmit={submitHandler} className="shadow-lg mt-0">
-                        <h1 className="mb-4">Shipping Info</h1>
+                        <h1 className="mb-4">Shipping Info </h1>
                         <div className="form-group">
-                            <label htmlFor="address_field">Flat, House no, Building, company, Apartment</label>
+                            <label htmlFor="address_field">Flat, House no, Building, company, Apartment <span style={{color:'red'}}>*</span></label>
                             <input
                                 type="text"
                                 id="address_field"
@@ -521,7 +543,7 @@ const Shipping = () => {
                             />
                         </div>
                         <div className="form-group">
-                            <label htmlFor="area_field">Area, street, Village</label>
+                            <label htmlFor="area_field">Area, street, Village <span style={{color:'red'}}>*</span></label>
                             <input
                                 type="text"
                                 id="area_field"
@@ -547,7 +569,7 @@ const Shipping = () => {
 
 
                         <div className="form-group">
-                            <label htmlFor="phone_field">Phone No</label>
+                            <label htmlFor="phone_field">Phone No (+91) <span style={{color:'red'}}>*</span></label>
                             <NumberInput
 
                                 id="phone_field"
@@ -559,12 +581,12 @@ const Shipping = () => {
                         </div>
 
                         <div className="form-group">
-                            <label htmlFor="postal_code_field">Postal Code</label>
+                            <label htmlFor="postal_code_field">Postal Code <span style={{color:'red'}}>*</span></label>
                             <NumberInput
                                 id="postal_code_field"
                                 className="no-arrow-input form-control"
                                 value={postalCode}
-                                onChange={(e) => setPostalCode(e.target.value)}
+                                onChange={(e) => handlePostalCodeChange(e)}
                                 required
                             // style={{width:'100%'}}
                             />
@@ -609,7 +631,7 @@ const Shipping = () => {
                         </div>
                         {!allowed && !latitude && !longitude && (
                             <div className="alert alert-danger" role="alert">
-                                Location access is required to proceed. Please Allow Location for this Site to Continue {' '}
+                                Location access is required to proceed. Please Allow Location for this Site and Refresh the Page to Continue {' '}
                                 {/* <button
                                     className="btn btn-link"
                                     onClick={handleRetryLocationAccess}

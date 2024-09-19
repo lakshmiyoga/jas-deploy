@@ -1,5 +1,5 @@
 import React, { useEffect, Fragment, useState } from 'react';
-import { Button } from "react-bootstrap";
+import { Button, Container, Navbar } from "react-bootstrap";
 import { useDispatch, useSelector } from 'react-redux';
 import { Link, useLocation } from "react-router-dom";
 import { deleteProduct, getAdminProducts } from '../../actions/productsActions';
@@ -11,16 +11,15 @@ import { clearError } from '../../slices/productsSlice';
 import { clearProductDeleted } from "../../slices/productSlice";
 import MetaData from '../Layouts/MetaData';
 
-const ProductList = () => {
+const ProductList = ({isActive,setIsActive}) => {
     // const location = useLocation();
     // sessionStorage.setItem('redirectPath', location.pathname);
     const { products = [], loading = true, error } = useSelector(state => state.productsState);
     const { isProductDeleted, error: productError } = useSelector(state => state.productState);
     const dispatch = useDispatch();
-    
-
     const [showModal, setShowModal] = useState(false);
     const [productToDelete, setProductToDelete] = useState(null);
+    console.log("products",products)
 
     const setProducts = () => {
         const data = {
@@ -28,22 +27,27 @@ const ProductList = () => {
                 {
                     label: 'S.No',
                     field: 's_no',
-                    sort: 'asc'
+                    sort: 'disabled'
                 },
                 {
                     label: 'Name',
                     field: 'name',
-                    sort: 'asc'
+                    sort: 'disabled'
                 },
                 {
-                    label: 'Price',
+                    label: 'Buying Price',
                     field: 'price',
-                    sort: 'asc'
+                    sort: 'disabled'
+                },
+                {
+                    label: 'Selling Price',
+                    field: 'sellprice',
+                    sort: 'disabled'
                 },
                 {
                     label: 'Actions',
                     field: 'actions',
-                    sort: 'asc'
+                    sort: 'disabled'
                 }
             ],
             rows: []
@@ -53,7 +57,8 @@ const ProductList = () => {
             data.rows.push({
                 s_no: index + 1,
                 name: `${product.englishName} / ${product.tamilName}`,
-                price: `Rs.${product.price} (per kg)`,
+                price: product.category === "Keerai" ? `Rs.${product.buyingPrice} (per piece)` : `Rs.${product.buyingPrice} (per kg)`,
+                sellprice: product.category === "Keerai" ? `Rs.${product.price} (per piece)` : `Rs.${product.price} (per kg)`,
                 actions: (
                     <Fragment>
                         <Link to={`/admin/product/${product._id}`} className="btn btn-primary py-1 px-2 ml-2">
@@ -110,14 +115,17 @@ const ProductList = () => {
       
         <div className="row">
             <div className="col-12 col-md-2">
-                <Sidebar />
+                <div style={{display:'flex',flexDirection:'row',position:'fixed',top:'0px',zIndex:99999,backgroundColor:'#fff',minWidth:'100%'}}>
+                <Sidebar isActive={isActive} setIsActive={setIsActive}/>
+                </div> 
             </div>
             <div className="col-12 col-md-10 smalldevice-space">
-                <h1 className="my-4 admin-dashboard-x">Product List</h1>
+                <h1 className="mb-4 admin-dashboard-x">Product List</h1>
                 <div className='mdb-table ' style={{display:'flex',justifyContent:'center', alignItems:'center'}}>
                 <Fragment>
                     {loading ? <Loader /> :
                         <MDBDataTable
+                            
                             data={setProducts()}
                             bordered
                             noBottomColumns

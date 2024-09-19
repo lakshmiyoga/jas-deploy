@@ -8,6 +8,7 @@ import enquiryReducer from "./slices/enquirySlice";
 import userReducer from "./slices/userSlice"
 import orderReducer from "./slices/orderSlice"
 import porterReducer from "./slices/porterSlice"
+import analysisReducer from "./slices/analysisSlice"
 
 
 const reducer = combineReducers({
@@ -19,12 +20,20 @@ const reducer = combineReducers({
     userState: userReducer, 
     orderState: orderReducer,
     porterState:porterReducer,
+    analysisState:analysisReducer,
 
 })
 
+// const store = configureStore({
+//     reducer,
+//     // middleware:[thunk],
+// })
 const store = configureStore({
     reducer,
-    // middleware:[thunk],
-})
+    middleware: (getDefaultMiddleware) =>
+      getDefaultMiddleware({
+        serializableCheck: false, // Disables the serializable state check middleware
+      }),
+  });
 
 export default  store;

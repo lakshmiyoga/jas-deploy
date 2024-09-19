@@ -5,7 +5,7 @@ import { useLocation, useNavigate, useParams } from "react-router-dom";
 import { orderDetail as orderDetailAction, updateOrder, porterOrder, RemoveOrderResponse } from "../../actions/orderActions";
 import { CancelOrderResponse, createPorterOrderResponse, getPackedOrder, getporterOrder, packedOrder } from "../../actions/porterActions";
 import { toast } from "react-toastify";
-import { clearOrderUpdated, clearError, adminOrderRemoveClearError } from "../../slices/orderSlice";
+import { clearOrderUpdated, clearError, adminOrderRemoveClearError, orderDetailClear } from "../../slices/orderSlice";
 import { Link } from "react-router-dom";
 import { v4 as uuidv4 } from 'uuid';
 import {
@@ -23,7 +23,7 @@ import ReactDOM from 'react-dom';
 import JasInvoice from "../Layouts/JasInvoice";
 import MetaData from "../Layouts/MetaData";
 
-const Dispatch = () => {
+const Dispatch = ({ isActive, setIsActive }) => {
     const location = useLocation();
     sessionStorage.setItem('redirectPath', location.pathname);
     const { loading, isOrderUpdated, error, orderDetail, porterOrderDetail, orderRemoveResponse, orderRemoveError } = useSelector(state => state.orderState);
@@ -59,9 +59,11 @@ const Dispatch = () => {
         }
     }, [orderDetail]);
 
-    useEffect(() => {
-        dispatch(porterClearData())
-    }, [])
+    // useEffect(() => {
+    //     dispatch(orderDetailClear());
+    //     dispatch(porterClearData());
+    //     dispatch(porterClearResponse());
+    // }, [])
 
 
     const handleItemSelection = (index) => {
@@ -322,6 +324,7 @@ const Dispatch = () => {
             });
         }
         // dispatch(clearError()) 
+        // dispatch(porterClearResponse());
         dispatch(orderDetailAction(id));
         dispatch(getporterOrder({ order_id: id }))
         dispatch(getPackedOrder({ order_id: id }))
@@ -344,239 +347,260 @@ const Dispatch = () => {
         // dispatch(createPorterOrderResponse({ order_id: id, porterOrder_id: porterOrderData?.porterOrder?.order_id }))
         // dispatch(getporterOrder({ order_id: id }))
 
-        dispatch(porterClearData())
-        dispatch(createPorterOrderResponse({ order_id: porterOrderData && porterOrderData.order_id, porterOrder_id: porterOrderData?.porterOrder?.order_id }))
-        dispatch(getporterOrder({ order_id: id }))
+        // dispatch(porterClearData())
+
+        // dispatch(getporterOrder({ order_id: id }))
         setRefreshData(true)
 
     }, [dispatch, id, porterOrderDetail, error]);
-    
-    useEffect(()=>{
-if(refreshData){
-    dispatch(porterClearData())
-    dispatch(getporterOrder({ order_id: id }))
-    setRefreshData(false)
-}
-    },[refreshData])
+
+    useEffect(() => {
+        if (porterOrderData && refreshData) {
+            dispatch(createPorterOrderResponse({ order_id: porterOrderData && porterOrderData.order_id, porterOrder_id: porterOrderData?.porterOrder?.order_id }))
+        }
+    }, [porterOrderData])
+
+    useEffect(() => {
+        if (refreshData && porterOrderResponse) {
+            // dispatch(porterClearData())
+            dispatch(getporterOrder({ order_id: id }))
+            setRefreshData(false)
+        }
+    }, [refreshData, porterOrderResponse])
 
     return (
         <div>
-             <MetaData title={`Dispatch`} />
-       
-        <div className="row">
-            <div className="col-12 col-md-2">
-                <Sidebar />
-            </div>
-            {
-                loading ? <Loader /> : (
-                    <div className="col-12 col-md-10 col-sm-10 smalldevice-space container order-detail-container">
-                        <Fragment>
-                            {/* <div className="row d-flex justify-content-around"> */}
-                            <div className="col-12 col-lg-12 mt-5 order-details">
-                                <h1 className="my-5">Order # {orderDetail.order_id}</h1>
+            <MetaData title={`Dispatch`} />
 
-                                <h4 className="mb-4">Shipping Info</h4>
-                                <p><b>Name:</b> {user.name}</p>
-                                <p><b>Phone:</b> {shippingInfo.phoneNo}</p>
-                                <p><b>Address:</b>{shippingInfo.address},{shippingInfo.area},{shippingInfo.landmark},{shippingInfo.city}-{shippingInfo.postalCode}</p>
-                                <p><b>Amount:</b> Rs.{parseFloat(totalPrice).toFixed(2)}</p>
-                                <p><b>Payment Mode:</b> {orderDetail && orderDetail.statusResponse && orderDetail.statusResponse.payment_method}</p>
+            <div className="row">
+                <div className="col-12 col-md-2">
+                    <div style={{ display: 'flex', flexDirection: 'row', position: 'fixed', top: '0px', zIndex: 99999, backgroundColor: '#fff', minWidth: '100%' }}>
+                        <Sidebar isActive={isActive} setIsActive={setIsActive} />
+                    </div>
+                </div>
+                {
+                    loading ? <Loader /> : (
+                        <div className="col-12 col-md-10 col-sm-10 smalldevice-space container order-detail-container">
+                            <Fragment>
+                                {/* <div className="row d-flex justify-content-around"> */}
+                                <div className="col-12 col-lg-12 mt-5 order-details">
+                                    <h1 className="my-5">Order # {orderDetail.order_id}</h1>
 
-                                <hr />
+                                    <h4 className="mb-4">Shipping Info</h4>
+                                    <p><b>Name:</b> {user.name}</p>
+                                    <p><b>Phone:</b> {shippingInfo.phoneNo}</p>
+                                    <p>
+                                        <b>Address:</b>
+                                        {shippingInfo.address && `${shippingInfo.address},`}
+                                        {shippingInfo.area && `${shippingInfo.area},`}
+                                        {shippingInfo.landmark && `${shippingInfo.landmark},`}
+                                        {shippingInfo.city && `${shippingInfo.city}`}
+                                        {shippingInfo.postalCode && `-${shippingInfo.postalCode}`}
+                                    </p>
 
-                                <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', flexWrap: 'wrap' }}>
-                                    <div style={{ display: 'flex', alignItems: 'center' }}>
-                                        <p><b>Payment Status:</b></p>
-                                        <p className={orderDetail && orderDetail.paymentStatus && orderDetail.paymentStatus === 'CHARGED' ? 'greenColor' : 'redColor'} style={{ marginLeft: '10px' }}><b>{orderDetail ? orderDetail.paymentStatus : 'Pending'}</b></p>
+                                    <p><b>Amount:</b> Rs.{parseFloat(totalPrice).toFixed(2)}</p>
+                                    {orderDetail && orderDetail.statusResponse && orderDetail.statusResponse.payment_method && (
+                                    <p><b>Payment Mode:</b> {orderDetail && orderDetail.statusResponse && orderDetail.statusResponse.payment_method}</p>
+
+                                )
+
+                                }
+
+                                    <hr />
+
+                                    <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', flexWrap: 'wrap' }}>
+                                        <div style={{ display: 'flex', alignItems: 'center' }}>
+                                            <p><b>Payment Status:</b></p>
+                                            <p className={orderDetail && orderDetail.paymentStatus && orderDetail.paymentStatus === 'CHARGED' ? 'greenColor' : 'redColor'} style={{ marginLeft: '10px' }}><b>{orderDetail ? orderDetail.paymentStatus : 'Pending'}</b></p>
+                                        </div>
+                                        <div style={{ display: 'flex', alignItems: 'center', marginRight: '50px' }}>
+                                            <p><b>Order Status:</b></p>
+                                            <p className={orderStatus && orderStatus.includes('Delivered') ? 'greenColor' : 'redColor'} style={{ marginLeft: '10px' }}><b>{orderStatus}</b></p>
+                                        </div>
+
                                     </div>
-                                    <div style={{ display: 'flex', alignItems: 'center', marginRight: '50px' }}>
-                                        <p><b>Order Status:</b></p>
-                                        <p className={orderStatus && orderStatus.includes('Delivered') ? 'greenColor' : 'redColor'} style={{ marginLeft: '10px' }}><b>{orderStatus}</b></p>
-                                    </div>
-                    
-                                </div>
 
-                                {/* <h4 className="my-4">Payment status</h4>
+                                    {/* <h4 className="my-4">Payment status</h4>
                                 <p className={orderDetail.paymentStatus === 'CHARGED' ? 'greenColor' : 'redColor'}><b>{orderDetail.paymentStatus || 'Pending'}</b></p>
                                 <hr />
                                 <h4 className="my-4">Order Status:</h4>
                                 <p className={dropStatus.includes('Delivered') ? 'greenColor' : 'redColor'}><b>{dropStatus}</b></p> */}
 
-                                {porterOrderData && porterOrderData.porterResponse && (
-                                    <Fragment>
-                                        <hr />
-                                        <h4 className="my-4">Delivery Details:</h4>
-                                        <div className="delivery-details">
-                                            <div className="detail-column">
-                                                <div className="detail-row">
-                                                    <h6>Order ID:</h6>
-                                                    <p>{porterOrderData.porterResponse.order_id && porterOrderData.porterResponse.order_id}</p>
+                                    {porterOrderData && porterOrderData.porterResponse && (
+                                        <Fragment>
+                                            <hr />
+                                            <h4 className="my-4">Delivery Details:</h4>
+                                            <div className="delivery-details">
+                                                <div className="detail-column">
+                                                    <div className="detail-row">
+                                                        <h6>Order ID:</h6>
+                                                        <p>{porterOrderData.porterResponse.order_id && porterOrderData.porterResponse.order_id}</p>
+                                                    </div>
+                                                    <div className="detail-row">
+                                                        <h6>Estimated Fair details:</h6>
+                                                        <p>Currency: {porterOrderData.porterResponse.fare_details && porterOrderData.porterResponse.fare_details.estimated_fare_details && porterOrderData.porterResponse.fare_details.estimated_fare_details.currency && porterOrderData.porterResponse.fare_details.estimated_fare_details.currency || "INR"}</p>
+                                                        <p>Minor Amount: {porterOrderData.porterResponse.fare_details && porterOrderData.porterResponse.fare_details.estimated_fare_details && porterOrderData.porterResponse.fare_details.estimated_fare_details.minor_amount && porterOrderData.porterResponse.fare_details.estimated_fare_details.minor_amount || "N/A"}</p>
+                                                    </div>
+
+
+                                                    <div className="detail-row">
+                                                        <h6>Order Timings:</h6>
+
+                                                        {porterOrderData.porterResponse && porterOrderData.porterResponse.order_timings && porterOrderData.porterResponse.order_timings.pickup_time ?
+                                                            (
+                                                                <p>Pickup Time:  {new Date(porterOrderData.porterResponse.order_timings.pickup_time * 1000).toLocaleString()}</p>
+                                                            ) : (<p>Pickup Time:  N/A</p>)
+                                                        }
+
+                                                        {porterOrderData.porterResponse && porterOrderData.porterResponse.order_timings && porterOrderData.porterResponse.order_timings.order_accepted_time ?
+                                                            (
+                                                                <p>Order Accepted Time:  {new Date(porterOrderData.porterResponse.order_timings.order_accepted_time * 1000).toLocaleString()}</p>
+                                                            ) : (<p>Order Accepted Time:  N/A</p>)
+                                                        }
+
+                                                        {porterOrderData.porterResponse && porterOrderData.porterResponse.order_timings && porterOrderData.porterResponse.order_timings.order_started_time ?
+                                                            (
+                                                                <p>Order Started Time:  {new Date(porterOrderData.porterResponse.order_timings.order_started_time * 1000).toLocaleString()}</p>
+                                                            ) : (<p>Order Started Time:  N/A</p>)
+                                                        }
+                                                        {porterOrderData.porterResponse && porterOrderData.porterResponse.order_timings && porterOrderData.porterResponse.order_timings.order_ended_time ?
+                                                            (
+                                                                <p>Order Ended Time:  {new Date(porterOrderData.porterResponse.order_timings.order_ended_time * 1000).toLocaleString()}</p>
+                                                            ) : (<p>Order Ended Time:  N/A</p>)
+                                                        }
+                                                        {/* <p>Order Ended Time: {new Date(porterOrderData.porterResponse.order_timings.order_ended_time * 1000).toLocaleString()}</p> */}
+                                                        {/* <p>Pickup Time: {new Date(porterOrderData.porterResponse.order_timings.pickup_time * 1000).toLocaleString()}</p> */}
+                                                    </div>
+
+
                                                 </div>
-                                                <div className="detail-row">
-                                                    <h6>Estimated Fair details:</h6>
-                                                    <p>Currency: {porterOrderData.porterResponse.fare_details && porterOrderData.porterResponse.fare_details.estimated_fare_details && porterOrderData.porterResponse.fare_details.estimated_fare_details.currency && porterOrderData.porterResponse.fare_details.estimated_fare_details.currency || "INR"}</p>
-                                                    <p>Minor Amount: {porterOrderData.porterResponse.fare_details && porterOrderData.porterResponse.fare_details.estimated_fare_details && porterOrderData.porterResponse.fare_details.estimated_fare_details.minor_amount && porterOrderData.porterResponse.fare_details.estimated_fare_details.minor_amount || "N/A"}</p>
+                                                <div className="detail-column">
+                                                    <div className="detail-row">
+                                                        <h6>Delivery Status:</h6>
+                                                        <p>{porterOrderData.porterResponse.status}</p>
+                                                    </div>
+
+                                                    <div className="detail-row">
+                                                        <h6>Actual Fare Details:</h6>
+                                                        <p>Currency: {porterOrderData.porterResponse.fare_details && porterOrderData.porterResponse.fare_details.actual_fare_details && porterOrderData.porterResponse.fare_details.actual_fare_details.currency && porterOrderData.porterResponse.fare_details.actual_fare_details.currency || "INR"}</p>
+                                                        <p>Minor Amount: {porterOrderData.porterResponse.fare_details && porterOrderData.porterResponse.fare_details.actual_fare_details && porterOrderData.porterResponse.fare_details.actual_fare_details.minor_amount && porterOrderData.porterResponse.fare_details.actual_fare_details.minor_amount || "N/A"}</p>
+                                                    </div>
+
+                                                    {
+                                                        porterOrderData.porterResponse.partner_info && (
+                                                            <div className="detail-row">
+                                                                <h5>Delivery Partner:</h5>
+                                                                {/* <h6>Name:</h6> */}
+                                                                <p>Name: {porterOrderData.porterResponse.partner_info.name}</p>
+                                                                {/* <h6>Mobile:</h6> */}
+                                                                <p>Mobile: {porterOrderData.porterResponse.partner_info.mobile.country_code} {porterOrderData.porterResponse.partner_info.mobile.mobile_number}</p>
+                                                                {porterOrderData.porterResponse.partner_info.partner_secondary_mobile && (
+                                                                    <>
+                                                                        {/* <h6>Secondary Mobile:</h6> */}
+                                                                        <p>Secondary Mobile: {porterOrderData.porterResponse.partner_info.partner_secondary_mobile.country_code} {porterOrderData.porterResponse.partner_info.partner_secondary_mobile.mobile_number}</p>
+                                                                    </>
+                                                                )
+                                                                }
+                                                                {/* <h6>Vehicle Number:</h6> */}
+                                                                <p>Vehicle Number: {porterOrderData.porterResponse.partner_info.vehicle_number}</p>
+                                                                {/* <h6>Vehicle Type:</h6> */}
+                                                                <p>Vehicle Type: {porterOrderData.porterResponse.partner_info.vehicle_type}</p>
+                                                                {/* <h6>Location:</h6> */}
+                                                                {/* <p>Lat: {porterOrderData.porterResponse.partner_info.location.lat}, Long: {porterOrderData.porterResponse.partner_info.location.long}</p> */}
+                                                            </div>
+                                                        )
+                                                    }
                                                 </div>
-
-
-                                                <div className="detail-row">
-                                                    <h6>Order Timings:</h6>
-
-                                                    {porterOrderData.porterResponse && porterOrderData.porterResponse.order_timings && porterOrderData.porterResponse.order_timings.pickup_time ?
-                                                        (
-                                                            <p>Pickup Time:  {new Date(porterOrderData.porterResponse.order_timings.pickup_time * 1000).toLocaleString()}</p>
-                                                        ) : (<p>Pickup Time:  N/A</p>)
-                                                    }
-
-                                                    {porterOrderData.porterResponse && porterOrderData.porterResponse.order_timings && porterOrderData.porterResponse.order_timings.order_accepted_time ?
-                                                        (
-                                                            <p>Order Accepted Time:  {new Date(porterOrderData.porterResponse.order_timings.order_accepted_time * 1000).toLocaleString()}</p>
-                                                        ) : (<p>Order Accepted Time:  N/A</p>)
-                                                    }
-
-                                                    {porterOrderData.porterResponse && porterOrderData.porterResponse.order_timings && porterOrderData.porterResponse.order_timings.order_started_time ?
-                                                        (
-                                                            <p>Order Started Time:  {new Date(porterOrderData.porterResponse.order_timings.order_started_time * 1000).toLocaleString()}</p>
-                                                        ) : (<p>Order Started Time:  N/A</p>)
-                                                    }
-                                                    {porterOrderData.porterResponse && porterOrderData.porterResponse.order_timings && porterOrderData.porterResponse.order_timings.order_ended_time ?
-                                                        (
-                                                            <p>Order Ended Time:  {new Date(porterOrderData.porterResponse.order_timings.order_ended_time * 1000).toLocaleString()}</p>
-                                                        ) : (<p>Order Ended Time:  N/A</p>)
-                                                    }
-                                                    {/* <p>Order Ended Time: {new Date(porterOrderData.porterResponse.order_timings.order_ended_time * 1000).toLocaleString()}</p> */}
-                                                    {/* <p>Pickup Time: {new Date(porterOrderData.porterResponse.order_timings.pickup_time * 1000).toLocaleString()}</p> */}
-                                                </div>
-
-
                                             </div>
-                                            <div className="detail-column">
-                                                <div className="detail-row">
-                                                    <h6>Delivery Status:</h6>
-                                                    <p>{porterOrderData.porterResponse.status}</p>
-                                                </div>
-
-                                                <div className="detail-row">
-                                                    <h6>Actual Fare Details:</h6>
-                                                    <p>Currency: {porterOrderData.porterResponse.fare_details && porterOrderData.porterResponse.fare_details.actual_fare_details && porterOrderData.porterResponse.fare_details.actual_fare_details.currency && porterOrderData.porterResponse.fare_details.actual_fare_details.currency || "INR"}</p>
-                                                    <p>Minor Amount: {porterOrderData.porterResponse.fare_details && porterOrderData.porterResponse.fare_details.actual_fare_details && porterOrderData.porterResponse.fare_details.actual_fare_details.minor_amount && porterOrderData.porterResponse.fare_details.actual_fare_details.minor_amount || "N/A"}</p>
-                                                </div>
-
-                                                {
-                                                    porterOrderData.porterResponse.partner_info && (
-                                                        <div className="detail-row">
-                                                            <h5>Delivery Partner:</h5>
-                                                            {/* <h6>Name:</h6> */}
-                                                            <p>Name: {porterOrderData.porterResponse.partner_info.name}</p>
-                                                            {/* <h6>Mobile:</h6> */}
-                                                            <p>Mobile: {porterOrderData.porterResponse.partner_info.mobile.country_code} {porterOrderData.porterResponse.partner_info.mobile.mobile_number}</p>
-                                                            {porterOrderData.porterResponse.partner_info.partner_secondary_mobile && (
-                                                                <>
-                                                                    {/* <h6>Secondary Mobile:</h6> */}
-                                                                    <p>Secondary Mobile: {porterOrderData.porterResponse.partner_info.partner_secondary_mobile.country_code} {porterOrderData.porterResponse.partner_info.partner_secondary_mobile.mobile_number}</p>
-                                                                </>
-                                                            )
-                                                            }
-                                                            {/* <h6>Vehicle Number:</h6> */}
-                                                            <p>Vehicle Number: {porterOrderData.porterResponse.partner_info.vehicle_number}</p>
-                                                            {/* <h6>Vehicle Type:</h6> */}
-                                                            <p>Vehicle Type: {porterOrderData.porterResponse.partner_info.vehicle_type}</p>
-                                                            {/* <h6>Location:</h6> */}
-                                                            {/* <p>Lat: {porterOrderData.porterResponse.partner_info.location.lat}, Long: {porterOrderData.porterResponse.partner_info.location.long}</p> */}
-                                                        </div>
-                                                    )
-                                                }
-                                            </div>
-                                        </div>
-                                    </Fragment>
-                                )}
+                                        </Fragment>
+                                    )}
 
 
-                                <hr />
-                                <h4 className="my-4">Order Items:</h4>
+                                    <hr />
+                                    <h4 className="my-4">Order Items:</h4>
 
-                                <div className="invoice-table-container">
-                                    <div className="updatetable-responsive">
-                                        <table className="updatetable updatetable-bordered">
-                                            <thead>
-                                                <tr>
+                                    <div className="invoice-table-container">
+                                        <div className="updatetable-responsive">
+                                            <table className="updatetable updatetable-bordered">
+                                                <thead>
+                                                    <tr>
+                                                        {getpackedOrderData && getpackedOrderData.dispatchedTable && (
+                                                            <>
+                                                                <th>Image</th>
+                                                                <th>Name</th>
+                                                                <th>Price per kg</th>
+                                                                <th>Ordered Weight</th>
+                                                                <th>Dispatched Weight</th>
+                                                                <th>Total Amount</th>
+                                                                {/* <th>Refundable Amount</th> */}
+                                                            </>
+                                                        )}
+                                                    </tr>
+                                                </thead>
+                                                <tbody>
                                                     {getpackedOrderData && getpackedOrderData.dispatchedTable && (
-                                                        <>
-                                                            <th>Image</th>
-                                                            <th>Name</th>
-                                                            <th>Price per kg</th>
-                                                            <th>Ordered Weight</th>
-                                                            <th>Dispatched Weight</th>
-                                                            <th>Total Amount</th>
-                                                            {/* <th>Refundable Amount</th> */}
-                                                        </>
+                                                        getpackedOrderData.dispatchedTable.map((item, index) => (
+                                                            <tr key={index}>
+                                                                <td>
+                                                                    <img src={item.image} alt={item.name} className="updateTableproduct-image" />
+                                                                </td>
+                                                                <td>{item.name}</td>
+                                                                <td>Rs. {parseFloat(item.pricePerKg).toFixed(2)}</td>
+                                                                <td>{item.orderedWeight} kg</td>
+                                                                <td>{item.dispatchedWeight} kg</td>
+                                                                <td>Rs. {parseFloat(item.pricePerKg * item.dispatchedWeight).toFixed(2)}</td>
+                                                                {/* <td>Rs. {item.refundableAmount}</td> */}
+                                                            </tr>
+                                                        ))
+
                                                     )}
-                                                </tr>
-                                            </thead>
-                                            <tbody>
-                                                {getpackedOrderData && getpackedOrderData.dispatchedTable && (
-                                                    getpackedOrderData.dispatchedTable.map((item, index) => (
-                                                        <tr key={index}>
-                                                            <td>
-                                                                <img src={item.image} alt={item.name} className="updateTableproduct-image" />
-                                                            </td>
-                                                            <td>{item.name}</td>
-                                                            <td>Rs. {parseFloat(item.pricePerKg).toFixed(2)}</td>
-                                                            <td>{item.orderedWeight} kg</td>
-                                                            <td>{item.dispatchedWeight} kg</td>
-                                                            <td>Rs. {parseFloat(item.pricePerKg * item.dispatchedWeight).toFixed(2)}</td>
-                                                            {/* <td>Rs. {item.refundableAmount}</td> */}
-                                                        </tr>
-                                                    ))
+                                                    <tr>
+                                                        <td colSpan="5" style={{ textAlign: 'right' }}><strong>Total Dispatched Amount</strong></td>
+                                                        <td className="amount"><strong>Rs. {getpackedOrderData && getpackedOrderData.totalDispatchedAmount && getpackedOrderData.totalDispatchedAmount}</strong></td>
+                                                    </tr>
 
-                                                )}
-                                                <tr>
-                                                    <td colSpan="5" style={{ textAlign: 'right' }}><strong>Total Dispatched Amount</strong></td>
-                                                    <td className="amount"><strong>Rs. {getpackedOrderData && getpackedOrderData.totalDispatchedAmount && getpackedOrderData.totalDispatchedAmount}</strong></td>
-                                                </tr>
-
-                                            </tbody>
-                                        </table>
+                                                </tbody>
+                                            </table>
+                                        </div>
                                     </div>
-                                </div>
 
-                                <hr />
-                                <div>
-                                    <button className='btn btn-primary' onClick={submitHandler} disabled={dropStatus === "Dispatched" || dropStatus === "Delivered"}>Dispatch</button>
-                                    {/* <button className='btn btn-primary' onClick={(e)=>submitHandlerPacked(e)} disabled={dropStatus === "Packed"}>Packed</button> */}
+                                    <hr />
+                                    <div>
+                                        <button className='btn btn-primary' onClick={submitHandler} disabled={dropStatus === "Dispatched" || dropStatus === "Delivered"}>Dispatch</button>
+                                        {/* <button className='btn btn-primary' onClick={(e)=>submitHandlerPacked(e)} disabled={dropStatus === "Packed"}>Packed</button> */}
 
-                                </div>
+                                    </div>
 
-                                {/* {porterOrderData && (
+                                    {/* {porterOrderData && (
                                     <Invoice porterOrderData={porterOrderData} />
 
                                 )
 
                                 } */}
 
-                                {getpackedOrderData && (
-                                    <div style={{ marginTop: '20px' }}>
-                                        <button onClick={handlePrint} className='btn btn-primary'>Download Invoice</button>
-                                        {ReactDOM.createPortal(
-                                            <div style={{ position: 'absolute', top: '-9999px', left: '-9999px', zIndex: '-9999999999' }}>
-                                                <JasInvoice ref={invoiceRef} invoice={getpackedOrderData} />
-                                            </div>,
-                                            document.body
-                                        )}
-                                    </div>
+                                    {getpackedOrderData && (
+                                        <div style={{ marginTop: '20px' }}>
+                                            <button onClick={handlePrint} className='btn btn-primary'>Download Invoice</button>
+                                            {ReactDOM.createPortal(
+                                                <div style={{ position: 'absolute', top: '-9999px', left: '-9999px', zIndex: '-9999999999' }}>
+                                                    <JasInvoice ref={invoiceRef} invoice={getpackedOrderData} />
+                                                </div>,
+                                                document.body
+                                            )}
+                                        </div>
 
-                                )
+                                    )
 
-                                }
-                            </div>
-                        </Fragment>
-                    </div>
-                )
-            }
+                                    }
+                                </div>
+                            </Fragment>
+                        </div>
+                    )
+                }
 
 
 
-        </div>
+            </div>
         </div>
     );
 
