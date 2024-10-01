@@ -94,7 +94,7 @@ const Enquiry = () => {
                         </div>
 
                         <div className="form-group">
-                            <label htmlFor="phone_field">Mobile <span style={{color:'red'}}>*</span></label>
+                            <label htmlFor="phone_field">Phone No (+91) <span style={{color:'red'}}>*</span></label>
                             <NumberInput
                                 id="mobile_field"
                                 name="mobile"

@@ -208,6 +208,7 @@ function App() {
                                     <Route path='/admin/user-summary' element={<ProtectedRoute isAdmin={true}><SummaryUser isActive={isActive} setIsActive={setIsActive}/></ProtectedRoute>} />
                                     <Route path='/admin/allorders' element={<ProtectedRoute isAdmin={true}><AllOrders isActive={isActive} setIsActive={setIsActive}/></ProtectedRoute>} />
                                     <Route path='/admin/orderdetail/:id' element={<ProtectedRoute isAdmin={true}><AdminOrderDetail isActive={isActive} setIsActive={setIsActive}/></ProtectedRoute>} />
+                                
                                     {/* </>
                                         
                                     )
@@ -221,8 +222,7 @@ function App() {
                             </div>
 
                             {/* {!isAdminRoute && <Header/>} */}
-
-
+                           
 
                             {/* <Footer /> */}
                         </div>
