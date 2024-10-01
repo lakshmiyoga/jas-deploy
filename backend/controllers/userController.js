@@ -14,7 +14,8 @@ const validator = require("validator");
 //register user
 
 const userRegister = catchAsyncError(async (req, res, next) => {
-  const { name, email, password } = req.body;
+  const { name, email, password, mobile } = req.body;
+  console.log(req.body)
 
   let avatar;
 
@@ -50,9 +51,9 @@ const userRegister = catchAsyncError(async (req, res, next) => {
   }
 
   // Password validation
-  if (!password || password.length < 6) {
-    return next(new ErrorHandler('Password must be at least 6 characters long', 400));
-  }
+  // if (!password || password.length < 6) {
+  //   return next(new ErrorHandler('Password must be at least 6 characters long', 400));
+  // }
   try {
     let user = await User.findOne({ email }).select('+password');
     if (user) {
@@ -66,6 +67,7 @@ const userRegister = catchAsyncError(async (req, res, next) => {
       name,
       email,
       password: hashedPassword,
+      mobile,
       avatar
     });
 
@@ -79,6 +81,35 @@ const userRegister = catchAsyncError(async (req, res, next) => {
 
   }
 });
+
+// Register user
+// const userRegister =catchAsyncError( async (req, res, next) => {
+//   try {
+//     const { name, email, password } = req.body;
+
+//     // Check if user already exists
+//     const existingUser = await User.findOne({ email });
+//     if (existingUser) {
+//       return res.status(400).json({ error: 'User already exists' });
+//     }
+
+//     // Create user
+//     const newUser = await User.create({
+//       name,
+//       email,
+//       password,
+//       avatar: req.body.avatar || 'default_avatar.png',
+//     });
+
+//     res.status(201).json({
+//       success: true,
+//       user: newUser
+//     });
+//   } catch (error) {
+//     return res.status(500).json({ error: error.message });
+//   }
+// });
+
 
 
 //login user

@@ -112,6 +112,7 @@ const payment = require("./routes/payment");
 const itemsRouter = require('./routes/item');
 const enquiry = require("./routes/enquiry");
 const analysis = require("./routes/analysis");
+const otp = require("./routes/otpRoutes")
 
 app.use('/api/v1', products);
 app.use('/api/v1', user);
@@ -121,7 +122,7 @@ app.use('/api/v1', itemsRouter);
 app.use('/api/v1', enquiry);
 app.use('/api/v1', porter);
 app.use('/api/v1', analysis);
-
+app.use('/api/v1', otp);
 
 if (process.env.NODE_ENV === "production") {
     app.use(express.static(path.join(__dirname, '../frontend/build')));

@@ -27,7 +27,7 @@ const paymentPageClientId = config.PAYMENT_PAGE_CLIENT_ID; // used in orderSessi
 
 const juspay = new Juspay({
     merchantId: config.MERCHANT_ID,
-    baseUrl: PRODUCTION_BASE_URL, // Using sandbox base URL for testing
+    baseUrl: SANDBOX_BASE_URL, // Using sandbox base URL for testing
     jweAuth: {
         keyId: config.KEY_UUID,
         publicKey,
@@ -125,7 +125,7 @@ const getQuote = catchAsyncError(async (req, res, next) => {
             drop_details,
             customer
         };
-        //   console.log(requestData)
+        //   console.log("requestData",requestData);
 
         const response = await axios.post(apiEndpoint, requestData, {
             headers: {
@@ -133,10 +133,10 @@ const getQuote = catchAsyncError(async (req, res, next) => {
                 'Content-Type': 'application/json'
             }
         });
-        // console.log(response.data)
+        console.log(response.data)
         return res.json(response.data);
     } catch (error) {
-        console.log(error)
+        console.log(error.response)
         // console.log(error.response.data.message)
         return next(new ErrorHandler(error.response && error.response.data && error.response.data.message ? error.response.data.message : "Server Error Please Try After SomeTime!", error.response.status));
         //   return res.status(500).json({ message: 'Error sending data', error });
