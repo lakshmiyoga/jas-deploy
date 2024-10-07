@@ -93,11 +93,24 @@ const ConfirmOrder = () => {
             try {
                 const response = await axios.post('/api/v1/get-quote', requestData);
                 console.log("getQuote Response", response.data)
-                if (response && response.data && response.data.vehicles[3] && response.data.vehicles[3].fare) {
-                    setShippingAmount(response.data.vehicles[3].fare.minor_amount);
+                // if (response && response.data && response.data.vehicles[3] && response.data.vehicles[3].fare) {
+                //     setShippingAmount(response.data.vehicles[3].fare.minor_amount);
+                //     setDummyUser(false);
+                // }
+                const twoWheelerVehicle = response.data.vehicles.find(vehicle => 
+                    vehicle.type && vehicle.type.includes("2 Wheeler")
+                );
+                
+                if (twoWheelerVehicle && twoWheelerVehicle.fare) {
+                    // Set the shipping amount for "2 Wheeler"
+                    setShippingAmount(twoWheelerVehicle.fare.minor_amount);
                     setDummyUser(false);
-                }
+                } 
                 else {
+                    
+                    toast.error(`No 2 Wheeler found in the vehicle list.`, {
+                        position: "bottom-center",
+                    });
                     navigate("/shipping")
                 }
 
@@ -266,17 +279,17 @@ const ConfirmOrder = () => {
                         <div className="row justify-content-center">
                             <div className="col-12 col-lg-8 mt-5 order-confirm" id='order_summary'>
                                 <h4 className="mb-3">Shipping Info</h4>
-                                <p><b>Name:</b> {user && user.name}</p>
-                                <p><b>Phone:</b> {shippingInfo.phoneNo}</p>
+                                <div><b>Name:</b> {user && user.name}</div>
+                                <div><b>Phone:</b> {shippingInfo.phoneNo}</div>
                                 {/* <p className="mb-4"><b>Address:</b> {`${shippingInfo.address},${shippingInfo.landmark},${shippingInfo.area}, ${shippingInfo.city}- ${shippingInfo.postalCode}`}</p> */}
-                                <p className="mb-4">
+                                <div className="mb-4">
                                     <b>Address:</b>
                                     {shippingInfo.address && `${shippingInfo.address},`}
                                     {shippingInfo.area && `${shippingInfo.area},`}
                                     {shippingInfo.landmark && `${shippingInfo.landmark},`}
                                     {shippingInfo.city && `${shippingInfo.city}`}
                                     {shippingInfo.postalCode && `-${shippingInfo.postalCode}`}
-                                </p>
+                                </div>
                                 <hr />
                                 <h4 className="mt-4">Your Cart Items:</h4>
                                 <hr />

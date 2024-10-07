@@ -240,9 +240,8 @@ const Shipping = () => {
     const dispatch = useDispatch();
     const [isMap, setIsMap] = useState(false);
     const mapRef = useRef(null);
-    const [renderKey, setRenderKey] = useState(0);
-    const [updateToggle, setUpdateToggle] = useState(false);
     // const libraries = ['places'];
+    const apiKey = process.env.REACT_APP_GOOGLEMAP_API_KEY;
 
     // const navigate = useNavigate();
     // const dispatch = useDispatch();
@@ -255,7 +254,7 @@ const Shipping = () => {
             const response = await axios.get(`https://maps.googleapis.com/maps/api/geocode/json`, {
                 params: {
                     latlng: `${latitude},${longitude}`,
-                    key: 'AIzaSyDbBxXUZPdM7tZJJ2IFVX-k2O4ZN9j1Gks'
+                    key: apiKey
                 }
             });
             const { data } = response;
@@ -750,7 +749,7 @@ const Shipping = () => {
 
             {showMapModal && dummyLat && dummyLng && (
                 <div style={mapFullScreenStyle}>
-                    <LoadScript googleMapsApiKey="AIzaSyDbBxXUZPdM7tZJJ2IFVX-k2O4ZN9j1Gks" libraries={libraries}>
+                    <LoadScript googleMapsApiKey={apiKey} libraries={libraries}>
                         <div style={{ height: '100vh', width: '100%' }}>
 
                             <GoogleMap
