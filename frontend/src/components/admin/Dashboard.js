@@ -16,9 +16,12 @@ const Dashboard = ({isActive,setIsActive}) => {
     const { adminOrders = [] } = useSelector( state => state.orderState);
     const dispatch = useDispatch();
 
+    console.log("adminOrders",adminOrders)
+
     let totalAmount = 0;
     if (adminOrders.length > 0) {
         adminOrders.forEach( order => {
+          if(order.paymentStatus === 'CHARGED')
             totalAmount += order.totalPrice
         })
     }
@@ -116,7 +119,7 @@ const Dashboard = ({isActive,setIsActive}) => {
         //     </div>
         // </div>
 <div >
-  <div className="row">
+  <div className="row" style={{margin:'10px'}}>
     <div className="col-md-2 col-12">
     <div style={{display:'flex',flexDirection:'row',position:'fixed',top:'0px',zIndex:99999,backgroundColor:'#fff',minWidth:'100%'}}>
       <Sidebar isActive={isActive} setIsActive={setIsActive}/>
@@ -127,7 +130,7 @@ const Dashboard = ({isActive,setIsActive}) => {
       <h1 className="mb-4 admin-dashboard-x">Dashboard</h1>
 
       {/* Total Amount Card */}
-      <div className="row " >
+      <div className="row" >
         <div className="col-12 mb-3">
           <div className="card text-white o-hidden h-100" style={{ backgroundColor: '#02441E' }}>
             <div className="card-body">

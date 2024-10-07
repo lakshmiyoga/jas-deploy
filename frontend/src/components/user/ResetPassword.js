@@ -1,95 +1,198 @@
-import { useEffect, useState} from 'react';
+import { useEffect, useState } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 import { resetPassword, clearAuthError } from '../../actions/userActions';
-import {useLocation, useNavigate, useParams} from 'react-router-dom';
+import { useLocation, useNavigate, useParams } from 'react-router-dom';
 import { toast } from 'react-toastify';
 import MetaData from '../Layouts/MetaData';
+import { clearResetPassword } from '../../slices/authSlice';
 
 const ResetPassword = () => {
+  const [password, setPassword] = useState("");
+  const [confirmPassword, setConfirmPassword] = useState("");
+  const location = useLocation();
+  sessionStorage.setItem('redirectPath', location.pathname);
+  const dispatch = useDispatch();
+  const { isAuthenticated, error } = useSelector(state => state.authState);
+  const navigate = useNavigate();
+  const [showPassword, setShowPassword] = useState(false);
+  const [showConfirmPassword, setShowConfirmPassword] = useState(false);
+  
+  // Password validation state
+  const [passwordValidation, setPasswordValidation] = useState({
+    capitalLetter: false,
+    specialCharacter: false,
+    minLength: false,
+    maxLength: true,
+  });
 
-    const [password, setPassword] = useState("");
-    const [confirmPassword, setConfirmPassword] = useState("");
-    const location = useLocation();
-    sessionStorage.setItem('redirectPath', location.pathname);
-    const dispatch = useDispatch();
-    const { isAuthenticated, error }  = useSelector(state => state.authState)
-    const navigate = useNavigate();
+  const { token } = useParams();
 
-    const { token } = useParams();
+  // Password validation function
+  const validatePassword = (password) => {
+    const capitalLetter = /[A-Z]/.test(password);
+    const specialCharacter = /[!@#$%^&*]/.test(password);
+    const minLength = password.length >= 6;
+    const maxLength = password.length <= 20;
 
-    const submitHandler  = (e) => {
-        e.preventDefault();
-        const formData = new FormData();
-        formData.append('password', password);
-        formData.append('confirmPassword', confirmPassword);
-        
-        dispatch(resetPassword({formData, token}))
+    setPasswordValidation({
+      capitalLetter,
+      specialCharacter,
+      minLength,
+      maxLength,
+    });
+  };
+
+  // Handle password change and validation
+  const handlePasswordChange = (e) => {
+    const newPassword = e.target.value;
+    setPassword(newPassword);
+    validatePassword(newPassword);
+  };
+
+  const submitHandler = (e) => {
+    e.preventDefault();
+    const formData = new FormData();
+    formData.append('password', password);
+    formData.append('confirmPassword', confirmPassword);
+
+    // Ensure password matches the confirm password before dispatch
+    if (password !== confirmPassword) {
+      toast.error("Passwords do not match", {
+        position: 'bottom-center',
+      });
+      return;
     }
 
-    useEffect(()=> {
-        if(isAuthenticated) {
-            toast('Password Reset Success!', {
-                type: 'success',
-                position: 'bottom-center'
-            })
-            navigate('/')
-            return;
-        }
-        if(error)  {
-            toast(error, {
-                position: 'bottom-center',
-                type: 'error',
-                onOpen: ()=> { dispatch(clearAuthError) }
-            })
-            return
-        }
-    },[isAuthenticated, error, dispatch, navigate])
+    // Dispatch reset password action
+    dispatch(resetPassword({ formData, token }));
+  };
+
+  useEffect(() => {
+    if (isAuthenticated) {
+      toast('Password Reset Success!', {
+        type: 'success',
+        position: 'bottom-center',
+      });
+      dispatch(clearResetPassword());
+      navigate('/');
+      return;
+    }
+    if (error) {
+      toast(error, {
+        position: 'bottom-center',
+        type: 'error',
+        onOpen: () => {
+          dispatch(clearAuthError);
+        },
+      });
+      return;
+    }
+  }, [isAuthenticated, error, dispatch, navigate]);
+
+  useEffect(() => {
+    dispatch(clearResetPassword());
+  }, [dispatch]);
+
+  // Disable submit button if password does not meet all validation criteria
+  const isFormValid =
+    passwordValidation.capitalLetter &&
+    passwordValidation.specialCharacter &&
+    passwordValidation.minLength &&
+    passwordValidation.maxLength &&
+    password === confirmPassword;
 
   return (
     <div>
-         <MetaData title={`Reset Password`} />
-          
-          <div className="products_heading">Reset Password</div>
-   
-    <div className="row wrapper">
-            <div className="col-10 col-lg-5">
-                <form onSubmit={submitHandler} className="shadow-lg">
-                    <h1 className="mb-3">New Password</h1>
+      <MetaData title={`Reset Password`} />
 
-                    <div className="form-group">
-                        <label htmlFor="password_field">Password</label>
-                        <input
-                            type="password"
-                            id="password_field"
-                            className="form-control"
-                            value={password}
-                            onChange={e => setPassword(e.target.value)}
-                        />
+      <div className="products_heading">Reset Password</div>
+
+      <div className="row wrapper">
+        <div className="col-10 col-lg-5">
+          <form onSubmit={submitHandler} className="shadow-lg">
+            <h1 className="mb-3">New Password</h1>
+
+            <div className="form-group">
+              <label htmlFor="password_field">Password</label>
+              <div style={{ position: 'relative' }}>
+              <input
+                // type="password"
+                type={showPassword ? 'text' : 'password'}
+                id="password_field"
+                className="form-control"
+                value={password}
+                onChange={handlePasswordChange}
+              />
+              <span
+                      onClick={() => setShowPassword(!showPassword)}
+                      style={{
+                        position: 'absolute',
+                        right: '10px',
+                        top: '50%',
+                        transform: 'translateY(-50%)',
+                        cursor: 'pointer'
+                      }}
+                    >
+                      {showPassword ? '🙈' : '👁️'}
+                    </span>
                     </div>
-
-                    <div className="form-group">
-                        <label htmlFor="confirm_password_field">Confirm Password</label>
-                        <input
-                            type="password"
-                            id="confirm_password_field"
-                            className="form-control"
-                            value={confirmPassword}
-                            onChange={e => setConfirmPassword(e.target.value)}
-                        />
-                    </div>
-
-                    <button
-                        id="new_password_button"
-                        type="submit"
-                        className="btn btn-block py-3">
-                        Set Password
-                    </button>
-
-                </form>
             </div>
-        </div>
-        </div>
-  )
-}
 
-export default ResetPassword
+            {/* Password validation criteria */}
+            <ul className="password-criteria">
+              <li className={passwordValidation.minLength ? 'text-success' : 'text-danger'}>
+                {passwordValidation.minLength ? '✔' : '✘'} Minimum 6 characters
+              </li>
+              <li className={passwordValidation.capitalLetter ? 'text-success' : 'text-danger'}>
+                {passwordValidation.capitalLetter ? '✔' : '✘'} At least one capital letter
+              </li>
+              <li className={passwordValidation.specialCharacter ? 'text-success' : 'text-danger'}>
+                {passwordValidation.specialCharacter ? '✔' : '✘'} At least one special character
+              </li>
+              <li className={passwordValidation.maxLength ? 'text-success' : 'text-danger'}>
+                {passwordValidation.maxLength ? '✔' : '✘'} No more than 20 characters
+              </li>
+            </ul>
+
+            <div className="form-group">
+              <label htmlFor="confirm_password_field">Confirm Password</label>
+              <div style={{ position: 'relative' }}>
+              <input
+                // type="password"
+                type={showConfirmPassword ? 'text' : 'password'}
+                id="confirm_password_field"
+                className="form-control"
+                value={confirmPassword}
+                onChange={e => setConfirmPassword(e.target.value)}
+              />
+               <span
+                      onClick={() => setShowConfirmPassword(!showConfirmPassword)}
+                      style={{
+                        position: 'absolute',
+                        right: '10px',
+                        top: '50%',
+                        transform: 'translateY(-50%)',
+                        cursor: 'pointer'
+                      }}
+                    >
+                      {showConfirmPassword ? '🙈' : '👁️'}
+                    </span>
+                    </div>
+            </div>
+
+            <button
+              id="new_password_button"
+              type="submit"
+              className="btn btn-block py-3"
+              disabled={!isFormValid}
+            >
+              Set Password
+            </button>
+          </form>
+        </div>
+      </div>
+    </div>
+  );
+};
+
+export default ResetPassword;

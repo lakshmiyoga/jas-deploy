@@ -16,6 +16,16 @@ const Product = ({ products, category }) => {
 
     const handleWeightChange = (productId, value) => {
         const weightValue = parseFloat(value);
+        if (weightValue < 0) {
+            return;
+        }
+        if (weightValue > 20) {
+            toast('Weight cannot exceed 20Kg', {
+                type: 'error',
+                position: 'bottom-center',
+            });
+            return;
+        }
         setWeight(prevWeights => ({ ...prevWeights, [productId]: weightValue }));
     };
     // const handleWeightChange = (productId, value) => {
@@ -51,14 +61,14 @@ const Product = ({ products, category }) => {
         }
         if (productWeight >= 0.25) {
             dispatch(addCartItem({ productId: product._id, quantity, productWeight }));
-            toast('Item added successfully!', {
+            toast.success('Item added successfully!', {
                 type: 'success',
                 position: 'bottom-center',
             });
             setQuantity(1);
             setWeight(prevWeights => ({ ...prevWeights, [product._id]: undefined })); // Reset weight for the added product
         } else {
-            toast('Please select weight for the correct item', {
+            toast.error('Please select weight for the correct item', {
                 type: 'error',
                 position: 'bottom-center',
             });
@@ -137,8 +147,9 @@ const Product = ({ products, category }) => {
                                         className="form-select no-arrow-input form-control custom-placeholder"
                                         placeholder={product && product.category === 'Keerai'?"Select/type Piece":"Select/type weight in Kg"}
                                         // step="0.01"
-                                        // min="0.25"
+                                        min="0.25"
                                         type="number"
+                                        // min="0"
                                     />
                                     <datalist id={`weight-options-${product._id}`}>
                                         {product.category === 'Keerai'

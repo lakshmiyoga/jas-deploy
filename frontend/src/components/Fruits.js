@@ -52,14 +52,13 @@ const Fruits = () => {
                         <div style={{ display: 'flex', justifyContent: 'space-between', marginTop:'20px' }}>
                             <Link to="/vegetables">
                                 <Card style={{ width: '100px', marginRight:'15px' }}>
-                                    <Card.Img  style={{ height: '50px', width: '80px' }} src='../images/vegetables.jpg' />
-                                    
+                                    <Card.Img  style={{ height: '50px', width: '99px' }} src='../images/vegetables.jpg' />
                                 </Card>
                             </Link>
 
                             <Link to="/keerai">
                                 <Card style={{ width: '100px' }}>
-                                    <Card.Img  style={{ height: '50px', width: '80px' }} src='../images/celeries.jpg' />
+                                    <Card.Img  style={{ height: '50px', width: '96px' }} src='../images/celeries.jpg' />
                                    
                                 </Card>
                             </Link>

@@ -128,7 +128,7 @@ const Analysis = ({ isActive, setIsActive }) => {
     return (
         <div>
             <MetaData title={`Analysis Dashboard`} />
-            <div className="row">
+            <div className="row" style={{margin:'5px'}}>
                 <div className="col-12 col-md-2">
                     <div className="sidebar-fixed">
                         <Sidebar isActive={isActive} setIsActive={setIsActive} />

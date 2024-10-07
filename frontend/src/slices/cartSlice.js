@@ -91,7 +91,7 @@ const cartSlice = createSlice({
             }
         },
         orderCompleted(state, action) {
-            localStorage.removeItem('shippingInfo');
+            // localStorage.removeItem('shippingInfo');
             localStorage.removeItem('cartItems');
             sessionStorage.removeItem('orderInfo');
             return {

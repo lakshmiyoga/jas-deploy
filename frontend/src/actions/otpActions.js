@@ -71,7 +71,7 @@ export const verifyMailOtp = createAsyncThunk('verifyotp/mail', async ({email,ot
         }
         let link = `/api/v1/verifyOTP/mail/`;
         const { data }  =  await axios.post(link,{ email: email ,hashedOTP:otp,otpdata:otpdata }, config);
-        console.log(data);
+        console.log("verified data",data);
         dispatch(mailVerifySuccess(data))
     } catch (error) {
         dispatch(mailVerifyFail(error.response.data.message))

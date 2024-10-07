@@ -20,7 +20,7 @@ const ConfirmOrder = () => {
     const dispatch = useDispatch();
     const location = useLocation();
     sessionStorage.setItem('redirectPath', location.pathname);
-    const { loading: orderLoading, orderDetail, error } = useSelector(state => state.orderState);
+    // const { loading: orderLoading, orderDetail, error } = useSelector(state => state.orderState);
     const { shippingInfo, items: cartItems } = useSelector(state => state.cartState);
     const { user } = useSelector(state => state.authState);
     const navigate = useNavigate();
@@ -45,13 +45,13 @@ const ConfirmOrder = () => {
 
     const shippingCharge = shippingAmount / 100;
     //  const shippingCharge = 1.00;
-    console.log("shippingCharge", shippingCharge)
+    console.log("shippingInfo", shippingInfo)
     const subtotal = cartItems.reduce((acc, item) => acc + item.price * item.productWeight, 0).toFixed(2);
     const total = (parseFloat(subtotal) + shippingCharge).toFixed(2);
 
     const [pickupDetails, setPickupDetails] = useState({
-        lat: 13.0265435,
-        lng: 80.2222761
+        lat: 13.0671844,
+        lng: 80.1798047
     });
 
     const [dropDetails, setDropDetails] = useState({
@@ -93,8 +93,8 @@ const ConfirmOrder = () => {
             try {
                 const response = await axios.post('/api/v1/get-quote', requestData);
                 console.log("getQuote Response", response.data)
-                if (response && response.data && response.data.vehicles[0] && response.data.vehicles[0].fare) {
-                    setShippingAmount(response.data.vehicles[0].fare.minor_amount);
+                if (response && response.data && response.data.vehicles[3] && response.data.vehicles[3].fare) {
+                    setShippingAmount(response.data.vehicles[3].fare.minor_amount);
                     setDummyUser(false);
                 }
                 else {
@@ -246,13 +246,13 @@ const ConfirmOrder = () => {
         if (shippingInfo) {
             validateShipping(shippingInfo, navigate);
         }
-        if (error) {
-            toast.error(error);
-        }
+        // if (error) {
+        //     toast.error(error);
+        // }
         if (message) {
             toast.error(message, { position: "bottom-center" });
         }
-    }, [shippingInfo, navigate, error, message]);
+    }, [shippingInfo, navigate, message]);
 
     return (
         <Fragment>

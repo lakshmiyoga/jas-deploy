@@ -48,14 +48,14 @@ const Keerai = () => {
                         <div style={{ display: 'flex', justifyContent: 'space-between', marginTop:'20px' }}>
                             <Link to="/fruits">
                                 <Card style={{ width: '100px', marginRight:'15px' }}>
-                                    <Card.Img  style={{ height: '50px', width: '80px' }} src='../images/fruits.jpg' />
+                                    <Card.Img  style={{ height: '50px', width: '99px' }} src='../images/fruits.jpg' />
                                     
                                 </Card>
                             </Link>
 
                             <Link to="/vegetables">
                                 <Card style={{ width: '100px' }}>
-                                    <Card.Img  style={{ height: '50px', width: '80px' }} src='../images/vegetables.jpg' />
+                                    <Card.Img  style={{ height: '50px', width: '96px' }} src='../images/vegetables.jpg' />
                                    
                                 </Card>
                             </Link>

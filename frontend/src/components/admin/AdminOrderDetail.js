@@ -68,20 +68,20 @@ export default function AdminOrderDetail({ isActive, setIsActive }) {
                             <h1>Order # {orderDetail.order_id}</h1>
 
                             <h4 className="mb-4">Shipping Info</h4>
-                            <p><b>Name:</b> {user.name}</p>
-                            <p><b>Phone:</b> {shippingInfo.phoneNo}</p>
-                            <p>
+                            <div><b>Name:</b> {user.name}</div>
+                            <div><b>Phone:</b> {shippingInfo.phoneNo}</div>
+                            <div>
                                 <b>Address:</b>
                                 {shippingInfo.address && `${shippingInfo.address},`}
                                 {shippingInfo.area && `${shippingInfo.area},`}
                                 {shippingInfo.landmark && `${shippingInfo.landmark},`}
                                 {shippingInfo.city && `${shippingInfo.city}`}
                                 {shippingInfo.postalCode && `-${shippingInfo.postalCode}`}
-                            </p>
+                            </div>
 
-                            <p><b>Amount:</b> {totalPrice} Rs</p>
+                            <div><b>Amount:</b> {totalPrice} Rs</div>
                             {orderDetail && orderDetail.statusResponse && orderDetail.statusResponse.payment_method && (
-                                    <p><b>Payment Mode:</b> {orderDetail && orderDetail.statusResponse && orderDetail.statusResponse.payment_method}</p>
+                                    <div><b>Payment Mode:</b> {orderDetail && orderDetail.statusResponse && orderDetail.statusResponse.payment_method}</div>
 
                                 )
 

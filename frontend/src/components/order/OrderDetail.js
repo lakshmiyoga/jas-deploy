@@ -10,10 +10,12 @@ import React, { useRef } from 'react';
 import { useReactToPrint } from 'react-to-print';
 import ReactDOM from 'react-dom';
 import { porterClearData } from '../../slices/porterSlice';
+import { toast } from 'react-toastify';
+import { clearError } from '../../slices/orderSlice';
 
 
 export default function OrderDetail() {
-    const { orderDetail, loading } = useSelector(state => state.orderState)
+    const {error, orderDetail, loading } = useSelector(state => state.orderState)
     const { shippingInfo = {}, user = {}, orderStatus = "Processing", orderItems = [], totalPrice = 0, paymentInfo = {} } = orderDetail;
     const { porterOrderData, porterOrderResponse, porterCancelResponse, porterCancelError, portererror, getpackedOrderData } = useSelector((state) => state.porterState);
     const isPaid = paymentInfo && paymentInfo.status === "succeeded" ? true : false;
@@ -36,7 +38,14 @@ export default function OrderDetail() {
         if (porterOrderData && refreshData) {
             dispatch(createPorterOrderResponse({ order_id: porterOrderData && porterOrderData.order_id, porterOrder_id: porterOrderData?.porterOrder?.order_id }))
         }
-    }, [porterOrderData])
+        if(error){
+            toast.error(error, {
+                position: 'bottom-center',
+            });
+            dispatch(clearError())
+
+        }
+    }, [porterOrderData,error])
 
     useEffect(() => {
         if (refreshData && porterOrderResponse) {
@@ -49,9 +58,14 @@ export default function OrderDetail() {
     const handlePrint = useReactToPrint({
         content: () => invoiceRef.current,
     });
-    console.log("orderDetail", orderDetail)
-    console.log("getpackedOrderData", getpackedOrderData)
-    console.log("orderItems", orderItems)
+
+
+const [trackurl,setTrackurl]=useState(false);
+  const handleClick = (tracking_url) => {
+    setTrackurl(true)
+    window.location.href = tracking_url;
+  }
+    console.log("porterOrderData", porterOrderData)
 
     return (
         <Fragment>
@@ -64,23 +78,32 @@ export default function OrderDetail() {
                         <div className="row d-flex justify-content-between" id='order_summary'>
                             <div className="col-12 col-lg-12 mt-5 order-details">
 
-                                <h1>Order # {orderDetail.order_id}</h1>
+                            <div className="my-5" style={{display:'flex',justifyContent:'space-between',flexWrap:'wrap' }}>
+                                    <h1 >Order # {orderDetail.order_id}</h1>
+                                    {
+                                        porterOrderData && porterOrderData.tracking_url && (
+                                            <button onClick={()=>handleClick(porterOrderData.tracking_url)} disabled={trackurl}   className='tracking-btn' >
+                                            Track Order
+                                        </button>
+                                        )
+                                    }
+                                    </div>
 
                                 <h4 className="mb-4">Shipping Info</h4>
-                                <p><b>Name:</b> {user.name}</p>
-                                <p><b>Phone:</b> {shippingInfo.phoneNo}</p>
-                                <p>
+                                <div><b>Name:</b> {user.name}</div>
+                                <div><b>Phone:</b>+91 {shippingInfo.phoneNo}</div>
+                                <div>
                                     <b>Address:</b>
                                     {shippingInfo.address && `${shippingInfo.address},`}
                                     {shippingInfo.area && `${shippingInfo.area},`}
                                     {shippingInfo.landmark && `${shippingInfo.landmark},`}
                                     {shippingInfo.city && `${shippingInfo.city}`}
                                     {shippingInfo.postalCode && `-${shippingInfo.postalCode}`}
-                                </p>
+                                </div>
 
-                                <p><b>Amount:</b> {totalPrice} Rs</p>
+                                <div><b>Amount:</b> {totalPrice} Rs</div>
                                 {orderDetail && orderDetail.statusResponse && orderDetail.statusResponse.payment_method && (
-                                    <p><b>Payment Mode:</b> {orderDetail && orderDetail.statusResponse && orderDetail.statusResponse.payment_method}</p>
+                                    <div><b>Payment Mode:</b> {orderDetail && orderDetail.statusResponse && orderDetail.statusResponse.payment_method}</div>
 
                                 )
 
@@ -240,6 +263,7 @@ export default function OrderDetail() {
                                     </div>
                                 </div>
                                 <div>
+                                   
                                     {orderStatus && orderStatus === 'Delivered' && (
                                         <div style={{ marginTop: '20px' }}>
                                             <button onClick={handlePrint} className='btn btn-primary'>Download Invoice</button>

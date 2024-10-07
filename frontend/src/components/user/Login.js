@@ -11,6 +11,7 @@ const Login = () => {
 
     const [email, setEmail] = useState("");
     const [password, setPassword] = useState("");
+    const [showPassword, setShowPassword] = useState(false);
     // const location = useLocation();
     // sessionStorage.setItem('redirectPath', location.pathname);
     const dispatch = useDispatch();
@@ -33,20 +34,29 @@ const Login = () => {
                 // onOpen:  () =>{dispatch(clearError())}
               })
             if (user.role === 'admin') {
+                 sessionStorage.removeItem('redirectPath');
                 // hasShownToast.current = true;
                 const redirectPath = sessionStorage.getItem('redirectPath') || '/';
                 navigate(redirectPath);
-                navigate('/');
+                // navigate('/');
             } else {
             // hasShownToast.current = true;
             const redirectPath = sessionStorage.getItem('redirectPath') || '/';
             navigate(redirectPath);
             // sessionStorage.removeItem('redirectPath'); 
-            navigate('/');
+            // navigate('/');
                 
             }
             return
         }
+        // if (isAuthenticated) {
+        //     toast.success('Login successfully', {
+        //         position: "bottom-center"
+        //     });
+
+        //     const redirectPath = sessionStorage.getItem('redirectPath') || '/';
+        //     navigate(redirectPath);
+        // }
         if(error){
            toast.error(error,{
             position:"bottom-center", 
@@ -55,12 +65,12 @@ const Login = () => {
         });
         // hasShownToast.current = true;
         }
-        return
+        // return
     }, [error, isAuthenticated, dispatch, navigate])
 
     const submitHandler = async(e) => {
         e.preventDefault();
-        sessionStorage.removeItem('redirectPath');
+        // sessionStorage.removeItem('redirectPath');
         dispatch(login({email, password}));
     }
     // console.log(email, password);
@@ -86,13 +96,28 @@ const Login = () => {
 
                         <div className="form-group">
                             <label htmlFor="password_field">Password</label>
+                            <div style={{ position: 'relative' }}>
                             <input
-                                type="password"
+                                // type="password"
+                                type={showPassword ? 'text' : 'password'}
                                 id="password_field"
                                 className="form-control"
                                 value={password}
                                 onChange={e => setPassword(e.target.value)}
                             />
+                             <span
+                      onClick={() => setShowPassword(!showPassword)}
+                      style={{
+                        position: 'absolute',
+                        right: '10px',
+                        top: '50%',
+                        transform: 'translateY(-50%)',
+                        cursor: 'pointer'
+                      }}
+                    >
+                      {showPassword ? '🙈' : '👁️'}
+                    </span>
+                    </div>
                         </div>
 
                         <Link to='/password/forgot' className="float-right mb-4">Forgot Password?</Link>

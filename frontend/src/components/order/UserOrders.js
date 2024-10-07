@@ -16,7 +16,7 @@ export default function UserOrders() {
     const {loading, userOrders = [] } = useSelector(state => state.orderState)
     const dispatch = useDispatch();
     const [dummyUser,setDummyUser] = useState(false);
-
+     console.log("userOrders",userOrders)
     const location = useLocation();
      sessionStorage.setItem('redirectPath', location.pathname);
      useEffect(() => {

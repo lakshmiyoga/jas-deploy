@@ -171,7 +171,7 @@
 
 // export default Shipping
 
-import React, { useEffect, useState, Fragment, useRef, useMemo, } from 'react';
+import React, { useEffect, useState, Fragment, useCallback, useRef } from 'react';
 import { useDispatch, useSelector } from "react-redux";
 import { useLocation, useNavigate } from "react-router-dom";
 import { saveShippingInfo } from "../../slices/cartSlice";
@@ -179,11 +179,11 @@ import StepsCheckOut from './StepsCheckOut';
 import { toast } from 'react-toastify';
 import axios from 'axios';
 import NumberInput from '../Layouts/NumberInput';
-import { GetLocationResponse } from '../../actions/orderActions';
 import MetaData from '../Layouts/MetaData';
-import MapComponent from '../Layouts/MapComponent';
-import { MapContainer, TileLayer } from 'react-leaflet';
+import { GoogleMap, LoadScript, Marker, Autocomplete } from '@react-google-maps/api';
 import 'leaflet/dist/leaflet.css';
+import { debounce } from 'lodash';
+import MyLocationIcon from '@mui/icons-material/MyLocation';
 
 
 export const validateShipping = (shippingInfo, navigate) => {
@@ -203,13 +203,14 @@ export const validateShipping = (shippingInfo, navigate) => {
     }
 }
 
+const libraries = ["places"];
+
 const Shipping = () => {
     const { shippingInfo = {} } = useSelector(state => state.cartState);
     const { isAuthenticated, user } = useSelector(state => state.authState);
     const location = useLocation();
     sessionStorage.setItem('redirectPath', location.pathname);
     // const { loactionResponse } = useSelector(state => state.orderState);
-    console.log("shippingInfo", shippingInfo)
     const [address, setAddress] = useState(shippingInfo.address);
     const [area, setArea] = useState(shippingInfo.area);
     const [landmark, setLandmark] = useState(shippingInfo.landmark);
@@ -225,311 +226,250 @@ const Shipping = () => {
     const [allowed, setAllowed] = useState(true);
     // const [latitude, setLatitude] = useState('12.947146336879577');
     // const [longitude, setLongitude] = useState('77.62102993895199');
-    const [latitude, setLatitude] = useState(null);
-    const [longitude, setLongitude] = useState(null);
+    const [latitude, setLatitude] = useState(shippingInfo.latitude);
+    const [longitude, setLongitude] = useState(shippingInfo.longitude);
     const [dummyLat, setDummyLat] = useState(null);
     const [dummyLng, setDummyLng] = useState(null);
-    const [showModal, setShowModal] = useState(true);
+    const [showModal, setShowModal] = useState(false);
     const [isButtonDisabled, setIsButtonDisabled] = useState(false);
     const [hasExceededPostalCode, setHasExceededPostalCode] = useState(false);
     const [showMapModal, setShowMapModal] = useState(false);
-    const [position, setPosition] = useState({ lat: 12.984820441742858, lng: 80.23556581985943 });
+    const [cancelbutton,setCancelbutton]=useState(false);
+    // const [position, setPosition] = useState({ lat: 12.984820441742858, lng: 80.23556581985943 });
     const navigate = useNavigate();
     const dispatch = useDispatch();
-    const [isMap,setIsMap] = useState(false);
+    const [isMap, setIsMap] = useState(false);
+    const mapRef = useRef(null);
+    const [renderKey, setRenderKey] = useState(0);
+    const [updateToggle, setUpdateToggle] = useState(false);
+    // const libraries = ['places'];
 
-    console.log("dummy data ", dummyLat, dummyLng);
-    console.log("state data ", latitude, longitude);
-    //     const [pickupDetails, setPickupDetails] = useState({
-    //         lat: 12.935025018880504,
-    //         lng: 77.6092605236106
-    //       });
+    // const navigate = useNavigate();
+    // const dispatch = useDispatch();
+    // const [isMap, setIsMap] = useState(false);
 
-    //       const [dropDetails, setDropDetails] = useState({
-    //         lat: shippingInfo && shippingInfo.latitude && shippingInfo.latitude,
-    //         lng: shippingInfo && shippingInfo.longitude && shippingInfo.longitude
-    //       });
-
-    //       const [customerDetails, setCustomerDetails] = useState({
-    //         name: user && user.name && user.name,
-    //         countryCode: '+91',
-    //         phoneNumber: phoneNo
-    //       });
-    // // console.log(latitude,longitude)
-    // useEffect(()=>{
-    //     setCustomerDetails({
-    //         name: user && user.name && user.name,
-    //         countryCode: '+91',
-    //         phoneNumber: phoneNo
-    //       } )
-    // },[user])
-    //   useEffect(()=>{
-    //     const fetchdata = async () => {
-
-    //     const requestData = {
-    //         pickup_details: pickupDetails,
-    //         drop_details: dropDetails,
-    //         customer: {
-    //           name: customerDetails.name,
-    //           mobile: {
-    //             country_code: customerDetails.countryCode,
-    //             number: customerDetails.phoneNumber
-    //           }
-    //         }
-    //       };
-    //       console.log(requestData)
-    //       try {
-    //         const response = await axios.post('/api/v1/get-quote', requestData,{ withCredentials: true });
-    //         console.log("getQuote Response",response.data)
-    //     //    toast.error('Response:', response.data);
-    //         // Handle response as needed
-    //       } catch (error) {
-    //         toast.error('Error sending data:', error);
-    //         // Handle error as needed
-    //       }
-    //     }
-    // if(user){
-    //     fetchdata()
-    // }
-
-    //   },[pickupDetails,dropDetails,customerDetails])
-
-
-    // const handleCurrentLocation = () => {
-    //     const fetchGeolocation = () => {
-    //         if (navigator.geolocation) {
-    //             navigator.geolocation.getCurrentPosition(
-    //                 position => {
-    //                     const { latitude, longitude } = position.coords;
-    //                     setLatitude(latitude);
-    //                     setLongitude(longitude);
-    //                     setAllowed(true);
-    //                 },
-    //                 error => {
-    //                     if (error.code === error.PERMISSION_DENIED) {
-    //                         // toast.error("Location access is required to proceed.");
-    //                         toast.error('Location access is required to proceed.', {
-    //                             position: "bottom-center",
-    //                             type: 'error',
-
-    //                         });
-    //                         // navigate('/cart')
-    //                         setAllowed(false);
-    //                     }
-    //                 }
-    //             );
-    //         } else {
-    //             // toast.error('Geolocation is not supported by this browser.');
-    //             toast.error('Geolocation is not supported by this browser.', {
-    //                 position: "bottom-center",
-    //                 type: 'error',
-
-    //             });
-    //             setAllowed(false);
-    //         }
-    //     };
-
-    //     fetchGeolocation();
-    //     setShowModal(false);
-    // }
-    // useEffect(()=>{
-    //     if(latitude && longitude){
-    //         dispatch(GetLocationResponse({latitude,longitude}))
-    //     }
-
-    // },[latitude,longitude])
-
-    // useEffect(() => {
-    //     // Check the location permission status on component mount
-    //     if (navigator.permissions) {
-    //         navigator.permissions.query({ name: 'geolocation' }).then(permissionStatus => {
-    //             if (permissionStatus.state === 'granted') {
-    //                 // If permission is already granted, fetch the location without showing the modal
-    //                 handleCurrentLocation();
-    //             } else if (permissionStatus.state === 'prompt') {
-    //                 // If the permission hasn't been granted or denied, show the modal
-    //                 setShowModal(true);
-    //             } else if (permissionStatus.state === 'denied') {
-    //                 // If the permission is denied, show the modal to prompt user action
-    //                 setShowModal(true);
-    //             }
-    //         });
-    //     } else {
-    //         // If the Permissions API is not supported, default to showing the modal
-    //         setShowModal(true);
-    //     }
-    // }, []);
+    console.log("shipping", shippingInfo)
 
     const fetchAddress = async (latitude, longitude) => {
         try {
-            const response = await axios.get(`https://nominatim.openstreetmap.org/reverse`, {
+            const response = await axios.get(`https://maps.googleapis.com/maps/api/geocode/json`, {
                 params: {
-                    format: 'json',
-                    lat: latitude,
-                    lon: longitude,
-                    addressdetails: 1
+                    latlng: `${latitude},${longitude}`,
+                    key: 'AIzaSyDbBxXUZPdM7tZJJ2IFVX-k2O4ZN9j1Gks'
                 }
             });
             const { data } = response;
-            console.log(data)
-            if (data) {
-                setPostalCode(data.address.postcode)
-                setCity(data.address.city);
-                setState(data.address.state);
-                setCountry(data.address.country);
+            console.log("address", data)
+            if (data.results[0]) {
+                const addressComponents = data.results[0].address_components;
+                addressComponents.forEach(component => {
+                    if (component.types.includes('postal_code')) {
+                        setPostalCode(component.long_name);
+                    } else if (component.types.includes('administrative_area_level_3')) {
+                        setCity(component.long_name);
+                    } else if (component.types.includes('administrative_area_level_1')) {
+                        setState(component.long_name);
+                    } else if (component.types.includes('country')) {
+                        setCountry(component.long_name);
+                    }
+                });
             }
         } catch (error) {
             console.error('Error fetching address:', error);
-            toast.error(error)
+            toast.error(error);
         }
     };
-
 
     useEffect(() => {
         if (latitude && longitude) {
             fetchAddress(latitude, longitude);
         }
-
     }, [latitude, longitude]);
 
 
-    const handleCurrentLocation = () => {
+    const handleCurrentLocation = async () => {
+        setAddress('');
+        setArea('');
+        setLandmark('');
         setIsButtonDisabled(true);
-        const fetchGeolocation = () => {
+        const fetchGeolocation = async () => {
             if (navigator.geolocation) {
                 navigator.geolocation.getCurrentPosition(
-                    position => {
-                        const { latitude, longitude } = position.coords;
-                        setLatitude(latitude);
-                        setLongitude(longitude);
-                        setDummyLat(latitude);
-                        setDummyLng(longitude);
+                    async position => {
+                        const { latitude, longitude, accuracy } = position.coords;
+
+                        if (accuracy <= 50) {
+                        setLatitude(parseFloat(latitude.toFixed(6)));
+                        setLongitude(parseFloat(longitude.toFixed(6)));
+                        // setDummyLat(parseFloat(latitude.toFixed(6)));
+                        // setDummyLng(parseFloat(longitude.toFixed(6)));
                         setAllowed(true);
-                        setShowModal(false);  // Close modal if location is fetched successfully
+                        setShowModal(false);
+                        setIsButtonDisabled(false);
+                        toast.success(`Location accuracy is ${Math.round(accuracy)} meters.`, {
+                            position: "bottom-center",
+                            type:
+                                'success',
+                        });
+                        }
+                        else {
+                            toast.error(`Could not get your precious location.`, {
+                                position: "bottom-center",
+                            });
+                            setIsButtonDisabled(false);
+                        }
+
                     },
                     error => {
-                        if (error.code === error.PERMISSION_DENIED) {
-                            toast.error('Location access is required to proceed.', {
-                                position: "bottom-center",
-                                type: 'error',
-                            });
-                            setAllowed(false);
-                            setShowModal(false);  // Keep modal open if permission is denied
-                        }
-                    }
+                        toast.error('Location access denied or not available.', {
+                            position: "bottom-center",
+                        });
+                        setIsButtonDisabled(false);
+                        setCancelbutton(true);
+                    },
+                    { enableHighAccuracy: true }
                 );
-            } else {
-                toast.error('Geolocation is not supported by this browser.', {
-                    position: "bottom-center",
-                    type: 'error',
-                });
-                setAllowed(false);
-                setShowModal(true);  // Keep modal open if geolocation is not supported
             }
         };
 
         fetchGeolocation();
     };
 
+    const handlegeoLocation = async () => {
+        // setAddress('');
+        // setArea('');
+        // setLandmark('');
+        setIsButtonDisabled(true);
+        const fetchGeolocation = async () => {
+            if (navigator.geolocation) {
+                navigator.geolocation.getCurrentPosition(
+                    async position => {
+                        const { latitude, longitude, accuracy } = position.coords;
 
-    // useEffect(() => {
-    //     const fetchLocationDetails = async () => {
-    //         if (postalCode && postalCode.length === 6) { // Adjust the length check as per your postal code format
-    //             try {
-    //                 const response = await axios.get(`https://api.opencagedata.com/geocode/v1/json?q=${postalCode}&key=b10cf7f18b9d4785a1a5f486c87195d0`);
-    //                 const location = response.data.results[0];
-    //                 const components = location.components;
+                        // if (accuracy <= 20) {
+                        setLatitude(parseFloat(latitude.toFixed(6)));
+                        setLongitude(parseFloat(longitude.toFixed(6)));
+                        setDummyLat(parseFloat(latitude.toFixed(6)));
+                        setDummyLng(parseFloat(longitude.toFixed(6)));
+                        setAllowed(true);
+                        setShowModal(false);
+                        setIsButtonDisabled(false);
+                        toast.success(`Location accuracy is ${Math.round(accuracy)} meters.`, {
+                            position: "bottom-center",
+                            type:
+                                'success',
+                        });
+                        // }
+                        // else{
+                        //     toast.error(`Could not get your precious location.`, {
+                        //         position: "bottom-center",
+                        //     });    
+                        //     setIsButtonDisabled(false);                    
+                        // }
 
-    //                 const city = components.state_district || "";
-    //                 const state = components.state || "";
-    //                 const country = components.country || "";
-    //                 const latitude = location.geometry.lat;
-    //                 const longitude = location.geometry.lng;
+                    },
+                    error => {
+                        toast.error('Location access denied or not available.', {
+                            position: "bottom-center",
+                        });
+                        setIsButtonDisabled(false);
+                        setCancelbutton(true);
+                    },
+                    { enableHighAccuracy: true }
+                );
+            }
+        };
 
-    //                 setCity(city);
-    //                 setState(state);
-    //                 setCountry(country);
-    //                 // setLatitude(latitude);
-    //                 // setLongitude(longitude);
-    //             } catch (error) {
-    //                 // toast.error("Error fetching location details. Please Provide Correct Postalcode");
-    //                 toast.error('Error fetching location details. Please Provide Correct Postalcode', {
-    //                     position: "bottom-center",
-    //                     type: 'error',
+        fetchGeolocation();
+    };
 
-    //                 });
-    //                 setCity("");
-    //                 setState("");
-    //                 setCountry("");
-    //             }
-    //         }
-    //     };
-
-    //     fetchLocationDetails();
-    // }, [postalCode]);
-
-    // useEffect(() => {
-    //     const fetchGeolocation = () => {
-    //         if (navigator.geolocation) {
-    //             navigator.geolocation.getCurrentPosition(
-    //                 position => {
-    //                     const { latitude, longitude } = position.coords;
-    //                     setLatitude(latitude);
-    //                     setLongitude(longitude);
-    //                     setAllowed(true);
-    //                 },
-    //                 error => {
-    //                     if (error.code === error.PERMISSION_DENIED) {
-    //                         // toast.error("Location access is required to proceed.");
-    //                         toast.error('Location access is required to proceed.',{
-    //                             position:"bottom-center", 
-    //                             type: 'error',
-
-    //                         });
-    //                        setAllowed(false);
-    //                     }
-    //                 }
-    //             );
-    //         } else  {
-    //             // toast.error('Geolocation is not supported by this browser.');
-    //             toast.error('Geolocation is not supported by this browser.',{
-    //                 position:"bottom-center", 
-    //                 type: 'error',
-
-    //             });
-    //             setAllowed(false);
-    //         }
-    //     };
-
-    //     fetchGeolocation();
-    // }, [navigate]);
-
-
-    const submitHandler = (e) => {
-        e.preventDefault();
-        dispatch(saveShippingInfo({ address, area, landmark, city, phoneNo, postalCode, country, state, latitude, longitude }));
-        if (isAuthenticated && latitude && longitude && allowed) {
-            navigate('/order/confirm');
-        }
-        else if (!latitude || !longitude || !allowed) {
-            //   toast.error("Please allow the Location for Next Step")
-            toast.error('Please allow the Location to Proceed', {
-                position: "bottom-center",
-                type: 'error',
-
+    useEffect(() => {
+        // Check the location permission status on component mount
+        if (navigator.permissions) {
+            navigator.permissions.query({ name: 'geolocation' }).then(permissionStatus => {
+                if (permissionStatus.state === 'granted') {
+                    return
+                    // If permission is already granted, fetch the location without showing the modal
+                    // handleCurrentLocation();
+                } else if (permissionStatus.state === 'prompt') {
+                    setAddress('');
+                    setArea('');
+                    setLandmark('');
+                    // setPhoneNo('');
+                    // dispatch(saveShippingInfo({}));
+                    setShowModal(true);
+                    setCancelbutton(true);
+                } else if (permissionStatus.state === 'denied') {
+                    setAddress('');
+                    setArea('');
+                    setLandmark('');
+                    // dispatch(saveShippingInfo({}));
+                    setShowModal(true);
+                    setCancelbutton(true);
+                }
             });
+        } else {
+            setAddress('');
+            setArea('');
+            setLandmark('');
+            // dispatch(saveShippingInfo({}));
+            setShowModal(true);
         }
-        else {
-            // toast.error("Please allow the Location for Next Step")
-            toast.error('Please allow the Location to Proceed', {
-                position: "bottom-center",
-                type: 'error',
+    }, []);
 
-            });
-        }
-
-
+    const handelChangeLocation = (e) => {
+        // setIsButtonDisabled(false);
+        // setAddress('');
+        // setArea('');
+        // setLandmark('');
+        // dispatch(saveShippingInfo({}));
+        setShowModal(true);
     }
+
+    const handleMap = (e) => {
+        // e.preventDefault();
+        setDummyLat(null);
+        setDummyLng(null);
+        handlegeoLocation();
+        setIsMap(true);
+    };
+
+    const [searchValue, setSearchValue] = useState('');  // For search input
+    const [autocomplete, setAutocomplete] = useState(null); // To handle autocomplete
+    console.log("autocomplete", autocomplete)
+
+    // Load autocomplete and set to the state
+    const onLoad = (autoC) => {
+        // e.preventDefault();
+        console.log("autoc", autoC)
+        setAutocomplete(autoC);
+    };
+
+    const onPlaceChanged = () => {
+        // e.preventDefault();
+        if (autocomplete !== null) {
+            const place = autocomplete.getPlace();
+            console.log("place", place)
+
+            // Check if the place has geometry (i.e., if it has location data)
+            if (place.geometry && place.geometry.location) {
+                const location = place.geometry.location;
+                setDummyLat(location.lat());
+                setDummyLng(location.lng());
+                // setAddress(place.formatted_address);  
+            } else {
+                console.log("Selected place does not have a geometry or location");
+            }
+        } else {
+            console.log("Autocomplete is not loaded yet!");
+        }
+    };
+
+    useEffect(() => {
+        if (dummyLat && dummyLng && isMap) {
+            setShowMapModal(true);
+        }
+    }, [dummyLat, dummyLng]);
 
     const handlePhoneNumberChange = (e) => {
         const value = e.target.value;
@@ -569,46 +509,64 @@ const Shipping = () => {
 
     const handleCancelDelete = () => {
         setShowModal(false);
-        navigate('/cart');
+        // navigate('/cart');
     };
 
 
-    const handleMap = () => {
-        handleCurrentLocation();
-        setIsMap(true);
-    }
-
-    useEffect(() => {
-        if (dummyLat && dummyLng && isMap) {
-            setShowMapModal(true)
+    const submitHandler = (e) => {
+        e.preventDefault();
+        dispatch(saveShippingInfo({ address, area, landmark, city, phoneNo, postalCode, country, state, latitude, longitude }));
+        if (isAuthenticated && latitude && longitude) {
+            navigate('/order/confirm');
+        } else {
+            toast.error('Please allow the location to proceed.', {
+                position: "bottom-center",
+            });
         }
-    }, [dummyLat , dummyLng])
-
-
+    };
 
     const updatePosition = (lat, lng) => {
-        setDummyLat(lat); // Store clicked position in dummy variables
+        setDummyLat(lat);
         setDummyLng(lng);
     };
 
-    const handleContinue = () => {
-        setLatitude(dummyLat); // Set latitude state
-        setLongitude(dummyLng); // Set longitude state
+
+
+    useEffect(() => {
+        if (dummyLat && dummyLng && mapRef.current) {
+            mapRef.current.panTo({ lat: dummyLat, lng: dummyLng });
+        }
+    }, [dummyLat, dummyLng]);
+
+    const handleContinue = (e) => {
+        e.preventDefault();
+        setAddress('');
+        setArea('');
+        setLandmark('');
+        setIsButtonDisabled(false)
+        setLatitude(dummyLat);
+        setLongitude(dummyLng);
         setShowModal(false);
-        setShowMapModal(false); // Close mapModal
+        setShowMapModal(false);
+        // setUpdateToggle(prev => !prev);
+        // setRenderKey(prev => prev + 1); 
     };
 
-    const handleBack = () => {
+    const handleBack = (e) => {
+        e.preventDefault();
+        setDummyLat(null);
+        setDummyLng(null);
         setIsButtonDisabled(false);
-        setShowMapModal(false); // Close mapPopup without saving
+        setShowMapModal(false);
         setShowModal(true);
+        // setUpdateToggle(prev => !prev);
+        // setRenderKey(prev => prev + 1); 
     };
+
 
     return (
-        <Fragment>
+        <Fragment >
             <MetaData title={"Shipping"} />
-
-
             {!showMapModal && (
                 <>
                     <div className="products_heading">Shipping</div>
@@ -616,7 +574,26 @@ const Shipping = () => {
                     <div className="row wrapper">
                         <div className="col-10 col-lg-5">
                             <form onSubmit={submitHandler} className="shadow-lg mt-0">
-                                <h1 className="mb-4">Shipping Info </h1>
+                                <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between' }} className="mb-4">
+                                    <h2 className="">Shipping Info</h2>
+
+                                    {/* <button type="button" style={{height:'30px',fontSize:'12px'}} onClick={handelChangeLocation} >Change Location</button> */}
+                                    <span
+                                        style={{
+                                            color: 'blue',
+                                            cursor: 'pointer',
+                                            textDecoration: 'none',
+                                            fontSize: '12px',
+                                            height: '30px',
+                                            lineHeight: '30px'
+                                        }}
+                                        onClick={handelChangeLocation}
+                                    >
+                                        Change Location
+                                    </span>
+
+                                </div>
+
                                 <div className="form-group">
                                     <label htmlFor="address_field">Flat, House no, Building, company, Apartment <span style={{ color: 'red' }}>*</span></label>
                                     <input
@@ -651,7 +628,6 @@ const Shipping = () => {
 
                                     />
                                 </div>
-
 
                                 <div className="form-group">
                                     <label htmlFor="phone_field">Phone No (+91) <span style={{ color: 'red' }}>*</span></label>
@@ -727,6 +703,8 @@ const Shipping = () => {
                                     </div>
                                 )}
 
+
+
                                 <button
                                     id="shipping_btn"
                                     type="submit"
@@ -746,7 +724,7 @@ const Shipping = () => {
                         <div className="modal-content">
                             <div className="modal-header">
                                 <h5 className="modal-title">Location Access</h5>
-                                <button type="button" className="close" onClick={handleCancelDelete} disabled={isButtonDisabled}>
+                                <button type="button" className="close" onClick={handleCancelDelete} disabled={isButtonDisabled || cancelbutton}>
                                     <span aria-hidden="true">&times;</span>
                                 </button>
                             </div>
@@ -769,23 +747,80 @@ const Shipping = () => {
                     </div>
                 </div>
             )}
+
             {showMapModal && dummyLat && dummyLng && (
                 <div style={mapFullScreenStyle}>
-                    <MapContainer center={{ lat: dummyLat, lng: dummyLng }} zoom={13} style={{ height: '100vh', width: '100%' }}>
-                        <TileLayer
-                            url="https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png"
-                            attribution='&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors'
-                        />
-                        <MapComponent setPosition={updatePosition} dummyLat={dummyLat} dummyLng={dummyLng} />
-                    </MapContainer>
-                    <div style={{ position: 'absolute', zIndex: '9999', bottom: '20px' }}>
-                        <button type="button" className="btn btn-secondary" style={{margin:'5px'}} onClick={handleBack}>Back</button>
-                        <button type="button" className="btn btn-primary" style={{margin:'5px'}} onClick={handleContinue}>Continue</button>
-                    </div>
+                    <LoadScript googleMapsApiKey="AIzaSyDbBxXUZPdM7tZJJ2IFVX-k2O4ZN9j1Gks" libraries={libraries}>
+                        <div style={{ height: '100vh', width: '100%' }}>
+
+                            <GoogleMap
+                                mapContainerStyle={{ height: "100vh", width: "100%" }}
+                                center={{ lat: dummyLat, lng: dummyLng }}
+                                zoom={13}
+                                onLoad={(map) => (mapRef.current = map)}
+                                onClick={(e) => updatePosition(e.latLng.lat(), e.latLng.lng())}
+                            >
+                                {/* <div style={{ position: 'relative', width: '100%', height: 'auto', display: 'flex', justifyContent: 'center' }}> */}
+                                <Autocomplete onLoad={onLoad} onPlaceChanged={onPlaceChanged} style={{ position: 'relative', zIndex: 9999999 }}>
+                                    <input
+                                        type="text"
+                                        placeholder="Search for a location"
+                                        value={searchValue}
+                                        onChange={(e) => setSearchValue(e.target.value)}
+                                        style={{
+                                            position: 'relative',
+                                            display: 'flex',
+                                            width: "40%",
+                                            height: "40px",
+                                            left: '50%', // Center it horizontally
+                                            transform: 'translateX(-50%)',
+                                            paddingLeft: "16px",
+                                            fontSize: "13px",
+                                            // position: 'absolute',
+                                            outline: 'none',
+                                            zIndex: 999999999,
+                                            borderRadius: '10px',
+                                            border: '1px solid black',
+                                            top: '55px',
+                                            // color:'#fff',
+                                            // backgroundColor:'#343a40'
+                                            // alignItems: 'center', justifyContent: 'center'
+                                        }}
+                                    />
+                                </Autocomplete>
+                                {/* </div> */}
+
+                                <Marker
+                                    position={{ lat: dummyLat, lng: dummyLng }}
+                                    draggable={true}
+                                    onDragEnd={(e) => updatePosition(e.latLng.lat(), e.latLng.lng())}
+                                />
+                                <button
+                                    onClick={handlegeoLocation}
+                                    style={{
+                                        position: 'absolute',
+                                        bottom: '25%',
+                                        right: '10px',
+                                        padding: '10px 15px',
+                                        backgroundColor: '#fff',
+                                        border: '1px solid #ccc',
+                                        borderRadius: '5px',
+                                        cursor: 'pointer',
+                                        boxShadow: '0 2px 5px rgba(0, 0, 0, 0.3)',
+                                    }}
+                                >
+                                    <MyLocationIcon style={{ color: '#4285F4', fontSize: '15px' }} />
+                                </button>
+                            </GoogleMap>
+                            <div style={{ position: 'absolute', zIndex: '9999', bottom: '20px', left: '50%', transform: 'translateX(-50%)', }}>
+                                <button type="button" className="btn btn-secondary" style={{ margin: '5px' }} onClick={handleBack}>Back</button>
+                                <button type="button" className="btn btn-primary" style={{ margin: '5px' }} onClick={handleContinue}>Continue</button>
+                            </div>
+                        </div>
+                    </LoadScript>
                 </div>
+
             )}
-
-
         </Fragment>
     );
 }
@@ -809,11 +844,24 @@ const mapFullScreenStyle = {
     width: '100%',
     height: '100%',
     backgroundColor: 'rgba(0, 0, 0, 0.8)', // Dimmed background
-    zIndex: 9999, // Ensure it's on top of everything
+    zIndex: 999, // Ensure it's on top of everything
     display: 'flex',
     justifyContent: 'center',
     alignItems: 'center',
 };
 
+const searchBarStyle = {
+    width: '300px',
+    height: '40px',
+    padding: '10px',
+    position: 'absolute',
+    top: '10px',
+    left: '50%',
+    transform: 'translateX(-50%)',
+    zIndex: 10,
+    borderRadius: '5px',
+};
+
 
 export default Shipping;
+

@@ -89,7 +89,7 @@ const Dispatch = ({ isActive, setIsActive }) => {
     const submitHandler = async (e) => {
         e.preventDefault();
         // setRefreshData(false)
-        const requestId = `TEST_0_${uuidv4()}`;
+        const requestId = `Jas_0_${uuidv4()}`;
         const porterData = {
             "request_id": requestId,
             "delivery_instructions": {
@@ -102,41 +102,41 @@ const Dispatch = ({ isActive, setIsActive }) => {
             },
             "pickup_details": {
                 "address": {
-                    "apartment_address": "27",
-                    "street_address1": "Sona Towers",
-                    "street_address2": "Krishna Nagar Industrial Area",
-                    "landmark": "Hosur Road",
-                    "city": "Bengaluru",
-                    "state": "Karnataka",
-                    "pincode": "560029",
+                    "apartment_address": "29",
+                    "street_address1": "Reddy St,Nerkundram",
+                    // "street_address2": "Krishna Nagar Industrial Area",
+                    "landmark": "Jas Fruits And Vegetables",
+                    "city": "Chennai",
+                    "state": "Tamilnadu",
+                    "pincode": "600107",
                     "country": "India",
-                    "lat": 12.935025018880504,
-                    "lng": 77.6092605236106,
+                    "lat": 13.0671844,
+                    "lng": 80.1798047,
                     "contact_details": {
-                        "name": "admin",
-                        "phone_number": "+919876543210"
+                        "name": "Bala Santhanam",
+                        "phone_number": "+919176720068"
                     }
                 }
             },
             "drop_details": {
                 "address": {
-                    "apartment_address": "this is apartment address",
+                    // "apartment_address": "this is apartment address",
                     "street_address1": shippingInfo.address,
-                    "street_address2": "This is My Order ID",
-                    "landmark": "BTM Layout",
+                    // "street_address2": "This is My Order ID",
+                    "landmark": shippingInfo.landmark,
                     "city": shippingInfo.city,
-                    "state": shippingInfo.state || "TamilNadu",
+                    "state": shippingInfo.state,
                     "pincode": shippingInfo.postalCode,
                     "country": shippingInfo.country,
-                    "lat": 12.947146336879577,
-                    "lng": 77.62102993895199,
+                    "lat": shippingInfo.latitude,
+                    "lng": shippingInfo.longitude,
                     "contact_details": {
                         "name": user.name,
                         "phone_number": shippingInfo.phoneNo
                     }
                 }
             },
-            "additional_comments": "This is a test comment",
+            // "additional_comments": "This is a test comment",
         };
 
         // Create an array to store status for each item
@@ -368,6 +368,14 @@ const Dispatch = ({ isActive, setIsActive }) => {
         }
     }, [refreshData, porterOrderResponse])
 
+    
+
+const [trackurl,setTrackurl]=useState(false);
+const handleClick = (tracking_url) => {
+  setTrackurl(true)
+  window.location.href = tracking_url;
+}
+
     return (
         <div>
             <MetaData title={`Dispatch`} />
@@ -384,23 +392,33 @@ const Dispatch = ({ isActive, setIsActive }) => {
                             <Fragment>
                                 {/* <div className="row d-flex justify-content-around"> */}
                                 <div className="col-12 col-lg-12 mt-5 order-details">
-                                    <h1 className="my-5">Order # {orderDetail.order_id}</h1>
+                                    <div className="my-5" style={{display:'flex',justifyContent:'space-between',flexWrap:'wrap' }}>
+                                    <h1 >Order # {orderDetail.order_id}</h1>
+                                    {
+                                        porterOrderData && porterOrderData.tracking_url && (
+                                            <button onClick={()=>handleClick(porterOrderData.tracking_url)} disabled={trackurl}   className='tracking-btn' >
+                                            Track Order
+                                        </button>
+                                        )
+                                    }
+                                    </div>
+                                   
 
                                     <h4 className="mb-4">Shipping Info</h4>
-                                    <p><b>Name:</b> {user.name}</p>
-                                    <p><b>Phone:</b> {shippingInfo.phoneNo}</p>
-                                    <p>
+                                    <div><b>Name:</b> {user.name}</div>
+                                    <div><b>Phone:</b> +91 {shippingInfo.phoneNo}</div>
+                                    <div>
                                         <b>Address:</b>
                                         {shippingInfo.address && `${shippingInfo.address},`}
                                         {shippingInfo.area && `${shippingInfo.area},`}
                                         {shippingInfo.landmark && `${shippingInfo.landmark},`}
                                         {shippingInfo.city && `${shippingInfo.city}`}
                                         {shippingInfo.postalCode && `-${shippingInfo.postalCode}`}
-                                    </p>
+                                    </div>
 
-                                    <p><b>Amount:</b> Rs.{parseFloat(totalPrice).toFixed(2)}</p>
+                                    <div><b>Amount:</b> Rs.{parseFloat(totalPrice).toFixed(2)}</div>
                                     {orderDetail && orderDetail.statusResponse && orderDetail.statusResponse.payment_method && (
-                                    <p><b>Payment Mode:</b> {orderDetail && orderDetail.statusResponse && orderDetail.statusResponse.payment_method}</p>
+                                    <div><b>Payment Mode:</b> {orderDetail && orderDetail.statusResponse && orderDetail.statusResponse.payment_method}</div>
 
                                 )
 
@@ -567,6 +585,7 @@ const Dispatch = ({ isActive, setIsActive }) => {
                                     <hr />
                                     <div>
                                         <button className='btn btn-primary' onClick={submitHandler} disabled={dropStatus === "Dispatched" || dropStatus === "Delivered"}>Dispatch</button>
+                                        
                                         {/* <button className='btn btn-primary' onClick={(e)=>submitHandlerPacked(e)} disabled={dropStatus === "Packed"}>Packed</button> */}
 
                                     </div>

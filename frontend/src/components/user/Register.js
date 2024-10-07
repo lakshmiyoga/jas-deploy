@@ -1,5 +1,5 @@
 import React, { useState, useEffect, useRef } from 'react'
-import { register, clearAuthError } from "../../actions/userActions"
+import { register, clearAuthError, loadUser } from "../../actions/userActions"
 import { useDispatch, useSelector } from 'react-redux';
 import { toast } from 'react-toastify';
 import { useLocation, useNavigate } from 'react-router-dom';
@@ -8,6 +8,9 @@ import MetaData from '../Layouts/MetaData';
 import NumberInput from '../Layouts/NumberInput';
 import { sendMailOtp, verifyMailOtp } from '../../actions/otpActions';
 import Loader from '../Layouts/Loader';
+import { otpClear, otpErrorClear } from '../../slices/otpSlice';
+import ButtonLoader from '../Layouts/LoaderButton';
+import store from '../../store';
 
 // const Register = () => {
 
@@ -208,10 +211,12 @@ const Register = () => {
     name: '',
     email: '',
     password: '',
+    confirmPassword: '',
     mobile: ''
   });
-  console.log("userData", userData);
 
+  const [showPassword, setShowPassword] = useState(false);
+  const [showConfirmPassword, setShowConfirmPassword] = useState(false);
   const [avatar, setAvatar] = useState('');
   const [avatarPreview, setAvatarPreview] = useState('/images/default_avatar.png');
   const [timeLeft, setTimeLeft] = useState(null);
@@ -221,6 +226,7 @@ const Register = () => {
     minLength: false,
     maxLength: true,
   });
+  console.log("avatar",avatar);
 
   const dispatch = useDispatch();
   const navigate = useNavigate();
@@ -232,14 +238,21 @@ const Register = () => {
     verifyloading,
     mailVerifiedData,
     mailVerifyError,
+    dummyisAuthenticated,
+    dummyuser,
   } = useSelector((state) => state.otpState);
+
+  // console.log("user",user)
 
   const mailIdRef = useRef(null);
   const [mailButtonDisabled, setMailButtonDisabled] = useState(false);
   const [otpMail, setOtpMail] = useState('');
   const [mailCode, setMailCode] = useState(false);
+  const [otpSent, setOtpSent] = useState(false);
   const [mailVerified, setMailVerified] = useState(false);
+  const registerRef = useRef(null); // Create a ref
 
+console.log("otpmail",otpMail)
   // Password validation
   const validatePassword = (password) => {
     const capitalLetter = /[A-Z]/.test(password);
@@ -255,21 +268,72 @@ const Register = () => {
     });
   };
 
+  const onChangeAvatar = (e) => {
+    const file = e.target.files[0];
+    const fileSizeLimit = 1 * 1024 * 1024; // 1 MB
+
+    if (file && file.size > fileSizeLimit) {
+      toast.error('The size of selected image exceeds the 1MB limit.', {
+        position: "bottom-center"
+      });
+      e.target.value = ''; // Clear the file input
+      return;
+    }
+
+    const reader = new FileReader();
+    reader.onload = () => {
+      if (reader.readyState === 2) {
+        setAvatarPreview(reader.result);
+        setAvatar(file);
+      }
+    };
+
+    if (file) {
+      reader.readAsDataURL(file);
+    }
+  };
+
   const onChange = (e) => {
     const { name, value } = e.target;
+    if (name === 'mobile' && value.length > 10) {
+      return; // Prevent updating state if mobile exceeds 10 digits
+      // Alternatively, you can truncate it
+      // setUserData({ ...userData, [name]: value.slice(0, 10) });
+    }
     if (name === 'password') {
       validatePassword(value);
     }
     setUserData({ ...userData, [name]: value });
   };
 
+  
+  useEffect(()=>{
+window.scrollTo({ top: 0, behavior: 'smooth' });
+}, [otpdata]);
+
+
   const submitHandler = (e) => {
     e.preventDefault();
+    dispatch(otpErrorClear());
+    dispatch(otpClear());
+    if( userData.password !== userData.confirmPassword ){
+      toast.error('Password does not match');
+      return
+    }
+    if(userData.mobile.length<10){
+      toast.error('Mobile nunber Invalid!!!');
+      return
+    }
+       // Scroll to the top of the Register component
+    //    if (registerRef.current) {
+    //     registerRef.current.scrollIntoView({ behavior: 'smooth' });
+    // }
     if (
       passwordValidation.capitalLetter &&
       passwordValidation.specialCharacter &&
       passwordValidation.minLength &&
-      passwordValidation.maxLength
+      passwordValidation.maxLength 
+     
     ) {
       const formData = new FormData();
       formData.append('name', userData.name);
@@ -277,22 +341,50 @@ const Register = () => {
       formData.append('password', userData.password);
       formData.append('mobile', userData.mobile);
       formData.append('avatar', avatar);
-
       setMailButtonDisabled(true);
       setTimeLeft(null);
       clearInterval(mailIdRef.current);
       dispatch(sendMailOtp(formData));
+
     } else {
       toast.error('Password does not meet all criteria');
     }
   };
+
+  // const resendOTP = (e) => {
+  //   e.preventDefault();
+  //   setMailButtonDisabled(true);
+  //   setTimeLeft(null);
+  //   clearInterval(mailIdRef.current);
+  //   dispatch(otpClear());
+  //   if (
+  //     passwordValidation.capitalLetter &&
+  //     passwordValidation.specialCharacter &&
+  //     passwordValidation.minLength &&
+  //     passwordValidation.maxLength
+  //   ) {
+  //     const formData = new FormData();
+  //     formData.append('name', userData.name);
+  //     formData.append('email', userData.email);
+  //     formData.append('password', userData.password);
+  //     formData.append('mobile', userData.mobile);
+  //     formData.append('avatar', avatar);
+  //     dispatch(sendMailOtp(formData));
+  //   } else {
+  //     toast.error('Password does not meet all criteria');
+  //   }
+  // };
 
   useEffect(() => {
     if (otperror) {
       toast.error(otperror);
       setMailButtonDisabled(false);
     }
-    if (otpdata) {
+    if (otpdata && !timeLeft) {
+      setMailButtonDisabled(true);
+      setTimeLeft(null);
+      clearInterval(mailIdRef.current);
+      setOtpSent(true);
       toast.success(otpdata.message);
       setMailCode(true);
       setTimeLeft(60);
@@ -312,9 +404,11 @@ const Register = () => {
   }, [otpdata, otperror, otploading]);
 
   const verifyMail = (e) => {
-    e.preventDefault();
+    // e.preventDefault();
+    // dispatch(otpClear());
+    dispatch(otpErrorClear());
     if (otpdata) {
-      dispatch(verifyMailOtp({ email: otpdata.dummyuserData.email, otp: otpMail ,otpdata}));
+      dispatch(verifyMailOtp({ email: otpdata.dummyuserData.email, otp: otpMail, otpdata }));
     }
   };
 
@@ -327,16 +421,15 @@ const Register = () => {
       setTimeLeft(null);
     }
     if (mailVerifyError) {
-      console.log(otpdata)
+      // console.log(otpdata)
       toast.error(mailVerifyError);
       setMailVerified(false);
     }
   }, [mailVerifiedData, mailVerifyError]);
 
   useEffect(() => {
-    if (isAuthenticated) {
-      toast('Registered successfully', { type: 'success', position: 'bottom-center' });
-      navigate('/');
+    if (dummyisAuthenticated && dummyuser) {
+      store.dispatch(loadUser());
     }
     if (error) {
       toast.error(error, {
@@ -345,46 +438,130 @@ const Register = () => {
         onOpen: () => dispatch(clearError())
       });
     }
-  }, [isAuthenticated, error, navigate, dispatch]);
+    if (isAuthenticated) {
+      dispatch(otpErrorClear());
+      dispatch(otpClear());
+      toast('Registered successfully', { type: 'success', position: 'bottom-center' });
+      navigate('/');
+    }
+  }, [dummyisAuthenticated, navigate, dispatch,isAuthenticated]);
+
+  const handleOtpChange = (e) => {
+    setOtpMail(e.target.value);
+  };
+
+  useEffect(()=>{
+    if (otpMail.length === 6) {
+      verifyMail();
+    }
+
+  },[otpMail])
 
   return (
-    <div>
+    <div >
       <MetaData title="Register" />
-      <div className="products_heading">Register</div>
+      <div className="products_heading" ref={registerRef}>Register</div>
       <div className="row wrapper mt-0">
         <div className="col-10 col-lg-5">
           {
-            otpdata ? (
-              <div>
-                <div style={{ display: 'flex', width: '90%', position: 'relative', marginBottom: '5px' }}>
+            otpdata || otpSent ? (
+              // <div>
+              //   <div>enter 6 digit that has sent to email </div>
+              //   <div style={{ display: 'flex', width: '90%', position: 'relative', marginBottom: '5px' }}>
+              //     <input
+              //       type="text"
+              //       placeholder="Enter OTP"
+              //       style={{ borderRadius: '10px', marginRight: '5px' }}
+              //       maxLength="6"
+              //       onChange={handleOtpChange}
+              //       autocomplete="one-time-code"
+              //     />
+              //     <button
+              //       style={{ color: 'white', backgroundColor: 'green', borderRadius: '12px', border: 'none', padding: '5px', minWidth: '20%', cursor: 'pointer' }}
+              //       onClick={(e) => verifyMail(e)}
+              //     >
+              //       {verifyloading ? <ButtonLoader fullPage={false} size={20} /> : (
+              //         <span>Verify</span>
+              //       )
+
+              //       }
+
+              //     </button>
+              //   </div>
+              //   <button
+              //     style={{ color: 'white', backgroundColor: 'green', borderRadius: '12px', border: 'none', padding: '5px', minWidth: '20%', cursor: 'pointer' }}
+              //     onClick={submitHandler}
+              //   >
+              //     {otploading ? <ButtonLoader fullPage={false} size={20} /> : (
+              //       <span> Resend OTP</span>
+              //     )
+
+              //     }
+
+              //   </button>
+              //   {timeLeft !== null && <p>Time left: {timeLeft}s</p>}
+              // </div>
+              <div style={{ display: 'flex', flexDirection: 'column', alignItems: 'center', width: '100%', padding: '20px', backgroundColor: '#f7f7f7', borderRadius: '10px', boxShadow: '0px 4px 12px rgba(0,0,0,0.1)', maxWidth: '400px', margin: 'auto' }}>
+                <div style={{ marginBottom: '10px', fontSize: '18px', fontWeight: '500', color: '#333', textAlign: 'center' }}>
+                  Enter the 6-digit code sent to your email
+                </div>
+                <div style={{ display: 'flex', justifyContent: 'center', width: '100%', position: 'relative', marginBottom: '20px' }}>
                   <input
                     type="text"
                     placeholder="Enter OTP"
-                    style={{ borderRadius: '10px', marginRight: '5px' }}
-                    onChange={(e) => setOtpMail(e.target.value)}
+                    style={{
+                      borderRadius: '8px',
+                      border: '1px solid #ccc',
+                      padding: '10px',
+                      width: '100%',
+                      fontSize: '16px',
+                      textAlign: 'center',
+                      marginRight: '10px',
+                      outline: 'none',
+                      transition: 'border 0.3s ease',
+                    }}
+                    maxLength="6"
+                    onChange={handleOtpChange}
+                    autocomplete="one-time-code"
                   />
-                  {verifyloading ? (
-                    <Loader fullPage={false} size={30} />
-                  ) : (
-                    <button
-                      style={{ color: 'white', backgroundColor: 'green', borderRadius: '12px', border: 'none', padding: '5px', minWidth: '20%', cursor: 'pointer' }}
-                      onClick={(e)=>verifyMail(e)}
-                    >
-                      Verify
-                    </button>
-                  )}
-                </div>
-               
-                  <button
-                    style={{ color: 'white', backgroundColor: 'green', borderRadius: '12px', border: 'none', padding: '5px', minWidth: '20%', cursor: 'pointer' }}
+                  <span
                     onClick={submitHandler}
+                    style={{
+                      color: '#007bff',
+                      cursor: 'pointer',
+                      textDecoration: 'none',
+                      fontSize: '10px',
+                      // marginBottom: '10px',
+                      alignSelf: 'center',
+                      display: 'flex',
+                      alignItems: 'center',
+                      // minWidth:'20%'
+                    }}
                   >
-                    Resend OTP
-                  </button>
-               
-                {timeLeft !== null && <p>Time left: {timeLeft}s</p>}
+                    {otploading ? <ButtonLoader fullPage={false} size={20} /> : <span >Resend OTP</span>}
+                  </span>
+                </div>
+                <button
+                  style={{
+                    color: '#fff',
+                    backgroundColor: '#28a745',
+                    borderRadius: '8px',
+                    border: 'none',
+                    padding: '10px 20px',
+                    fontSize: '16px',
+                    cursor: 'pointer',
+                    transition: 'background-color 0.3s ease',
+                    width: '100%',
+                    marginBottom: '10px',
+                  }}
+                  onClick={(e) => verifyMail(e)}
+                >
+                  {verifyloading ? <ButtonLoader fullPage={false} size={20} /> : <span>Verify</span>}
+                </button>
+                {timeLeft !== null && <p style={{ fontSize: '14px', color: '#555' }}>Time left: {timeLeft}s</p>}
               </div>
-            )  : (
+
+            ) : (
               <form onSubmit={submitHandler} className="shadow-lg" encType='multipart/form-data'>
                 <h3>Register</h3>
 
@@ -416,8 +593,10 @@ const Register = () => {
 
                 <div className="form-group">
                   <label htmlFor="password_field">Password <span style={{ color: 'red' }}>*</span></label>
+                  <div style={{ position: 'relative' }}>
                   <input
-                    type="password"
+                  type={showPassword ? 'text' : 'password'}
+                    // type="password"
                     id="password_field"
                     name="password"
                     className="form-control"
@@ -425,7 +604,22 @@ const Register = () => {
                     onChange={onChange}
                     required
                   />
-                  <ul className="password-criteria">
+                  <span
+                      onClick={() => setShowPassword(!showPassword)}
+                      style={{
+                        position: 'absolute',
+                        right: '10px',
+                        top: '50%',
+                        transform: 'translateY(-50%)',
+                        cursor: 'pointer'
+                      }}
+                    >
+                      {showPassword ? '🙈' : '👁️'}
+                    </span>
+                    </div>
+                
+                </div>
+                <ul className="password-criteria">
                     <li className={passwordValidation.minLength ? 'text-success' : 'text-danger'}>
                       {passwordValidation.minLength ? '✔' : '✘'} Minimum 6 characters
                     </li>
@@ -439,6 +633,31 @@ const Register = () => {
                       {passwordValidation.maxLength ? '✔' : '✘'} No more than 20 characters
                     </li>
                   </ul>
+                <div className="form-group">
+                  <label htmlFor="confirmPassword_field">Confirm Password <span style={{ color: 'red' }}>*</span></label>
+                  <div style={{ position: 'relative' }}>
+                    <input
+                      type={showConfirmPassword ? 'text' : 'password'}
+                      id="confirmPassword_field"
+                      name="confirmPassword"
+                      className="form-control"
+                      value={userData.confirmPassword}
+                      onChange={onChange}
+                      required
+                    />
+                    <span
+                      onClick={() => setShowConfirmPassword(!showConfirmPassword)}
+                      style={{
+                        position: 'absolute',
+                        right: '10px',
+                        top: '50%',
+                        transform: 'translateY(-50%)',
+                        cursor: 'pointer'
+                      }}
+                    >
+                      {showConfirmPassword ? '🙈' : '👁️'}
+                    </span>
+                  </div>
                 </div>
 
                 <div className="form-group">
@@ -452,30 +671,50 @@ const Register = () => {
                   />
                 </div>
 
-                <div className="form-group">
-                  <label htmlFor="avatar_upload">Avatar</label>
-                  <div className="d-flex align-items-center">
-                    <figure className="avatar mr-3">
-                      <img src={avatarPreview} className="rounded-circle" alt="Avatar Preview" />
-                    </figure>
-                    <div className="custom-file">
-                      <input
-                        type="file"
-                        name="avatar"
-                        className="custom-file-input"
-                        id="customFile"
-                        onChange={(e) => setAvatar(e.target.files[0])}
-                      />
-                      <label className="custom-file-label" htmlFor="customFile">
-                        Choose Avatar
-                      </label>
-                    </div>
-                  </div>
+                <div className='form-group'>
+              <label htmlFor='avatar_upload'>Avatar(*Size should be within 1mb)</label>
+              <div className='d-flex align-items-center'>
+                <div>
+                  <figure className='avatar mr-3 item-rtl'>
+                    <img
+                      src={avatarPreview}
+                      className='rounded-circle'
+                      alt='avatar'
+                    />
+                  </figure>
                 </div>
+                <div className='custom-file'>
+                  <input
+                    type='file'
+                    name='avatar'
+                    onChange={onChangeAvatar}
+                    className='custom-file-input'
+                    id='customFile'
+                  />
+                  <label className='custom-file-label' htmlFor='customFile'>
+                    Choose Avatar
+                  </label>
+                </div>
+              </div>
+            </div>
+                {/* {
+                  otploading ? <ButtonLoader /> : (
+                    <button type="submit" className="btn btn-block py-3" disabled={otploading}>
+                      REGISTER
+                    </button>
+                  )
+                } */}
 
                 <button type="submit" className="btn btn-block py-3" disabled={otploading}>
-                  REGISTER
+                  {otploading ? <ButtonLoader fullPage={false} size={20} /> : (
+                    <span>  REGISTER</span>
+                  )
+
+                  }
+
+
                 </button>
+
               </form>
             )
           }

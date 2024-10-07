@@ -5,13 +5,16 @@ const authSlice = createSlice({
     name: 'auth',
     initialState: {
         loading: false,
-        isAuthenticated: false
+        isAuthenticated: false,
+        user:null,
+        error:null,
     },
     reducers: {
         loginRequest(state, action) {
             return {
                 ...state,
-                loading: true
+                loading: true,
+                isAuthenticated: false,
             }
         },
         loginSuccess(state, action) {
@@ -25,11 +28,13 @@ const authSlice = createSlice({
             return {
                 ...state,
                 loading: false,
-                error: action.payload
+                isAuthenticated: false,
+                error: action.payload,  
             }
         },
         clearError(state, action) {
             return {
+                ...state,
                 loading: false,
                 error: null,
                 // user:null
@@ -79,6 +84,7 @@ const authSlice = createSlice({
             return {
                 loading: false,
                 isAuthenticated: false,
+                user: null, 
             }
         },
         logoutFail(state, action) {
@@ -138,6 +144,14 @@ const authSlice = createSlice({
                 error: action.payload
             }
         },
+        clearUpdatePassword(state, action){
+            return {
+                ...state,
+                loading: false,
+                isUpdated: false,
+                error: null
+            }
+        },
         forgotPasswordRequest(state, action) {
             return {
                 ...state,
@@ -180,6 +194,15 @@ const authSlice = createSlice({
                 error: action.payload
             }
         },
+        clearResetPassword(state,actions){
+            return {
+                ...state,
+                loading: false,
+                isAuthenticated: false,
+                user: null,
+                error: null,
+            }
+        },
 
 
     }
@@ -212,6 +235,9 @@ export const { loginRequest,
     forgotPasswordSuccess,
     resetPasswordFail,
     resetPasswordRequest,
-    resetPasswordSuccess } = actions;
+    resetPasswordSuccess,
+    clearResetPassword,
+    clearUpdatePassword
+ } = actions;
 
 export default reducer;

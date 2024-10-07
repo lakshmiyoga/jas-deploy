@@ -10,7 +10,7 @@ import ProductDetail from './components/Product/ProductDetail';
 import ProductSearch from './components/Product/ProductSearch';
 import Login from './components/user/Login';
 import Register from './components/user/Register';
-import { useEffect, useState } from 'react';
+import { useEffect, useMemo, useState } from 'react';
 import store from './store';
 import { loadUser } from './actions/userActions';
 import Dashboard from './components/admin/Dashboard';
@@ -69,6 +69,8 @@ function App() {
     const location = useLocation();
     const navigate = useNavigate();
     const redirectPath = sessionStorage.getItem('redirectPath') || '/';
+    // const redirectPath = useMemo(() => sessionStorage.getItem('redirectPath') || '/', []);
+
     // if (!redirectPath && !location) {
     //     navigate('/')
     //     sessionStorage.setItem('redirectPath', '/');
@@ -89,7 +91,7 @@ function App() {
     }, [])
 
     useEffect(() => {
-        if (!isAuthenticated) {
+        if (!isAuthenticated || !user) {
             store.dispatch(loadUser());
         }
         if (!product) {
@@ -163,6 +165,7 @@ function App() {
                                     {/* <Route path="/" element={<LandingPage />} /> */}
                                     <Route path="/vegetables" element={<Vegetables />} />
                                     <Route path="/fruits" element={<Fruits />} />
+                                    
                                     <Route path="/keerai" element={<Keerai />} />
                                     <Route path="/about" element={<About />} />
                                     <Route path="/enquiry" element={<Enquiry />} />
