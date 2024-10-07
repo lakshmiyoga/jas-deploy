@@ -7,8 +7,8 @@ const nodeCron = require('node-cron');
 const nodemailer = require('nodemailer');
 const path = require('path');
 const axios = require('axios');
-// const porterModel = require('../models/porterModel');
-const porterModel = require('../models/allProductModel');
+const porterModel = require('../models/porterModel');
+// const porterModel = require('../models/allProductModel');
 // const fetch = require('node-fetch');
 const fs = require('fs');
 const { Juspay, APIError } = require('expresscheckout-nodejs');
@@ -28,7 +28,7 @@ const paymentPageClientId = config.PAYMENT_PAGE_CLIENT_ID; // used in orderSessi
 
 const juspay = new Juspay({
     merchantId: config.MERCHANT_ID,
-    baseUrl: SANDBOX_BASE_URL, // Using sandbox base URL for testing
+    baseUrl: PRODUCTION_BASE_URL, // Using sandbox base URL for testing
     jweAuth: {
         keyId: config.KEY_UUID,
         publicKey,
@@ -40,14 +40,15 @@ const juspay = new Juspay({
 //get single order for user 
 
 const getSinglePorterOrder = catchAsyncError(async (req, res, next) => {
-    //    console.log(req.params)
+    console.log("req.body", req.body); // Log request body
     const { order_id } = req.body;
+    console.log("order_id", order_id); // Log order_id
     // if (!order_id) {
-    //     return next(new ErrorHandler(`Order not found`, 404))
+    //     return next(new ErrorHandler(`Order id not found`, 404))
     // }
-    // console.log(req.body)
+    // console.log("req.body",req.body)
     const order = await porterModel.findOne({ order_id });
-    // console.log(order)
+    console.log("order",order)
     if (!order) {
         return next(new ErrorHandler(`Order not found with this id: ${order_id}`, 404))
     }
@@ -79,6 +80,59 @@ const getSinglePorterOrder = catchAsyncError(async (req, res, next) => {
    
 })
 
+// const getSinglePorterOrder = catchAsyncError(async (req, res, next) => {
+//     console.log("req.body", req.body); // Log request body
+//     const { order_id } = req.body;
+//     console.log("order_id", order_id); // Log order_id
+    
+//     if (!order_id) {
+//         return next(new ErrorHandler(`Order ID is missing`, 400));
+//     }
+    
+//     console.log("Type of order_id:", typeof order_id);
+//     console.log("Length of order_id:", order_id.length);
+
+//     // Try raw MongoDB query for debugging purposes
+//     // const rawQuery = await mongoose.connection.db.collection('porterModel').findOne({ order_id: String(order_id) });
+//     // console.log("Raw MongoDB Query Result:", rawQuery);
+    
+//     const order = await porterModel.findOne({ order_id: String(order_id) });
+//     console.log("order", order);
+
+//     if (!order) {
+//         return next(new ErrorHandler(`Order not found with this id: ${order_id}`, 404));
+//     }
+
+//     const statusResponse = await juspay.order.status(order_id);
+
+//     if (statusResponse) {
+//         const onepayments = await Dispatch.findOne({ order_id });
+
+//         if (onepayments) {
+//             const refundStatus = await Dispatch.findOneAndUpdate(
+//                 { order_id },
+//                 {
+//                     refundStatus: statusResponse?.refunds?.[0]?.status,
+//                     $set: { statusResponse }
+//                 },
+//                 { new: true }
+//             );
+
+//             return res.status(200).json({
+//                 success: true,
+//                 porterOrder: order
+//             });
+//         }
+//     }
+
+//     return res.status(200).json({
+//         success: true,
+//         porterOrder: order
+//     });
+// });
+
+
+
 
 const getPorterResponse = catchAsyncError(async (req, res, next) => {
     //    console.log(req.params)
@@ -89,7 +143,8 @@ const getPorterResponse = catchAsyncError(async (req, res, next) => {
     if (!order || !porterOrder_id) {
         return next(new ErrorHandler(`Order not found with this id: ${order_id}`, 404))
     }
-    const apiEndpoint = `https://pfe-apigw-uat.porter.in/v1/orders/${porterOrder_id}`
+    // const apiEndpoint = `https://pfe-apigw-uat.porter.in/v1/orders/${porterOrder_id}`
+    const apiEndpoint = `https://pfe-apigw.porter.in/v1/orders/${porterOrder_id}`
     // apiEndpoint = `https://pfe-apigw-uat.porter.in/v1/orders/{order_id:CRN93814651}`
     const response = await axios.get(apiEndpoint, {
         headers: {
@@ -197,7 +252,8 @@ const getCancelResponse = catchAsyncError(async (req, res, next) => {
     // apiEndpoint = `https://pfe-apigw-uat.porter.in/v1/orders/${porterOrder_id}/cancel`
 
     try {
-        apiEndpoint = `https://pfe-apigw-uat.porter.in/v1/orders/${porterOrder_id}/cancel`
+        // apiEndpoint = `https://pfe-apigw-uat.porter.in/v1/orders/${porterOrder_id}/cancel`
+        apiEndpoint = `https://pfe-apigw.porter.in/v1/orders/${porterOrder_id}/cancel`
         const response = await axios.post(apiEndpoint, {}, {
             headers: {
                 'X-API-KEY': process.env.PORTER_API_KEY,

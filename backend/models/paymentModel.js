@@ -30,6 +30,14 @@ const paymentSchema = mongoose.Schema({
             type: String,
             required: true
         },
+        latitude:{
+            type: String,
+            required: true
+        },
+        longitude:{
+            type: String,
+            required: true, 
+        }
     },
     user: {
         type: Object,

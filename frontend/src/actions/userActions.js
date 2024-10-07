@@ -67,7 +67,7 @@ export const login = createAsyncThunk('post/login', async ({email,password},{dis
     try {
        
               dispatch(registerRequest());
-              console.log(userData)
+              // console.log(userData)
               const config = {
                 headers: {
                     'Content-type': 'multipart/form-data'

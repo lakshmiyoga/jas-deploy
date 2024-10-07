@@ -27,7 +27,7 @@ const paymentPageClientId = config.PAYMENT_PAGE_CLIENT_ID; // used in orderSessi
 
 const juspay = new Juspay({
     merchantId: config.MERCHANT_ID,
-    baseUrl: SANDBOX_BASE_URL, // Using sandbox base URL for testing
+    baseUrl: PRODUCTION_BASE_URL, // Using sandbox base URL for testing
     jweAuth: {
         keyId: config.KEY_UUID,
         publicKey,
@@ -76,7 +76,7 @@ const newOrder = catchAsyncError(async (req, res, next) => {
 const getSingleOrder = catchAsyncError(async (req, res, next) => {
     //    console.log(req.params)
     const { id } = req.params
-    console.log("id", id)
+    // console.log("id", id)
     const order = await Payment.findOne({ 'order_id': id }).populate('user', 'name email');
     // console.log(order)
     if (!order) {
@@ -116,7 +116,8 @@ const getSingleOrder = catchAsyncError(async (req, res, next) => {
 const getQuote = catchAsyncError(async (req, res, next) => {
     //    console.log(req.params)
     const { pickup_details, drop_details, customer } = req.body;
-    const apiEndpoint = 'https://pfe-apigw-uat.porter.in/v1/get_quote';
+    // const apiEndpoint = 'https://pfe-apigw-uat.porter.in/v1/get_quote';
+    const apiEndpoint = 'https://pfe-apigw.porter.in/v1/get_quote';
     // const apiKey = 'fdbe7c47-25ce-4b15-90c7-ccce2027841d';
     //    console.log(req.body)
     try {
@@ -125,7 +126,7 @@ const getQuote = catchAsyncError(async (req, res, next) => {
             drop_details,
             customer
         };
-        //   console.log(requestData)
+        //   console.log("requestData",requestData);
 
         const response = await axios.post(apiEndpoint, requestData, {
             headers: {
@@ -133,10 +134,10 @@ const getQuote = catchAsyncError(async (req, res, next) => {
                 'Content-Type': 'application/json'
             }
         });
-        // console.log(response.data)
+        console.log(response.data)
         return res.json(response.data);
     } catch (error) {
-        console.log(error)
+        console.log(error.response)
         // console.log(error.response.data.message)
         return next(new ErrorHandler(error.response && error.response.data && error.response.data.message ? error.response.data.message : "Server Error Please Try After SomeTime!", error.response.status));
         //   return res.status(500).json({ message: 'Error sending data', error });
@@ -149,7 +150,8 @@ const porterOrder = catchAsyncError(async (req, res, next) => {
     //    console.log(req.params)
     const { order_id, request_id, user, user_id, porterData, updatedItems, detailedTable, totalRefundableAmount } = req.body;
     // console.log("req.body", req.body)
-    const apiEndpoint = 'https://pfe-apigw-uat.porter.in/v1/orders/create';
+    // const apiEndpoint = 'https://pfe-apigw-uat.porter.in/v1/orders/create';
+    const apiEndpoint = 'https://pfe-apigw.porter.in/v1/orders/create';
 
     const porterOrderExist = await PorterModel.findOne({ order_id });
 
@@ -163,6 +165,7 @@ const porterOrder = catchAsyncError(async (req, res, next) => {
                 }
             });
             const porterOrder = response.data;
+            console.log("porterOrder", porterOrder)
             if (order_id && request_id && user_id && porterData && porterOrder) {
                 const Data = new PorterModel({
                     order_id: order_id,
@@ -174,7 +177,8 @@ const porterOrder = catchAsyncError(async (req, res, next) => {
                     porterResponse: {},
                     updatedItems: updatedItems,
                     detailedTable: detailedTable,
-                    totalRefundableAmount: totalRefundableAmount
+                    totalRefundableAmount: totalRefundableAmount,
+                    tracking_url: porterOrder.tracking_url,
 
                 });
                 // console.log("Data", Data)
@@ -190,7 +194,8 @@ const porterOrder = catchAsyncError(async (req, res, next) => {
                         if (porterResponse) {
                             if (porterResponse && porterResponse.porterOrder && porterResponse.porterOrder.order_id) {
                                 try {
-                                    const apiEndpoint1 = `https://pfe-apigw-uat.porter.in/v1/orders/${porterResponse.porterOrder.order_id}`
+                                    // const apiEndpoint1 = `https://pfe-apigw-uat.porter.in/v1/orders/${porterResponse.porterOrder.order_id}`
+                                    const apiEndpoint1 = `https://pfe-apigw.porter.in/v1/orders/${porterResponse.porterOrder.order_id}`
                                     // apiEndpoint = `https://pfe-apigw-uat.porter.in/v1/orders/{order_id:CRN93814651}`
                                     const response = await axios.get(apiEndpoint1, {
                                         headers: {
@@ -338,8 +343,10 @@ const orders = catchAsyncError(async (req, res, next) => {
         let totalAmount = 0;
         // console.log("this is sample response",JSON.stringify(orders, null, 2));
         orders.forEach(order => {
-            totalAmount += order.totalPrice
-        })
+            if (order.paymentStatus === "CHARGED") {
+                totalAmount += order.totalPrice;
+            }
+        });
         return res.status(200).json({
             success: true,
             totalAmount,
@@ -499,7 +506,7 @@ const sendEmaildata = async (orderSummary) => {
     let info = await transporter.sendMail({
         from: process.env.SEND_MAIL,
         to: 'jasfruitsandvegetables@gmail.com',
-        subject: 'Items Daily order summary ',
+        subject: 'Order Summary for Today ',
         html: summaryHtml,
     });
 
@@ -656,6 +663,7 @@ const getUserSummaryByDate = catchAsyncError(async (req, res) => {
 // Function to send email
 
 const sendEmail = async (userSummary) => {
+    // console.log("userSummary", userSummary)
     let transporter = nodemailer.createTransport({
         service: 'gmail',
         auth: {
@@ -665,55 +673,55 @@ const sendEmail = async (userSummary) => {
     });
 
     let summaryHtml = '<h1>User Summary for Today</h1>';
-    summaryHtml += '<table border="1" style="border-collapse: collapse; width: 100%;">';
+    summaryHtml += '<table border="1" style="border-collapse: collapse; width:100% ;">';
     summaryHtml += `
         <thead>
             <tr>
-                <th>User Name</th>
-                <th>User Email</th>
-                <th>Phone No</th>
-                <th>Address</th>
-                <th>Product Name</th>
-                <th>Product Weight (kg)</th>
-                <th>Product Price (Rs.)</th>
+                <th colspan="1">User Name</th>
+                <th colspan="2">User Email</th>
+                <th colspan="1">Phone No</th>
+                <th colspan="2">Address</th>
+                <th colspan="1">Product Name</th>
+                <th colspan="1">Product Weight (kg)</th>
+                <th colspan="1">Product Price (Rs.)</th>
             </tr>
         </thead>
-        <tbody>`;
+         <tbody>`;
 
     let totalWeight = 0;
     let totalAmount = 0;
 
     userSummary.forEach(summary => {
+        summaryHtml += `
+            <tr>
+                <td colspan="1" style="text-align:center;" >${summary.user.name}</td>
+                <td colspan="2" style="text-align:center;" >${summary.user.email}</td>
+                <td colspan="1" style="text-align:center;">${summary.shippingInfo.phoneNo}</td>
+                <td colspan="2" style="text-align:center;">${summary.shippingInfo.address}, ${summary.shippingInfo.city}, ${summary.shippingInfo.country}, ${summary.shippingInfo.postalCode}</td>
+                <td colspan="1" style="text-align:center;">${summary.products.map(product => product.name).join('<br>')}</td>
+                <td colspan="1" style="text-align:center;">${summary.products.map(product => product.weight.toFixed(2)).join('<br>')}</td>
+                <td colspan="1" style="text-align:center;">${summary.products.map(product => parseFloat(product.price).toFixed(2)).join('<br>')}</td>
+            </tr>`;
+    
+        // Assuming you're adding up total weight and amount here
         summary.products.forEach(product => {
-            summaryHtml += `
-                <tr>
-                    <td>${summary.user.name}</td>
-                    <td>${summary.user.email}</td>
-                    <td>${summary.shippingInfo.phoneNo}</td>
-                    <td>${summary.shippingInfo.address}, ${summary.shippingInfo.city}, ${summary.shippingInfo.country}, ${summary.shippingInfo.postalCode}</td>
-                    <td>${product.name}</td>
-                    <td>${product.weight.toFixed(2)}</td>
-                    <td>${parseFloat(product.price).toFixed(2)}</td>
-                </tr>`;
-
             totalWeight += product.weight;
             totalAmount += parseFloat(product.price);
         });
     });
 
-    summaryHtml += '</tbody></table>';
+    summaryHtml += `
+        <tr>
+            <td colspan="7" style="text-align:right;"><strong>Total</strong></td> <!-- Span until Product Name -->
+            <td  colspan="1" style="text-align:center;"><strong>${totalWeight.toFixed(2)} kg</strong></td> <!-- Total weight -->
+            <td  colspan="1" style="text-align:center;"><strong>Rs. ${totalAmount.toFixed(2)}</strong></td> <!-- Total amount -->
+        </tr>
+    </tbody>`;
+
+    // summaryHtml += '</tbody></table>';
 
     // Add total weight and total amount row at the end of the table
-    summaryHtml += `
-        <table border="1" style="border-collapse: collapse; width: 100%;">
-            
-                <tr>
-                    <td colspan="5"><strong>Total </strong></td>
-                    <td colspan="1"><strong>${totalWeight.toFixed(2)}</strong></td>
-                    <td colspan="1"><strong>Rs. ${totalAmount.toFixed(2)}</strong></td>
-                </tr>
-            
-        </table>`;
+   
 
     let info = await transporter.sendMail({
         from: process.env.SEND_MAIL,
@@ -769,7 +777,7 @@ const sendEmail = async (userSummary) => {
 // });
 
 
-nodeCron.schedule('00 21 * * *', async () => {
+nodeCron.schedule('0 21  * * *', async () => {
     const date = new Date();
     date.setDate(date.getDate() + 1);
     const formattedDate = date.toISOString().split('T')[0]; // Get YYYY-MM-DD format
@@ -795,7 +803,7 @@ nodeCron.schedule('00 21 * * *', async () => {
         });
 
         const data = await response.json();
-        console.log("Fetched data:", data);
+        // console.log("Fetched data:", data);
 
         if (!response.ok) {
             throw new Error(`HTTP error! Status: ${response.status}`);
@@ -1068,7 +1076,8 @@ async function checkPaymentStatus() {
         await Promise.all(orders.map(async (order) => {
             try {
                 if (order && order.porterOrder) {
-                    const apiEndpoint = `https://pfe-apigw-uat.porter.in/v1/orders/${order.porterOrder.order_id}`;
+                    // const apiEndpoint = `https://pfe-apigw-uat.porter.in/v1/orders/${order.porterOrder.order_id}`;
+                    const apiEndpoint = `https://pfe-apigw.porter.in/v1/orders/${order.porterOrder.order_id}`;
                     let response;
                     for (let attempt = 0; attempt < 3; attempt++) { // Retry up to 3 times
                         try {
@@ -1125,12 +1134,15 @@ async function checkPaymentStatus() {
                 }
             } catch (error) {
                 console.error(`Error processing order ${order.order_id}:`, error);
+                return
                 // Log the order ID and error details for better tracking
             }
         }));
         console.log("Payment Updation completed !!!!!!!!!!!!!!!!!!!!!!!!")
+        return
     } catch (error) {
         console.error('Error checking payment status:', error);
+        return
     }
 }
 
@@ -1140,6 +1152,7 @@ async function checkRefundStatus() {
             totalRefundableAmount: { $gt: 0 },
             refundStatus: { $not: { $regex: /^(SUCCESS|FAILURE)$/i } }
         });
+        // console.log("refundOrders",refundOrders)
 
         await Promise.all(refundOrders.map(async (order) => {
             try {
@@ -1149,6 +1162,10 @@ async function checkRefundStatus() {
                         statusResponse = await juspay.order.status(order.order_id);
                         if (statusResponse) break; // Exit loop on success
                     } catch (error) {
+                        if (error.error_info && error.error_info.code === 'RESOURCE_NOT_FOUND') {
+                            console.error(`Order ${order.order_id} not found, skipping...`);
+                            return; // Skip further processing for this order
+                        }
                         if (attempt === 2 || !isRetryableError(error)) throw error; // Throw error if last attempt or non-retryable error
                         console.warn(`Attempt ${attempt + 1} failed for order ${order.order_id}, retrying...`);
                     }
@@ -1170,11 +1187,14 @@ async function checkRefundStatus() {
 
             } catch (error) {
                 console.error(`Error checking refund order ${order.order_id}:`, error);
+                return
             }
         }));
         console.log("Refund Updation completed !!!!!!!!!!!!!!!!!!!!!!!!")
+        return
     } catch (error) {
         console.error('Error checking refund status:', error);
+        return
     }
 }
 

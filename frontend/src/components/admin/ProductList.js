@@ -19,6 +19,7 @@ const ProductList = ({isActive,setIsActive}) => {
     const dispatch = useDispatch();
     const [showModal, setShowModal] = useState(false);
     const [productToDelete, setProductToDelete] = useState(null);
+    console.log("products",products)
 
     const setProducts = () => {
         const data = {
@@ -34,8 +35,13 @@ const ProductList = ({isActive,setIsActive}) => {
                     sort: 'disabled'
                 },
                 {
-                    label: 'Price',
+                    label: 'Buying Price',
                     field: 'price',
+                    sort: 'disabled'
+                },
+                {
+                    label: 'Selling Price',
+                    field: 'sellprice',
                     sort: 'disabled'
                 },
                 {
@@ -51,7 +57,8 @@ const ProductList = ({isActive,setIsActive}) => {
             data.rows.push({
                 s_no: index + 1,
                 name: `${product.englishName} / ${product.tamilName}`,
-                price: `Rs.${product.price} (per kg)`,
+                price: product.category === "Keerai" ? `Rs.${product.buyingPrice} (per piece)` : `Rs.${product.buyingPrice} (per kg)`,
+                sellprice: product.category === "Keerai" ? `Rs.${product.price} (per piece)` : `Rs.${product.price} (per kg)`,
                 actions: (
                     <Fragment>
                         <Link to={`/admin/product/${product._id}`} className="btn btn-primary py-1 px-2 ml-2">

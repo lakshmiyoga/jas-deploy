@@ -38,7 +38,7 @@ const paymentPageClientId = config.PAYMENT_PAGE_CLIENT_ID; // used in orderSessi
 
 const juspay = new Juspay({
 	merchantId: config.MERCHANT_ID,
-	baseUrl: SANDBOX_BASE_URL, // Using sandbox base URL for testing
+	baseUrl: PRODUCTION_BASE_URL, // Using sandbox base URL for testing
 	jweAuth: {
 		keyId: config.KEY_UUID,
 		publicKey,
@@ -334,7 +334,8 @@ const paymentSuccess = catchAsyncError(async (req, res, next) => {
 						})
 						.catch((error) => {
 						  // Handle the error appropriately and send only one response
-						//   return next(new ErrorHandler('Failed to send OTP. Check the number.', 500));
+						  console.log(error)
+						  return next(new ErrorHandler('Failed to send OTP. Check the number.', 500));
 						});
 					  
 

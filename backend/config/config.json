@@ -1,7 +1,8 @@
+
 {
-    "MERCHANT_ID": "SG520",
-    "PRIVATE_KEY_PATH": "C:\\Users\\Administrator\\Downloads\\key_aa2a964eee584243b8cf0514a65a0176\\privateKey.pem",
-    "PUBLIC_KEY_PATH": "C:\\Users\\Administrator\\Downloads\\key_aa2a964eee584243b8cf0514a65a0176\\key_aa2a964eee584243b8cf0514a65a0176.pem",
-    "KEY_UUID": "key_aa2a964eee584243b8cf0514a65a0176",
-    "PAYMENT_PAGE_CLIENT_ID": "hdfcmaster"
+    "MERCHANT_ID": "36794",
+    "PRIVATE_KEY_PATH": "C:\\Users\\Administrator\\Downloads\\key_e4b492a3d3fc47c5a1fbc69c78f43abe\\privateKey.pem",
+    "PUBLIC_KEY_PATH": "C:\\Users\\Administrator\\Downloads\\key_e4b492a3d3fc47c5a1fbc69c78f43abe\\key_e4b492a3d3fc47c5a1fbc69c78f43abe.pem",
+    "KEY_UUID": "key_e4b492a3d3fc47c5a1fbc69c78f43abe",
+    "PAYMENT_PAGE_CLIENT_ID": "36794"
 }

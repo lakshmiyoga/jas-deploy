@@ -53,7 +53,7 @@ export default function UserOrders() {
                     sort: "disabled"
                 },
                 {
-                    label: "Number of Items",
+                    label: "No of Items",
                     field: 'numOfItems',
                     sort: "disabled"
                 },

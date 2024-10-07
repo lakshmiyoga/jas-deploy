@@ -32,8 +32,10 @@ const createProducts = catchAsyncError(async (req, res, next) => {
     const newItem = new Product({
         englishName: req.body.englishName,
         tamilName: req.body.tamilName,
+        buyingPrice:req.body.buyingPrice,
         price: req.body.price,
         category: req.body.category,
+        stocks:req.body.stocks,
         images: req.body.images,
         user: req.body.user
     });

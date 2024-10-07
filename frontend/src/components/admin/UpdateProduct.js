@@ -197,8 +197,10 @@ const UpdateProduct = ({isActive,setIsActive}) => {
     const [formData, setFormData] = useState({
         englishName: "",
         tamilName:"",
+        buyingPrice:"",
         price: "",
         category: "",
+        stocks:"",
         images: [],
         imagesPreview: [],
         imagesCleared: false
@@ -221,8 +223,10 @@ const UpdateProduct = ({isActive,setIsActive}) => {
                 ...formData,
                 englishName: product.englishName,
                 tamilName: product.tamilName,
+                buyingPrice: product.buyingPrice,
                 price: product.price,
                 category: product.category,
+                stocks: product.stocks,
                 imagesPreview: product.images.map(image => image.image)
             });
         }
@@ -306,8 +310,10 @@ const UpdateProduct = ({isActive,setIsActive}) => {
         const formDataToSend = new FormData();
         formDataToSend.append('englishName', formData.englishName);
         formDataToSend.append('tamilName', formData.tamilName);
+        formDataToSend.append('buyingPrice', formData.buyingPrice);
         formDataToSend.append('price', formData.price);
         formDataToSend.append('category', formData.category);
+        formDataToSend.append('stocks', formData.stocks);
         formData.images.forEach(image => formDataToSend.append('images', image));
         formDataToSend.append('imagesCleared', formData.imagesCleared);
         // console.log(formDataToSend)
@@ -403,7 +409,19 @@ const UpdateProduct = ({isActive,setIsActive}) => {
                             </div>
 
                             <div className="form-group">
-                                <label htmlFor="price">Price</label>
+                                <label htmlFor="buyingPrice">Buying Price</label>
+                                <input
+                                    type="text"
+                                    id="buyingPrice"
+                                    name="buyingPrice"
+                                    className="form-control"
+                                    value={formData.buyingPrice}
+                                    onChange={handleChange}
+                                />
+                            </div>
+
+                            <div className="form-group">
+                                <label htmlFor="price"> Selling Price</label>
                                 <input
                                     type="text"
                                     id="price"
@@ -427,6 +445,22 @@ const UpdateProduct = ({isActive,setIsActive}) => {
                                     <option value="Vegetables">Vegetables</option>
                                     <option value="Fruits">Fruits</option>
                                     <option value="Keerai">Keerai</option>
+                                </select>
+                            </div>
+
+                            <div className="form-group">
+                                <label htmlFor="stocks"> Stocks</label>
+                                <select
+                                    type="text"
+                                    id="stocks"
+                                    name="stocks"
+                                    className="form-control"
+                                    value={formData.stocks}
+                                    onChange={handleChange}
+                                >
+                                <option value="">Select</option>
+                                    <option value="Stock">Stock</option>
+                                    <option value="No Stock">No Stock</option>
                                 </select>
                             </div>
 

@@ -13,7 +13,7 @@
         "stocks": "Stock"
     },
     {
-        "englishName": "ASH GOURD (pumpkin)",
+        "englishName": "ASH GOURD",
         "tamilName": "வெண்பூசணி",
         "price": 85,
         "buyingPrice": 40,
@@ -27,7 +27,7 @@
     },
     {
         "englishName": "AVARI NATTU",
-        "tamilName": "அவாரி நட்டு",
+        "tamilName": "அவரி நாட்டு",
         "price": 45,
         "buyingPrice": 40,
         "images": [
@@ -40,12 +40,12 @@
     },
     {
         "englishName": "BABY CORN",
-        "tamilName": "பெய்பி கார்ன்",
+        "tamilName": "பேபி கார்ன்",
         "price": 60,
         "buyingPrice": 40,
         "images": [
             {
-                "image": "/images/products/baby_corn.jpg"
+                "image": "/images/products/baby_corn.jpeg"
             }
         ],
         "category": "Vegetables",
@@ -53,7 +53,7 @@
     },
     {
         "englishName": "BABY POTATO",
-        "tamilName": "பெய்பி உருளைக்கிழங்கு",
+        "tamilName": "பேபி உருளைக்கிழங்கு",
         "price": 40,
         "buyingPrice": 40,
         "images": [
@@ -66,7 +66,7 @@
     },
     {
         "englishName": "BANANNA LUNCH LEAF",
-        "tamilName": "வாழை இலையை மதிய உணவு",
+        "tamilName": "வாழை இலை",
         "price": 25,
         "buyingPrice": 40,
         "images": [
@@ -105,7 +105,7 @@
     },
     {
         "englishName": "BITTER GOURD BABY",
-        "tamilName": "கார்வெள்ளை சிறியவை",
+        "tamilName": "பாகற்காய் சிறியவை",
         "price": 35,
         "buyingPrice": 40,
         "images": [
@@ -118,7 +118,7 @@
     },
     {
         "englishName": "BITTER GOURD BIG",
-        "tamilName": "கார்வெள்ளை பெரியவை",
+        "tamilName": "பாகற்காய் பெரியது",
         "price": 40,
         "buyingPrice": 40,
         "images": [
@@ -131,7 +131,7 @@
     },
     {
         "englishName": "BITTER GOURD SMALL",
-        "tamilName": "கார்வெள்ளை சிறியவை",
+        "tamilName": "பாகற்காய் சிறியது",
         "price": 35,
         "buyingPrice": 40,
         "images": [
@@ -235,7 +235,7 @@
     },
     {
         "englishName": "BRINJAL VARI",
-        "tamilName": "வெரைட்டி கத்திரிக்காய்",
+        "tamilName": "வரி கத்திரிக்காய்",
         "price": 65,
         "buyingPrice": 40,
         "images": [
@@ -383,7 +383,7 @@
         "buyingPrice": 40,
         "images": [
             {
-                "image": "/images/products/carrot.jpg"
+                "image": "/images/products/carrot.webp"
             }
         ],
         "category": "Vegetables",
@@ -396,7 +396,7 @@
         "buyingPrice": 40,
         "images": [
             {
-                "image": "/images/products/cellery.jpg"
+                "image": "/images/products/cellery.jpeg"
             }
         ],
         "category": "Vegetables",
@@ -429,8 +429,8 @@
         "stocks": "Stock"
     },
     {
-        "englishName": "CHOCHOW",
-        "tamilName": "சொசொவ்",
+        "englishName": "CHOWCHOW",
+        "tamilName": "சௌச்சௌ",
         "price": 35,
         "buyingPrice": 40,
         "images": [
@@ -638,7 +638,7 @@
     },
     {
         "englishName": "ICE BERG",
-        "tamilName": "ஐஸ்பேர்க்",
+        "tamilName": "ஐஸ் பெர்க்",
         "price": 70,
         "buyingPrice": 40,
         "images": [
@@ -651,7 +651,7 @@
     },
     {
         "englishName": "IVY GOURD",
-        "tamilName": "கோவைக்காய்",
+        "tamilName": "கோவக்காய்",
         "price": 30,
         "buyingPrice": 40,
         "images": [
@@ -741,8 +741,8 @@
         "stocks": "Stock"
     },
     {
-        "englishName": "MALLI- PCS",
-        "tamilName": "மல்லி- துண்டுகள்",
+        "englishName": "MALLI",
+        "tamilName": "மல்லி",
         "price": 35,
         "buyingPrice": 40,
         "images": [
@@ -755,7 +755,7 @@
     },
     {
         "englishName": "MANGO GINGER",
-        "tamilName": "மாம்பழ இஞ்சி",
+        "tamilName": "மாங்காய் இஞ்சி",
         "price": 90,
         "buyingPrice": 40,
         "images": [
@@ -820,7 +820,7 @@
     },
     {
         "englishName": "NOOKAL",
-        "tamilName": "நூகல்",
+        "tamilName": "நூக்கல்",
         "price": 65,
         "buyingPrice": 40,
         "images": [
@@ -871,8 +871,8 @@
         "stocks": "Stock"
     },
     {
-        "englishName": "PALLAKAI",
-        "tamilName": "பல்லாகாய்",
+        "englishName": "PALAAKAAI",
+        "tamilName": "பலாக்காய்",
         "price": 35,
         "buyingPrice": 40,
         "images": [
@@ -942,15 +942,15 @@
         "buyingPrice": 40,
         "images": [
             {
-                "image": "/images/products/pudina.jpg"
+                "image": "/images/products/pudina.webp"
             }
         ],
         "category": "Vegetables",
         "stocks": "Stock"
     },
     {
-        "englishName": "PUMPKIN ( PARANKIKAI)",
-        "tamilName": "பரங்கிக்காய்",
+        "englishName": "PUMPKIN",
+        "tamilName": "பூசணிக்காய்",
         "price": 30,
         "buyingPrice": 40,
         "images": [
@@ -981,7 +981,7 @@
         "buyingPrice": 40,
         "images": [
             {
-                "image": "/images/products/radish_white.jpg"
+                "image": "/images/products/radish_white.webp"
             }
         ],
         "category": "Vegetables",
@@ -995,19 +995,6 @@
         "images": [
             {
                 "image": "/images/products/raw_banana.jpg"
-            }
-        ],
-        "category": "Vegetables",
-        "stocks": "Stock"
-    },
-    {
-        "englishName": "RAW BANANA Chips",
-        "tamilName": "வாழைக்காய் சிப்ஸ்",
-        "price": 55,
-        "buyingPrice": 40,
-        "images": [
-            {
-                "image": "/images/products/raw_banana_chips.jpg"
             }
         ],
         "category": "Vegetables",
@@ -1170,13 +1157,13 @@
         "stocks": "Stock"
     },
     {
-        "englishName": "THINDHA",
+        "englishName": "THINDA",
         "tamilName": "திண்டா",
         "price": 60,
         "buyingPrice": 40,
         "images": [
             {
-                "image": "/images/products/thindha.jpg"
+                "image": "/images/products/thinda.jpeg"
             }
         ],
         "category": "Vegetables",
@@ -1313,8 +1300,8 @@
         "stocks": "Stock"
     },
     {
-        "englishName": "MANTHAKALI KEERAI",
-        "tamilName": "மாந்தக்காலிக்கீரை",
+        "englishName": "MANATHAKALI KEERAI",
+        "tamilName": "மணத்தக்காளி கீரை",
         "price": 30,
         "buyingPrice": 40,
         "images": [
@@ -1431,7 +1418,7 @@
     },
     {
         "englishName": "SIRU KEERAI",
-        "tamilName": "சீருக்கீரை",
+        "tamilName": "சிறு கீரை",
         "price": 30,
         "buyingPrice": 40,
         "images": [
@@ -1444,7 +1431,7 @@
     },
     {
         "englishName": "SPRING ONION",
-        "tamilName": "வெந்தயம்",
+        "tamilName": "வெங்காயத் தாள்",
         "price": 40,
         "buyingPrice": 40,
         "images": [
@@ -1483,7 +1470,7 @@
     },
     {
         "englishName": "THOOTHUVALAI KEERAI",
-        "tamilName": "தூத்துவளைக்கீரை",
+        "tamilName": "தூதுவளை கீரை",
         "price": 35,
         "buyingPrice": 40,
         "images": [
@@ -1509,7 +1496,7 @@
     },
     {
         "englishName": "PASALAI KEERAI",
-        "tamilName": "வசாலைக் கீரை",
+        "tamilName": "பசலை கீரை",
         "price": 30,
         "buyingPrice": 40,
         "images": [
@@ -1522,7 +1509,7 @@
     },
     {
         "englishName": "VENTHAIYAKKERAI BIG",
-        "tamilName": "வெந்தைக்கீரை பெரியது",
+        "tamilName": "வெந்தையக்கீரை பெரியது",
         "price": 40,
         "buyingPrice": 40,
         "images": [
@@ -1535,7 +1522,7 @@
     },
     {
         "englishName": "VENTHAIYAKKERAI SMALL",
-        "tamilName": "வெந்தைக்கீரை சிறியது",
+        "tamilName": "வெந்தையக்கீரை சிறியது",
         "price": 35,
         "buyingPrice": 40,
         "images": [
@@ -1600,7 +1587,7 @@
     },
     {
         "englishName": "APPLE - ROYAL GALA",
-        "tamilName": "ஆப்பிள் - ராயல் கலை",
+        "tamilName": "ஆப்பிள் - ராயல் காலா",
         "price": 170,
         "buyingPrice": 40,
         "images": [
@@ -1652,7 +1639,7 @@
     },
     {
         "englishName": "BANANA-ELAKKI",
-        "tamilName": "வாழைப்பழம்-எலகி",
+        "tamilName": "வாழைப்பழம்-ஏலக்கி",
         "price": 60,
         "buyingPrice": 40,
         "images": [
@@ -1690,8 +1677,8 @@
         "stocks": "Stock"
     },
     {
-        "englishName": "BLUEBERRY (KGS)",
-        "tamilName": "நீலபழம் (கிலோகிராம்)",
+        "englishName": "BLUEBERRY",
+        "tamilName": "புளுபெர்ரி",
         "price": 300,
         "buyingPrice": 40,
         "images": [
@@ -1729,8 +1716,8 @@
         "stocks": "Stock"
     },
     {
-        "englishName": "CHEVAZHAI [KGS]",
-        "tamilName": "செவ்வாழை (கிலோகிராம்)",
+        "englishName": "CHEVAZHAI",
+        "tamilName": "செவ்வாழை",
         "price": 80,
         "buyingPrice": 40,
         "images": [
@@ -1743,7 +1730,7 @@
     },
     {
         "englishName": "DRAGON FRUITS",
-        "tamilName": "பாம்புப் பழங்கள்",
+        "tamilName": "டிராகன் பழங்கள்",
         "price": 250,
         "buyingPrice": 40,
         "images": [
@@ -1795,7 +1782,7 @@
     },
     {
         "englishName": "GUAVA WHITE",
-        "tamilName": "வெள்ளை காயா",
+        "tamilName": "வெள்ளை கொய்யா",
         "price": 70,
         "buyingPrice": 40,
         "images": [
@@ -1808,7 +1795,7 @@
     },
     {
         "englishName": "GUAVA RED",
-        "tamilName": "சிவப்பு காயா",
+        "tamilName": "சிவப்பு கொய்யா",
         "price": 75,
         "buyingPrice": 40,
         "images": [
@@ -1872,8 +1859,8 @@
         "stocks": "Stock"
     },
     {
-        "englishName": "MALAIVAZHAI (KGS)",
-        "tamilName": "மலைவாழை (கிலோகிராம்)",
+        "englishName": "MALAIVAZHAI",
+        "tamilName": "மலைவாழை",
         "price": 70,
         "buyingPrice": 40,
         "images": [
@@ -1950,8 +1937,8 @@
         "stocks": "Stock"
     },
     {
-        "englishName": "MANGO - JAWADU (KGS)",
-        "tamilName": "மாம்பழம் - ஜவாது (கிலோ)",
+        "englishName": "MANGO - JAWADU",
+        "tamilName": "மாம்பழம் - ஜவாது",
         "price": 80,
         "buyingPrice": 40,
         "images": [
@@ -1963,8 +1950,8 @@
         "stocks": "Stock"
     },
     {
-        "englishName": "MANGO - LANGADA (KGS)",
-        "tamilName": "மாம்பழம் - லங்கடா (கிலோ)",
+        "englishName": "MANGO - LANGADA",
+        "tamilName": "மாம்பழம் - லங்கடா",
         "price": 85,
         "buyingPrice": 40,
         "images": [
@@ -1989,8 +1976,8 @@
         "stocks": "Stock"
     },
     {
-        "englishName": "MANGO - RUMANI (KGS)",
-        "tamilName": "மாம்பழம் - ருமானி (கிலோ)",
+        "englishName": "MANGO - RUMANI",
+        "tamilName": "மாம்பழம் - ருமானி",
         "price": 75,
         "buyingPrice": 40,
         "images": [
@@ -2016,7 +2003,7 @@
     },
     {
         "englishName": "MANGUSTAN",
-        "tamilName": "மாங்கூஸ்டான்",
+        "tamilName": "மங்கூஸ்டான்",
         "price": 110,
         "buyingPrice": 40,
         "images": [
@@ -2028,13 +2015,13 @@
         "stocks": "Stock"
     },
     {
-        "englishName": "MORISH FRUIT (KGS)",
-        "tamilName": "மொரிஷ் பழம் (கிலோ)",
+        "englishName": "MORISH FRUIT",
+        "tamilName": "மொரிஷ் பழம்",
         "price": 75,
         "buyingPrice": 40,
         "images": [
             {
-                "image": "/images/products/morish_fruit.jpg"
+                "image": "/images/products/morish_fruit.jpeg"
             }
         ],
         "category": "Fruits",
@@ -2042,7 +2029,7 @@
     },
     {
         "englishName": "MUSK MELON VARI",
-        "tamilName": "மச்சட்டி பழம் வரி",
+        "tamilName": "முலாம்பழம் வரி",
         "price": 60,
         "buyingPrice": 40,
         "images": [
@@ -2054,8 +2041,8 @@
         "stocks": "Stock"
     },
     {
-        "englishName": "MUSKMELON (KGS)",
-        "tamilName": "முஸ்க்மெலன் (கிலோ)",
+        "englishName": "MUSKMELON",
+        "tamilName": "முலாம்பழம்",
         "price": 50,
         "buyingPrice": 40,
         "images": [
@@ -2067,8 +2054,8 @@
         "stocks": "Stock"
     },
     {
-        "englishName": "MUSAMBI (KGS)",
-        "tamilName": "முசம்பி (கிலோ)",
+        "englishName": "MUSAMBI",
+        "tamilName": "முசம்பி",
         "price": 40,
         "buyingPrice": 40,
         "images": [
@@ -2093,8 +2080,8 @@
         "stocks": "Stock"
     },
     {
-        "englishName": "PAPPAYA (KGS)",
-        "tamilName": "பப்பாளி (கிலோ)",
+        "englishName": "PAPPAYA",
+        "tamilName": "பப்பாளி",
         "price": 35,
         "buyingPrice": 40,
         "images": [
@@ -2106,7 +2093,7 @@
         "stocks": "Stock"
     },
     {
-        "englishName": "PASSION FR",
+        "englishName": "PASSION FRUIT",
         "tamilName": "பேஷன் பழம்",
         "price": 45,
         "buyingPrice": 40,
@@ -2145,8 +2132,8 @@
         "stocks": "Stock"
     },
     {
-        "englishName": "PINE APPLE (KGS)",
-        "tamilName": "பைன் அப்பிள் (கிலோ)",
+        "englishName": "PINE APPLE",
+        "tamilName": "பைன் அப்பிள்",
         "price": 40,
         "buyingPrice": 40,
         "images": [
@@ -2185,7 +2172,7 @@
     },
     {
         "englishName": "POOVAMPALAM",
-        "tamilName": "பூவாம்பழம்",
+        "tamilName": "பூவம்பழம்",
         "price": 50,
         "buyingPrice": 40,
         "images": [
@@ -2197,8 +2184,8 @@
         "stocks": "Stock"
     },
     {
-        "englishName": "RASTHALI (KGS)",
-        "tamilName": "ராஸ்தாளி (கிலோ)",
+        "englishName": "RASTHALI",
+        "tamilName": "ரஸ்தாளி",
         "price": 45,
         "buyingPrice": 40,
         "images": [
@@ -2223,8 +2210,8 @@
         "stocks": "Stock"
     },
     {
-        "englishName": "SAPPOTA (KGS)",
-        "tamilName": "சப்போட்டா (கிலோ)",
+        "englishName": "SAPPOTA",
+        "tamilName": "சப்போட்டா",
         "price": 55,
         "buyingPrice": 40,
         "images": [
@@ -2236,8 +2223,8 @@
         "stocks": "Stock"
     },
     {
-        "englishName": "SOURSOP(KGS)",
-        "tamilName": "முல்லைப்பழம் (கிலோ)",
+        "englishName": "SOURSOP",
+        "tamilName": "முள்ளு சீதா",
         "price": 70,
         "buyingPrice": 40,
         "images": [
@@ -2315,25 +2302,12 @@
     },
     {
         "englishName": "GRAPES GREEN SEEDLESS",
-        "tamilName": "பச்சை திராட்சை இல்லாத",
+        "tamilName": "பச்சை திராட்சை விதையற்றது",
         "price": 55,
         "buyingPrice": 40,
         "images": [
             {
                 "image": "/images/products/green_seedless_grapes.jpg"
-            }
-        ],
-        "category": "Fruits",
-        "stocks": "Stock"
-    },
-    {
-        "englishName": "LITHUSE",
-        "tamilName": "லித்தூஸ்",
-        "price": 70,
-        "buyingPrice": 40,
-        "images": [
-            {
-                "image": "/images/products/lithuse.jpg"
             }
         ],
         "category": "Fruits",
@@ -2354,7 +2328,7 @@
     },
     {
         "englishName": "PIRANDAI KERRAI",
-        "tamilName": "பிரண்டை கெற்றை",
+        "tamilName": "பிறண்டை கீரை",
         "price": 90,
         "buyingPrice": 40,
         "images": [
@@ -2373,32 +2347,6 @@
         "images": [
             {
                 "image": "/images/products/indian_cherry.jpg"
-            }
-        ],
-        "category": "Fruits",
-        "stocks": "Stock"
-    },
-    {
-        "englishName": "JAPAN FRUITS",
-        "tamilName": "ஜப்பான் பழங்கள்",
-        "price": 110,
-        "buyingPrice": 40,
-        "images": [
-            {
-                "image": "/images/products/japan_fruits.jpg"
-            }
-        ],
-        "category": "Fruits",
-        "stocks": "Stock"
-    },
-    {
-        "englishName": "KIWI FRUIT",
-        "tamilName": "கீவி பழம்",
-        "price": 120,
-        "buyingPrice": 40,
-        "images": [
-            {
-                "image": "/images/products/kiwi_fruit.jpg"
             }
         ],
         "category": "Fruits",

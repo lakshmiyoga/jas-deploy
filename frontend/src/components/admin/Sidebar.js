@@ -197,7 +197,7 @@ const Sidebar = ({ isActive, setIsActive }) => {
                             //     <Container >
                             //         <Navbar.Brand>
                                         <Link to="/">
-                                            <img className="logo-admin" src="/images/logo1.png" alt="logo" />
+                                            <img className="logo-admin" src="/images/logo.png" alt="logo" />
                                         </Link>
                             //         </Navbar.Brand>
                             //     </Container>

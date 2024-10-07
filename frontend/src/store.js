@@ -9,6 +9,7 @@ import userReducer from "./slices/userSlice"
 import orderReducer from "./slices/orderSlice"
 import porterReducer from "./slices/porterSlice"
 import analysisReducer from "./slices/analysisSlice"
+import otpReducer from "./slices/otpSlice"
 
 
 const reducer = combineReducers({
@@ -21,6 +22,7 @@ const reducer = combineReducers({
     orderState: orderReducer,
     porterState:porterReducer,
     analysisState:analysisReducer,
+    otpState:otpReducer,
 
 })
 
