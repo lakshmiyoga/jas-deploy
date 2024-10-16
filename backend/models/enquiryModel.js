@@ -22,6 +22,14 @@ messageData:{
     // required:true,
     default:''
 },
+files:[
+    {
+        file:{
+            type:String,
+            required:true
+        }
+    }
+],
 createdAt: {
     type: Date,
     default: Date.now

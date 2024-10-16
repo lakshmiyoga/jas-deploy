@@ -15,7 +15,7 @@ const validator = require("validator");
 
 const userRegister = catchAsyncError(async (req, res, next) => {
   const { name, email, password, mobile } = req.body;
-  console.log(req.body)
+  // console.log(req.body)
 
   let avatar;
 
@@ -74,7 +74,7 @@ const userRegister = catchAsyncError(async (req, res, next) => {
     console.log("regUser",regUser)
 
     await regUser.save();
-    sendToken(regUser, 201, res);
+    return sendToken(regUser, 201, res);
   } catch (error) {
     console.log("error",error)
     return next(new ErrorHandler(error.message, 500));
@@ -116,7 +116,9 @@ const userRegister = catchAsyncError(async (req, res, next) => {
 
 const userLogin = catchAsyncError(async (req, res, next) => {
   const { email, password } = req.body;
+  
   // console.log(email, password )
+  res.clearCookie('token', { path: '/' });
 
     // Email validation
     if (!email || !validator.isEmail(email)) {
@@ -145,7 +147,7 @@ const userLogin = catchAsyncError(async (req, res, next) => {
   
     // res.status(201).json({ success:true, user, token});
   
-    sendToken(user, 201, res)
+    return sendToken(user, 201, res)
 
   }catch(error){
     console.log("error",error)
@@ -159,7 +161,7 @@ const userLogin = catchAsyncError(async (req, res, next) => {
 //logout user
 
 const logoutUser = (req, res, next) => {
-  res.cookie('token', null, {
+  return res.cookie('token', null, {
     expires: new Date(Date.now()),
     httpOnly: true
   })
@@ -315,7 +317,8 @@ const updateUserProfile = catchAsyncError(async (req, res, next) => {
 
   let newUserData = {
     name: req.body.name,
-    email: req.body.email
+    email: req.body.email,
+    mobile:req.body.mobile
   }
 
   let avatar;
@@ -339,7 +342,6 @@ const updateUserProfile = catchAsyncError(async (req, res, next) => {
 
   const user = await User.findByIdAndUpdate(
     req.user._id,
-
     { $set: newUserData },
     { new: true }
   ).select

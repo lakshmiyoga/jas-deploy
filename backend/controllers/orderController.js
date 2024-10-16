@@ -27,7 +27,7 @@ const paymentPageClientId = config.PAYMENT_PAGE_CLIENT_ID; // used in orderSessi
 
 const juspay = new Juspay({
     merchantId: config.MERCHANT_ID,
-    baseUrl: PRODUCTION_BASE_URL, // Using sandbox base URL for testing
+    baseUrl: SANDBOX_BASE_URL, // Using sandbox base URL for testing
     jweAuth: {
         keyId: config.KEY_UUID,
         publicKey,
@@ -90,9 +90,16 @@ const getSingleOrder = catchAsyncError(async (req, res, next) => {
                 if (onepayments) {
                     const paymentstatus = await Payment.findOneAndUpdate({ 'order_id': id },
                         {
+                            paymentStatus: statusResponse.status,
                             $set: { statusResponse: statusResponse }
                         },
                         { new: true });
+                    if (paymentstatus) {
+                        return res.status(200).json({
+                            success: true,
+                            order: paymentstatus
+                        })
+                    }
                 }
 
             } catch (error) {
@@ -100,10 +107,10 @@ const getSingleOrder = catchAsyncError(async (req, res, next) => {
             }
 
         }
-        return res.status(200).json({
-            success: true,
-            order
-        })
+        // return res.status(200).json({
+        //     success: true,
+        //     order
+        // })
 
     } catch (error) {
         return next(new ErrorHandler('Something went wrong', 404))
@@ -116,8 +123,8 @@ const getSingleOrder = catchAsyncError(async (req, res, next) => {
 const getQuote = catchAsyncError(async (req, res, next) => {
     //    console.log(req.params)
     const { pickup_details, drop_details, customer } = req.body;
-    // const apiEndpoint = 'https://pfe-apigw-uat.porter.in/v1/get_quote';
-    const apiEndpoint = 'https://pfe-apigw.porter.in/v1/get_quote';
+    const apiEndpoint = 'https://pfe-apigw-uat.porter.in/v1/get_quote';
+    // const apiEndpoint = 'https://pfe-apigw.porter.in/v1/get_quote';
     // const apiKey = 'fdbe7c47-25ce-4b15-90c7-ccce2027841d';
     //    console.log(req.body)
     try {
@@ -150,8 +157,8 @@ const porterOrder = catchAsyncError(async (req, res, next) => {
     //    console.log(req.params)
     const { order_id, request_id, user, user_id, porterData, updatedItems, detailedTable, totalRefundableAmount } = req.body;
     // console.log("req.body", req.body)
-    // const apiEndpoint = 'https://pfe-apigw-uat.porter.in/v1/orders/create';
-    const apiEndpoint = 'https://pfe-apigw.porter.in/v1/orders/create';
+    const apiEndpoint = 'https://pfe-apigw-uat.porter.in/v1/orders/create';
+    // const apiEndpoint = 'https://pfe-apigw.porter.in/v1/orders/create';
 
     const porterOrderExist = await PorterModel.findOne({ order_id });
 
@@ -194,8 +201,8 @@ const porterOrder = catchAsyncError(async (req, res, next) => {
                         if (porterResponse) {
                             if (porterResponse && porterResponse.porterOrder && porterResponse.porterOrder.order_id) {
                                 try {
-                                    // const apiEndpoint1 = `https://pfe-apigw-uat.porter.in/v1/orders/${porterResponse.porterOrder.order_id}`
-                                    const apiEndpoint1 = `https://pfe-apigw.porter.in/v1/orders/${porterResponse.porterOrder.order_id}`
+                                    const apiEndpoint1 = `https://pfe-apigw-uat.porter.in/v1/orders/${porterResponse.porterOrder.order_id}`
+                                    // const apiEndpoint1 = `https://pfe-apigw.porter.in/v1/orders/${porterResponse.porterOrder.order_id}`
                                     // apiEndpoint = `https://pfe-apigw-uat.porter.in/v1/orders/{order_id:CRN93814651}`
                                     const response = await axios.get(apiEndpoint1, {
                                         headers: {
@@ -255,7 +262,7 @@ const porterOrder = catchAsyncError(async (req, res, next) => {
 
                                     return res.status(200).json({ porterOrder })
                                 } catch (error) {
-                                    console.log(error)
+                                    // console.log(error)
                                     return next(new ErrorHandler(error.response.data.message, error.response.status));
                                 }
                             }
@@ -274,7 +281,7 @@ const porterOrder = catchAsyncError(async (req, res, next) => {
                 //   return res.status(500).json({ message: 'Error sending data', error });
             }
         } catch (error) {
-            console.log(error)
+            // console.log(error)
             return next(new ErrorHandler(error.response.data.message, error.response.status));
         }
 
@@ -301,18 +308,66 @@ const porterOrder = catchAsyncError(async (req, res, next) => {
 //Get Loggedin User Orders 
 
 const myOrders = catchAsyncError(async (req, res, next) => {
-    // console.log(req)
-    const now = new Date();
-    const oneWeekAgo = new Date();
-    oneWeekAgo.setDate(now.getDate() - 7);
+    try {
 
-    const orders = await Payment.find({ 'user_id': req.user.id, createdAt: { $gte: oneWeekAgo } });
-    // const orders = await Order.find();
-    // console.log(orders)
-    return res.status(200).json({
-        success: true,
-        orders
-    })
+        const orderResponse = await Payment.find({
+            'paymentStatus': { $in: ['initiated', 'PENDING', 'PENDING_VBV', 'AUTHORIZING'] }
+        });
+
+       if (orderResponse.length > 0) {
+            await Promise.all(orderResponse.map(async (order) => {
+                try {
+                    if (order && order.order_id) {
+                        const statusResponse = await juspay.order.status(order.order_id);
+                        if (statusResponse) {
+                            const onePayment = await Payment.findOne({ order_id: order.order_id });
+                            if (onePayment) {
+                                const paymentStatus = await Payment.findOneAndUpdate(
+                                    { order_id: order.order_id },
+                                    {
+                                        paymentStatus: statusResponse.status,
+                                        $set: { statusResponse: statusResponse }
+                                    },
+                                    { new: true }
+                                );
+                            }
+                        }
+                    }
+                } catch (error) {
+                    console.error(`Error updating payment status for ${order.order_id}:`, error);
+                }
+            }));
+            const now = new Date();
+            const oneWeekAgo = new Date();
+            oneWeekAgo.setDate(now.getDate() - 7);
+    
+            const orders = await Payment.find({ 'user_id': req.user.id, createdAt: { $gte: oneWeekAgo } });
+            return res.status(200).json({
+                success: true,
+                orders
+            });
+        }
+        else {
+            // console.log(req)
+            const now = new Date();
+            const oneWeekAgo = new Date();
+            oneWeekAgo.setDate(now.getDate() - 7);
+
+            const orders = await Payment.find({ 'user_id': req.user.id, createdAt: { $gte: oneWeekAgo } });
+            // const orders = await Order.find();
+            // console.log(orders)
+            return res.status(200).json({
+                success: true,
+                orders
+            })
+        }
+
+    }
+    catch (error) {
+        // console.error("Error fetching order summary:", error);
+        return next(new ErrorHandler(`Something Went Wrong Please Try Again!!!!`, 400));
+    }
+
 })
 
 //Admin: Get All Orders - api/v1/admin/orders
@@ -320,38 +375,146 @@ const myOrders = catchAsyncError(async (req, res, next) => {
 const orders = catchAsyncError(async (req, res, next) => {
 
     try {
-        // const { date } = req.query;
-        // console.log("ordersummarydate", date);
-        // const formattedDate = new Date(date).toISOString().split('T')[0];
-        // const orders = await Payment.find({
-        //     paymentStatus: 'CHARGED',
-        //     $expr: {
-        //         $eq: [
-        //             { $dateToString: { format: "%Y-%m-%d", date: "$orderDate" } },
-        //             formattedDate
-        //         ]
-        //     }
-        // }).select('orderItems shippingInfo user user_id itemsPrice taxPrice shippingPrice totalPrice order_id paymentStatus orderStatus createdAt').exec();
-        // console.log("Fetched orders:", orders);
-
-        const now = new Date();
-        const oneMonthAgo = new Date();
-        oneMonthAgo.setMonth(now.getMonth() - 1);
-
-        const orders = await Payment.find({ createdAt: { $gte: oneMonthAgo } });
-
-        let totalAmount = 0;
-        // console.log("this is sample response",JSON.stringify(orders, null, 2));
-        orders.forEach(order => {
-            if (order.paymentStatus === "CHARGED") {
-                totalAmount += order.totalPrice;
-            }
+        const orderResponse = await Payment.find({
+            'paymentStatus': { $in: ['initiated', 'PENDING', 'PENDING_VBV', 'AUTHORIZING'] }
         });
-        return res.status(200).json({
-            success: true,
-            totalAmount,
-            orders
-        })
+
+        // if (orderResponse.length>0) {
+        //     await Promise.all(orderResponse.map(async (order) => {
+        //         try {
+        //             if (order && order.order_id) {
+        //                 const statusResponse = await juspay.order.status(order.order_id);
+
+        //                 if (statusResponse) {
+
+        //                     const onePayment = await Payment.findOne({ order_id: order.order_id });
+        //                     if (onePayment) {
+        //                         // Update payment status in the database
+        //                         const paymentStatus = await Payment.findOneAndUpdate(
+        //                             { order_id: order.order_id },
+        //                             {
+        //                                 paymentStatus: statusResponse.status,
+        //                                 $set: { statusResponse: statusResponse }
+        //                             },
+        //                             { new: true }
+        //                         );
+        //                         if (paymentStatus) {
+        //                             // console.log(req)
+        //                             const now = new Date();
+        //                             const oneMonthAgo = new Date();
+        //                             oneMonthAgo.setMonth(now.getMonth() - 1);
+                            
+        //                             const orders = await Payment.find({ createdAt: { $gte: oneMonthAgo } });
+                            
+        //                             let totalAmount = 0;
+        //                             // console.log("this is sample response",JSON.stringify(orders, null, 2));
+        //                             orders.forEach(order => {
+        //                                 if (order.paymentStatus === "CHARGED") {
+        //                                     totalAmount += order.totalPrice;
+        //                                 }
+        //                             });
+        //                             return res.status(200).json({
+        //                                 success: true,
+        //                                 totalAmount,
+        //                                 orders
+        //                             })
+                            
+        //                         }
+        //                     }
+        //                 }
+        //             }
+        //         } catch (error) {
+        //             console.error(`Error updating payment status for ${order.order_id}:`, error);
+        //             return
+        //             // Log the order ID and error details for better tracking
+        //         }
+        //     }));
+        // }
+        if (orderResponse.length > 0) {
+            await Promise.all(orderResponse.map(async (order) => {
+                try {
+                    if (order && order.order_id) {
+                        const statusResponse = await juspay.order.status(order.order_id);
+                        if (statusResponse) {
+                            const onePayment = await Payment.findOne({ order_id: order.order_id });
+                            if (onePayment) {
+                                const paymentStatus = await Payment.findOneAndUpdate(
+                                    { order_id: order.order_id },
+                                    {
+                                        paymentStatus: statusResponse.status,
+                                        $set: { statusResponse: statusResponse }
+                                    },
+                                    { new: true }
+                                );
+                            }
+                        }
+                    }
+                } catch (error) {
+                    console.error(`Error updating payment status for ${order.order_id}:`, error);
+                }
+            }));
+            const now = new Date();
+            const oneMonthAgo = new Date();
+            oneMonthAgo.setMonth(now.getMonth() - 1);
+    
+            const orders = await Payment.find({ createdAt: { $gte: oneMonthAgo } });
+            // const orders = await Payment.find({});
+    
+            let totalAmount = 0;
+            // console.log("this is sample response",JSON.stringify(orders, null, 2));
+            orders.forEach(order => {
+                if (order.paymentStatus === "CHARGED") {
+                    totalAmount += order.totalPrice;
+                }
+            });
+            return res.status(200).json({
+                success: true,
+                totalAmount,
+                orders
+            })
+        }
+        else {
+            const now = new Date();
+            const oneMonthAgo = new Date();
+            oneMonthAgo.setMonth(now.getMonth() - 1);
+    
+            const orders = await Payment.find({ createdAt: { $gte: oneMonthAgo } });
+            // const orders = await Payment.find({});
+    
+            let totalAmount = 0;
+            // console.log("this is sample response",JSON.stringify(orders, null, 2));
+            orders.forEach(order => {
+                if (order.paymentStatus === "CHARGED") {
+                    totalAmount += order.totalPrice;
+                }
+            });
+            return res.status(200).json({
+                success: true,
+                totalAmount,
+                orders
+            })
+    
+        }
+
+
+        // const now = new Date();
+        // const oneMonthAgo = new Date();
+        // oneMonthAgo.setMonth(now.getMonth() - 1);
+
+        // const orders = await Payment.find({ createdAt: { $gte: oneMonthAgo } });
+
+        // let totalAmount = 0;
+        // // console.log("this is sample response",JSON.stringify(orders, null, 2));
+        // orders.forEach(order => {
+        //     if (order.paymentStatus === "CHARGED") {
+        //         totalAmount += order.totalPrice;
+        //     }
+        // });
+        // return res.status(200).json({
+        //     success: true,
+        //     totalAmount,
+        //     orders
+        // })
 
     }
     catch (error) {
@@ -387,7 +550,7 @@ const updateOrder = catchAsyncError(async (req, res, next) => {
     order.deliveredAt = Date.now();
     await order.save();
 
-    res.status(200).json({
+   return res.status(200).json({
         success: true
     });
 });
@@ -402,7 +565,7 @@ const deleteOrder = catchAsyncError(async (req, res, next) => {
     }
 
     // await order.remove();
-    res.status(200).json({
+    return res.status(200).json({
         success: true
     })
 })
@@ -702,7 +865,7 @@ const sendEmail = async (userSummary) => {
                 <td colspan="1" style="text-align:center;">${summary.products.map(product => product.weight.toFixed(2)).join('<br>')}</td>
                 <td colspan="1" style="text-align:center;">${summary.products.map(product => parseFloat(product.price).toFixed(2)).join('<br>')}</td>
             </tr>`;
-    
+
         // Assuming you're adding up total weight and amount here
         summary.products.forEach(product => {
             totalWeight += product.weight;
@@ -721,7 +884,7 @@ const sendEmail = async (userSummary) => {
     // summaryHtml += '</tbody></table>';
 
     // Add total weight and total amount row at the end of the table
-   
+
 
     let info = await transporter.sendMail({
         from: process.env.SEND_MAIL,
@@ -1067,6 +1230,39 @@ const getRemoveResponse = catchAsyncError(async (req, res, next) => {
 // }
 async function checkPaymentStatus() {
     try {
+
+        const orderResponse = await Payment.find({
+            'paymentStatus': 'initiated' || 'PENDING' || 'PENDING_VBV' || 'AUTHORIZING'
+        });
+
+        // await Promise.all(orderResponse.map(async (order) => {
+        //     try {
+        //         if (order && order.order_id) {
+        //             const statusResponse = await juspay.order.status(order.order_id);
+
+        //             if (statusResponse) {
+
+        //                 const onePayment = await Payment.findOne({ order_id: order.order_id });
+        //                 if (onePayment) {
+        //                     // Update payment status in the database
+        //                     const paymentStatus = await Payment.findOneAndUpdate(
+        //                         { order_id: order.order_id },
+        //                         {
+        //                             paymentStatus: statusResponse.status,
+        //                             $set: { statusResponse: statusResponse }
+        //                         },
+        //                         { new: true }
+        //                     );
+        //                 }
+        //             }
+        //         }
+        //     } catch (error) {
+        //         console.error(`Error updating payment status for ${order.order_id}:`, error);
+        //         return
+        //         // Log the order ID and error details for better tracking
+        //     }
+        // }));
+
         // Fetch orders that are still pending or in-progress
         const orders = await PorterModel.find({
             'porterResponse.status': { $nin: ['ended', 'cancelled', 'Processing', 'Packed'] }
@@ -1076,8 +1272,8 @@ async function checkPaymentStatus() {
         await Promise.all(orders.map(async (order) => {
             try {
                 if (order && order.porterOrder) {
-                    // const apiEndpoint = `https://pfe-apigw-uat.porter.in/v1/orders/${order.porterOrder.order_id}`;
-                    const apiEndpoint = `https://pfe-apigw.porter.in/v1/orders/${order.porterOrder.order_id}`;
+                    const apiEndpoint = `https://pfe-apigw-uat.porter.in/v1/orders/${order.porterOrder.order_id}`;
+                    // const apiEndpoint = `https://pfe-apigw.porter.in/v1/orders/${order.porterOrder.order_id}`;
                     let response;
                     for (let attempt = 0; attempt < 3; attempt++) { // Retry up to 3 times
                         try {
@@ -1203,11 +1399,17 @@ function isRetryableError(error) {
     return error.raw && error.raw.includes('504');
 }
 
-nodeCron.schedule('* * * * *', () => {
-    console.log('Checking Refund and payment status...');
-    checkPaymentStatus();
-    checkRefundStatus();
-});
+// nodeCron.schedule('* * * * *', () => {
+//     console.log('Checking payment status...');
+//     checkPaymentStatus();
+//     // checkRefundStatus();
+// });
+
+
+// nodeCron.schedule('0 0 */12 * * *', () => {
+//     console.log('Checking Refund status...');
+//     checkRefundStatus();
+// });
 
 
 module.exports = { newOrder, getSingleOrder, getQuote, porterOrder, myOrders, orders, updateOrder, deleteOrder, getOrderSummaryByDate, getUserSummaryByDate, getRemoveResponse };

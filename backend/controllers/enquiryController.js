@@ -7,6 +7,23 @@ const ErrorHandler = require("../utils/errorHandler");
 const createEnquiry = catchAsyncError(async(req, res, next)=>{
     const{name, email, mobile, message} = req.body;
     console.log(req.body);
+    let files = []
+
+    let BASE_URL = process.env.BACKEND_URL;
+    if(process.env.NODE_ENV === "production"){
+        BASE_URL = `${req.protocol}://${req.get('host')}`
+    }
+
+    console.log('reqfile',req.files)
+
+    if (req.files && req.files.length > 0) {
+        req.files.forEach(file => {
+            let url = `${BASE_URL}/uploads/Product/${file.filename}`;
+            files.push({ file: url })
+        })
+    }
+
+    req.body.files = files;
 
     try {
 
@@ -40,7 +57,13 @@ const createEnquiry = catchAsyncError(async(req, res, next)=>{
         }
     
         const enquiry = new Enquiry(
-            {name, email, mobile, messageData:message,createdAt:Date.now()},
+            {
+                name, 
+                email, 
+                mobile, 
+                messageData:message,
+                files:req.body.files,
+                createdAt:Date.now()},
         )
         // console.log("enquiry",enquiry)
         await enquiry.save();

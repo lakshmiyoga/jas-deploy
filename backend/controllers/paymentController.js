@@ -13,6 +13,7 @@ const CryptoJS = require('crypto-js');
 const validator = require("validator");
 const SerialNumber = require('../models/SerialNumber');
 const twilio = require('twilio');
+const nodemailer = require('nodemailer');
 
 
 const accountSid = process.env.ACCOUNT_SID;
@@ -36,9 +37,18 @@ const publicKey = fs.readFileSync(path.resolve(config.PUBLIC_KEY_PATH));
 const privateKey = fs.readFileSync(path.resolve(config.PRIVATE_KEY_PATH));
 const paymentPageClientId = config.PAYMENT_PAGE_CLIENT_ID; // used in orderSession request
 
+// Email configuration (Update these settings according to your SMTP provider)
+const transporter = nodemailer.createTransport({
+    service: 'gmail', // Use your email service
+    auth: {
+        user: process.env.SEND_MAIL, // Your email address
+        pass: process.env.MAIL_PASS  // Your email password or app-specific password
+    }
+});
+
 const juspay = new Juspay({
 	merchantId: config.MERCHANT_ID,
-	baseUrl: PRODUCTION_BASE_URL, // Using sandbox base URL for testing
+	baseUrl: SANDBOX_BASE_URL, // Using sandbox base URL for testing
 	jweAuth: {
 		keyId: config.KEY_UUID,
 		publicKey,
@@ -285,86 +295,184 @@ const handleResponse = catchAsyncError(async (req, res, next) => {
 
 
 
-const paymentSuccess = catchAsyncError(async (req, res, next) => {
+// const paymentSuccess = catchAsyncError(async (req, res, next) => {
 
-	const encryptedOrderId = req.params.orderId;
-	let BASE_URL = process.env.FRONTEND_URL;
-	if (process.env.NODE_ENV === "production") {
-		BASE_URL = `${req.protocol}://${req.get('host')}`
-	}
+// 	const encryptedOrderId = req.params.orderId;
+// 	let BASE_URL = process.env.FRONTEND_URL;
+// 	if (process.env.NODE_ENV === "production") {
+// 		BASE_URL = `${req.protocol}://${req.get('host')}`
+// 	}
 
-	if (!encryptedOrderId) {
-		return res.redirect(`${BASE_URL}/order/confirm?message=${encodeURIComponent('Something went wrong in orderid')}`);
-	}
+// 	if (!encryptedOrderId) {
+// 		return res.redirect(`${BASE_URL}/order/confirm?message=${encodeURIComponent('Something went wrong in orderid')}`);
+// 	}
 
-	// Decrypt orderId
-	const orderId = decryptData(encryptedOrderId, encryptionKey);
-	if (!orderId) {
+// 	// Decrypt orderId
+// 	const orderId = decryptData(encryptedOrderId, encryptionKey);
+// 	if (!orderId) {
 
-		return res.redirect(`${BASE_URL}/order/confirm?message=${encodeURIComponent('Something went wrong in orderid')}`);
-	}
+// 		return res.redirect(`${BASE_URL}/order/confirm?message=${encodeURIComponent('Something went wrong in orderid')}`);
+// 	}
 
-	try {
-		const statusResponse = await juspay.order.status(orderId);
+// 	try {
+// 		const statusResponse = await juspay.order.status(orderId);
 
-		if (statusResponse) {
-			const response = new responseModel({ statusResponse });
+// 		if (statusResponse) {
+// 			const response = new responseModel({ statusResponse });
 
-			await response.save();
+// 			await response.save();
 
-			const onepayments = await Payment.findOne({ order_id: orderId });
-			// console.log("onepayments",onepayments)
-			if (onepayments) {
-				const paymentstatus = await Payment.findOneAndUpdate({ order_id: orderId },
-					{
-						paymentStatus: statusResponse.status,
-						$set: { statusResponse: statusResponse }
-					},
-					{ new: true });
-					// console.log("paymentstatus",paymentstatus)
-				if (paymentstatus && paymentstatus.statusResponse && paymentstatus.statusResponse.status === 'CHARGED' ) {
-                    client.messages.create({
-						body: `Your order is placed with this Id ${orderId}`,
-						from: twilioPhoneNumber,
-						to: `+91${onepayments.shippingInfo.phoneNo}`,
-					  })
-						.then(() => {
-						  // Send the OTP success response or redirect, not both
-						//   return res.redirect(`${BASE_URL}/payment/confirm/${encodeURIComponent(encryptedOrderId)}`);
-						})
-						.catch((error) => {
-						  // Handle the error appropriately and send only one response
-						  console.log(error)
-						  return next(new ErrorHandler('Failed to send OTP. Check the number.', 500));
-						});
+// 			const onepayments = await Payment.findOne({ order_id: orderId });
+// 			// console.log("onepayments",onepayments)
+// 			if (onepayments) {
+// 				const paymentstatus = await Payment.findOneAndUpdate({ order_id: orderId },
+// 					{
+// 						paymentStatus: statusResponse.status,
+// 						$set: { statusResponse: statusResponse }
+// 					},
+// 					{ new: true });
+// 					// console.log("paymentstatus",paymentstatus)
+// 				if (paymentstatus && paymentstatus.statusResponse && paymentstatus.statusResponse.status === 'CHARGED' ) {
+//                     client.messages.create({
+// 						body: `Your order is placed with this Id ${orderId}`,
+// 						from: twilioPhoneNumber,
+// 						to: `+91${onepayments.shippingInfo.phoneNo}`,
+// 					  })
+// 						.then(() => {
+// 						  // Send the OTP success response or redirect, not both
+// 						//   return res.redirect(`${BASE_URL}/payment/confirm/${encodeURIComponent(encryptedOrderId)}`);
+// 						})
+// 						.catch((error) => {
+// 						  // Handle the error appropriately and send only one response
+// 						  console.log(error)
+// 						  return next(new ErrorHandler('Failed to send OTP. Check the number.', 500));
+// 						});
 					  
 
-				}
+// 				}
 				
-				// else {
-				// 	return res.redirect(`${BASE_URL}/order/confirm?message=${encodeURIComponent('The data is not stored in db')}`);
-				// }
-				return res.redirect(`${BASE_URL}/payment/confirm/${encodeURIComponent(encryptedOrderId)}`);
+// 				// else {
+// 				// 	return res.redirect(`${BASE_URL}/order/confirm?message=${encodeURIComponent('The data is not stored in db')}`);
+// 				// }
+// 				return res.redirect(`${BASE_URL}/payment/confirm/${encodeURIComponent(encryptedOrderId)}`);
 
-			}
-			else {
+// 			}
+// 			else {
 
-				return res.redirect(`${BASE_URL}/order/confirm?message=${encodeURIComponent('Something went wrong in update')}`);
+// 				return res.redirect(`${BASE_URL}/order/confirm?message=${encodeURIComponent('Something went wrong in update')}`);
 
-			}
+// 			}
 
 
 
-		}
-	}
-	catch (error) {
+// 		}
+// 	}
+// 	catch (error) {
 
-		return res.redirect(`${BASE_URL}/order/confirm?message=${encodeURIComponent('Something went wrong in payment success')}`);
+// 		return res.redirect(`${BASE_URL}/order/confirm?message=${encodeURIComponent('Something went wrong in payment success')}`);
 
-	}
+// 	}
 
+// });
+
+const paymentSuccess = catchAsyncError(async (req, res, next) => {
+
+    const encryptedOrderId = req.params.orderId;
+    let BASE_URL = process.env.FRONTEND_URL;
+
+    if (process.env.NODE_ENV === "production") {
+        BASE_URL = `${req.protocol}://${req.get('host')}`;
+    }
+
+    if (!encryptedOrderId) {
+        return res.redirect(`${BASE_URL}/order/confirm?message=${encodeURIComponent('Something went wrong in orderId')}`);
+    }
+
+    // Decrypt orderId
+    const orderId = decryptData(encryptedOrderId, encryptionKey);
+    if (!orderId) {
+        return res.redirect(`${BASE_URL}/order/confirm?message=${encodeURIComponent('Something went wrong in orderId')}`);
+    }
+
+    try {
+        // Fetch Juspay order status
+        const statusResponse = await juspay.order.status(orderId);
+
+        if (statusResponse) {
+            const newResponse = await new responseModel({ statusResponse });
+            await newResponse.save();
+
+            const onePayment = await Payment.findOne({ order_id: orderId });
+
+            if (onePayment) {
+                // Update payment status in the database
+                const paymentStatus = await Payment.findOneAndUpdate(
+                    { order_id: orderId },
+                    {
+                        paymentStatus: statusResponse.status,
+                        $set: { statusResponse: statusResponse }
+                    },
+                    { new: true }
+                );
+
+                // Extract necessary details for emails
+                const user = onePayment.user; // Assuming you store user info in onePayment
+                const totalPrice = onePayment.totalPrice; // Assuming total price is in onePayment
+                const shippingInfo = onePayment.shippingInfo;
+
+                if (paymentStatus && paymentStatus.statusResponse) {
+                    const { status } = paymentStatus.statusResponse;
+
+                    // Send confirmation if payment is successful
+                    if (status === 'CHARGED') {
+                        // Send email to the customer
+                        const customerMailOptions = {
+                            from: process.env.SEND_MAIL,
+                            to: user.email, // Customer email
+                            subject: 'Order Confirmation',
+                            text: `Dear ${user.name},\n\nYour order with order ID ${orderId} has been placed successfully. Your total amount is ₹${totalPrice}.\n\nThank you for shopping with us!`
+                        };
+
+                        // Send email to the supplier
+                        const supplierMailOptions = {
+                            from: process.env.SEND_MAIL,
+                            to: 'jasfruitsandvegetables@gmail.com', // Supplier email
+                            subject: `New Order Received - Order ID: ${orderId}`,
+                            text: `Hello,\n\nA new order with order ID ${orderId} has been placed.\n\nShipping Info: ${shippingInfo.address}\n\nTotal Price: ₹${totalPrice}`
+                        };
+
+                        // Send both emails
+                        await transporter.sendMail(customerMailOptions);
+                        await transporter.sendMail(supplierMailOptions);
+                    }
+                    // Send cancellation email if payment was not successful
+                    else if (status !== 'CHARGED') {
+                        const customerMailOptions = {
+                            from: process.env.SEND_MAIL,
+                            to: user.email, // Customer email
+                            subject: 'Order Cancellation',
+                            text: `Dear ${user.name},\n\nYour order with order ID ${orderId} has been cancelled.\n\nThank you for shopping with us!`
+                        };
+
+                        // Send cancellation email to customer
+                        await transporter.sendMail(customerMailOptions);
+                    }
+
+                    // Redirect to payment confirmation page
+                    return res.redirect(`${BASE_URL}/payment/confirm/${encodeURIComponent(encryptedOrderId)}`);
+                }
+
+            } else {
+                return res.redirect(`${BASE_URL}/order/confirm?message=${encodeURIComponent('Something went wrong in update')}`);
+            }
+
+        }
+    } catch (error) {
+        // Handle errors
+        console.error("Failed to process payment:", error);
+        return next(new ErrorHandler('Something went wrong in payment success', 500));
+    }
 });
-
 
 
 

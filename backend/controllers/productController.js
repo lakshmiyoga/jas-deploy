@@ -35,6 +35,7 @@ const createProducts = catchAsyncError(async (req, res, next) => {
         buyingPrice:req.body.buyingPrice,
         price: req.body.price,
         category: req.body.category,
+        percentage:req.body.percentage,
         stocks:req.body.stocks,
         images: req.body.images,
         user: req.body.user
@@ -81,7 +82,7 @@ const updateProducts = async (req, res, next) => {
     console.log(req)
 
     let product = await Product.findByIdAndUpdate(req.params.id);
-    console.log(product)
+    // console.log(product)
 
     let images = [];
 
@@ -117,7 +118,7 @@ const updateProducts = async (req, res, next) => {
     })
     
 
-    res.status(200).json({
+   return res.status(200).json({
         success: true,
         product
     })

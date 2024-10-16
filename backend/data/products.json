@@ -4,6 +4,7 @@
         "tamilName": "பெரிய நெல்லி",
         "price": 45,
         "buyingPrice": 40,
+        "percentage":0,
         "images": [
             {
                 "image": "/images/products/amla.jpg"
@@ -17,6 +18,7 @@
         "tamilName": "வெண்பூசணி",
         "price": 85,
         "buyingPrice": 40,
+        "percentage":0,
         "images": [
             {
                 "image": "/images/products/ash_gourd.jpg"
@@ -30,6 +32,7 @@
         "tamilName": "அவரி நாட்டு",
         "price": 45,
         "buyingPrice": 40,
+        "percentage":0,
         "images": [
             {
                 "image": "/images/products/avari_nattu.jpg"
@@ -43,6 +46,7 @@
         "tamilName": "பேபி கார்ன்",
         "price": 60,
         "buyingPrice": 40,
+        "percentage":0,
         "images": [
             {
                 "image": "/images/products/baby_corn.jpeg"
@@ -56,6 +60,7 @@
         "tamilName": "பேபி உருளைக்கிழங்கு",
         "price": 40,
         "buyingPrice": 40,
+        "percentage":0,
         "images": [
             {
                 "image": "/images/products/baby_potato.jpg"
@@ -69,6 +74,7 @@
         "tamilName": "வாழை இலை",
         "price": 25,
         "buyingPrice": 40,
+        "percentage":0,
         "images": [
             {
                 "image": "/images/products/banana_lunch_leaf.jpg"
@@ -82,6 +88,7 @@
         "tamilName": "பீன்ஸ்",
         "price": 55,
         "buyingPrice": 40,
+        "percentage":0,
         "images": [
             {
                 "image": "/images/products/beans.jpg"
@@ -95,6 +102,7 @@
         "tamilName": "பீட்ரூட்",
         "price": 30,
         "buyingPrice": 40,
+        "percentage":0,
         "images": [
             {
                 "image": "/images/products/beetroot.jpg"
@@ -108,6 +116,7 @@
         "tamilName": "பாகற்காய் சிறியவை",
         "price": 35,
         "buyingPrice": 40,
+        "percentage":0,
         "images": [
             {
                 "image": "/images/products/bitter_gourd_baby.jpg"
@@ -121,6 +130,7 @@
         "tamilName": "பாகற்காய் பெரியது",
         "price": 40,
         "buyingPrice": 40,
+        "percentage":0,
         "images": [
             {
                 "image": "/images/products/bitter_gourd_big.jpg"
@@ -134,6 +144,7 @@
         "tamilName": "பாகற்காய் சிறியது",
         "price": 35,
         "buyingPrice": 40,
+        "percentage":0,
         "images": [
             {
                 "image": "/images/products/bitter_gourd_small.jpg"
@@ -147,6 +158,7 @@
         "tamilName": "சுரைக்காய்",
         "price": 20,
         "buyingPrice": 40,
+        "percentage":0,
         "images": [
             {
                 "image": "/images/products/bottle_gourd.jpg"
@@ -160,6 +172,7 @@
         "tamilName": "கத்திரிக்காய் பவானி",
         "price": 35,
         "buyingPrice": 40,
+        "percentage":0,
         "images": [
             {
                 "image": "/images/products/brinjal_bhavani.jpg"
@@ -173,6 +186,7 @@
         "tamilName": "கத்திரிக்காய் பெரியவை",
         "price": 40,
         "buyingPrice": 40,
+        "percentage":0,
         "images": [
             {
                 "image": "/images/products/brinjal_big.jpg"
@@ -186,6 +200,7 @@
         "tamilName": "கத்திரிக்காய் டிஸ்கோ",
         "price": 45,
         "buyingPrice": 40,
+        "percentage":0,
         "images": [
             {
                 "image": "/images/products/brinjal_disco.jpg"
@@ -199,6 +214,7 @@
         "tamilName": "பச்சைக் கத்திரிக்காய்",
         "price": 50,
         "buyingPrice": 40,
+        "percentage":0,
         "images": [
             {
                 "image": "/images/products/brinjal_green.jpg"
@@ -212,6 +228,7 @@
         "tamilName": "நீளமான பச்சைக் கத்திரிக்காய்",
         "price": 55,
         "buyingPrice": 40,
+        "percentage":0,
         "images": [
             {
                 "image": "/images/products/brinjal_long_green.jpg"
@@ -225,6 +242,7 @@
         "tamilName": "கத்திரிக்காய் உஜாலா",
         "price": 60,
         "buyingPrice": 40,
+        "percentage":0,
         "images": [
             {
                 "image": "/images/products/brinjal_ujala.jpg"
@@ -238,6 +256,7 @@
         "tamilName": "வரி கத்திரிக்காய்",
         "price": 65,
         "buyingPrice": 40,
+        "percentage":0,
         "images": [
             {
                 "image": "/images/products/brinjal_vari.jpg"
@@ -251,6 +270,7 @@
         "tamilName": "பிராட் பீன்ஸ்",
         "price": 70,
         "buyingPrice": 40,
+        "percentage":0,
         "images": [
             {
                 "image": "/images/products/broad_beans.jpg"
@@ -264,6 +284,7 @@
         "tamilName": "ப்ரோக்கோலி",
         "price": 75,
         "buyingPrice": 40,
+        "percentage":0,
         "images": [
             {
                 "image": "/images/products/broccoli.jpg"
@@ -277,6 +298,7 @@
         "tamilName": "பட்டர் பீன்ஸ்",
         "price": 80,
         "buyingPrice": 40,
+        "percentage":0,
         "images": [
             {
                 "image": "/images/products/butter_beans.jpg"
@@ -290,6 +312,7 @@
         "tamilName": "சீனக்கோசு",
         "price": 85,
         "buyingPrice": 40,
+        "percentage":0,
         "images": [
             {
                 "image": "/images/products/cabbage_chineses.jpg"
@@ -303,6 +326,7 @@
         "tamilName": "பச்சைக் கோசு",
         "price": 90,
         "buyingPrice": 40,
+        "percentage":0,
         "images": [
             {
                 "image": "/images/products/cabbage_green.jpg"
@@ -316,6 +340,7 @@
         "tamilName": "சிவப்பு கோசு",
         "price": 95,
         "buyingPrice": 40,
+        "percentage":0,
         "images": [
             {
                 "image": "/images/products/cabbage_red.jpg"
@@ -329,6 +354,7 @@
         "tamilName": "காலிஃபிளவர்",
         "price": 100,
         "buyingPrice": 40,
+        "percentage":0,
         "images": [
             {
                 "image": "/images/products/cauliflower.jpg"
@@ -342,6 +368,7 @@
         "tamilName": "குடை மிளகாய்",
         "price": 105,
         "buyingPrice": 40,
+        "percentage":0,
         "images": [
             {
                 "image": "/images/products/capsicum.jpg"
@@ -355,6 +382,7 @@
         "tamilName": "சிவப்பு குடை மிளகாய்",
         "price": 110,
         "buyingPrice": 40,
+        "percentage":0,
         "images": [
             {
                 "image": "/images/products/capsicum_red.jpg"
@@ -368,6 +396,7 @@
         "tamilName": "மஞ்சள் குடை மிளகாய்",
         "price": 115,
         "buyingPrice": 40,
+        "percentage":0,
         "images": [
             {
                 "image": "/images/products/capsicum_yellow.jpg"
@@ -381,6 +410,7 @@
         "tamilName": "காரட்",
         "price": 50,
         "buyingPrice": 40,
+        "percentage":0,
         "images": [
             {
                 "image": "/images/products/carrot.webp"
@@ -394,6 +424,7 @@
         "tamilName": "செல்லரி",
         "price": 60,
         "buyingPrice": 40,
+        "percentage":0,
         "images": [
             {
                 "image": "/images/products/cellery.jpeg"
@@ -407,6 +438,7 @@
         "tamilName": "செர்ரி தக்காளி",
         "price": 80,
         "buyingPrice": 40,
+        "percentage":0,
         "images": [
             {
                 "image": "/images/products/cherry_tomato.jpg"
@@ -420,6 +452,7 @@
         "tamilName": "பஜ்ஜி மிளகாய்",
         "price": 45,
         "buyingPrice": 40,
+        "percentage":0,
         "images": [
             {
                 "image": "/images/products/bajji_chilly.jpg"
@@ -433,6 +466,7 @@
         "tamilName": "சௌச்சௌ",
         "price": 35,
         "buyingPrice": 40,
+        "percentage":0,
         "images": [
             {
                 "image": "/images/products/chochow.jpg"
@@ -446,6 +480,7 @@
         "tamilName": "கொத்தவரங்காய்",
         "price": 70,
         "buyingPrice": 40,
+        "percentage":0,
         "images": [
             {
                 "image": "/images/products/cluster_beans.jpg"
@@ -459,6 +494,7 @@
         "tamilName": "தேங்காய்",
         "price": 30,
         "buyingPrice": 40,
+        "percentage":0,
         "images": [
             {
                 "image": "/images/products/coconut.jpg"
@@ -472,6 +508,7 @@
         "tamilName": "வெள்ளரி",
         "price": 25,
         "buyingPrice": 40,
+        "percentage":0,
         "images": [
             {
                 "image": "/images/products/cucumber.jpg"
@@ -485,6 +522,7 @@
         "tamilName": "ஆர்கானிக் வெள்ளரி",
         "price": 40,
         "buyingPrice": 40,
+        "percentage":0,
         "images": [
             {
                 "image": "/images/products/cucumber_organic.jpg"
@@ -498,6 +536,7 @@
         "tamilName": "மஞ்சள் வெள்ளரி",
         "price": 35,
         "buyingPrice": 40,
+        "percentage":0,
         "images": [
             {
                 "image": "/images/products/cucumber_yellow.jpg"
@@ -511,6 +550,7 @@
         "tamilName": "கறிவேப்பிலை",
         "price": 20,
         "buyingPrice": 40,
+        "percentage":0,
         "images": [
             {
                 "image": "/images/products/curry_leaves.jpg"
@@ -524,6 +564,7 @@
         "tamilName": "தில்லி காரட்",
         "price": 55,
         "buyingPrice": 40,
+        "percentage":0,
         "images": [
             {
                 "image": "/images/products/carrot_delhi.jpg"
@@ -537,6 +578,7 @@
         "tamilName": "டபுள் பீன்ஸ்",
         "price": 75,
         "buyingPrice": 40,
+        "percentage":0,
         "images": [
             {
                 "image": "/images/products/double_beans.jpg"
@@ -550,6 +592,7 @@
         "tamilName": "முருங்கைக்காய்",
         "price": 40,
         "buyingPrice": 40,
+        "percentage":0,
         "images": [
             {
                 "image": "/images/products/drumstick.jpg"
@@ -563,6 +606,7 @@
         "tamilName": "பூண்டு",
         "price": 100,
         "buyingPrice": 40,
+        "percentage":0,
         "images": [
             {
                 "image": "/images/products/garlic.jpg"
@@ -576,6 +620,7 @@
         "tamilName": "மலை பூண்டு",
         "price": 120,
         "buyingPrice": 40,
+        "percentage":0,
         "images": [
             {
                 "image": "/images/products/garlic_malai.jpg"
@@ -589,6 +634,7 @@
         "tamilName": "இஞ்சி",
         "price": 90,
         "buyingPrice": 40,
+        "percentage":0,
         "images": [
             {
                 "image": "/images/products/ginger.jpg"
@@ -602,6 +648,7 @@
         "tamilName": "பச்சை மிளகாய்",
         "price": 60,
         "buyingPrice": 40,
+        "percentage":0,
         "images": [
             {
                 "image": "/images/products/green_chilly.jpg"
@@ -615,6 +662,7 @@
         "tamilName": "பச்சைப்பட்டாணி",
         "price": 85,
         "buyingPrice": 40,
+        "percentage":0,
         "images": [
             {
                 "image": "/images/products/green_peas.jpg"
@@ -628,6 +676,7 @@
         "tamilName": "நிலக்கடலை",
         "price": 45,
         "buyingPrice": 40,
+        "percentage":0,
         "images": [
             {
                 "image": "/images/products/ground_nut.jpg"
@@ -641,6 +690,7 @@
         "tamilName": "ஐஸ் பெர்க்",
         "price": 70,
         "buyingPrice": 40,
+        "percentage":0,
         "images": [
             {
                 "image": "/images/products/ice_berg.jpg"
@@ -654,6 +704,7 @@
         "tamilName": "கோவக்காய்",
         "price": 30,
         "buyingPrice": 40,
+        "percentage":0,
         "images": [
             {
                 "image": "/images/products/ivy_gourd.jpg"
@@ -667,6 +718,7 @@
         "tamilName": "கூற்கான்",
         "price": 65,
         "buyingPrice": 40,
+        "percentage":0,
         "images": [
             {
                 "image": "/images/products/koorkhan.jpg"
@@ -680,6 +732,7 @@
         "tamilName": "அவரைக்காய்",
         "price": 50,
         "buyingPrice": 40,
+        "percentage":0,
         "images": [
             {
                 "image": "/images/products/lab_lab.jpg"
@@ -693,6 +746,7 @@
         "tamilName": "வெண்டைக்காய்",
         "price": 40,
         "buyingPrice": 40,
+        "percentage":0,
         "images": [
             {
                 "image": "/images/products/ladiesfinger.jpg"
@@ -706,6 +760,7 @@
         "tamilName": "எலுமிச்சை",
         "price": 85,
         "buyingPrice": 40,
+        "percentage":0,
         "images": [
             {
                 "image": "/images/products/lemon.jpg"
@@ -719,6 +774,7 @@
         "tamilName": "லெட்டூஸ்",
         "price": 55,
         "buyingPrice": 40,
+        "percentage":0,
         "images": [
             {
                 "image": "/images/products/lettuce.jpg"
@@ -732,6 +788,7 @@
         "tamilName": "மலபார்",
         "price": 65,
         "buyingPrice": 40,
+        "percentage":0,
         "images": [
             {
                 "image": "/images/products/malabar.jpg"
@@ -745,6 +802,7 @@
         "tamilName": "மல்லி",
         "price": 35,
         "buyingPrice": 40,
+        "percentage":0,
         "images": [
             {
                 "image": "/images/products/malli.jpg"
@@ -758,6 +816,7 @@
         "tamilName": "மாங்காய் இஞ்சி",
         "price": 90,
         "buyingPrice": 40,
+        "percentage":0,
         "images": [
             {
                 "image": "/images/products/mango_ginger.jpg"
@@ -771,6 +830,7 @@
         "tamilName": "மரவள்ளி",
         "price": 40,
         "buyingPrice": 40,
+        "percentage":0,
         "images": [
             {
                 "image": "/images/products/maravalli.jpg"
@@ -784,6 +844,7 @@
         "tamilName": "மொச்சை",
         "price": 55,
         "buyingPrice": 40,
+        "percentage":0,
         "images": [
             {
                 "image": "/images/products/mochai.jpg"
@@ -797,6 +858,7 @@
         "tamilName": "காளான்",
         "price": 100,
         "buyingPrice": 40,
+        "percentage":0,
         "images": [
             {
                 "image": "/images/products/mushroom.jpg"
@@ -810,6 +872,7 @@
         "tamilName": "நார்த்தங்காய்",
         "price": 75,
         "buyingPrice": 40,
+        "percentage":0,
         "images": [
             {
                 "image": "/images/products/narthankai.jpg"
@@ -823,6 +886,7 @@
         "tamilName": "நூக்கல்",
         "price": 65,
         "buyingPrice": 40,
+        "percentage":0,
         "images": [
             {
                 "image": "/images/products/nookal.jpg"
@@ -836,6 +900,7 @@
         "tamilName": "பெரிய வெங்காயம்",
         "price": 45,
         "buyingPrice": 40,
+        "percentage":0,
         "images": [
             {
                 "image": "/images/products/onion_big.jpg"
@@ -849,6 +914,7 @@
         "tamilName": "சின்ன வெங்காயம்",
         "price": 55,
         "buyingPrice": 40,
+        "percentage":0,
         "images": [
             {
                 "image": "/images/products/onion_small.jpg"
@@ -862,6 +928,7 @@
         "tamilName": "வெள்ளை வெங்காயம்",
         "price": 70,
         "buyingPrice": 40,
+        "percentage":0,
         "images": [
             {
                 "image": "/images/products/onion_white.jpg"
@@ -875,6 +942,7 @@
         "tamilName": "பலாக்காய்",
         "price": 35,
         "buyingPrice": 40,
+        "percentage":0,
         "images": [
             {
                 "image": "/images/products/pallakai.jpg"
@@ -888,6 +956,7 @@
         "tamilName": "பருவல்",
         "price": 45,
         "buyingPrice": 40,
+        "percentage":0,
         "images": [
             {
                 "image": "/images/products/paruval.jpg"
@@ -901,6 +970,7 @@
         "tamilName": "பிடிக்கருணை",
         "price": 55,
         "buyingPrice": 40,
+        "percentage":0,
         "images": [
             {
                 "image": "/images/products/pidikarunai.jpg"
@@ -914,6 +984,7 @@
         "tamilName": "வாழைப்பூ",
         "price": 60,
         "buyingPrice": 40,
+        "percentage":0,
         "images": [
             {
                 "image": "/images/products/plantain_flower.jpg"
@@ -927,6 +998,7 @@
         "tamilName": "பெரிய உருளைக்கிழங்கு",
         "price": 50,
         "buyingPrice": 40,
+        "percentage":0,
         "images": [
             {
                 "image": "/images/products/potato_big.jpg"
@@ -940,6 +1012,7 @@
         "tamilName": "புதினா",
         "price": 20,
         "buyingPrice": 40,
+        "percentage":0,
         "images": [
             {
                 "image": "/images/products/pudina.webp"
@@ -953,6 +1026,7 @@
         "tamilName": "பூசணிக்காய்",
         "price": 30,
         "buyingPrice": 40,
+        "percentage":0,
         "images": [
             {
                 "image": "/images/products/pumpkin.jpg"
@@ -966,6 +1040,7 @@
         "tamilName": "சிவப்பு முள்ளங்கி",
         "price": 40,
         "buyingPrice": 40,
+        "percentage":0,
         "images": [
             {
                 "image": "/images/products/radish_red.jpg"
@@ -979,6 +1054,7 @@
         "tamilName": "வெள்ளை முள்ளங்கி",
         "price": 35,
         "buyingPrice": 40,
+        "percentage":0,
         "images": [
             {
                 "image": "/images/products/radish_white.webp"
@@ -992,6 +1068,7 @@
         "tamilName": "வாழைக்காய்",
         "price": 45,
         "buyingPrice": 40,
+        "percentage":0,
         "images": [
             {
                 "image": "/images/products/raw_banana.jpg"
@@ -1005,6 +1082,7 @@
         "tamilName": "மாங்காய்",
         "price": 70,
         "buyingPrice": 40,
+        "percentage":0,
         "images": [
             {
                 "image": "/images/products/raw_mango.jpg"
@@ -1018,6 +1096,7 @@
         "tamilName": "பீர்க்கங்காய்",
         "price": 35,
         "buyingPrice": 40,
+        "percentage":0,
         "images": [
             {
                 "image": "/images/products/ridge_gourd.jpg"
@@ -1031,6 +1110,7 @@
         "tamilName": "செம்பு",
         "price": 40,
         "buyingPrice": 40,
+        "percentage":0,
         "images": [
             {
                 "image": "/images/products/sembu.jpg"
@@ -1044,6 +1124,7 @@
         "tamilName": "சேனை",
         "price": 45,
         "buyingPrice": 40,
+        "percentage":0,
         "images": [
             {
                 "image": "/images/products/senai.jpg"
@@ -1057,6 +1138,7 @@
         "tamilName": "சிறுகிழங்கு",
         "price": 35,
         "buyingPrice": 40,
+        "percentage":0,
         "images": [
             {
                 "image": "/images/products/sirukilangu.jpg"
@@ -1070,6 +1152,7 @@
         "tamilName": "புடலங்காய்",
         "price": 30,
         "buyingPrice": 40,
+        "percentage":0,
         "images": [
             {
                 "image": "/images/products/snake_guard.jpg"
@@ -1083,6 +1166,7 @@
         "tamilName": "சோயா பீன்ஸ்",
         "price": 75,
         "buyingPrice": 40,
+        "percentage":0,
         "images": [
             {
                 "image": "/images/products/beans_soya.jpg"
@@ -1096,6 +1180,7 @@
         "tamilName": "இனிப்புச்சோளம்",
         "price": 45,
         "buyingPrice": 40,
+        "percentage":0,
         "images": [
             {
                 "image": "/images/products/sweet_corn.jpg"
@@ -1109,6 +1194,7 @@
         "tamilName": "சோதனை இனிப்புச்சோளம்",
         "price": 50,
         "buyingPrice": 40,
+        "percentage":0,
         "images": [
             {
                 "image": "/images/products/sweet_corn_try.jpg"
@@ -1122,6 +1208,7 @@
         "tamilName": "இனிப்பு உருளைக்கிழங்கு",
         "price": 40,
         "buyingPrice": 40,
+        "percentage":0,
         "images": [
             {
                 "image": "/images/products/sweet_potato.jpg"
@@ -1135,6 +1222,7 @@
         "tamilName": "தண்டு",
         "price": 35,
         "buyingPrice": 40,
+        "percentage":0,
         "images": [
             {
                 "image": "/images/products/thandhu.jpg"
@@ -1148,6 +1236,7 @@
         "tamilName": "மெல்லிய பீன்ஸ்",
         "price": 55,
         "buyingPrice": 40,
+        "percentage":0,
         "images": [
             {
                 "image": "/images/products/thin_beans.jpg"
@@ -1161,6 +1250,7 @@
         "tamilName": "திண்டா",
         "price": 60,
         "buyingPrice": 40,
+        "percentage":0,
         "images": [
             {
                 "image": "/images/products/thinda.jpeg"
@@ -1174,6 +1264,7 @@
         "tamilName": "பச்சை தக்காளி",
         "price": 30,
         "buyingPrice": 40,
+        "percentage":0,
         "images": [
             {
                 "image": "/images/products/tomato_green.jpg"
@@ -1187,6 +1278,7 @@
         "tamilName": "நாடு தக்காளி",
         "price": 35,
         "buyingPrice": 40,
+        "percentage":0,
         "images": [
             {
                 "image": "/images/products/tomato_nadu.jpg"
@@ -1200,6 +1292,7 @@
         "tamilName": "நவீன் தக்காளி",
         "price": 40,
         "buyingPrice": 40,
+        "percentage":0,
         "images": [
             {
                 "image": "/images/products/tomato_naveen.jpg"
@@ -1213,6 +1306,7 @@
         "tamilName": "சீமைக்கோல்",
         "price": 55,
         "buyingPrice": 40,
+        "percentage":0,
         "images": [
             {
                 "image": "/images/products/turnip.jpg"
@@ -1226,6 +1320,7 @@
         "tamilName": "வதுமாங்கா",
         "price": 45,
         "buyingPrice": 40,
+        "percentage":0,
         "images": [
             {
                 "image": "/images/products/vadhumanga.jpg"
@@ -1239,6 +1334,7 @@
         "tamilName": "வெள்ளை பீன்ஸ்",
         "price": 65,
         "buyingPrice": 40,
+        "percentage":0,
         "images": [
             {
                 "image": "/images/products/white_beans.jpg"
@@ -1252,6 +1348,7 @@
         "tamilName": "பச்சை சுக்கினி",
         "price": 60,
         "buyingPrice": 40,
+        "percentage":0,
         "images": [
             {
                 "image": "/images/products/zucchini_green.jpg"
@@ -1265,6 +1362,7 @@
         "tamilName": "மஞ்சள் சுக்கினி",
         "price": 65,
         "buyingPrice": 40,
+        "percentage":0,
         "images": [
             {
                 "image": "/images/products/zucchini_yellow.jpg"
@@ -1278,6 +1376,7 @@
         "tamilName": "அகத்திக்கீரை",
         "price": 25,
         "buyingPrice": 40,
+        "percentage":0,
         "images": [
             {
                 "image": "/images/products/agathi_keerai.jpg"
@@ -1291,6 +1390,7 @@
         "tamilName": "அரைக்கீரை",
         "price": 20,
         "buyingPrice": 40,
+        "percentage":0,
         "images": [
             {
                 "image": "/images/products/arai_keerai.jpg"
@@ -1304,6 +1404,7 @@
         "tamilName": "மணத்தக்காளி கீரை",
         "price": 30,
         "buyingPrice": 40,
+        "percentage":0,
         "images": [
             {
                 "image": "/images/products/manthakali_keerai.jpg"
@@ -1317,6 +1418,7 @@
         "tamilName": "முடக்கத்தான்கீரை",
         "price": 35,
         "buyingPrice": 40,
+        "percentage":0,
         "images": [
             {
                 "image": "/images/products/mudakathan_keerai.jpg"
@@ -1330,6 +1432,7 @@
         "tamilName": "முளைக்கீரை",
         "price": 25,
         "buyingPrice": 40,
+        "percentage":0,
         "images": [
             {
                 "image": "/images/products/mulaikeerai.jpg"
@@ -1343,6 +1446,7 @@
         "tamilName": "முருங்கைக்கீரை",
         "price": 30,
         "buyingPrice": 40,
+        "percentage":0,
         "images": [
             {
                 "image": "/images/products/muruga_keerai.jpg"
@@ -1356,6 +1460,7 @@
         "tamilName": "பாலக்கீரை",
         "price": 20,
         "buyingPrice": 40,
+        "percentage":0,
         "images": [
             {
                 "image": "/images/products/palak.jpg"
@@ -1369,6 +1474,7 @@
         "tamilName": "பருப்புக்கீரை",
         "price": 25,
         "buyingPrice": 40,
+        "percentage":0,
         "images": [
             {
                 "image": "/images/products/parupu_keerai.jpg"
@@ -1382,6 +1488,7 @@
         "tamilName": "பொன்னாங்கண்ணி பச்சை",
         "price": 30,
         "buyingPrice": 40,
+        "percentage":0,
         "images": [
             {
                 "image": "/images/products/ponnanganni_green.jpg"
@@ -1395,6 +1502,7 @@
         "tamilName": "பொன்னாங்கண்ணி சிவப்பு",
         "price": 30,
         "buyingPrice": 40,
+        "percentage":0,
         "images": [
             {
                 "image": "/images/products/ponnanganni_red.jpg"
@@ -1408,6 +1516,7 @@
         "tamilName": "புளிச்சக்கீரை",
         "price": 25,
         "buyingPrice": 40,
+        "percentage":0,
         "images": [
             {
                 "image": "/images/products/pulicha_keerai.jpg"
@@ -1421,6 +1530,7 @@
         "tamilName": "சிறு கீரை",
         "price": 30,
         "buyingPrice": 40,
+        "percentage":0,
         "images": [
             {
                 "image": "/images/products/siru_keerai.jpg"
@@ -1434,6 +1544,7 @@
         "tamilName": "வெங்காயத் தாள்",
         "price": 40,
         "buyingPrice": 40,
+        "percentage":0,
         "images": [
             {
                 "image": "/images/products/spring_onion.jpg"
@@ -1447,6 +1558,7 @@
         "tamilName": "சுக்கன் கீரை",
         "price": 30,
         "buyingPrice": 40,
+        "percentage":0,
         "images": [
             {
                 "image": "/images/products/sukkan_keerai.jpg"
@@ -1460,6 +1572,7 @@
         "tamilName": "சுண்டைக்காய்",
         "price": 35,
         "buyingPrice": 40,
+        "percentage":0,
         "images": [
             {
                 "image": "/images/products/sundakai.jpg"
@@ -1473,6 +1586,7 @@
         "tamilName": "தூதுவளை கீரை",
         "price": 35,
         "buyingPrice": 40,
+        "percentage":0,
         "images": [
             {
                 "image": "/images/products/thoothuvalai_keerai.jpg"
@@ -1486,6 +1600,7 @@
         "tamilName": "வல்லாரைக் கீரை",
         "price": 30,
         "buyingPrice": 40,
+        "percentage":0,
         "images": [
             {
                 "image": "/images/products/vallarai_keerai.jpg"
@@ -1499,6 +1614,7 @@
         "tamilName": "பசலை கீரை",
         "price": 30,
         "buyingPrice": 40,
+        "percentage":0,
         "images": [
             {
                 "image": "/images/products/pasalai_keerai.jpg"
@@ -1512,6 +1628,7 @@
         "tamilName": "வெந்தையக்கீரை பெரியது",
         "price": 40,
         "buyingPrice": 40,
+        "percentage":0,
         "images": [
             {
                 "image": "/images/products/venthaiyakkerai_big.jpg"
@@ -1525,6 +1642,7 @@
         "tamilName": "வெந்தையக்கீரை சிறியது",
         "price": 35,
         "buyingPrice": 40,
+        "percentage":0,
         "images": [
             {
                 "image": "/images/products/venthaiyakkerai_small.jpg"
@@ -1538,6 +1656,7 @@
         "tamilName": "கரிசலாங்கண்ணி",
         "price": 35,
         "buyingPrice": 40,
+        "percentage":0,
         "images": [
             {
                 "image": "/images/products/karisalakanni.jpg"
@@ -1551,6 +1670,7 @@
         "tamilName": "ஆப்பிள் - பெல்ஜியம்",
         "price": 150,
         "buyingPrice": 40,
+        "percentage":0,
         "images": [
             {
                 "image": "/images/products/apple_belgium.jpg"
@@ -1564,6 +1684,7 @@
         "tamilName": "ஆப்பிள் - ஃபுஜி",
         "price": 140,
         "buyingPrice": 40,
+        "percentage":0,
         "images": [
             {
                 "image": "/images/products/apple_fuji.jpg"
@@ -1577,6 +1698,7 @@
         "tamilName": "ஆப்பிள் - பச்சை",
         "price": 160,
         "buyingPrice": 40,
+        "percentage":0,
         "images": [
             {
                 "image": "/images/products/apple_green.jpg"
@@ -1590,6 +1712,7 @@
         "tamilName": "ஆப்பிள் - ராயல் காலா",
         "price": 170,
         "buyingPrice": 40,
+        "percentage":0,
         "images": [
             {
                 "image": "/images/products/apple_royal_gala.jpg"
@@ -1603,6 +1726,7 @@
         "tamilName": "ஆப்பிள் - ஷிம்லா",
         "price": 150,
         "buyingPrice": 40,
+        "percentage":0,
         "images": [
             {
                 "image": "/images/products/apple_shimla.jpg"
@@ -1616,6 +1740,7 @@
         "tamilName": "ஆப்பிள் - வாஷிங்டன்",
         "price": 180,
         "buyingPrice": 40,
+        "percentage":0,
         "images": [
             {
                 "image": "/images/products/apple_washington.jpg"
@@ -1629,6 +1754,7 @@
         "tamilName": "ஆஸ்திரேலியா ஆரஞ்சு",
         "price": 120,
         "buyingPrice": 40,
+        "percentage":0,
         "images": [
             {
                 "image": "/images/products/australia_orange.jpg"
@@ -1642,6 +1768,7 @@
         "tamilName": "வாழைப்பழம்-ஏலக்கி",
         "price": 60,
         "buyingPrice": 40,
+        "percentage":0,
         "images": [
             {
                 "image": "/images/products/banana_elakki.jpg"
@@ -1655,6 +1782,7 @@
         "tamilName": "வாழைப்பழம்-பெயன்",
         "price": 50,
         "buyingPrice": 40,
+        "percentage":0,
         "images": [
             {
                 "image": "/images/products/banana_peyan.jpg"
@@ -1668,6 +1796,7 @@
         "tamilName": "கருப்பு திராட்சை விதையற்ற",
         "price": 100,
         "buyingPrice": 40,
+        "percentage":0,
         "images": [
             {
                 "image": "/images/products/black_grapes_seedless.jpg"
@@ -1681,6 +1810,7 @@
         "tamilName": "புளுபெர்ரி",
         "price": 300,
         "buyingPrice": 40,
+        "percentage":0,
         "images": [
             {
                 "image": "/images/products/blueberry.jpg"
@@ -1694,6 +1824,7 @@
         "tamilName": "வெண்ணெய் பழம்",
         "price": 150,
         "buyingPrice": 40,
+        "percentage":0,
         "images": [
             {
                 "image": "/images/products/butter_fruit.jpg"
@@ -1707,6 +1838,7 @@
         "tamilName": "செர்ரி - (இறக்குமதி)",
         "price": 200,
         "buyingPrice": 40,
+        "percentage":0,
         "images": [
             {
                 "image": "/images/products/cherry_imported.jpg"
@@ -1720,6 +1852,7 @@
         "tamilName": "செவ்வாழை",
         "price": 80,
         "buyingPrice": 40,
+        "percentage":0,
         "images": [
             {
                 "image": "/images/products/chevazhai.jpg"
@@ -1733,6 +1866,7 @@
         "tamilName": "டிராகன் பழங்கள்",
         "price": 250,
         "buyingPrice": 40,
+        "percentage":0,
         "images": [
             {
                 "image": "/images/products/dragon_fruits.jpg"
@@ -1746,6 +1880,7 @@
         "tamilName": "அத்தி பழம்",
         "price": 180,
         "buyingPrice": 40,
+        "percentage":0,
         "images": [
             {
                 "image": "/images/products/fig_fruit.jpg"
@@ -1759,6 +1894,7 @@
         "tamilName": "பச்சை திராட்சை",
         "price": 90,
         "buyingPrice": 40,
+        "percentage":0,
         "images": [
             {
                 "image": "/images/products/grapes_green.jpg"
@@ -1772,6 +1908,7 @@
         "tamilName": "திராட்சை - பன்னீர்",
         "price": 110,
         "buyingPrice": 40,
+        "percentage":0,
         "images": [
             {
                 "image": "/images/products/grapes_panner.jpg"
@@ -1785,6 +1922,7 @@
         "tamilName": "வெள்ளை கொய்யா",
         "price": 70,
         "buyingPrice": 40,
+        "percentage":0,
         "images": [
             {
                 "image": "/images/products/guava_white.jpg"
@@ -1798,6 +1936,7 @@
         "tamilName": "சிவப்பு கொய்யா",
         "price": 75,
         "buyingPrice": 40,
+        "percentage":0,
         "images": [
             {
                 "image": "/images/products/guava_red.jpg"
@@ -1811,6 +1950,7 @@
         "tamilName": "கமலா ஆரஞ்சு",
         "price": 120,
         "buyingPrice": 40,
+        "percentage":0,
         "images": [
             {
                 "image": "/images/products/kamala_orange.jpg"
@@ -1824,6 +1964,7 @@
         "tamilName": "கற்பூரவள்ளி",
         "price": 80,
         "buyingPrice": 40,
+        "percentage":0,
         "images": [
             {
                 "image": "/images/products/karpuravalli.jpg"
@@ -1837,6 +1978,7 @@
         "tamilName": "கிவி பழம்",
         "price": 200,
         "buyingPrice": 40,
+        "percentage":0,
         "images": [
             {
                 "image": "/images/products/kiwi_fruit.jpg"
@@ -1850,6 +1992,7 @@
         "tamilName": "லிட்சி தாய்லாந்து",
         "price": 300,
         "buyingPrice": 40,
+        "percentage":0,
         "images": [
             {
                 "image": "/images/products/litche_thailand.jpg"
@@ -1863,6 +2006,7 @@
         "tamilName": "மலைவாழை",
         "price": 70,
         "buyingPrice": 40,
+        "percentage":0,
         "images": [
             {
                 "image": "/images/products/malaivazhai.jpg"
@@ -1876,6 +2020,7 @@
         "tamilName": "மால்டா ஆரஞ்சு",
         "price": 130,
         "buyingPrice": 40,
+        "percentage":0,
         "images": [
             {
                 "image": "/images/products/malda_orange.jpg"
@@ -1889,6 +2034,7 @@
         "tamilName": "மாண்டரின்ஸ் ஆரஞ்சு",
         "price": 140,
         "buyingPrice": 40,
+        "percentage":0,
         "images": [
             {
                 "image": "/images/products/mandrins_orange.jpg"
@@ -1902,6 +2048,7 @@
         "tamilName": "மாம்பழம் - அல்போன்சா",
         "price": 180,
         "buyingPrice": 40,
+        "percentage":0,
         "images": [
             {
                 "image": "/images/products/mango_alphonsa.jpg"
@@ -1915,6 +2062,7 @@
         "tamilName": "மாம்பழம் - பங்கனபள்ளி",
         "price": 170,
         "buyingPrice": 40,
+        "percentage":0,
         "images": [
             {
                 "image": "/images/products/mango_banganaballi.jpg"
@@ -1928,6 +2076,7 @@
         "tamilName": "மாம்பழம் - ஹிமாம்பசந்த்",
         "price": 190,
         "buyingPrice": 40,
+        "percentage":0,
         "images": [
             {
                 "image": "/images/products/mango_himampasand.jpg"
@@ -1941,6 +2090,7 @@
         "tamilName": "மாம்பழம் - ஜவாது",
         "price": 80,
         "buyingPrice": 40,
+        "percentage":0,
         "images": [
             {
                 "image": "/images/products/mango_jawadu.jpg"
@@ -1954,6 +2104,7 @@
         "tamilName": "மாம்பழம் - லங்கடா",
         "price": 85,
         "buyingPrice": 40,
+        "percentage":0,
         "images": [
             {
                 "image": "/images/products/mango_langada.jpg"
@@ -1967,6 +2118,7 @@
         "tamilName": "மாம்பழம் - மால்கோவா",
         "price": 90,
         "buyingPrice": 40,
+        "percentage":0,
         "images": [
             {
                 "image": "/images/products/mango_malgova.jpg"
@@ -1980,6 +2132,7 @@
         "tamilName": "மாம்பழம் - ருமானி",
         "price": 75,
         "buyingPrice": 40,
+        "percentage":0,
         "images": [
             {
                 "image": "/images/products/mango_rumani.jpg"
@@ -1993,6 +2146,7 @@
         "tamilName": "மாம்பழம் - செந்துரா",
         "price": 95,
         "buyingPrice": 40,
+        "percentage":0,
         "images": [
             {
                 "image": "/images/products/mango_senthura.jpg"
@@ -2006,6 +2160,7 @@
         "tamilName": "மங்கூஸ்டான்",
         "price": 110,
         "buyingPrice": 40,
+        "percentage":0,
         "images": [
             {
                 "image": "/images/products/mangustan.jpg"
@@ -2019,6 +2174,7 @@
         "tamilName": "மொரிஷ் பழம்",
         "price": 75,
         "buyingPrice": 40,
+        "percentage":0,
         "images": [
             {
                 "image": "/images/products/morish_fruit.jpeg"
@@ -2032,6 +2188,7 @@
         "tamilName": "முலாம்பழம் வரி",
         "price": 60,
         "buyingPrice": 40,
+        "percentage":0,
         "images": [
             {
                 "image": "/images/products/musk_melon_vari.jpg"
@@ -2045,6 +2202,7 @@
         "tamilName": "முலாம்பழம்",
         "price": 50,
         "buyingPrice": 40,
+        "percentage":0,
         "images": [
             {
                 "image": "/images/products/muskmelon.jpg"
@@ -2058,6 +2216,7 @@
         "tamilName": "முசம்பி",
         "price": 40,
         "buyingPrice": 40,
+        "percentage":0,
         "images": [
             {
                 "image": "/images/products/musambi.jpg"
@@ -2071,6 +2230,7 @@
         "tamilName": "நேந்திரம் வாழை",
         "price": 30,
         "buyingPrice": 40,
+        "percentage":0,
         "images": [
             {
                 "image": "/images/products/nendram_banana.jpg"
@@ -2084,6 +2244,7 @@
         "tamilName": "பப்பாளி",
         "price": 35,
         "buyingPrice": 40,
+        "percentage":0,
         "images": [
             {
                 "image": "/images/products/pappaya.jpg"
@@ -2097,6 +2258,7 @@
         "tamilName": "பேஷன் பழம்",
         "price": 45,
         "buyingPrice": 40,
+        "percentage":0,
         "images": [
             {
                 "image": "/images/products/passion_fruit.jpg"
@@ -2110,6 +2272,7 @@
         "tamilName": "பேர் பழம்",
         "price": 55,
         "buyingPrice": 40,
+        "percentage":0,
         "images": [
             {
                 "image": "/images/products/pear_fruit.jpg"
@@ -2123,6 +2286,7 @@
         "tamilName": "சிவப்பு பேர்",
         "price": 60,
         "buyingPrice": 40,
+        "percentage":0,
         "images": [
             {
                 "image": "/images/products/pear_red.jpg"
@@ -2136,6 +2300,7 @@
         "tamilName": "பைன் அப்பிள்",
         "price": 40,
         "buyingPrice": 40,
+        "percentage":0,
         "images": [
             {
                 "image": "/images/products/pineapple.jpg"
@@ -2149,6 +2314,7 @@
         "tamilName": "ப்ளம்ஸ் பழம்",
         "price": 70,
         "buyingPrice": 40,
+        "percentage":0,
         "images": [
             {
                 "image": "/images/products/plums_fruit.jpg"
@@ -2162,6 +2328,7 @@
         "tamilName": "மாதுளை காபூல்",
         "price": 80,
         "buyingPrice": 40,
+        "percentage":0,
         "images": [
             {
                 "image": "/images/products/pomegranate_kabul.jpg"
@@ -2175,6 +2342,7 @@
         "tamilName": "பூவம்பழம்",
         "price": 50,
         "buyingPrice": 40,
+        "percentage":0,
         "images": [
             {
                 "image": "/images/products/poovampalam.jpg"
@@ -2188,6 +2356,7 @@
         "tamilName": "ரஸ்தாளி",
         "price": 45,
         "buyingPrice": 40,
+        "percentage":0,
         "images": [
             {
                 "image": "/images/products/rasthali.jpg"
@@ -2201,6 +2370,7 @@
         "tamilName": "சிவப்பு கிளோப் திராட்சை",
         "price": 65,
         "buyingPrice": 40,
+        "percentage":0,
         "images": [
             {
                 "image": "/images/products/red_gloab_grape.jpg"
@@ -2214,6 +2384,7 @@
         "tamilName": "சப்போட்டா",
         "price": 55,
         "buyingPrice": 40,
+        "percentage":0,
         "images": [
             {
                 "image": "/images/products/sappota.jpg"
@@ -2227,6 +2398,7 @@
         "tamilName": "முள்ளு சீதா",
         "price": 70,
         "buyingPrice": 40,
+        "percentage":0,
         "images": [
             {
                 "image": "/images/products/soursop.jpg"
@@ -2240,6 +2412,7 @@
         "tamilName": "ஸ்ட்ராபெர்ரி பழம் [பட்டயம்]",
         "price": 75,
         "buyingPrice": 40,
+        "percentage":0,
         "images": [
             {
                 "image": "/images/products/strawberry.jpg"
@@ -2253,6 +2426,7 @@
         "tamilName": "தண்ணீர் மெலன்",
         "price": 30,
         "buyingPrice": 40,
+        "percentage":0,
         "images": [
             {
                 "image": "/images/products/watermelon.jpg"
@@ -2266,6 +2440,7 @@
         "tamilName": "தண்ணீர் மெலன் கிரான்",
         "price": 40,
         "buyingPrice": 40,
+        "percentage":0,
         "images": [
             {
                 "image": "/images/products/watermelon_kiran.jpg"
@@ -2279,6 +2454,7 @@
         "tamilName": "சீத்தா பழம்",
         "price": 25,
         "buyingPrice": 40,
+        "percentage":0,
         "images": [
             {
                 "image": "/images/products/cheetha_palam.jpg"
@@ -2292,6 +2468,7 @@
         "tamilName": "கினோர் ஆரஞ்சு",
         "price": 60,
         "buyingPrice": 40,
+        "percentage":0,
         "images": [
             {
                 "image": "/images/products/kinor_orange.jpg"
@@ -2305,6 +2482,7 @@
         "tamilName": "பச்சை திராட்சை விதையற்றது",
         "price": 55,
         "buyingPrice": 40,
+        "percentage":0,
         "images": [
             {
                 "image": "/images/products/green_seedless_grapes.jpg"
@@ -2318,6 +2496,7 @@
         "tamilName": "ஆஸ்திரேலியா திராட்சை",
         "price": 80,
         "buyingPrice": 40,
+        "percentage":0,
         "images": [
             {
                 "image": "/images/products/australia_grapes.jpg"
@@ -2331,6 +2510,7 @@
         "tamilName": "பிறண்டை கீரை",
         "price": 90,
         "buyingPrice": 40,
+        "percentage":0,
         "images": [
             {
                 "image": "/images/products/pirandai_kerrai.jpg"
@@ -2344,6 +2524,7 @@
         "tamilName": "செர்ரி - இந்தியன்",
         "price": 100,
         "buyingPrice": 40,
+        "percentage":0,
         "images": [
             {
                 "image": "/images/products/indian_cherry.jpg"
@@ -2357,6 +2538,7 @@
         "tamilName": "ரமடான் பழங்கள்",
         "price": 130,
         "buyingPrice": 40,
+        "percentage":0,
         "images": [
             {
                 "image": "/images/products/ramdan_fruits.jpg"

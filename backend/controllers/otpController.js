@@ -130,7 +130,7 @@ const mailOtp = catchAsyncError(async (req, res, next) => {
         from: 'abangokul@gmail.com',
         to: email,
         subject: 'OTP Verification',
-        text: `Your OTP for verification is/n/n: ${hashedOTP}`
+        text: `Your OTP for verification is: ${hashedOTP}`
       };
 
       const dummyuserData = await mailOTP.findOne({ email }).select('+password');

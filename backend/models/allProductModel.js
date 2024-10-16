@@ -13,12 +13,16 @@ const allproductSchema = new mongoose.Schema({
     },
     buyingPrice:{
         type:Number,
-        default:40.0
+        default:0.0
     }, 
     price:{
         type:Number,
         default:0.0
     }, 
+    percentage:{
+        type:Number,
+        default:40
+    },
     images:[
         {
             image:{
