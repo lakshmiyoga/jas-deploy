@@ -15,13 +15,15 @@ import { porterClearData, porterClearResponse } from '../../slices/porterSlice';
 const PaymentList = ({isActive,setIsActive}) => {
     const location = useLocation();
     sessionStorage.setItem('redirectPath', location.pathname);
-    const { adminOrders: orders = [], loading = true, error, isOrderDeleted }  = useSelector(state => state.orderState);
+    const { adminOrders: orders, loading = true, error, isOrderDeleted }  = useSelector(state => state.orderState);
     const dispatch = useDispatch();
     useEffect(() => {
         dispatch(orderDetailClear());
         dispatch(porterClearData());
         dispatch(porterClearResponse());
     }, [])
+
+    // console.log("Orders",orders)
 
     const setOrders = () => {
         const data = {
@@ -62,9 +64,9 @@ const PaymentList = ({isActive,setIsActive}) => {
 
         
         // Sort orders by creation date (newest first)
-        const sortedOrders = [...orders].sort((a, b) => new Date(b.createdAt) - new Date(a.createdAt));
+        const sortedOrders = orders && [...orders].sort((a, b) => new Date(b.createdAt) - new Date(a.createdAt));
 
-        sortedOrders.forEach((order,index) => {
+        sortedOrders && sortedOrders.forEach((order,index) => {
             data.rows.push({
                 s_no: index + 1,
                 id:order.order_id,
@@ -114,9 +116,13 @@ const PaymentList = ({isActive,setIsActive}) => {
             });
             return;
         }
-
-        dispatch(adminOrdersAction());
     }, [dispatch, error, isOrderDeleted]);
+
+    useEffect(()=>{
+        if(!orders){
+            dispatch(adminOrdersAction());
+        }   
+    },[orders])
 
     return (
         <div>

@@ -23,11 +23,13 @@ const Cart = () => {
     const total = (parseFloat(subtotal) + shippingCharge).toFixed(2);
 
     const checkOutHandler = () => {
-        if (isAuthenticated) {
-            navigate('/shipping');
-        } else {
-            navigate('/login');
-        }
+        // if (isAuthenticated) {
+        //     navigate('/shipping');
+        // } else {
+        //     navigate('/login');
+        // }
+        sessionStorage.setItem('redirectPath', '/shipping');
+        navigate('/shipping');
     };
 
     const handleDeleteClick = (product) => {
@@ -41,6 +43,7 @@ const Cart = () => {
         toast.success('Item removed from Cart', {
             position: "bottom-center",
             type: 'success',
+            autoClose: 500, 
         });
     };
 

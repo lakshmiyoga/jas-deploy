@@ -3,7 +3,7 @@ import Sidebar from "./Sidebar";
 import { useDispatch, useSelector } from 'react-redux';
 import { useLocation, useNavigate, useParams } from "react-router-dom";
 import { orderDetail as orderDetailAction, updateOrder, porterOrder, RemoveOrderResponse } from "../../actions/orderActions";
-import { CancelOrderResponse, createPorterOrderResponse, getPackedOrder, getporterOrder, initRefund, packedOrder } from "../../actions/porterActions";
+import { CancelOrderResponse, createPorterOrderResponse, getPackedOrder, getporterOrder, initRefund, packedOrder, updatedPackedOrder } from "../../actions/porterActions";
 import { toast } from "react-toastify";
 import { clearOrderUpdated, clearError, adminOrderRemoveClearError, orderDetailClear } from "../../slices/orderSlice";
 import { clearRefundError } from "../../slices/porterSlice";
@@ -19,6 +19,7 @@ import Invoice from "../Layouts/Invoice";
 import NumberInput from "../Layouts/NumberInput";
 import Loader from "../Layouts/Loader";
 import MetaData from "../Layouts/MetaData";
+import LoaderButton from "../Layouts/LoaderButton";
 
 const RefundOrder = ({ isActive, setIsActive }) => {
     const location = useLocation();
@@ -38,6 +39,7 @@ const RefundOrder = ({ isActive, setIsActive }) => {
     const [removalReason, setRemovalReason] = useState('');
     const navigate = useNavigate();
     const dispatch = useDispatch();
+    const [refundloading, setRefundLoading] = useState(false)
     console.log("orderDetail", orderDetail)
 
 
@@ -296,6 +298,7 @@ const RefundOrder = ({ isActive, setIsActive }) => {
 
     const submitRefundHandler = () => {
         const RefundableAmount = Number(getpackedOrderData.totalRefundableAmount);
+        setRefundLoading(true)
         // console.log("RefundableAmount",RefundableAmount)
         dispatch(initRefund({ order_id: id, RefundableAmount }))
     }
@@ -307,22 +310,12 @@ const RefundOrder = ({ isActive, setIsActive }) => {
                 position: "bottom-center",
                 onOpen: () => dispatch(clearRefundError())
             });
+            setRefundLoading(false);
+            dispatch(updatedPackedOrder({}));
+            return;
 
         }
-        if (error) {
-            toast(error, {
-                position: "bottom-center",
-                type: 'error',
-                onOpen: () => { dispatch(clearError()) }
-            });
-        }
-        if (refundError) {
-            toast(refundError, {
-                position: "bottom-center",
-                type: 'error',
-                onOpen: () => { dispatch(clearRefundError()) }
-            });
-        }
+
         // dispatch(porterClearData())
         // dispatch(porterClearResponse());
         dispatch(orderDetailAction(id));
@@ -333,7 +326,26 @@ const RefundOrder = ({ isActive, setIsActive }) => {
         setRefreshData(true)
         // dispatch(getporterOrder({ order_id: id }))
 
-    }, [dispatch, id, porterOrderDetail, error, refundData, refundError]);
+    }, [dispatch, id, porterOrderDetail, refundData]);
+
+    useEffect(() => {
+        if (error) {
+            toast(error, {
+                position: "bottom-center",
+                type: 'error',
+                onOpen: () => { dispatch(clearError()) }
+            });
+            setRefundLoading(false);
+        }
+        if (refundError) {
+            toast(refundError, {
+                position: "bottom-center",
+                type: 'error',
+                onOpen: () => { dispatch(clearRefundError()) }
+            });
+            setRefundLoading(false);
+        }
+    }, [refundError, error])
 
     useEffect(() => {
         if (porterOrderData && refreshData) {
@@ -380,11 +392,11 @@ const RefundOrder = ({ isActive, setIsActive }) => {
 
                                     <div><b>Amount:</b> Rs.{parseFloat(totalPrice).toFixed(2)}</div>
                                     {orderDetail && orderDetail.statusResponse && orderDetail.statusResponse.payment_method && (
-                                    <div><b>Payment Mode:</b> {orderDetail && orderDetail.statusResponse && orderDetail.statusResponse.payment_method}</div>
+                                        <div><b>Payment Mode:</b> {orderDetail && orderDetail.statusResponse && orderDetail.statusResponse.payment_method}</div>
 
-                                )
+                                    )
 
-                                }
+                                    }
 
                                     <hr />
 
@@ -623,17 +635,24 @@ const RefundOrder = ({ isActive, setIsActive }) => {
                                     </div>
 
                                     <hr />
-                                    {/* <div>
+                                    <div>
                                         {
                                             orderDetail && orderDetail.statusResponse && orderDetail.statusResponse.refunds ? (
-                                                <button className='btn btn-primary' onClick={submitRefundHandler} disabled={true}>Already Refunded</button>
+                                                <button className='btn btn-primary' onClick={submitRefundHandler} disabled={true}>Already initiated</button>
                                             ) : (
-                                                <button className='btn btn-primary' onClick={submitRefundHandler} disabled={dropStatus === "Refund"}>Refund</button>
+                                                <button className='btn btn-primary' onClick={submitRefundHandler} disabled={dropStatus === "Refund" || refundloading}>
+                                                    {refundloading ? <LoaderButton fullPage={false} size={20} /> : (
+                                                        <span>  Refund</span>
+                                                    )
+
+                                                    }
+                                                    
+                                                </button>
                                             )
 
                                         }
-                                      
-                                    </div> */}
+
+                                    </div>
 
                                 </div>
                             </Fragment>

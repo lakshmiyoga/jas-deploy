@@ -92,6 +92,8 @@ const PaymentConfirm = () => {
         return 'Transaction Failed';
       case 'NEW':
         return 'Transaction Cancelled';
+        case 'AUTHORIZING':
+        return 'Transaction Pending';
       default:
         return 'Transaction Status';
     }
@@ -111,8 +113,10 @@ const PaymentConfirm = () => {
         return 'https://img.icons8.com/color/48/000000/cancel.png';
       case 'NEW':
         return 'https://img.icons8.com/color/48/000000/cancel.png';
+        case 'AUTHORIZING':
+          return 'https://img.icons8.com/color/48/000000/hourglass-sand-bottom.png';
       default:
-        return '';
+        return '❌';
     }
   };
 
@@ -130,6 +134,8 @@ const PaymentConfirm = () => {
         return '❌ Failed';
       case 'NEW':
         return '❌ Cancelled';
+        case 'AUTHORIZING':
+          return '⌛ AUTHORIZING';
       default:
         return '❓ Unknown';
     }

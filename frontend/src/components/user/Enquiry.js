@@ -14,6 +14,8 @@ const Enquiry = () => {
         mobile: "",
         message: ""
     });
+    const [files, setFiles] = useState([]); 
+    console.log("files",files)
 // console.log("formdata",formData)
     const dispatch = useDispatch();
     const navigate = useNavigate();
@@ -25,9 +27,17 @@ const Enquiry = () => {
 
     const submitHandler = async(e) => {
         e.preventDefault();
-        await dispatch(postEnquiryDetails(formData));
-        // setFormData("");
-        console.log(formData)
+        // await dispatch(postEnquiryDetails(formData));
+        const form = new FormData();
+        form.append('name', formData.name);
+        form.append('email', formData.email);
+        form.append('mobile', formData.mobile);
+        form.append('message', formData.message);
+
+        // Append all files to the FormData object
+        files.forEach(file => form.append('files', file));
+
+        await dispatch(postEnquiryDetails(form));
     };
 
     const handleChange = (e) => {
@@ -38,6 +48,43 @@ const Enquiry = () => {
             [name]: value
         }));
     };
+
+    const handleFileChange = (e) => {
+        const selectedFiles = Array.from(e.target.files);
+
+        // Filter files by acceptable formats: images (jpeg, jpg, png) and PDF
+        const validFiles = selectedFiles.filter(file =>
+            ['image/jpeg', 'image/jpg', 'image/png', 'application/pdf'].includes(file.type)
+        );
+
+        // Calculate the total size of selected files (in bytes)
+        const totalSize = validFiles.reduce((acc, file) => acc + file.size, 0);
+
+        // Convert the total size from bytes to MB (1MB = 1,048,576 bytes)
+        const totalSizeInMB = totalSize / (1024 * 1024);
+
+        if (totalSizeInMB > 1) {
+            toast.error('Total file size exceeds 10MB. Please upload smaller files.', {
+                position: 'bottom-center',
+            });
+            e.target.value = null;
+            return
+        }
+        else{
+            if (validFiles.length !== selectedFiles.length) {
+                toast.error('Only JPEG, JPG, PNG, or PDF files are allowed.', {
+                    position: 'bottom-center',
+                })
+                e.target.value = null;
+                return
+            }
+    
+            setFiles(validFiles); // Set valid files in state  
+        }
+    };
+
+   
+    
 
     useEffect(()=>{
         if(isSubmitted  ){
@@ -94,7 +141,7 @@ const Enquiry = () => {
                         </div>
 
                         <div className="form-group">
-                            <label htmlFor="phone_field">Phone No (+91) <span style={{color:'red'}}>*</span></label>
+                            <label htmlFor="phone_field">Phone No (+91) </label>
                             <NumberInput
                                 id="mobile_field"
                                 name="mobile"
@@ -115,6 +162,18 @@ const Enquiry = () => {
                                 onChange={handleChange}
                             />
                         </div>
+                        {/* <div className="form-group">
+                            <label htmlFor="files_field">Upload Files (JPEG, JPG, PNG, PDF) - Max total size: 10MB</label>
+                            <input
+                                type="file"
+                                id="files_field"
+                                name="files"
+                                accept=".pdf,.jpg,.jpeg,.png"
+                                className="form-control"
+                                onChange={handleFileChange}
+                                multiple // Allow multiple files
+                            />
+                        </div> */}
 
                         <button
                             id="submit_button"

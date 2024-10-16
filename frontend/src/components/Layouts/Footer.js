@@ -88,7 +88,7 @@ const Footer = () => {
           <ul>
             <li>29, Reddy St, Nerkundram, Chennai - 600107</li>
             <li>+91 91767 20068</li>
-            <li>info@jasfruitsandvegetables.in</li>
+            <li>Jasfruitsandvegetables@gmail.com</li>
           </ul>
         </div>
       </div>

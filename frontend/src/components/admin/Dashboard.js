@@ -3,23 +3,32 @@ import Sidebar from './Sidebar'
 import {useDispatch, useSelector} from 'react-redux';
 import { useEffect } from "react";
 import { getAdminProducts } from "../../actions/productsActions";
-import {getUsers} from "../../actions/userActions";
+import {getUsers, loadUser} from "../../actions/userActions";
 import {adminOrders as adminOrdersAction} from '../../actions/orderActions'
 import {Link, useLocation} from 'react-router-dom'
 import { getEnquiryDetails } from '../../actions/enquiryActions';
+import LoaderButton from '../Layouts/LoaderButton';
+import store from '../../store';
  
 const Dashboard = ({isActive,setIsActive}) => {
  
-    const { products = [] } = useSelector( state => state.productsState);
-    const {enquiry =[]} = useSelector(state => state.enquiryState);
-    const { users = [] } = useSelector( state => state.userState);
-    const { adminOrders = [] } = useSelector( state => state.orderState);
+    const { products  } = useSelector( state => state.productsState);
+    const {enquiry } = useSelector(state => state.enquiryState);
+    const { users  } = useSelector( state => state.userState);
+    const { adminOrders  } = useSelector( state => state.orderState);
     const dispatch = useDispatch();
+    // const { isAuthenticated, user } = useSelector(state => state.authState);
+
+    // useEffect(()=>{
+    //   if(!isAuthenticated){
+    //     store.dispatch(loadUser());  
+    //   }
+    // },[isAuthenticated])
 
     console.log("adminOrders",adminOrders)
 
     let totalAmount = 0;
-    if (adminOrders.length > 0) {
+    if (adminOrders && adminOrders.length > 0) {
         adminOrders.forEach( order => {
           if(order.paymentStatus === 'CHARGED')
             totalAmount += order.totalPrice
@@ -27,12 +36,29 @@ const Dashboard = ({isActive,setIsActive}) => {
     }
 
 
-    useEffect( () => {
-        dispatch(getAdminProducts());
+    // useEffect( () => {
+    //     dispatch(getAdminProducts());
+    //     // dispatch(getEnquiryDetails());
+    //     // dispatch(getUsers());
+    //     // dispatch(adminOrdersAction());
+    //  }, [dispatch])
+
+     useEffect(()=>{
+      if(!enquiry){
         dispatch(getEnquiryDetails());
-        dispatch(getUsers());
+      }
+      if(!adminOrders){
         dispatch(adminOrdersAction());
-     }, [dispatch])
+      }
+      if(!users){
+        dispatch(getUsers());
+      }
+
+      if(!products){
+        dispatch(getAdminProducts());
+      }
+     
+     },[enquiry,adminOrders,users,products])
  
 // console.log(enquiry)
 // console.log(products)
@@ -150,7 +176,7 @@ const Dashboard = ({isActive,setIsActive}) => {
             <div className="card-body">
               <div className="text-center card-font-size">
                 Products<br />
-                <b>{products.length}</b>
+                <b>{products && products.length ? products.length : <LoaderButton fullPage={false} size={20} />}</b>
               </div>
             </div>
             <Link className="card-footer text-white clearfix small z-1" to="/admin/products">
@@ -167,7 +193,7 @@ const Dashboard = ({isActive,setIsActive}) => {
             <div className="card-body">
               <div className="text-center card-font-size">
                 Orders<br />
-                <b>{adminOrders.length}</b>
+                <b>{adminOrders && adminOrders.length ? adminOrders.length :<LoaderButton fullPage={false} size={20} />}</b>
               </div>
             </div>
             <Link className="card-footer text-white clearfix small z-1" to="/admin/allorders">
@@ -184,7 +210,7 @@ const Dashboard = ({isActive,setIsActive}) => {
             <div className="card-body">
               <div className="text-center card-font-size">
                 Users<br />
-                <b>{users.length}</b>
+                <b>{users && users.length ?  users.length :<LoaderButton fullPage={false} size={20} />}</b>
               </div>
             </div>
             <Link className="card-footer text-white clearfix small z-1" to="/admin/users">
@@ -201,7 +227,7 @@ const Dashboard = ({isActive,setIsActive}) => {
             <div className="card-body">
               <div className="text-center card-font-size">
                 Enquiry<br />
-                <b>{enquiry && enquiry.length}</b>
+                <b>{enquiry && enquiry.length ? enquiry.length :<LoaderButton fullPage={false} size={20} />}</b>
               </div>
             </div>
             <Link className="card-footer text-white clearfix small z-1" to="/admin/getenquiry">

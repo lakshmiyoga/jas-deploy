@@ -5,6 +5,7 @@ import { toast } from 'react-toastify';
 import { useLocation, useNavigate } from 'react-router-dom';
 import MetaData from '../Layouts/MetaData';
 import { clearUpdatePassword } from '../../slices/authSlice';
+import LoaderButton from '../Layouts/LoaderButton';
 
 const UpdatePassword = () => {
   const [oldPassword, setOldPassword] = useState('');
@@ -22,7 +23,7 @@ const UpdatePassword = () => {
   const [showPassword, setShowPassword] = useState(false);
   const [showOldPassword, setShowOldPassword] = useState(false);
   const dispatch = useDispatch();
-  const { isUpdated, error } = useSelector(state => state.authState);
+  const {updatepasswordloading, isUpdated, error } = useSelector(state => state.authState);
 
   // Password validation function
   const validatePassword = (password) => {
@@ -175,9 +176,14 @@ const UpdatePassword = () => {
             <button
               type="submit"
               className="btn update-btn btn-block mt-4 mb-3"
-              disabled={!isFormValid}  // Disable submit if form is invalid
+              disabled={!isFormValid || updatepasswordloading}  // Disable submit if form is invalid
             >
-              Update Password
+               {updatepasswordloading ? <LoaderButton fullPage={false} size={20} /> : (
+                                    <span>   Update Password</span>
+                                )
+
+                                }
+             
             </button>
           </form>
         </div>

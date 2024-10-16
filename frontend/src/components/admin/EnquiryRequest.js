@@ -18,13 +18,13 @@ const EnquiryRequest = ({isActive,setIsActive}) => {
   sessionStorage.setItem('redirectPath', location.pathname);
     // const { products = [], loading = true, error } = useSelector(state => state.productsState);
     // const { isProductDeleted, error: productError } = useSelector(state => state.productState);
-    const { isEnquiryDeleted, error,loading = true, enquiry=[] } = useSelector(state => state.enquiryState);
+    const { isEnquiryDeleted, error,loading = true, enquiry } = useSelector(state => state.enquiryState);
     const dispatch = useDispatch();
 
     const [showModal, setShowModal] = useState(false);
     const [enquiryToDelete, setEnquiryToDelete] = useState(null);
 
-  console.log(enquiry)
+  // console.log(enquiry)
     const setEnquiryDetails = () => {
         // const data = {
         //     columns: [
@@ -133,9 +133,9 @@ const EnquiryRequest = ({isActive,setIsActive}) => {
         
 
         // Sort orders by creation date (newest first)
-        const sortedEnquiry = [...enquiry].sort((a, b) => new Date(b.createdAt) - new Date(a.createdAt));
+        const sortedEnquiry = enquiry && [...enquiry].sort((a, b) => new Date(b.createdAt) - new Date(a.createdAt));
 
-        sortedEnquiry.forEach((user,index) => {
+        sortedEnquiry && sortedEnquiry.forEach((user,index) => {
             data.rows.push({
                 s_no: index+1,
                 name: user.name,
@@ -179,8 +179,15 @@ const EnquiryRequest = ({isActive,setIsActive}) => {
             })
             return;
         }
-        dispatch(getEnquiryDetails())
+        // dispatch(getEnquiryDetails())
     }, [dispatch, error, isEnquiryDeleted])
+
+    useEffect(()=>{
+      if(!enquiry){
+        dispatch(getEnquiryDetails())
+      }
+      
+    },[enquiry])
 
     // const deleteHandler = (e, id) => {
     //     e.target.disabled = true;

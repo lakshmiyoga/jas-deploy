@@ -5,12 +5,15 @@ import Loader from '../Layouts/Loader';
 import Sidebar from '../admin/Sidebar'; // Assuming Sidebar component is in this path
 import { useLocation } from 'react-router-dom';
 import MetaData from '../Layouts/MetaData';
+import { getAdminProducts } from '../../actions/productsActions';
+import { useDispatch } from 'react-redux';
 
 const UpdatePrice = ({isActive,setIsActive}) => {
     const [items, setItems] = useState([]);
     const [file, setFile] = useState(null);
     const [loading, setloading] = useState(false);
     const location = useLocation();
+    const dispatch = useDispatch();
     sessionStorage.setItem('redirectPath', location.pathname);
 
     // const handleFileChange = (e) => {
@@ -40,16 +43,26 @@ const UpdatePrice = ({isActive,setIsActive}) => {
                 return;
             }
             formData.append('csvFile', file);
-            await axios.post('/api/v1/upload/price', formData, {
+           const data= await axios.post('/api/v1/upload/price', formData, {
                 headers: {
                     'Content-Type': 'multipart/form-data'
                 }
             });
+            console.log("Prices updated",data)
+             
+           
+            if(data && data.status === 200){
+                toast.success('Prices updated successfully');
+                dispatch(getAdminProducts())
+                setloading(false);
+                setItems([]);
+                setFile(null);
+            }
+           else{
+            toast.error('Error uploading file. Please try again.');
+           }
+           
 
-            toast.success('Prices updated successfully');
-            setloading(false);
-            setItems([]);
-            setFile(null);
         } catch (error) {
             setloading(false);
             toast.error('Error uploading file. Please try again.');
@@ -67,19 +80,20 @@ const UpdatePrice = ({isActive,setIsActive}) => {
 
     const downloadCSV = () => {
         setloading(true);
+        const currentDate = new Date().toISOString().split('T')[0];
         fetch('/api/v1/download/price?format=csv')
             .then(response => response.blob())
             .then(blob => {
                 const url = window.URL.createObjectURL(new Blob([blob]));
                 const link = document.createElement('a');
                 link.href = url;
-                link.setAttribute('download', 'items.csv');
+                link.setAttribute('download', `items-${currentDate}.xlsx`);
                 document.body.appendChild(link);
                 link.click();
                 link.parentNode.removeChild(link);
                 setloading(false);
             })
-            .catch(error => console.error('Error downloading CSV:', error));
+            .catch(error => console.error('Error downloading file:', error));
         setloading(false);
     };
 

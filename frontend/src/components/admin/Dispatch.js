@@ -22,11 +22,12 @@ import { useReactToPrint } from 'react-to-print';
 import ReactDOM from 'react-dom';
 import JasInvoice from "../Layouts/JasInvoice";
 import MetaData from "../Layouts/MetaData";
+import LoaderButton from "../Layouts/LoaderButton";
 
 const Dispatch = ({ isActive, setIsActive }) => {
     const location = useLocation();
     sessionStorage.setItem('redirectPath', location.pathname);
-    const { loading, isOrderUpdated, error, orderDetail, porterOrderDetail, orderRemoveResponse, orderRemoveError } = useSelector(state => state.orderState);
+    const { loading, isOrderUpdated, error, orderDetail, porterloading, porterOrderDetail, orderRemoveResponse, orderRemoveError } = useSelector(state => state.orderState);
     const { products } = useSelector((state) => state.productsState);
     const { porterOrderData, porterOrderResponse, porterCancelResponse, porterCancelError, portererror, getpackedOrderData } = useSelector((state) => state.porterState);
     const { user = {}, orderItems = [], shippingInfo = {}, totalPrice = 0, statusResponse = {} } = orderDetail;
@@ -42,6 +43,7 @@ const Dispatch = ({ isActive, setIsActive }) => {
     const invoiceRef = useRef();
     const navigate = useNavigate();
     const dispatch = useDispatch();
+    const [showModal, setShowModal] = useState(false);
     console.log("porterOrderData", porterOrderData)
 
 
@@ -314,15 +316,16 @@ const Dispatch = ({ isActive, setIsActive }) => {
                 position: "bottom-center",
                 onOpen: () => dispatch(clearOrderUpdated())
             });
+            setShowModal(false);
 
         }
-        if (error) {
-            toast(error, {
-                position: "bottom-center",
-                type: 'error',
-                onOpen: () => { dispatch(clearError()) }
-            });
-        }
+        // if (error) {
+        //     toast(error, {
+        //         position: "bottom-center",
+        //         type: 'error',
+        //         onOpen: () => { dispatch(clearError()) }
+        //     });
+        // }
         // dispatch(clearError()) 
         // dispatch(porterClearResponse());
         dispatch(orderDetailAction(id));
@@ -352,7 +355,18 @@ const Dispatch = ({ isActive, setIsActive }) => {
         // dispatch(getporterOrder({ order_id: id }))
         setRefreshData(true)
 
-    }, [dispatch, id, porterOrderDetail, error]);
+    }, [dispatch, id, porterOrderDetail]);
+
+    useEffect(() => {
+        if (error) {
+            toast(error, {
+                position: "bottom-center",
+                type: 'error',
+                onOpen: () => { dispatch(clearError()) }
+            });
+            return;
+        }
+    }, [error])
 
     useEffect(() => {
         if (porterOrderData && refreshData) {
@@ -368,13 +382,20 @@ const Dispatch = ({ isActive, setIsActive }) => {
         }
     }, [refreshData, porterOrderResponse])
 
-    
 
-const [trackurl,setTrackurl]=useState(false);
-const handleClick = (tracking_url) => {
-  setTrackurl(true)
-  window.location.href = tracking_url;
-}
+
+    const [trackurl, setTrackurl] = useState(false);
+    const handleClick = (tracking_url) => {
+        setTrackurl(true)
+        window.location.href = tracking_url;
+    }
+
+    const handeldispatch = () => {
+        setShowModal(true);
+    }
+    const handleCancel = () => {
+        setShowModal(false);
+    }
 
     return (
         <div>
@@ -392,17 +413,17 @@ const handleClick = (tracking_url) => {
                             <Fragment>
                                 {/* <div className="row d-flex justify-content-around"> */}
                                 <div className="col-12 col-lg-12 mt-5 order-details">
-                                    <div className="my-5" style={{display:'flex',justifyContent:'space-between',flexWrap:'wrap' }}>
-                                    <h1 >Order # {orderDetail.order_id}</h1>
-                                    {
-                                        porterOrderData && porterOrderData.tracking_url && (
-                                            <button onClick={()=>handleClick(porterOrderData.tracking_url)} disabled={trackurl}   className='tracking-btn' >
-                                            Track Order
-                                        </button>
-                                        )
-                                    }
+                                    <div className="my-5" style={{ display: 'flex', justifyContent: 'space-between', flexWrap: 'wrap' }}>
+                                        <h1 >Order # {orderDetail.order_id}</h1>
+                                        {
+                                            porterOrderData && porterOrderData.tracking_url && (
+                                                <button onClick={() => handleClick(porterOrderData.tracking_url)} disabled={trackurl} className='tracking-btn' >
+                                                    Track Order
+                                                </button>
+                                            )
+                                        }
                                     </div>
-                                   
+
 
                                     <h4 className="mb-4">Shipping Info</h4>
                                     <div><b>Name:</b> {user.name}</div>
@@ -418,11 +439,11 @@ const handleClick = (tracking_url) => {
 
                                     <div><b>Amount:</b> Rs.{parseFloat(totalPrice).toFixed(2)}</div>
                                     {orderDetail && orderDetail.statusResponse && orderDetail.statusResponse.payment_method && (
-                                    <div><b>Payment Mode:</b> {orderDetail && orderDetail.statusResponse && orderDetail.statusResponse.payment_method}</div>
+                                        <div><b>Payment Mode:</b> {orderDetail && orderDetail.statusResponse && orderDetail.statusResponse.payment_method}</div>
 
-                                )
+                                    )
 
-                                }
+                                    }
 
                                     <hr />
 
@@ -584,11 +605,54 @@ const handleClick = (tracking_url) => {
 
                                     <hr />
                                     <div>
-                                        <button className='btn btn-primary' onClick={submitHandler} disabled={dropStatus === "Dispatched" || dropStatus === "Delivered"}>Dispatch</button>
-                                        
+                                        <button className='btn btn-primary' onClick={handeldispatch} disabled={dropStatus === "Dispatched" || dropStatus === "Delivered"}>Dispatch</button>
+
                                         {/* <button className='btn btn-primary' onClick={(e)=>submitHandlerPacked(e)} disabled={dropStatus === "Packed"}>Packed</button> */}
 
                                     </div>
+
+                                    {showModal && (
+                                        <div className="modal" tabIndex="-1" role="dialog" style={modalStyle}>
+                                            <div className="modal-dialog" role="document">
+                                                <div className="modal-content">
+                                                    <div className="modal-header">
+                                                        {/* <h5 className="modal-title">Confirm Dispatch</h5> */}
+                                                        <div>Are you sure you want to dispatch this items?</div>
+                                                        <button type="button" className="close" onClick={handleCancel}>
+                                                            <span aria-hidden="true">&times;</span>
+                                                        </button>
+                                                    </div>
+                                                    <div className="modal-body">
+
+                                                        {getpackedOrderData && getpackedOrderData.dispatchedTable && (
+                                                            <div style={{ maxHeight: '200px', overflowY: 'auto' }}>
+                                                                <ul style={{ listStyleType: 'circle', paddingLeft: '20px' }}>
+                                                                    {getpackedOrderData.dispatchedTable
+                                                                        .filter(item => item.pricePerKg * item.dispatchedWeight > 0) // Filter items with total amount > 0
+                                                                        .map((item, index) => (
+                                                                            <li key={index} style={{ paddingBottom: '10px' }}>
+                                                                                <strong>{item.name}</strong> - {item.dispatchedWeight} kg
+                                                                            </li>
+                                                                        ))}
+                                                                </ul>
+                                                            </div>
+                                                        )}
+                                                    </div>
+
+                                                    <div className="modal-footer">
+                                                        <button type="button" className="btn btn-primary" onClick={submitHandler} disabled={porterloading}>
+                                                            {porterloading ? <LoaderButton fullPage={false} size={20} /> : (
+                                                                <span>  Continue</span>
+                                                            )
+
+                                                            }
+                                                            
+                                                        </button>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    )}
 
                                     {/* {porterOrderData && (
                                     <Invoice porterOrderData={porterOrderData} />
@@ -625,6 +689,18 @@ const handleClick = (tracking_url) => {
 
 
 
+};
+
+const modalStyle = {
+    display: 'flex',
+    justifyContent: 'center',
+    alignItems: 'center',
+    position: 'fixed',
+    top: 0,
+    left: 0,
+    width: '100%',
+    height: '100%',
+    backgroundColor: 'rgba(0,0,0,0.5)'
 };
 
 export default Dispatch;

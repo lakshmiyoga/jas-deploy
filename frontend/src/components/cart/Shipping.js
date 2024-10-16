@@ -206,7 +206,10 @@ export const validateShipping = (shippingInfo, navigate) => {
 const libraries = ["places"];
 
 const Shipping = () => {
-    const { shippingInfo = {} } = useSelector(state => state.cartState);
+    // const { shippingInfo = {} } = useSelector(state => state.cartState);
+    const shippingInfo = localStorage.getItem('shippingInfo') 
+        ? JSON.parse(localStorage.getItem('shippingInfo')) 
+        : {};
     const { isAuthenticated, user } = useSelector(state => state.authState);
     const location = useLocation();
     sessionStorage.setItem('redirectPath', location.pathname);
@@ -246,8 +249,9 @@ const Shipping = () => {
     // const navigate = useNavigate();
     // const dispatch = useDispatch();
     // const [isMap, setIsMap] = useState(false);
+    
 
-    console.log("shipping", shippingInfo)
+    console.log("shippingInfo", shippingInfo)
 
     const fetchAddress = async (latitude, longitude) => {
         try {
@@ -297,7 +301,7 @@ const Shipping = () => {
                     async position => {
                         const { latitude, longitude, accuracy } = position.coords;
 
-                        if (accuracy <= 50) {
+                        // if (accuracy <= 50) {
                         setLatitude(parseFloat(latitude.toFixed(6)));
                         setLongitude(parseFloat(longitude.toFixed(6)));
                         // setDummyLat(parseFloat(latitude.toFixed(6)));
@@ -310,13 +314,13 @@ const Shipping = () => {
                             type:
                                 'success',
                         });
-                        }
-                        else {
-                            toast.error(`Could not get your precious location.`, {
-                                position: "bottom-center",
-                            });
-                            setIsButtonDisabled(false);
-                        }
+                        // }
+                        // else {
+                        //     toast.error(`Could not get your precious location.`, {
+                        //         position: "bottom-center",
+                        //     });
+                        //     setIsButtonDisabled(false);
+                        // }
 
                     },
                     error => {
@@ -387,7 +391,17 @@ const Shipping = () => {
         if (navigator.permissions) {
             navigator.permissions.query({ name: 'geolocation' }).then(permissionStatus => {
                 if (permissionStatus.state === 'granted') {
-                    return
+                    if(shippingInfo.latitude && shippingInfo.longitude){
+                        return
+                    }
+                    else{
+                        setShowModal(true);
+                        setCancelbutton(true);
+                        setAddress('');
+                        setArea('');
+                        setLandmark('');
+                    }
+                    
                     // If permission is already granted, fetch the location without showing the modal
                     // handleCurrentLocation();
                 } else if (permissionStatus.state === 'prompt') {
@@ -417,7 +431,8 @@ const Shipping = () => {
     }, []);
 
     const handelChangeLocation = (e) => {
-        // setIsButtonDisabled(false);
+        setIsButtonDisabled(false);
+        setCancelbutton(false)
         // setAddress('');
         // setArea('');
         // setLandmark('');
@@ -571,25 +586,18 @@ const Shipping = () => {
                     <div className="products_heading">Shipping</div>
                     <StepsCheckOut shipping />
                     <div className="row wrapper">
-                        <div className="col-10 col-lg-5">
+                        <div className="col-10 col-lg-6">
                             <form onSubmit={submitHandler} className="shadow-lg mt-0">
                                 <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between' }} className="mb-4">
-                                    <h2 className="">Shipping Info</h2>
+                                    <div className="shipping-head">Shipping Info</div>
 
                                     {/* <button type="button" style={{height:'30px',fontSize:'12px'}} onClick={handelChangeLocation} >Change Location</button> */}
-                                    <span
-                                        style={{
-                                            color: 'blue',
-                                            cursor: 'pointer',
-                                            textDecoration: 'none',
-                                            fontSize: '12px',
-                                            height: '30px',
-                                            lineHeight: '30px'
-                                        }}
+                                    <div
+                                        className="location-text"
                                         onClick={handelChangeLocation}
                                     >
                                         Change Location
-                                    </span>
+                                    </div>
 
                                 </div>
 
@@ -723,9 +731,15 @@ const Shipping = () => {
                         <div className="modal-content">
                             <div className="modal-header">
                                 <h5 className="modal-title">Location Access</h5>
-                                <button type="button" className="close" onClick={handleCancelDelete} disabled={isButtonDisabled || cancelbutton}>
-                                    <span aria-hidden="true">&times;</span>
-                                </button>
+                                {
+                                    isButtonDisabled || cancelbutton ? <></> : (
+                                        <button type="button" className="close" onClick={handleCancelDelete} disabled={isButtonDisabled || cancelbutton}>
+                                        <span aria-hidden="true">&times;</span>
+                                    </button>
+                                    )
+
+                                }
+                               
                             </div>
                             <div className="modal-body d-flex justify-content-center">
                                 {/* <p>Are you sure you want to delete this item?</p> */}
@@ -764,27 +778,28 @@ const Shipping = () => {
                                     <input
                                         type="text"
                                         placeholder="Search for a location"
+                                        className='map-search-bar'
                                         value={searchValue}
                                         onChange={(e) => setSearchValue(e.target.value)}
-                                        style={{
-                                            position: 'relative',
-                                            display: 'flex',
-                                            width: "40%",
-                                            height: "40px",
-                                            left: '50%', // Center it horizontally
-                                            transform: 'translateX(-50%)',
-                                            paddingLeft: "16px",
-                                            fontSize: "13px",
-                                            // position: 'absolute',
-                                            outline: 'none',
-                                            zIndex: 999999999,
-                                            borderRadius: '10px',
-                                            border: '1px solid black',
-                                            top: '55px',
-                                            // color:'#fff',
-                                            // backgroundColor:'#343a40'
-                                            // alignItems: 'center', justifyContent: 'center'
-                                        }}
+                                        // style={{
+                                        //     position: 'relative',
+                                        //     display: 'flex',
+                                        //     width: "40%",
+                                        //     height: "40px",
+                                        //     left: '50%', // Center it horizontally
+                                        //     transform: 'translateX(-50%)',
+                                        //     paddingLeft: "16px",
+                                        //     fontSize: "13px",
+                                        //     // position: 'absolute',
+                                        //     outline: 'none',
+                                        //     zIndex: 999999999,
+                                        //     borderRadius: '10px',
+                                        //     border: '1px solid black',
+                                        //     top: '55px',
+                                        //     // color:'#fff',
+                                        //     // backgroundColor:'#343a40'
+                                        //     // alignItems: 'center', justifyContent: 'center'
+                                        // }}
                                     />
                                 </Autocomplete>
                                 {/* </div> */}
@@ -796,19 +811,9 @@ const Shipping = () => {
                                 />
                                 <button
                                     onClick={handlegeoLocation}
-                                    style={{
-                                        position: 'absolute',
-                                        bottom: '25%',
-                                        right: '10px',
-                                        padding: '10px 15px',
-                                        backgroundColor: '#fff',
-                                        border: '1px solid #ccc',
-                                        borderRadius: '5px',
-                                        cursor: 'pointer',
-                                        boxShadow: '0 2px 5px rgba(0, 0, 0, 0.3)',
-                                    }}
+                                    className='current-location-icon'
                                 >
-                                    <MyLocationIcon style={{ color: '#4285F4', fontSize: '15px' }} />
+                                    <MyLocationIcon style={{ color: '#4285F4', fontSize: '20px',display:'flex',justifyContent:'center',alignItems:'center' }} />
                                 </button>
                             </GoogleMap>
                             <div style={{ position: 'absolute', zIndex: '9999', bottom: '20px', left: '50%', transform: 'translateX(-50%)', }}>

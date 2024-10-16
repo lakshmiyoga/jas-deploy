@@ -5,6 +5,7 @@ const enquirySlice = createSlice({
     name:'enquiry',
     initialState:{
         loading:false,
+        enquiry:null,
         isEnquiryDeleted:false
     }, 
     reducers:{

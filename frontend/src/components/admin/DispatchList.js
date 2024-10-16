@@ -16,7 +16,7 @@ import { porterClearData, porterClearResponse } from '../../slices/porterSlice';
 const DispatchList = ({isActive,setIsActive}) => {
     const location = useLocation();
     sessionStorage.setItem('redirectPath', location.pathname);
-    const { adminOrders: orders = [], loading, error, isOrderDeleted ,updateadminOrders:orderlist=[]}  = useSelector(state => state.orderState);
+    const { adminOrders: orders , loading, error, isOrderDeleted ,updateadminOrders:orderlist=[]}  = useSelector(state => state.orderState);
     console.log(orders);
     
     const dispatch = useDispatch();
@@ -168,9 +168,15 @@ const DispatchList = ({isActive,setIsActive}) => {
         //     // setRefresh(false)
         //     // setPageLoading(false)
         // }
-        dispatch(adminOrdersAction());
+        // dispatch(adminOrdersAction());
         
     }, [dispatch, error,refresh]);
+
+    useEffect(()=>{
+        if(!orders){
+            dispatch(adminOrdersAction());
+        }   
+    },[orders])
 
 //   useEffect(()=>{
 //     const updateOrders = async () => {

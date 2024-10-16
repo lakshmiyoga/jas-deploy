@@ -1,6 +1,6 @@
 import { Fragment, useEffect, useState } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
-import { Link, useLocation, useParams } from 'react-router-dom';
+import { Link, useLocation, useNavigate, useParams } from 'react-router-dom';
 import Loader from '../Layouts/Loader';
 import { orderDetail as orderDetailAction } from '../../actions/orderActions';
 import { CancelOrderResponse, createPorterOrderResponse, getPackedOrder, getporterOrder, packedOrder } from "../../actions/porterActions";
@@ -20,10 +20,12 @@ export default function OrderDetail() {
     const { porterOrderData, porterOrderResponse, porterCancelResponse, porterCancelError, portererror, getpackedOrderData } = useSelector((state) => state.porterState);
     const isPaid = paymentInfo && paymentInfo.status === "succeeded" ? true : false;
     const dispatch = useDispatch();
+    const { isAuthenticated } = useSelector(state => state.authState);
     const { id } = useParams();
     const [payment, setPayment] = useState(null)
     const invoiceRef = useRef();
     const location = useLocation();
+    const navigate = useNavigate();
     const [refreshData, setRefreshData] = useState(false)
     sessionStorage.setItem('redirectPath', location.pathname);
 
@@ -59,6 +61,9 @@ export default function OrderDetail() {
         content: () => invoiceRef.current,
     });
 
+    if(!isAuthenticated){
+        navigate('/unauthorized')
+    }
 
 const [trackurl,setTrackurl]=useState(false);
   const handleClick = (tracking_url) => {
@@ -76,7 +81,7 @@ const [trackurl,setTrackurl]=useState(false);
                     <div className="container order-detail-container">
 
                         <div className="row d-flex justify-content-between" id='order_summary'>
-                            <div className="col-12 col-lg-12 mt-5 order-details">
+                            <div className="col-12 col-lg-12 order-details">
 
                             <div className="my-5" style={{display:'flex',justifyContent:'space-between',flexWrap:'wrap' }}>
                                     <h1 >Order # {orderDetail.order_id}</h1>

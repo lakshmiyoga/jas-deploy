@@ -193,7 +193,7 @@ import { porterClearData, porterClearResponse } from '../../slices/porterSlice';
 const AllOrders = ({ isActive, setIsActive }) => {
     const location = useLocation();
     sessionStorage.setItem('redirectPath', location.pathname);
-    const { adminOrders: orders = [], loading = true, error, isOrderDeleted } = useSelector(state => state.orderState);
+    const { adminOrders: orders, loading = true, error, isOrderDeleted } = useSelector(state => state.orderState);
     const [date, setDate] = useState('');
 
     const dispatch = useDispatch();
@@ -220,10 +220,10 @@ const AllOrders = ({ isActive, setIsActive }) => {
         };
 
         // Sort orders by creation date (newest first)
-        const sortedOrders = [...orders].sort((a, b) => new Date(b.createdAt) - new Date(a.createdAt));
+        const sortedOrders = orders && [...orders].sort((a, b) => new Date(b.createdAt) - new Date(a.createdAt));
 
         // Filter orders by selected date and specific conditions
-        const filteredOrders = sortedOrders.filter(order => {
+        const filteredOrders = sortedOrders && sortedOrders.filter(order => {
             if (!order.orderDate) return false;
 
             // Parse order date and match it with the selected date
@@ -233,7 +233,7 @@ const AllOrders = ({ isActive, setIsActive }) => {
         });
 
         // Map the filtered orders to table rows
-        filteredOrders.forEach((order, index) => {
+        filteredOrders && filteredOrders.forEach((order, index) => {
             data.rows.push({
                 s_no: index + 1,
                 id: order.order_id,
@@ -279,8 +279,14 @@ const AllOrders = ({ isActive, setIsActive }) => {
             });
         }
 
-        dispatch(adminOrdersAction());
+        // dispatch(adminOrdersAction());
     }, [dispatch, error, isOrderDeleted]);
+
+    useEffect(()=>{
+        if(!orders){
+            dispatch(adminOrdersAction());
+        }   
+    },[orders])
 
     return (
         <div>

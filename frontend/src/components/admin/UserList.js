@@ -13,7 +13,7 @@ import MetaData from "../Layouts/MetaData";
 export default function UserList({isActive,setIsActive}) {
     const location = useLocation();
     sessionStorage.setItem('redirectPath', location.pathname);
-    const { users = [], loading = true, error, isUserDeleted } = useSelector(state => state.userState);
+    const { users , loading = true, error, isUserDeleted } = useSelector(state => state.userState);
     const dispatch = useDispatch();
     const [showModal, setShowModal] = useState(false);
     const [userToDelete, setUserToDelete] = useState(null);
@@ -53,9 +53,9 @@ export default function UserList({isActive,setIsActive}) {
         };
 
         // Sort users by creation date (newest first)
-        const sortedUsers = [...users].sort((a, b) => new Date(b.createdAt) - new Date(a.createdAt));
+        const sortedUsers = users && [...users].sort((a, b) => new Date(b.createdAt) - new Date(a.createdAt));
 
-        sortedUsers.forEach((user, index) => {
+        sortedUsers && sortedUsers.forEach((user, index) => {
             data.rows.push({
                 s_no: index + 1,
                 name: user.name,
@@ -106,11 +106,19 @@ export default function UserList({isActive,setIsActive}) {
                 position: "bottom-center",
                 onOpen: () => dispatch(clearUserDeleted())
             });
+            dispatch(getUsers());
             return;
         }
 
-        dispatch(getUsers());
+        // dispatch(getUsers());
     }, [dispatch, error, isUserDeleted]);
+
+    useEffect(()=>{
+        if(!users){
+            dispatch(getUsers());
+        }
+       
+    },[])
 
     return (
         <div className="row">

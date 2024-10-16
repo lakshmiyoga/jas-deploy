@@ -2,12 +2,13 @@ import React, { Fragment } from 'react';
 import Sidebar from '../admin/Sidebar';
 import { useState, useEffect } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
-import {  useLocation, useNavigate, useParams } from "react-router-dom";
-import { updateProduct } from '../../actions/productsActions';
-import { clearProductUpdated, clearError } from '../../slices/productSlice';
+import { useLocation, useNavigate, useParams } from "react-router-dom";
+import { getAdminProducts, updateProduct } from '../../actions/productsActions';
+import { clearProductUpdated, clearError, clearproduct } from '../../slices/productSlice';
 import { toast } from 'react-toastify';
 import { getProduct } from '../../actions/productAction';
 import MetaData from '../Layouts/MetaData';
+import LoaderButton from '../Layouts/LoaderButton';
 
 // const UpdateProduct = () => {
 //     const [name, setName] = useState("");
@@ -190,32 +191,33 @@ import MetaData from '../Layouts/MetaData';
 
 // export default UpdateProduct;
 
-const UpdateProduct = ({isActive,setIsActive}) => {
+const UpdateProduct = ({ isActive, setIsActive }) => {
     // const location = useLocation();
     // sessionStorage.setItem('redirectPath', location.pathname);
 
     const [formData, setFormData] = useState({
         englishName: "",
-        tamilName:"",
-        buyingPrice:"",
+        tamilName: "",
+        buyingPrice: "",
         price: "",
         category: "",
-        stocks:"",
+        percentage: "",
+        stocks: "",
         images: [],
         imagesPreview: [],
         imagesCleared: false
     });
-   
+
     // console.log(formData)
 
     const { id } = useParams();
-    const { loading, isProductUpdated, error, product } = useSelector((state) => state.productState);
+    const { updateloading, isProductUpdated, error, product } = useSelector((state) => state.productState);
     const dispatch = useDispatch();
     const navigate = useNavigate();
 
-    console.log(isProductUpdated,error,product)
+    // console.log(isProductUpdated,error,product)
 
-    
+
 
     useEffect(() => {
         if (product && product._id) {
@@ -226,6 +228,7 @@ const UpdateProduct = ({isActive,setIsActive}) => {
                 buyingPrice: product.buyingPrice,
                 price: product.price,
                 category: product.category,
+                percentage: product.percentage,
                 stocks: product.stocks,
                 imagesPreview: product.images.map(image => image.image)
             });
@@ -263,22 +266,22 @@ const UpdateProduct = ({isActive,setIsActive}) => {
         const files = Array.from(e.target.files);
         const maxSize = 5 * 1024 * 1024; // 10 MB in bytes
         let totalSize = 0;
-    
+
         // Calculate total size of all selected files
         files.forEach(file => {
             totalSize += file.size;
         });
-    
+
         // Check if total size exceeds the maximum allowed size
         if (totalSize > maxSize) {
             toast.error('The total size of all selected images exceeds the 5MB limit.');
             return; // Stop further execution if total size exceeds the limit
         }
-    
+
         // Proceed with setting images if total size is within the limit
         files.forEach(file => {
             const reader = new FileReader();
-    
+
             reader.onload = () => {
                 if (reader.readyState === 2) {
                     setFormData(prevState => ({
@@ -288,12 +291,12 @@ const UpdateProduct = ({isActive,setIsActive}) => {
                     }));
                 }
             };
-    
+
             reader.readAsDataURL(file);
         });
     };
-    
-    
+
+
     const clearImagesHandler = () => {
         setFormData({
             ...formData,
@@ -313,12 +316,17 @@ const UpdateProduct = ({isActive,setIsActive}) => {
         formDataToSend.append('buyingPrice', formData.buyingPrice);
         formDataToSend.append('price', formData.price);
         formDataToSend.append('category', formData.category);
+        formDataToSend.append('percentage', formData.percentage);
         formDataToSend.append('stocks', formData.stocks);
         formData.images.forEach(image => formDataToSend.append('images', image));
         formDataToSend.append('imagesCleared', formData.imagesCleared);
         // console.log(formDataToSend)
         dispatch(updateProduct({ id, formDataToSend }));
     };
+
+    useEffect(()=>{
+          dispatch(clearproduct())
+    },[])
 
     useEffect(() => {
         if (product && product._id !== id) {
@@ -331,6 +339,27 @@ const UpdateProduct = ({isActive,setIsActive}) => {
             dispatch(getProduct(id));
         }
     }, [dispatch, id]);
+
+    // useEffect(()=>{
+    //     if(id){
+    //         dispatch(getProduct(id));
+    //     }
+    // },[])
+
+    useEffect(() => {
+        if (formData.buyingPrice && formData.percentage) {
+            const buyingPrice = parseFloat(formData.buyingPrice);
+            const percentage = parseFloat(formData.percentage);
+            if (!isNaN(buyingPrice) && !isNaN(percentage)) {
+                const calculatedPrice = buyingPrice + (buyingPrice * (percentage / 100));
+                setFormData(prevState => ({
+                    ...prevState,
+                    price: calculatedPrice.toFixed(2) // Set price with two decimal points
+                }));
+            }
+        }
+    }, [formData.buyingPrice, formData.percentage]);
+
 
     // useEffect(() => {
     //     if (isProductUpdated) {
@@ -359,9 +388,10 @@ const UpdateProduct = ({isActive,setIsActive}) => {
                 position: "bottom-center",
                 onOpen: () => dispatch(clearProductUpdated())
             });
+            dispatch(getAdminProducts())
             navigate('/admin/products');
         }
-    
+
         if (error) {
             toast(error, {
                 position: "bottom-center",
@@ -375,8 +405,8 @@ const UpdateProduct = ({isActive,setIsActive}) => {
         <div className="row">
             <MetaData title={`Update Product`} />
             <div className="col-12 col-md-2">
-            <div style={{display:'flex',flexDirection:'row',position:'fixed',top:'0px',zIndex:99999,backgroundColor:'#fff',minWidth:'100%'}}>
-                <Sidebar isActive={isActive} setIsActive={setIsActive}/>
+                <div style={{ display: 'flex', flexDirection: 'row', position: 'fixed', top: '0px', zIndex: 99999, backgroundColor: '#fff', minWidth: '100%' }}>
+                    <Sidebar isActive={isActive} setIsActive={setIsActive} />
                 </div>
             </div>
             <div className="col-12 col-md-10 smalldevice-space">
@@ -386,7 +416,7 @@ const UpdateProduct = ({isActive,setIsActive}) => {
                             <h1 className="mb-4 admin-dashboard-x">Update Product</h1>
 
                             <div className="form-group">
-                                <label htmlFor="name">English Name</label>
+                                <label htmlFor="name">English Name <span style={{ color: 'red' }}>*</span></label>
                                 <input
                                     type="text"
                                     id="englishName"
@@ -394,10 +424,11 @@ const UpdateProduct = ({isActive,setIsActive}) => {
                                     className="form-control"
                                     value={formData.englishName}
                                     onChange={handleChange}
+                                    required
                                 />
                             </div>
                             <div className="form-group">
-                                <label htmlFor="name">Tamil Name</label>
+                                <label htmlFor="name">Tamil Name <span style={{ color: 'red' }}>*</span></label>
                                 <input
                                     type="text"
                                     id="tamilName"
@@ -405,11 +436,12 @@ const UpdateProduct = ({isActive,setIsActive}) => {
                                     className="form-control"
                                     value={formData.tamilName}
                                     onChange={handleChange}
+                                    required
                                 />
                             </div>
 
                             <div className="form-group">
-                                <label htmlFor="buyingPrice">Buying Price</label>
+                                <label htmlFor="buyingPrice">Buying Price in (Rs) <span style={{ color: 'red' }}>*</span></label>
                                 <input
                                     type="text"
                                     id="buyingPrice"
@@ -417,29 +449,45 @@ const UpdateProduct = ({isActive,setIsActive}) => {
                                     className="form-control"
                                     value={formData.buyingPrice}
                                     onChange={handleChange}
+                                    required
                                 />
                             </div>
 
                             <div className="form-group">
-                                <label htmlFor="price"> Selling Price</label>
+                                <label htmlFor="percentage">Percentage (%) <span style={{ color: 'red' }}>*</span></label>
+                                <input
+                                    type="text"
+                                    id="percentage"
+                                    name="percentage"
+                                    className="form-control"
+                                    value={formData.percentage}
+                                    onChange={handleChange}
+                                    required
+                                />
+                            </div>
+
+                            <div className="form-group">
+                                <label htmlFor="price"> Selling Price in (Rs)</label>
                                 <input
                                     type="text"
                                     id="price"
                                     name="price"
                                     className="form-control"
                                     value={formData.price}
-                                    onChange={handleChange}
+                                    // onChange={handleChange}
+                                    disabled
                                 />
                             </div>
 
                             <div className="form-group">
-                                <label htmlFor="category">Category</label>
+                                <label htmlFor="category">Category <span style={{ color: 'red' }}>*</span></label>
                                 <select
                                     id="category"
                                     name="category"
                                     className="form-control"
                                     value={formData.category}
                                     onChange={handleChange}
+                                    required
                                 >
                                     <option value="">Select</option>
                                     <option value="Vegetables">Vegetables</option>
@@ -449,7 +497,7 @@ const UpdateProduct = ({isActive,setIsActive}) => {
                             </div>
 
                             <div className="form-group">
-                                <label htmlFor="stocks"> Stocks</label>
+                                <label htmlFor="stocks"> Stocks <span style={{ color: 'red' }}>*</span></label>
                                 <select
                                     type="text"
                                     id="stocks"
@@ -457,15 +505,16 @@ const UpdateProduct = ({isActive,setIsActive}) => {
                                     className="form-control"
                                     value={formData.stocks}
                                     onChange={handleChange}
+                                    required
                                 >
-                                <option value="">Select</option>
+                                    <option value="">Select</option>
                                     <option value="Stock">Stock</option>
                                     <option value="No Stock">No Stock</option>
                                 </select>
                             </div>
 
                             <div className='form-group'>
-                                <label>Images (*Size should be within 5mb) </label>
+                                <label>Images (*Size should be within 5mb) <span style={{ color: 'red' }}>*</span></label>
                                 <div className='custom-file'>
                                     <input
                                         type='file'
@@ -475,6 +524,7 @@ const UpdateProduct = ({isActive,setIsActive}) => {
                                         id='images'
                                         multiple
                                         onChange={handleImagesChange}
+                                        // required
                                     />
                                     <label className='custom-file-label' htmlFor='images'>
                                         Choose Images
@@ -499,12 +549,18 @@ const UpdateProduct = ({isActive,setIsActive}) => {
                                 }
                             </div>
 
+
                             <button
                                 type="submit"
                                 className="btn btn-block py-3"
-                                disabled={loading}
+                                disabled={updateloading}
                             >
-                                UPDATE
+                                {updateloading ? <LoaderButton fullPage={false} size={20} /> : (
+                                    <span>  UPDATE</span>
+                                )
+
+                                }
+
                             </button>
                         </form>
                     </div>

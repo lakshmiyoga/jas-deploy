@@ -252,7 +252,6 @@ const Register = () => {
   const [mailVerified, setMailVerified] = useState(false);
   const registerRef = useRef(null); // Create a ref
 
-console.log("otpmail",otpMail)
   // Password validation
   const validatePassword = (password) => {
     const capitalLetter = /[A-Z]/.test(password);
@@ -441,7 +440,7 @@ window.scrollTo({ top: 0, behavior: 'smooth' });
     if (isAuthenticated) {
       dispatch(otpErrorClear());
       dispatch(otpClear());
-      toast('Registered successfully', { type: 'success', position: 'bottom-center' });
+      toast('Registered successfully', { type: 'success', position: 'bottom-center',autoClose: 500  });
       navigate('/');
     }
   }, [dummyisAuthenticated, navigate, dispatch,isAuthenticated]);

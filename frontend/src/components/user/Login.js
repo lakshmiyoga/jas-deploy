@@ -6,10 +6,11 @@ import {  toast } from 'react-toastify';
 import {useLocation, useNavigate} from 'react-router-dom';
 import {Link} from 'react-router-dom';
 import { clearError } from '../../slices/authSlice';
+import LoaderButton from '../Layouts/LoaderButton';
 
-const Login = () => {
+const Login = ({email,setEmail}) => {
 
-    const [email, setEmail] = useState("");
+    // const [email, setEmail] = useState("");
     const [password, setPassword] = useState("");
     const [showPassword, setShowPassword] = useState(false);
     // const location = useLocation();
@@ -18,6 +19,15 @@ const Login = () => {
     const navigate = useNavigate();
 
     const {loading, error, isAuthenticated, user} = useSelector(state => state.authState)
+
+    const [emailMissing, setEmailMissing] = useState(false);
+
+    const handleClick = () => {
+        if (!email) {
+            setEmailMissing(true);
+        }
+    };
+
     // const redirect = location.search?'/'+location.search.split('=')[1]:'/';
 
     // const hasShownToast = useRef(false);
@@ -31,6 +41,7 @@ const Login = () => {
             toast('Login successfully',{
                 type:'success',
                 position:"bottom-center",
+                autoClose: 500, 
                 // onOpen:  () =>{dispatch(clearError())}
               })
             if (user.role === 'admin') {
@@ -74,6 +85,8 @@ const Login = () => {
         dispatch(login({email, password}));
     }
     // console.log(email, password);
+
+
     return (
         <div >
             <MetaData title={`Login`} />
@@ -90,7 +103,7 @@ const Login = () => {
                                 className="form-control"
                                 value={email}
                                 onChange={e => setEmail(e.target.value)}
-
+                                required
                             />
                         </div>
 
@@ -119,8 +132,8 @@ const Login = () => {
                     </span>
                     </div>
                         </div>
-
-                        <Link to='/password/forgot' className="float-right mb-4">Forgot Password?</Link>
+                        {emailMissing && <p style={{ color: 'red',fontSize:'12px' }}>Please enter your email to proceed.</p>}
+                        <Link to={email?'/password/forgot':''} className="float-right mb-4"  onClick={handleClick}>Forgot Password?</Link>
 
                         <button
                             id="login_button"
@@ -128,7 +141,12 @@ const Login = () => {
                             className="btn btn-block py-3"
                             disabled={loading}
                         >
-                            LOGIN
+                            {loading ? <LoaderButton fullPage={false} size={20} /> : (
+                                    <span>  LOGIN</span>
+                                )
+
+                                }
+                            
                         </button>
 
                         <Link to='/register' className="float-right mt-3">New User?</Link>

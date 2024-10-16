@@ -2,7 +2,7 @@ import './App.css';
 import Footer from './components/Layouts/Footer';
 import Header from './components/Layouts/Header';
 import Home from './components/Home';
-import { BrowserRouter as Router, Route, Routes, useLocation, useNavigate } from "react-router-dom";
+import { BrowserRouter as Router, Route, Routes, useLocation, useNavigate, Navigate } from "react-router-dom";
 import { HelmetProvider } from "react-helmet-async";
 import { ToastContainer } from "react-toastify";
 import 'react-toastify/dist/ReactToastify.css';
@@ -64,11 +64,14 @@ import Loader from './components/Layouts/Loader';
 import AllOrders from './components/admin/AllOrders';
 import AdminOrderDetail from './components/admin/AdminOrderDetail';
 import Analysis from './components/admin/Analysis';
+import Unauthorized from './components/Layouts/Unauthorized';
 
 function App() {
     const location = useLocation();
     const navigate = useNavigate();
-    const redirectPath = sessionStorage.getItem('redirectPath') || '/';
+    const redirectPath = sessionStorage.getItem('redirectPath') || location.pathname;
+    const [email, setEmail] = useState("");
+    // console.log("location path",location.pathname)
     // const redirectPath = useMemo(() => sessionStorage.getItem('redirectPath') || '/', []);
 
     // if (!redirectPath && !location) {
@@ -78,17 +81,25 @@ function App() {
     // if(!redirectPath){
     //     sessionStorage.setItem('redirectPath', '/');
     // }
-    console.log("redirectPath", redirectPath)
+    console.log("redirectPath", redirectPath);
 
 
     const { isAuthenticated, loading, user } = useSelector(state => state.authState);
     const { product, loading: productLoading } = useSelector((state) => state.productState);
     const [openSide, setOpenSide] = useState(false);
     const [isActive, setIsActive] = useState(false);
+    const [userLoaded, setUserLoaded] = useState(false);
 
     useEffect(() => {
         store.dispatch(getProducts());
+        const loadInitialData = async () => {
+            await store.dispatch(loadUser());
+            setUserLoaded(true); // Set the flag once the user data is loaded
+        };
+        loadInitialData();
     }, [])
+
+
 
     useEffect(() => {
         if (!isAuthenticated || !user) {
@@ -103,15 +114,19 @@ function App() {
     // let isAdminRoute = true;
 
     useEffect(() => {
-        if (isAuthenticated) {
+        if (isAuthenticated && user) {
             // if (redirectPath) {
             // const redirectPath = sessionStorage.getItem('redirectPath') || '/';
             // return navigate(redirectPath);
             const redirectPath = sessionStorage.getItem('redirectPath');
-            if (redirectPath && location.pathname !== redirectPath) {
+            if (redirectPath && location.pathname === redirectPath) {
                 sessionStorage.removeItem('redirectPath');
                 navigate(redirectPath, { replace: true });
             }
+            // else if (redirectPath && location.pathname === redirectPath){
+            //     sessionStorage.removeItem('redirectPath');
+            //     navigate(redirectPath, { replace: true });
+            // }
             // sessionStorage.removeItem('redirectPath');
             // }
         }
@@ -136,13 +151,18 @@ function App() {
 
 
 
-    const isAdminRoute = location.pathname.includes('/admin') || (user && user.role === 'admin');
+    // const isAdminRoute = location.pathname.includes('/admin') || (user && user.role === 'admin');
+    const isAdminRoute = location.pathname.includes('/admin') 
+
+    // if (!userLoaded || loading) {
+    //     return <Loader />;
+    // }
 
     return (
         <div className={`${openSide?"App-blure":isActive?"App-blure":"App"}`}>
             <HelmetProvider>
                 {
-                    productLoading ? <Loader /> : (
+                    productLoading || !userLoaded ? <Loader /> : (
                         <div style={{ display: 'flex', flexDirection: 'column', position: 'relative' }}>
                             {/* <Header /> */}
 
@@ -153,10 +173,13 @@ function App() {
                             <div className={isAdminRoute ? "" : openSide ? "content-blure":isActive ? "content-blure":"content"}>
                                 <Routes>
                                     {/* <Route path="/*" element={<Login />} /> */}
-                                    <Route path="/login" element={<Login />} />
+                                    <Route path="/login" element={<Login  email={email} setEmail={setEmail}/>} />
                                     <Route path="/register" element={<Register />} />
                                     {
-                                        user && redirectPath && user.role === "admin" ? <Route path="/" element={<ProtectedRoute isAdmin={true}><Dashboard isActive={isActive} setIsActive={setIsActive}/></ProtectedRoute>} /> :
+                                        user && redirectPath && user.role === "admin" ? 
+                                        // <Route path="/" element={<ProtectedRoute isAdmin={true}><Dashboard isActive={isActive} setIsActive={setIsActive}/></ProtectedRoute>} />
+                                        <Route path="/" element={<LandingPage />} />
+                                         :
                                             <Route path="/" element={<LandingPage />} />
                                     }
                                     {
@@ -165,7 +188,7 @@ function App() {
                                     {/* <Route path="/" element={<LandingPage />} /> */}
                                     <Route path="/vegetables" element={<Vegetables />} />
                                     <Route path="/fruits" element={<Fruits />} />
-                                    
+                                    <Route path="/unauthorized" element={<Unauthorized />} />
                                     <Route path="/keerai" element={<Keerai />} />
                                     <Route path="/about" element={<About />} />
                                     <Route path="/enquiry" element={<Enquiry />} />
@@ -174,19 +197,22 @@ function App() {
                                     <Route path="/refundPolicy" element={<RefundPolicy />} />
                                     <Route path="/search/:keyword" element={<ProductSearch />} />
                                     <Route path="/product/:id" element={<ProductDetail />} />
-                                    <Route path="/myProfile" element={<ProtectedRoute><Profile /></ProtectedRoute>} />
-                                    <Route path="/myProfile/update" element={<ProtectedRoute><UpdateProfile /></ProtectedRoute>} />
-                                    <Route path="/myProfile/update/password" element={<ProtectedRoute><UpdatePassword /></ProtectedRoute>} />
-                                    <Route path="/password/forgot" element={<ForgotPassword />} />
-                                    <Route path="/password/reset/:token" element={<ResetPassword />} />
                                     <Route path="/cart" element={<Cart />} />
-                                    <Route path="/shipping" element={<Shipping />} />
+                                    <Route path="/password/forgot" element={<ForgotPassword email={email} setEmail={setEmail}/>} />
+
+                                    <Route path="/myProfile" element={<ProtectedRoute isAdmin={false}><Profile /></ProtectedRoute>} />
+                                    <Route path="/myProfile/update" element={<ProtectedRoute isAdmin={false}><UpdateProfile /></ProtectedRoute>} />
+                                    <Route path="/myProfile/update/password" element={<ProtectedRoute isAdmin={false}><UpdatePassword /></ProtectedRoute>} />
+                                    
+                                    <Route path="/password/reset/:token" element={<ProtectedRoute isAdmin={false}><ResetPassword /></ProtectedRoute>} />
+                                    
+                                    <Route path="/shipping" element={<ProtectedRoute isAdmin={false} ><Shipping /></ProtectedRoute>} />
                                     {/* <Route path="/refund" element={<Refund />} /> */}
-                                    <Route path="/orders" element={<ProtectedRoute><UserOrders /></ProtectedRoute>} />
-                                    <Route path='/order/:id' element={<ProtectedRoute><OrderDetail /></ProtectedRoute>} />
-                                    <Route path='/payment/:id' element={<ProtectedRoute><PaymentDetails /></ProtectedRoute>} />
-                                    <Route path="/order/confirm" element={<ConfirmOrder />} />
-                                    <Route path="/payment/confirm/:id" element={<PaymentConfirm />} />
+                                    <Route path="/orders" element={<ProtectedRoute isAdmin={false}><UserOrders /></ProtectedRoute>} />
+                                    <Route path='/order/:id' element={<ProtectedRoute isAdmin={false}><OrderDetail /></ProtectedRoute>} />
+                                    <Route path='/payment/:id' element={<ProtectedRoute isAdmin={false}><PaymentDetails /></ProtectedRoute>} />
+                                    <Route path="/order/confirm" element={<ProtectedRoute isAdmin={false}><ConfirmOrder /></ProtectedRoute>} />
+                                    <Route path="/payment/confirm/:id" element={<ProtectedRoute isAdmin={false}><PaymentConfirm /></ProtectedRoute>} />
                                     {/* {
                                     user && (
                                         <> */}
@@ -211,7 +237,7 @@ function App() {
                                     <Route path='/admin/user-summary' element={<ProtectedRoute isAdmin={true}><SummaryUser isActive={isActive} setIsActive={setIsActive}/></ProtectedRoute>} />
                                     <Route path='/admin/allorders' element={<ProtectedRoute isAdmin={true}><AllOrders isActive={isActive} setIsActive={setIsActive}/></ProtectedRoute>} />
                                     <Route path='/admin/orderdetail/:id' element={<ProtectedRoute isAdmin={true}><AdminOrderDetail isActive={isActive} setIsActive={setIsActive}/></ProtectedRoute>} />
-                                
+                                    {/* <Route path="*" element={<Navigate to="/" replace />} /> */}
                                     {/* </>
                                         
                                     )
@@ -240,9 +266,9 @@ function App() {
 
 function RootApp() {
 
-    // useEffect(()=>{
-    //     store.dispatch(loadUser());
-    // },[])
+    useEffect(()=>{
+        store.dispatch(loadUser());
+    },[])
     return (
         <Router>
             <App />

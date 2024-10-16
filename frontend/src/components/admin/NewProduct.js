@@ -3,10 +3,11 @@ import Sidebar from '../admin/Sidebar'
 import { useState, useEffect } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 import { useLocation, useNavigate } from "react-router-dom";
-import { createNewProduct } from '../../actions/productsActions';
+import { createNewProduct, getAdminProducts } from '../../actions/productsActions';
 import { clearProductCreated, clearError } from '../../slices/productSlice';
 import { toast } from 'react-toastify';
 import MetaData from '../Layouts/MetaData';
+import LoaderButton from '../Layouts/LoaderButton';
 
 
 const NewProduct = ({ isActive, setIsActive }) => {
@@ -17,13 +18,14 @@ const NewProduct = ({ isActive, setIsActive }) => {
     const [buyingPrice, setBuyingPrice] = useState("");
     const [price, setPrice] = useState("");
     const [category, setCategory] = useState("");
+    const [percentage, setPercentage] = useState("40");
     const [stocks, setStocks] = useState("");
     const [images, setImages] = useState([]);
     const [imagesPreview, setImagesPreview] = useState([]);
     const [imagesCleared, setImagesCleared] = useState(false);
 
 
-    const { loading, isProductCreated, error } = useSelector(state => state.productState)
+    const { newloading, isProductCreated, error } = useSelector(state => state.productState)
 
     const categories = [
         'Vegetables',
@@ -93,6 +95,7 @@ const NewProduct = ({ isActive, setIsActive }) => {
         formData.append('tamilName', tamilName);
         formData.append('buyingPrice', buyingPrice);
         formData.append('price', price);
+        formData.append('percentage', percentage);
         formData.append('category', category);
         formData.append('stocks', stocks);
         images.forEach(image => {
@@ -115,6 +118,7 @@ const NewProduct = ({ isActive, setIsActive }) => {
                 position: "bottom-center",
                 onOpen: () => dispatch(clearProductCreated())
             })
+            dispatch(getAdminProducts())
             navigate('/admin/products')
             return;
         }
@@ -128,6 +132,17 @@ const NewProduct = ({ isActive, setIsActive }) => {
             return
         }
     }, [isProductCreated, error, dispatch, navigate])
+
+    useEffect(() => {
+        // Calculate price whenever buyingPrice or percentage changes
+        if (buyingPrice && percentage) {
+            const calculatedPrice = parseFloat(buyingPrice) + (parseFloat(buyingPrice) * (parseFloat(percentage) / 100));
+            setPrice(calculatedPrice.toFixed(2)); // Setting the price with two decimal points
+        } else {
+            setPrice(""); // Reset price if buyingPrice or percentage is empty
+        }
+    }, [buyingPrice, percentage]);
+
 
     return (
         <div>
@@ -146,35 +161,49 @@ const NewProduct = ({ isActive, setIsActive }) => {
                                 <h1 className="mb-4">New Product</h1>
 
                                 <div className="form-group">
-                                    <label htmlFor="englishName_field">English Name</label>
+                                    <label htmlFor="englishName_field">English Name  <span style={{color:'red'}}>*</span></label>
                                     <input
                                         type="text"
                                         id="englishName_field"
                                         className="form-control"
                                         onChange={e => setEnglishName(e.target.value)}
                                         value={englishName}
+                                        required
                                     />
                                 </div>
 
                                 <div className="form-group">
-                                    <label htmlFor="tamilName_field">Tamil Name</label>
+                                    <label htmlFor="tamilName_field">Tamil Name  <span style={{color:'red'}}>*</span></label>
                                     <input
                                         type="text"
                                         id="tamilName_field"
                                         className="form-control"
                                         onChange={e => setTamilName(e.target.value)}
                                         value={tamilName}
+                                        required
                                     />
                                 </div>
 
                                 <div className="form-group">
-                                    <label htmlFor="buyingPrice">Buying Price</label>
+                                    <label htmlFor="buyingPrice">Buying Price  <span style={{color:'red'}}>*</span></label>
                                     <input
                                         type="text"
                                         id="buyingPrice"
                                         className="form-control"
                                         onChange={e => setBuyingPrice(e.target.value)}
                                         value={buyingPrice}
+                                        required
+                                    />
+                                </div>
+                                <div className="form-group">
+                                    <label htmlFor="percentage">Percentage  <span style={{color:'red'}}>*</span></label>
+                                    <input
+                                        type="text"
+                                        id="percentage"
+                                        className="form-control"
+                                        onChange={e => setPercentage(e.target.value)}
+                                        value={percentage}
+                                        required
                                     />
                                 </div>
 
@@ -184,8 +213,9 @@ const NewProduct = ({ isActive, setIsActive }) => {
                                         type="text"
                                         id="price_field"
                                         className="form-control"
-                                        onChange={e => setPrice(e.target.value)}
+                                        // onChange={e => setPrice(e.target.value)}
                                         value={price}
+                                        disabled
                                     />
                                 </div>
 
@@ -195,8 +225,8 @@ const NewProduct = ({ isActive, setIsActive }) => {
               </div> */}
 
                                 <div className="form-group">
-                                    <label for="category_field">Category</label>
-                                    <select onChange={e => setCategory(e.target.value)} className="form-control" id="category_field">
+                                    <label for="category_field">Category  <span style={{color:'red'}}>*</span></label>
+                                    <select onChange={e => setCategory(e.target.value)} className="form-control" id="category_field" required>
                                         <option value="">Select</option>
                                         {categories.map(category => (
                                             <option key={category} value={category}>{category}</option>
@@ -224,13 +254,14 @@ const NewProduct = ({ isActive, setIsActive }) => {
               </div> */}
 
                                 <div className="form-group">
-                                    <label for="stock_field">Stocks</label>
+                                    <label for="stock_field">Stocks  <span style={{color:'red'}}>*</span></label>
                                     <select
                                         type="text"
                                         id="stock_field"
                                         className="form-control"
                                         onChange={e => setStocks(e.target.value)}
                                         value={stocks}
+                                        required
                                     >
                                      <option value="">Select</option>
                                      <option value="Stock">Stock</option>
@@ -239,7 +270,7 @@ const NewProduct = ({ isActive, setIsActive }) => {
                                 </div>
 
                                 <div className='form-group'>
-                                    <label>Images  (*Size should be within 5mb) </label>
+                                    <label>Images  (*Size should be within 5mb)  <span style={{color:'red'}}>*</span> </label>
 
                                     <div className='custom-file'>
                                         <input
@@ -250,6 +281,7 @@ const NewProduct = ({ isActive, setIsActive }) => {
                                             id='customFile'
                                             multiple
                                             onChange={onImagesChange}
+                                            required
                                         />
                                         <label className='custom-file-label' for='customFile'>
                                             Choose Images
@@ -290,9 +322,14 @@ const NewProduct = ({ isActive, setIsActive }) => {
                                     id="login_button"
                                     type="submit"
                                     className="btn btn-block py-3"
-                                    disabled={loading}
+                                    disabled={newloading}
                                 >
-                                    CREATE
+                                    {newloading ? <LoaderButton fullPage={false} size={20} /> : (
+                                    <span>  CREATE</span>
+                                )
+
+                                }
+                                    
                                 </button>
 
                             </form>

@@ -7,8 +7,8 @@ const orderSlice = createSlice({
     initialState: {
         initorder:{},
         orderDetail: {},
-        userOrders : [],
-        adminOrders: [],
+        userOrders : null,
+        adminOrders: null,
         loading: false,
         isOrderDeleted: false,
         isOrderUpdated: false,
@@ -86,6 +86,16 @@ const orderSlice = createSlice({
                 ...state,
                 loading: false,
                 error: action.payload
+            }
+        },
+        userOrdersClear(state, action) {
+            return {
+                ...state,
+                loading: false,
+                error: null,
+                userOrders: null,
+                totalOrders:null,
+
             }
         },
         orderDetailRequest(state, action) {
@@ -208,13 +218,13 @@ const orderSlice = createSlice({
         porterOrderRequest(state, action) {
             return {
                 ...state,
-                loading: true
+                porterloading: true
             }
         },
         porterOrderSuccess(state, action) {
             return {
                 ...state,
-                loading: false,
+                porterloading: false,
                 porterOrderDetail:action.payload.porterOrder,
                 isOrderUpdated: true
             }
@@ -222,7 +232,7 @@ const orderSlice = createSlice({
         porterOrderFail(state, action) {
             return {
                 ...state,
-                loading: false,
+                porterloading: false,
                 error: action.payload,
             }
         },
@@ -360,7 +370,8 @@ export const {
     updateadminOrdersRequest,
     updateadminOrdersSuccess,
     adminOrderClear,
-    orderDetailClear
+    orderDetailClear,
+    userOrdersClear
 
  } = actions;
 

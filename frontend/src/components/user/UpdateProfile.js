@@ -5,19 +5,22 @@ import { toast } from 'react-toastify'
 import { clearUpdateProfile } from '../../slices/authSlice';
 import { useLocation, useNavigate } from 'react-router-dom';
 import MetaData from '../Layouts/MetaData';
+import LoaderButton from '../Layouts/LoaderButton';
+import NumberInput from '../Layouts/NumberInput';
 
 const UpdateProfile = () => {
 
-    const { error, user, isUpdated } = useSelector(state => state.authState);
+    const { profileupdateloading,error, user, isUpdated } = useSelector(state => state.authState);
     const [name, setName] = useState("");
     const [email, setEmail] = useState("");
+    const [mobile,setMobile]=useState("");
     const [avatar, setAvatar] = useState("");
     const [avatarPreview, setAvatarPreview] = useState("/images/default_avatar.png");
     const navigate = useNavigate()
     const dispatch = useDispatch();
     const location = useLocation();
     sessionStorage.setItem('redirectPath', location.pathname);
-    console.log(error, user, isUpdated)
+    // console.log(error, user, isUpdated)
 
     // const onChangeAvatar = (e) => {
         
@@ -63,8 +66,9 @@ const UpdateProfile = () => {
     const submitHandler = (e) => {
         e.preventDefault();
         const formData = new FormData();
-        formData.append('name', name)
-        formData.append('email', email)
+        formData.append('name', name);
+        formData.append('email', email);
+        formData.append('mobile', mobile)
         formData.append('avatar', avatar);
         dispatch(updateProfile(formData))
 
@@ -74,6 +78,7 @@ const UpdateProfile = () => {
         if (user) {
             setName(user.name);
             setEmail(user.email);
+            setMobile(user.mobile);
             if (user.avatar) {
                 setAvatarPreview(user.avatar)
             }
@@ -138,6 +143,17 @@ const UpdateProfile = () => {
                             />
                         </div>
 
+                        <div className="form-group">
+                            <label htmlFor="phone_field">Phone No (+91) <span style={{color:'red'}}>*</span></label>
+                            <NumberInput
+                                id="mobile_field"
+                                name="mobile"
+                                className="no-arrow-input form-control"
+                                value={mobile}
+                                onChange={(e) => setMobile(e.target.value)}  
+                            />
+                        </div>
+
                         <div className='form-group'>
                             <label htmlFor='avatar_upload'>Avatar (*Size should be within 1mb)</label>
                             <div className='d-flex align-items-center'>
@@ -167,7 +183,12 @@ const UpdateProfile = () => {
                             </div>
                         </div>
 
-                        <button type="submit" className="btn update-btn btn-block mt-4 mb-3" >Update</button>
+                        <button type="submit" className="btn update-btn btn-block mt-4 mb-3" disabled={profileupdateloading}>
+                        {profileupdateloading ? <LoaderButton fullPage={false} size={20} /> : (
+                                    <span> Update </span>
+                                )
+                                }
+                            </button>
                     </form>
                 </div>
             </div>

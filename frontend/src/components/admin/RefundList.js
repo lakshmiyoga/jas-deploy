@@ -17,8 +17,8 @@ const RefundList = ({isActive,setIsActive}) => {
     // const { adminOrders: orders = [], error, isOrderDeleted }  = useSelector(state => state.orderState);
     const location = useLocation();
     sessionStorage.setItem('redirectPath', location.pathname);
-    const { loading, allpackedOrderData: orders = [], allpackedOrderError,updatepackedOrderData :orderslist = []  } = useSelector(state => state.porterState);
-    console.log("allpackedOrderData", orders, allpackedOrderError);
+    const { loading, allpackedOrderData: orders, allpackedOrderError,updatepackedOrderData :orderslist   } = useSelector(state => state.porterState);
+    // console.log("allpackedOrderData", orders, allpackedOrderError);
 
     const dispatch = useDispatch();
 
@@ -165,10 +165,20 @@ const RefundList = ({isActive,setIsActive}) => {
         //     return;
         // }
 // if(refresh){
-    dispatch(updatedPackedOrder({}));
+    // dispatch(updatedPackedOrder({}));
 // }
         
     }, [dispatch, allpackedOrderError, refresh]);
+
+    useEffect(()=>{
+        if(!orderslist){
+            dispatch(updatedPackedOrder({}));   
+        }
+    },[orderslist])
+
+    
+
+
 
     // useEffect(() => {
     //     const updateOrders = async () => {

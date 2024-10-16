@@ -6,7 +6,7 @@ const userSlice = createSlice({
     initialState: {
         loading: false,
         user: {},
-        users: [],
+        users:null,
         isUserUpdated: false,
         isUserDeleted: false
     },

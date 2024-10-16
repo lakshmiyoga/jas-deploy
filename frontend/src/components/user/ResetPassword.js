@@ -5,6 +5,7 @@ import { useLocation, useNavigate, useParams } from 'react-router-dom';
 import { toast } from 'react-toastify';
 import MetaData from '../Layouts/MetaData';
 import { clearResetPassword } from '../../slices/authSlice';
+import LoaderButton from '../Layouts/LoaderButton';
 
 const ResetPassword = () => {
   const [password, setPassword] = useState("");
@@ -12,7 +13,7 @@ const ResetPassword = () => {
   const location = useLocation();
   sessionStorage.setItem('redirectPath', location.pathname);
   const dispatch = useDispatch();
-  const { isAuthenticated, error } = useSelector(state => state.authState);
+  const { resetloading,isAuthenticated, error } = useSelector(state => state.authState);
   const navigate = useNavigate();
   const [showPassword, setShowPassword] = useState(false);
   const [showConfirmPassword, setShowConfirmPassword] = useState(false);
@@ -184,9 +185,15 @@ const ResetPassword = () => {
               id="new_password_button"
               type="submit"
               className="btn btn-block py-3"
-              disabled={!isFormValid}
+              disabled={!isFormValid || resetloading}
             >
-              Set Password
+             {resetloading ? <LoaderButton fullPage={false} size={20} /> : (
+                    <span>  Set Password</span>
+                  )
+
+                  }
+ 
+              
             </button>
           </form>
         </div>

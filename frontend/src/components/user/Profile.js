@@ -29,6 +29,8 @@ const Profile = () => {
 
                 <div className="col-12  col-md-5" style={{display:'flex',flexDirection:'column',alignItems:'center',justifyContent:'center'}} >
                     <h5>Full Name: {user && user.name}</h5>
+                    
+                    <h5>Mobile Number: {user && user.mobile ? `+91 ${ user.mobile} `:'Not available' }</h5>
                     {/* <p>{user.name}</p> */}
 
                     <h5>Email Address: {user && user.email}</h5>

@@ -3,7 +3,7 @@ import MetaData from '../Layouts/MetaData';
 import { MDBDataTable } from 'mdbreact'
 import { useDispatch, useSelector } from 'react-redux';
 import { userOrders as userOrdersAction } from '../../actions/orderActions';
-import { Link, useLocation } from 'react-router-dom';
+import { Link, Navigate, useLocation, useNavigate } from 'react-router-dom';
 import Loader from '../Layouts/Loader';
 import { loadUser } from '../../actions/userActions';
 import store from '../../store';
@@ -13,18 +13,33 @@ import { porterClearData, porterClearResponse } from '../../slices/porterSlice';
 
 export default function UserOrders() {
     
-    const {loading, userOrders = [] } = useSelector(state => state.orderState)
+    const {loading, userOrders } = useSelector(state => state.orderState)
+    const { isAuthenticated, user } = useSelector(state => state.authState);
     const dispatch = useDispatch();
     const [dummyUser,setDummyUser] = useState(false);
-     console.log("userOrders",userOrders)
+     console.log("userOrders",userOrders);
+     const navigate = useNavigate();
     const location = useLocation();
      sessionStorage.setItem('redirectPath', location.pathname);
      useEffect(() => {
         dispatch(orderDetailClear());
         dispatch(porterClearData());
         dispatch(porterClearResponse());
-        dispatch(userOrdersAction())
     }, [])
+
+    useEffect(()=>{
+        if(!userOrders){
+            dispatch(userOrdersAction());
+        }
+       
+    },[userOrders])
+
+    // useEffect(()=>{
+    //     if(!isAuthenticated){
+    //         navigate('/unauthorized');
+    //     }
+    // },[isAuthenticated])
+    
     // const { user } = useSelector(state => state.authState);
 
     // useEffect(() => {
@@ -77,9 +92,9 @@ export default function UserOrders() {
         }
 
         // Sort orders by creation date (newest first)
-        const sortedOrders = [...userOrders].sort((a, b) => new Date(b.createdAt) - new Date(a.createdAt));
+        const sortedOrders =userOrders && [...userOrders].sort((a, b) => new Date(b.createdAt) - new Date(a.createdAt));
 
-        sortedOrders.forEach((userOrder, index) => {
+        sortedOrders && sortedOrders.forEach((userOrder, index) => {
             data.rows.push({
                 s_no: index + 1,
                 id: userOrder.order_id,
@@ -87,7 +102,7 @@ export default function UserOrders() {
                 amount: `${userOrder.totalPrice} Rs`,
                 status: userOrder.orderStatus && userOrder.orderStatus.includes('Delivered') ?
                     (<p style={{ color: 'green' }}> {userOrder.orderStatus} </p>) :
-                    (<p style={{ color: 'red' }}> {userOrder.orderStatus} </p>),
+                    (<p style={{ color: 'red' }}> {userOrder && userOrder.paymentStatus && userOrder.paymentStatus === 'CHARGED' ? userOrder.orderStatus : 'Cancelled'} </p>),
                 actions: <Link to={`/order/${userOrder.order_id}`} className="btn btn-primary" >
                     <i className='fa fa-eye'></i>
                 </Link>

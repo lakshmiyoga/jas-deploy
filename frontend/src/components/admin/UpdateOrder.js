@@ -2,7 +2,7 @@ import { Fragment, useEffect } from "react";
 import Sidebar from "./Sidebar";
 import { useDispatch, useSelector } from 'react-redux';
 import { useLocation, useNavigate, useParams } from "react-router-dom";
-import { orderDetail as orderDetailAction, updateOrder, porterOrder, RemoveOrderResponse } from "../../actions/orderActions";
+import { orderDetail as orderDetailAction, updateOrder, porterOrder, RemoveOrderResponse, adminOrders } from "../../actions/orderActions";
 import { CancelOrderResponse, createPorterOrderResponse, getporterOrder, packedOrder } from "../../actions/porterActions";
 import { toast } from "react-toastify";
 import { clearOrderUpdated, clearError, adminOrderRemoveClearError } from "../../slices/orderSlice";
@@ -328,6 +328,8 @@ const UpdateOrder = ({ isActive, setIsActive }) => {
                 position: "bottom-center",
                 onOpen: () => dispatch(clearOrderUpdated())
             });
+            dispatch(adminOrders());
+            return
 
         }
         if (error) {

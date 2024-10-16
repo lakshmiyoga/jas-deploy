@@ -14,6 +14,7 @@ import { loadUser } from '../../actions/userActions';
 import store from '../../store';
 import { getProducts } from '../../actions/productsActions';
 import CryptoJS from 'crypto-js';
+import LoaderButton from '../Layouts/LoaderButton';
 
 
 const ConfirmOrder = () => {
@@ -23,6 +24,7 @@ const ConfirmOrder = () => {
     // const { loading: orderLoading, orderDetail, error } = useSelector(state => state.orderState);
     const { shippingInfo, items: cartItems } = useSelector(state => state.cartState);
     const { user } = useSelector(state => state.authState);
+    console.log("user",user)
     const navigate = useNavigate();
     const [loading, setLoading] = useState(false);
     const [dummyUser, setDummyUser] = useState(false);
@@ -43,8 +45,12 @@ const ConfirmOrder = () => {
         }
     }, [user]);
 
-    const shippingCharge = shippingAmount / 100;
-    //  const shippingCharge = 1.00;
+    // useEffect(()=>{
+    //     store.dispatch(loadUser());
+    // },[])
+
+    // const shippingCharge = shippingAmount / 100;
+    const shippingCharge = 1.00;
     console.log("shippingInfo", shippingInfo)
     const subtotal = cartItems.reduce((acc, item) => acc + item.price * item.productWeight, 0).toFixed(2);
     const total = (parseFloat(subtotal) + shippingCharge).toFixed(2);
@@ -89,25 +95,25 @@ const ConfirmOrder = () => {
                     }
                 }
             };
-            console.log(requestData)
+            // console.log(requestData)
             try {
                 const response = await axios.post('/api/v1/get-quote', requestData);
-                console.log("getQuote Response", response.data)
+                // console.log("getQuote Response", response.data)
                 // if (response && response.data && response.data.vehicles[3] && response.data.vehicles[3].fare) {
                 //     setShippingAmount(response.data.vehicles[3].fare.minor_amount);
                 //     setDummyUser(false);
                 // }
-                const twoWheelerVehicle = response.data.vehicles.find(vehicle => 
+                const twoWheelerVehicle = response.data.vehicles.find(vehicle =>
                     vehicle.type && vehicle.type.includes("2 Wheeler")
                 );
-                
+
                 if (twoWheelerVehicle && twoWheelerVehicle.fare) {
                     // Set the shipping amount for "2 Wheeler"
                     setShippingAmount(twoWheelerVehicle.fare.minor_amount);
                     setDummyUser(false);
-                } 
+                }
                 else {
-                    
+
                     toast.error(`No 2 Wheeler found in the vehicle list.`, {
                         position: "bottom-center",
                     });
@@ -137,6 +143,7 @@ const ConfirmOrder = () => {
     const initPayment = async (data) => {
         if (data && data.payment_links && data.payment_links.web) {
             window.location.href = data.payment_links.web;
+            // setLoading(false);
             // window.open(data.payment_links.web, '_blank');
         } else {
             alert('Failed to initiate payment: ' + (data.message || 'Unknown error'));
@@ -275,7 +282,8 @@ const ConfirmOrder = () => {
                 <div className="products_heading">Confirm Order</div>
                 <StepsCheckOut shipping confirmOrder />
                 <div className="container confirm-order-container">
-                    {loading || !shippingAmount ? <Loader /> : (
+                    {!shippingAmount ? <Loader /> : (
+                        // {loading || !shippingAmount ? <Loader /> : (
                         <div className="row justify-content-center">
                             <div className="col-12 col-lg-8 mt-5 order-confirm" id='order_summary'>
                                 <h4 className="mb-3">Shipping Info</h4>
@@ -323,7 +331,12 @@ const ConfirmOrder = () => {
                                     <hr />
                                     {shippingCharge ? (
                                         <button id="checkout_btn" className="btn btn-primary btn-block" onClick={handelopenModal} disabled={loading}>
-                                            Proceed to Payment
+                                             {/* {loading ? <LoaderButton fullPage={false} size={20} /> : (
+                                                                <span>  Proceed to Payment</span>
+                                                            )
+
+                                                            } */}
+                                           Proceed to Payment  
                                         </button>
                                     ) : (
                                         <button id="checkout_btn" className="btn btn-block" disabled>
@@ -336,16 +349,28 @@ const ConfirmOrder = () => {
                                                 <div className="modal-content">
                                                     <div className="modal-header">
                                                         <h5 className="modal-title">Confirm Order</h5>
-                                                        <button type="button" className="close" onClick={handleCancelModal}>
-                                                            <span aria-hidden="true">&times;</span>
-                                                        </button>
+                                                        {
+                                                            !loading ? (
+                                                                <button type="button" className="close" onClick={handleCancelModal} disabled={loading}>
+                                                                <span aria-hidden="true">&times;</span>
+                                                            </button>
+                                                            ) : <></>
+                                                        }
+                                                       
                                                     </div>
                                                     <div className="modal-body">
                                                         <p>{orderDescription && orderDescription}</p>
                                                     </div>
                                                     <div className="modal-footer">
-                                                        <button type="button" className="btn btn-secondary" onClick={handleCancelModal}>Cancel</button>
-                                                        <button type="button" className="btn btn-success" onClick={processPayment}>Continue</button>
+                                                        <button type="button" className="btn btn-secondary" onClick={handleCancelModal} disabled={loading}>Cancel</button>
+                                                        <button type="button" className="btn btn-success" onClick={processPayment} disabled={loading}>
+                                                            {loading ? <LoaderButton fullPage={false} size={20} /> : (
+                                                                <span>  Continue</span>
+                                                            )
+
+                                                            }
+                                                            
+                                                        </button>
                                                     </div>
                                                 </div>
                                             </div>

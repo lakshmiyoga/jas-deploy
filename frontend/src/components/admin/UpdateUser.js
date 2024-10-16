@@ -2,7 +2,7 @@ import { Fragment, useEffect, useState } from "react";
 import Sidebar from "./Sidebar";
 import { useDispatch, useSelector} from 'react-redux';
 import { useLocation, useNavigate, useParams } from "react-router-dom";
-import { getUser, updateUser } from "../../actions/userActions";
+import { getUser, getUsers, updateUser } from "../../actions/userActions";
 import { clearError, clearUserUpdated } from "../../slices/userSlice";
 import { toast } from "react-toastify";
 import MetaData from "../Layouts/MetaData";
@@ -38,6 +38,7 @@ export default function UpdateUser ({isActive,setIsActive}) {
                 position: 'bottom-center',
                 onOpen: () => dispatch(clearUserUpdated())
             })
+            dispatch(getUsers());
             return;
         }
 

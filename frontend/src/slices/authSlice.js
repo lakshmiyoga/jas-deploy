@@ -15,6 +15,7 @@ const authSlice = createSlice({
                 ...state,
                 loading: true,
                 isAuthenticated: false,
+                user:null,
             }
         },
         loginSuccess(state, action) {
@@ -78,6 +79,7 @@ const authSlice = createSlice({
             return {
                 ...state,
                 loading: false,
+                error:action.payload
             }
         },
         logoutSuccess(state, action) {
@@ -96,14 +98,14 @@ const authSlice = createSlice({
         updateProfileRequest(state, action) {
             return {
                 ...state,
-                loading: true,
+                profileupdateloading: true,
                 isUpdated: false
             }
         },
         updateProfileSuccess(state, action) {
             return {
                 ...state,
-                loading: false,
+                profileupdateloading: false,
                 user: action.payload.user,
                 isUpdated: true
             }
@@ -111,7 +113,7 @@ const authSlice = createSlice({
         updateProfileFail(state, action) {
             return {
                 ...state,
-                loading: false,
+                profileupdateloading: false,
                 error: action.payload
             }
         },
@@ -126,21 +128,21 @@ const authSlice = createSlice({
         updatePasswordRequest(state, action) {
             return {
                 ...state,
-                loading: true,
+                updatepasswordloading: true,
                 isUpdated: false
             }
         },
         updatePasswordSuccess(state, action) {
             return {
                 ...state,
-                loading: false,
+                updatepasswordloading: false,
                 isUpdated: true
             }
         },
         updatePasswordFail(state, action) {
             return {
                 ...state,
-                loading: false,
+                updatepasswordloading: false,
                 error: action.payload
             }
         },
@@ -176,13 +178,13 @@ const authSlice = createSlice({
         resetPasswordRequest(state, action) {
             return {
                 ...state,
-                loading: true,
+                resetloading: true,
             }
         },
         resetPasswordSuccess(state, action) {
             return {
                 ...state,
-                loading: false,
+                resetloading: false,
                 isAuthenticated: true,
                 user: action.payload.user
             }
@@ -190,7 +192,7 @@ const authSlice = createSlice({
         resetPasswordFail(state, action) {
             return {
                 ...state,
-                loading: false,
+                resetloading: false,
                 error: action.payload
             }
         },

@@ -7,12 +7,17 @@ import { useEffect } from 'react';
 
 export default function ProtectedRoute({ children, isAdmin }) {
     const { isAuthenticated, loading, user } = useSelector(state => state.authState);
+  
     const location = useLocation();
     const navigate = useNavigate();
 
-    // useEffect(() => {
-    //         store.dispatch(loadUser());
-    // }, []);
+    useEffect(() => {
+        if (!isAuthenticated && !loading) {
+            store.dispatch(loadUser()); // Load user if not already loaded
+        }
+    }, [isAuthenticated, loading]);
+
+    // console.log("protecteduser",user)
 
     if (loading) {
         return <Loader />;
@@ -22,30 +27,73 @@ export default function ProtectedRoute({ children, isAdmin }) {
     // if (!isAuthenticated) {
     //     return <Navigate to="/login" />;
     // }
-    
+
     if (isAdmin ) {
         if (user && user.role === 'admin') {
             // const redirectPath = sessionStorage.getItem('redirectPath') || '/';
             // navigate(redirectPath);
             // sessionStorage.removeItem('redirectPath');
-            sessionStorage.removeItem('redirectPath');
+            // sessionStorage.removeItem('redirectPath');
             return children;
             
             // sessionStorage.removeItem('redirectPath');
             // return <Navigate to="/admin/dashboard" />
 
-        } else {
-            const redirectPath = sessionStorage.getItem('redirectPath') || '/';
-        //    return navigate(redirectPath);
-            return <Navigate to={redirectPath} replace />;
-            // sessionStorage.removeItem('redirectPath');
-            // return <Navigate to="/" />;
-            
+        } 
+        else if (user && user.role !== 'admin'){
+            return <Navigate to="/unauthorized" replace />;
         }
+        else{
+             return <Navigate to="/unauthorized" replace />;
+        }
+        // else {
+        //     const redirectPath = sessionStorage.getItem('redirectPath') || '/';
+        // //    return navigate(redirectPath);
+        //     return <Navigate to={redirectPath} replace />;
+        //     // sessionStorage.removeItem('redirectPath');
+        //     // return <Navigate to="/" />;
+            
+        // }
     }
 
+    else if (!isAdmin && isAuthenticated) {
 
-    return children;
+        if (user && user.role === 'user' || user && user.role === 'admin' ) {
+            // const redirectPath = sessionStorage.getItem('redirectPath') || '/';
+            // navigate(redirectPath);
+            // sessionStorage.removeItem('redirectPath');
+            // sessionStorage.removeItem('redirectPath');
+            return children;
+            
+            // sessionStorage.removeItem('redirectPath');
+            // return <Navigate to="/admin/dashboard" />
+
+        } 
+        else if (user && user.role !== 'user' || 'admin'){
+            return <Navigate to="/unauthorized" replace />;
+        }
+        else{
+            return <Navigate to="/unauthorized" replace />;
+        }
+        // else {
+        //     const redirectPath = sessionStorage.getItem('redirectPath') || '/';
+        // //    return navigate(redirectPath);
+        //     return <Navigate to={redirectPath} replace />;
+        //     // sessionStorage.removeItem('redirectPath');
+        //     // return <Navigate to="/" />;
+            
+        // }
+    }
+    
+    else if(!isAuthenticated){
+        return <Navigate to="/unauthorized" replace />;
+    }
+
+    else{
+        return <Navigate to="/login" />
+    }
+
+    // return children;
 }
 
 // import { useEffect } from 'react';

@@ -10,6 +10,9 @@ const Product = ({ products, category }) => {
     const [quantity, setQuantity] = useState(1);
     const dispatch = useDispatch();
     const location = useLocation();
+    const [weightvalue,setweightvalue] =useState(false);
+    const [weighttoast,setWeightToast]=useState(false);
+    const [correctWeight,setcorrectWeight]=useState(false)
     sessionStorage.setItem('redirectPath', location.pathname);
 
     console.log("products",products)
@@ -20,11 +23,19 @@ const Product = ({ products, category }) => {
             return;
         }
         if (weightValue > 20) {
-            toast('Weight cannot exceed 20Kg', {
-                type: 'error',
-                position: 'bottom-center',
-            });
+            setweightvalue(true)
+            if(!weightvalue){
+                toast('Weight cannot exceed 20Kg', {
+                    type: 'error',
+                    position: 'bottom-center',
+                    autoClose: 500
+                });
+                return
+            }
+           else{
             return;
+           }
+           
         }
         setWeight(prevWeights => ({ ...prevWeights, [productId]: weightValue }));
     };
@@ -52,11 +63,18 @@ const Product = ({ products, category }) => {
 
         const productWeight = weight[product._id];
         if (!isNaN(productWeight) && productWeight < 0.25) {
+            setWeightToast(true);
             setWeight(prevWeights => ({ ...prevWeights, [productId]: '' }));
-            return toast('The value should not be less than 0.25kg', {
-                type: 'error',
-                position: 'bottom-center',
-            });
+            if(!weighttoast){
+                return toast('The value should not be less than 0.25kg', {
+                    type: 'error',
+                    position: 'bottom-center',
+                    autoClose: 500
+                });
+            }
+            else{
+                return;
+            }
 
         }
         if (productWeight >= 0.25) {
@@ -64,14 +82,23 @@ const Product = ({ products, category }) => {
             toast.success('Item added successfully!', {
                 type: 'success',
                 position: 'bottom-center',
+                autoClose: 500, 
             });
             setQuantity(1);
             setWeight(prevWeights => ({ ...prevWeights, [product._id]: undefined })); // Reset weight for the added product
         } else {
-            toast.error('Please select weight for the correct item', {
-                type: 'error',
-                position: 'bottom-center',
-            });
+            setcorrectWeight(true);
+            if(!correctWeight){
+                toast.error('Please select weight for the correct item', {
+                    type: 'error',
+                    position: 'bottom-center',
+                    autoClose: 500, 
+                });
+            }
+            else{
+               return
+            }
+           
         }
     };
 

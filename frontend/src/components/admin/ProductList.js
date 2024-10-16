@@ -10,11 +10,12 @@ import Sidebar from "../admin/Sidebar";
 import { clearError } from '../../slices/productsSlice';
 import { clearProductDeleted } from "../../slices/productSlice";
 import MetaData from '../Layouts/MetaData';
+import LoaderButton from '../Layouts/LoaderButton';
 
 const ProductList = ({isActive,setIsActive}) => {
     // const location = useLocation();
     // sessionStorage.setItem('redirectPath', location.pathname);
-    const { products = [], loading = true, error } = useSelector(state => state.productsState);
+    const { products , loading ,deleteloading, error } = useSelector(state => state.productsState);
     const { isProductDeleted, error: productError } = useSelector(state => state.productState);
     const dispatch = useDispatch();
     const [showModal, setShowModal] = useState(false);
@@ -53,7 +54,7 @@ const ProductList = ({isActive,setIsActive}) => {
             rows: []
         }
 
-        products.forEach((product, index) => {
+        products && products.forEach((product, index) => {
             data.rows.push({
                 s_no: index + 1,
                 name: `${product.englishName} / ${product.tamilName}`,
@@ -90,10 +91,17 @@ const ProductList = ({isActive,setIsActive}) => {
                 position: "bottom-center",
                 onOpen: () => dispatch(clearProductDeleted())
             })
+            dispatch(getAdminProducts())
             return;
         }
-        dispatch(getAdminProducts())
+        // dispatch(getAdminProducts())
     }, [dispatch, error, isProductDeleted, productError])
+
+    useEffect(()=>{
+        if(!products){
+            dispatch(getAdminProducts())
+        }
+    },[products])
 
     const handleDeleteClick = (id) => {
         setProductToDelete(id);
@@ -151,7 +159,14 @@ const ProductList = ({isActive,setIsActive}) => {
                                 <p>Are you sure you want to delete this product?</p>
                             </div>
                             <div className="modal-footer">
-                                <button type="button" className="btn btn-danger" onClick={handleConfirmDelete}>OK</button>
+                                <button type="button" className="btn btn-danger" onClick={handleConfirmDelete} disabled={deleteloading}>
+                                {deleteloading ? <LoaderButton fullPage={false} size={20} /> : (
+                                    <span>  OK</span>
+                                )
+
+                                }
+                                    
+                                    </button>
                                 <button type="button" className="btn btn-secondary" onClick={handleCancelDelete}>Cancel</button>
                             </div>
                         </div>
