@@ -28,7 +28,12 @@ export default function ProtectedRoute({ children, isAdmin }) {
     //     return <Navigate to="/login" />;
     // }
 
-    if (isAdmin ) {
+    if(isAdmin && !isAuthenticated || isAdmin && !user ){
+        return <Navigate to="/unauthorized" replace />;
+    }
+
+
+    if (isAdmin && isAuthenticated) {
         if (user && user.role === 'admin') {
             // const redirectPath = sessionStorage.getItem('redirectPath') || '/';
             // navigate(redirectPath);
@@ -56,7 +61,7 @@ export default function ProtectedRoute({ children, isAdmin }) {
         // }
     }
 
-    else if (!isAdmin && isAuthenticated) {
+    else if ( !isAdmin && isAuthenticated) {
 
         if (user && user.role === 'user' || user && user.role === 'admin' ) {
             // const redirectPath = sessionStorage.getItem('redirectPath') || '/';
@@ -85,8 +90,8 @@ export default function ProtectedRoute({ children, isAdmin }) {
         // }
     }
     
-    else if(!isAuthenticated){
-        return <Navigate to="/unauthorized" replace />;
+    else if(!isAuthenticated || !user ){
+        return <Navigate to="/" replace />;
     }
 
     else{

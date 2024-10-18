@@ -20,12 +20,13 @@ const otpSlice = createSlice({
       state.loading = false;
       state.otpdata = null;
       state.otperror = null;
-      state.mailVerifiedData = null;
-      state.verifyloading = false;
+      // state.mailVerifiedData = null;
+      // state.verifyloading = false;
     },
     otpErrorClear(state){
         state.mailVerifyError=null;
         state.mobileOtperror=null;
+
     },
     mailOtpRequest(state) {
       state.otploading = true;
@@ -51,6 +52,12 @@ const otpSlice = createSlice({
       state.verifyloading = false;
       state.mailVerifyError = action.payload;
     },
+    mailClearError(state, action) {
+      state.verifyloading = false;
+      state.mailVerifyError = null;
+      state.otperror = null;
+
+    },
     mobileOtpRequest(state) {
       state.mobileOtploading = true;
     },
@@ -73,6 +80,11 @@ const otpSlice = createSlice({
       state.mobileVerifyloading = false;
       state.mobileVerifyError = action.payload;
     },
+    mobileClearError(state, action) {
+      state.mobileVerifyloading = false;
+      state.mobileVerifyError = null;
+      state.mobileOtperror = null;
+    },
   },
 });
 
@@ -93,6 +105,8 @@ export const {
   mobileVerifyFail,
   otpClear,
   otpErrorClear,
+  mailClearError,
+  mobileClearError,
 } = actions;
 
 export default reducer;

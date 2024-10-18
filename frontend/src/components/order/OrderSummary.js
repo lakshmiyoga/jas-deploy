@@ -36,7 +36,7 @@ const OrderSummary = ({isActive,setIsActive}) => {
     return (
         <div>
         <MetaData title={`OrderSummary`} />
-        <div className="row">
+        <div className="row loader-parent">
             {/* <MetaData title="Order Summary" /> */}
             <div className="col-12 col-md-2">
             <div style={{display:'flex',flexDirection:'row',position:'fixed',top:'0px',zIndex:99999,backgroundColor:'#fff',minWidth:'100%'}}>
@@ -44,7 +44,7 @@ const OrderSummary = ({isActive,setIsActive}) => {
                 </div>
             </div>
 
-            <div className="col-12 col-md-10 smalldevice-space-summary" >
+            <div className="col-12 col-md-10 smalldevice-space-summary loader-parent" >
                 <h1 className='admin-dashboard-x mb-4'>Order Summary for a Day</h1>
                 <input
                     type="date"
@@ -52,9 +52,11 @@ const OrderSummary = ({isActive,setIsActive}) => {
                     onChange={(e) => setDate(e.target.value)}
                     className="form-control mb-3 date-input"
                 />
-                {loading ? (
-                    <Loader />
-                ) : error ? (
+                {loading ?  (
+                     <div className="container loader-loading-center">
+                     <Loader />
+                 </div>
+                )  : error ? (
                     <p className="text-danger">{error}</p>
                 ) : (
                     <div className="container ordersummary-detail-container">

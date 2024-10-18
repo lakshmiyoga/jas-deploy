@@ -34,20 +34,20 @@ const userSlice = createSlice({
         userRequest(state, action){
             return {
                 ...state,
-                loading: true
+                userloading: true
             }
         },
         userSuccess(state, action){
             return {
                 ...state,
-                loading: false,
+                userloading: false,
                 user: action.payload.user,
             }
         },
         userFail(state, action){
             return {
                 ...state,
-                loading: false,
+                userloading: false,
                 error:  action.payload
             }
         },

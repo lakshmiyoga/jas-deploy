@@ -36,10 +36,10 @@ const Vegetables = () => {
     const filteredVegetable = keyword ? vegetables.filter((vegetable) => vegetable.englishName.toLowerCase().includes(keyword.toLowerCase())) : vegetables;
     console.log(filteredVegetable);
 
-    
-     // Sort the filtered vegetables in ascending order by name
+
+    // Sort the filtered vegetables in ascending order by name
     //  const sortedVegetables = filteredVegetable.sort();
-     const sortedVegetables = filteredVegetable.sort((a, b) => a.englishName.localeCompare(b.englishName));
+    const sortedVegetables = filteredVegetable.sort((a, b) => a.englishName.localeCompare(b.englishName));
 
     return (
         <Fragment>
@@ -48,8 +48,11 @@ const Vegetables = () => {
                 <Fragment>
                     <MetaData title={'Buy Best Products'} />
                     <div className="products_heading">Vegetables</div>
-                    <div className=" search-responsive col-12 col-md-6 mt-2 mt-md-0" style={{ display: 'flex', alignItems: 'center', justifyContent: 'center', position: 'relative', minWidth: '100%', height: 'auto' }}>
-                        <Search keyword={keyword} setKeyword={setKeyword} />
+                    <div className=" search-responsive col-12 col-md-6 mt-2 mt-md-0" style={{ display: 'flex', alignItems: 'center', justifyContent: 'center', position: 'relative', minWidth: '100%', height: 'auto', flexDirection: 'column' }}>
+                        <div style={{ display: 'flex', flexDirection: 'row', position: 'relative', width: '100%', justifyContent: 'center', alignItems: 'center' }}>
+                            <Search keyword={keyword} setKeyword={setKeyword} />
+                        </div>
+
                         {/* <div style={{ display: 'flex', justifyContent: 'space-between', marginTop:'20px' }}>
                             <Link to="/fruits">
                                 <Card style={{ width: '100px', marginRight:'15px' }}>
@@ -65,48 +68,42 @@ const Vegetables = () => {
                                 </Card>
                             </Link>
                         </div> */}
-                        
-              <div className="col-sm-12 col-md-6 col-lg-2 my-2 landingpage-card-vegetables ">
-              <Link to="/fruits" state={{ category: 'Fruits' }} style={{ textDecoration: 'none' }}>
-                <div className="card p-3 rounded">
-                 
-                    <div className="d-flex justify-content-center align-items-center">
-                      <img
-                        className="card-img-top-vegetable mx-auto"
-                        src="../images/fruits.jpg"
-                        alt="fruits"
-                      />
-                    </div>
-                 
-                  <div className="card-body d-flex flex-column">
-                    {/* <h5 className="card-title"> */}
-                      <h3 className="card-title">Fruits</h3>
-                    {/* </h5> */}
-                  </div>
+                        <div style={{ display: 'flex', flexDirection: 'row', position: 'relative', width: '100%', justifyContent: 'center', alignItems: 'center', marginTop: '20px' }}>
+                            {/* Fruits Card */}
+                            <div className="card card-vegetbles  col-sm-2 col-md-2 col-lg-2 my-2 landingpage-card-vegetables">
+                                <Link to="/fruits" state={{ category: 'Fruits' }} style={{ textDecoration: 'none' }}>
+                                    <div className="square-card">
+                                        <div className="card-content">
+                                            <img
+                                                className="card-img-top-vegetable"
+                                                src="../images/fruits.jpg"
+                                                alt="fruits"
+                                            />
+                                            <div className="card-title-vegetable">Fruits</div>
+                                        </div>
+                                    </div>
+                                </Link>
+                            </div>
 
-                </div>
-                </Link>
-              </div>
-              <div className="col-sm-12 col-md-6 col-lg-2 my-3 landingpage-card-vegetables ">
-              <Link to="/keerai" state={{ category: 'Keerai' }} style={{ textDecoration: 'none' }}>
-                <div className="card p-3 rounded">
-                
-                <div className="d-flex justify-content-center align-items-center">
-                  <img
-                    className="card-img-top-vegetable mx-auto"
-                    src="../images/products/arai_keerai.jpg"
-                    alt="celeries"
-                  />
-                  </div>
-                  
-                  <div className="card-body d-flex flex-column">
-                    {/* <h5 className="card-title"> */}
-                      <h3 className="card-title">Keerai</h3>
-                    {/* </h5> */}
-                  </div>
-                </div>
-                </Link>
-              </div>
+                            {/* Keerai Card */}
+                            <div className="card card-vegetbles  col-sm-2 col-md-2 col-lg-2 my-2 landingpage-card-vegetables">
+                                <Link to="/keerai" state={{ category: 'Keerai' }} style={{ textDecoration: 'none' }}>
+                                    <div className="square-card">
+                                        <div className="card-content">
+                                            <img
+                                                className="card-img-top-vegetable"
+                                                src="../images/products/arai_keerai.jpg"
+                                                alt="keerai"
+                                            />
+                                            <div className="card-title-vegetable">Keerai</div>
+                                        </div>
+                                    </div>
+                                </Link>
+                            </div>
+                        </div>
+
+
+
 
                     </div>
                     {

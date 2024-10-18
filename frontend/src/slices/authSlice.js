@@ -16,6 +16,7 @@ const authSlice = createSlice({
                 loading: true,
                 isAuthenticated: false,
                 user:null,
+                error:null,
             }
         },
         loginSuccess(state, action) {
@@ -30,6 +31,7 @@ const authSlice = createSlice({
                 ...state,
                 loading: false,
                 isAuthenticated: false,
+                user:null,
                 error: action.payload,  
             }
         },
@@ -66,10 +68,12 @@ const authSlice = createSlice({
                 ...state,
                 isAuthenticated: false,
                 loading: true,
+                user:null,
             }
         },
         loadUserSuccess(state, action) {
             return {
+                ...state,
                 loading: false,
                 isAuthenticated: true,
                 user: action.payload.user
@@ -79,11 +83,22 @@ const authSlice = createSlice({
             return {
                 ...state,
                 loading: false,
-                error:action.payload
+                isAuthenticated: false,
+                user:null,
+                // error:action.payload
+            }
+        },
+        logoutRequest(state, action) {
+            return {
+                ...state,
+                loading: false,
+                // isAuthenticated: false,
+                // user:null,
             }
         },
         logoutSuccess(state, action) {
             return {
+                ...state,
                 loading: false,
                 isAuthenticated: false,
                 user: null, 
@@ -92,7 +107,17 @@ const authSlice = createSlice({
         logoutFail(state, action) {
             return {
                 ...state,
-                error: action.payload
+                error: action.payload,
+                // isAuthenticated: false,
+                // user:null,
+            }
+        },
+        clearUser(state, action) {
+            return {
+                ...state,
+                error: null,
+                isAuthenticated: false,
+                user: null, 
             }
         },
         updateProfileRequest(state, action) {
@@ -239,7 +264,9 @@ export const { loginRequest,
     resetPasswordRequest,
     resetPasswordSuccess,
     clearResetPassword,
-    clearUpdatePassword
+    clearUpdatePassword,
+    logoutRequest,
+    clearUser,
  } = actions;
 
 export default reducer;

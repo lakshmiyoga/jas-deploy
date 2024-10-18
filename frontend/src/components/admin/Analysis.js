@@ -128,13 +128,13 @@ const Analysis = ({ isActive, setIsActive }) => {
     return (
         <div>
             <MetaData title={`Analysis Dashboard`} />
-            <div className="row" style={{margin:'5px'}}>
+            <div className="row loader-parent" style={{margin:'5px'}}>
                 <div className="col-12 col-md-2">
                     <div className="sidebar-fixed">
                         <Sidebar isActive={isActive} setIsActive={setIsActive} />
                     </div>
                 </div>
-                <div className="col-12 col-md-10 smalldevice-space">
+                <div className="col-12 col-md-10 smalldevice-space loader-parent">
                     <h1 className="admin-dashboard-x mb-4">Analysis</h1>
                     <div className="filter-row">
                         <div style={{display:'flex',flexDirection:'row', marginRight:'20px'}}>
@@ -161,7 +161,9 @@ const Analysis = ({ isActive, setIsActive }) => {
                     </div>
 
                     {loading ? (
+                        <div className="container loader-loading-center">
                         <Loader />
+                    </div>
                     ) : (
 
                         <div className="row " style={{ display: 'flex', justifyContent: 'center', alignItems: 'center', flexWrap: 'wrap' }}>

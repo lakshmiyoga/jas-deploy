@@ -23,7 +23,8 @@ import { loginFail,
     forgotPasswordFail,
     resetPasswordRequest,
     resetPasswordSuccess,
-    resetPasswordFail} from "../slices/authSlice";
+    resetPasswordFail,
+    logoutRequest} from "../slices/authSlice";
 
 
     import {
@@ -99,9 +100,9 @@ export const login = createAsyncThunk('post/login', async ({email,password},{dis
 export const logout =  async (dispatch) => {
 
   try {
-   
+      dispatch(logoutRequest())
       await axios.get(`/api/v1/logout`);
-      sessionStorage.removeItem('redirectPath');
+      // sessionStorage.removeItem('redirectPath');
       dispatch(logoutSuccess())
   } catch (error) {
       dispatch(logoutFail())

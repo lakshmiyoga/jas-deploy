@@ -21,7 +21,7 @@
 
 //     const [date, setDate] = useState(formattedPreviousDate);
 //     const [refresh,setRefresh]=useState(false);
-    
+
 
 
 //     console.log("date", date);
@@ -206,20 +206,20 @@ import { clearOrderDeleted, orderDetailClear } from "../../slices/orderSlice";
 import MetaData from '../Layouts/MetaData';
 import { porterClearData, porterClearResponse } from '../../slices/porterSlice';
 
-const OrderList = ({isActive,setIsActive}) => {
+const OrderList = ({ isActive, setIsActive }) => {
     const location = useLocation();
     sessionStorage.setItem('redirectPath', location.pathname);
-    const { adminOrders: orders , loading = true, error, isOrderDeleted } = useSelector(state => state.orderState);
+    const { adminOrders: orders, loading = true, error, isOrderDeleted } = useSelector(state => state.orderState);
     const [date, setDate] = useState(new Date().toISOString().split('T')[0]);
 
     const dispatch = useDispatch();
-    useEffect(()=>{
+    useEffect(() => {
         dispatch(orderDetailClear());
-       dispatch(porterClearData());
-       dispatch(porterClearResponse());
-    },[])
+        dispatch(porterClearData());
+        dispatch(porterClearResponse());
+    }, [])
 
-    console.log("orders",orders)
+    console.log("orders", orders)
 
     const setOrders = () => {
         const data = {
@@ -299,34 +299,34 @@ const OrderList = ({isActive,setIsActive}) => {
         //         actions: '-'
         //     });
         // } else {
-            // Map the filtered orders to table rows
-            filteredOrders && filteredOrders.sort((a, b) => new Date(b.createdAt) - new Date(a.createdAt)).forEach((order, index) => {
-                data.rows.push({
-                    s_no: index + 1,
-                    id: order.order_id,
-                    name: order.user.name,
-                    phone_no: order.shippingInfo.phoneNo,
-                    email: order.user.email,
-                    amount: `Rs.${order.totalPrice}`,
-                    orderstatus: (
-                        <div className={order.orderStatus.includes('Delivered') ? 'greenColor' : 'redColor'}>
-                            {order.orderStatus}
-                        </div>
-                    ),
-                    paymentstatus: (
-                        <div className='greenColor'>
-                            {order.paymentStatus}
-                        </div>
-                    ),
-                    actions: (
-                        <Fragment>
-                            <Link to={`/admin/order/${order.order_id}`} className="btn btn-primary py-1 px-2 ml-2">
-                                <i className="fa fa-pencil"></i>
-                            </Link>
-                        </Fragment>
-                    )
-                });
+        // Map the filtered orders to table rows
+        filteredOrders && filteredOrders.sort((a, b) => new Date(b.createdAt) - new Date(a.createdAt)).forEach((order, index) => {
+            data.rows.push({
+                s_no: index + 1,
+                id: order.order_id,
+                name: order.user.name,
+                phone_no: order.shippingInfo.phoneNo,
+                email: order.user.email,
+                amount: `Rs.${order.totalPrice}`,
+                orderstatus: (
+                    <div className={order.orderStatus.includes('Delivered') ? 'greenColor' : 'redColor'}>
+                        {order.orderStatus}
+                    </div>
+                ),
+                paymentstatus: (
+                    <div className='greenColor'>
+                        {order.paymentStatus}
+                    </div>
+                ),
+                actions: (
+                    <Fragment>
+                        <Link to={`/admin/order/${order.order_id}`} className="btn btn-primary py-1 px-2 ml-2">
+                            <i className="fa fa-pencil"></i>
+                        </Link>
+                    </Fragment>
+                )
             });
+        });
         // }
 
         return data;
@@ -349,46 +349,50 @@ const OrderList = ({isActive,setIsActive}) => {
 
         // dispatch(adminOrdersAction());
     }, [dispatch, error, isOrderDeleted]);
-    useEffect(()=>{
-        if(!orders){
+    useEffect(() => {
+        if (!orders) {
             dispatch(adminOrdersAction());
         }
-    },[orders])
+    }, [orders])
 
     return (
         <div>
-             <MetaData title={`Order list`} />
-      
-        <div className="row">
-            <div className="col-12 col-md-2">
-            <div style={{display:'flex',flexDirection:'row',position:'fixed',top:'0px',zIndex:99999,backgroundColor:'#fff',minWidth:'100%'}}>
-                <Sidebar isActive={isActive} setIsActive={setIsActive}/>
+            <MetaData title={`Order list`} />
+
+            <div className="row loader-parent">
+                <div className="col-12 col-md-2">
+                    <div style={{ display: 'flex', flexDirection: 'row', position: 'fixed', top: '0px', zIndex: 99999, backgroundColor: '#fff', minWidth: '100%' }}>
+                        <Sidebar isActive={isActive} setIsActive={setIsActive} />
+                    </div>
                 </div>
-            </div>
-            <div className="col-12 col-md-10 smalldevice-space">
-                <h1 className=" mb-4 admin-dashboard-x">Order List</h1>
-                <input
-                    type="date"
-                    value={date}
-                    onChange={(e) => setDate(e.target.value)}
-                    className="form-control mb-3 date-input"
-                />
-                <div className='mdb-table' style={{display:'flex',justifyContent:'center', alignItems:'center'}}>
-                <Fragment>
-                    {loading ? <Loader /> :
-                        <MDBDataTable
-                            data={setOrders()}
-                            bordered
-                            hover
-                            className="px-3 product-table"
-                            noBottomColumns
-                        />
-                    }
-                </Fragment>
+                <div className="col-12 col-md-10 smalldevice-space loader-parent">
+                    <h1 className=" mb-4 admin-dashboard-x">Order List</h1>
+                    <input
+                        type="date"
+                        value={date}
+                        onChange={(e) => setDate(e.target.value)}
+                        className="form-control mb-3 date-input"
+                    />
+
+                    <Fragment>
+                        {loading ? (<div className="container loader-loading-center">
+                            <Loader />
+                        </div>) :
+                            <div className='mdb-table' style={{ display: 'flex', justifyContent: 'center', alignItems: 'center' }}>
+                                <MDBDataTable
+                                    data={setOrders()}
+                                    bordered
+                                    hover
+                                    className="px-3 product-table"
+                                    noBottomColumns
+                                />
+                            </div>
+                        }
+                    </Fragment>
                 </div>
             </div>
         </div>
-        </div>
+
     );
 };
 

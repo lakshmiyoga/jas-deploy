@@ -25,14 +25,14 @@ const SummaryUser = ({isActive,setIsActive}) => {
     const totalAmount = userSummary.reduce((sum, order) => sum + (order.totalAmount || 0), 0);
 
     return (
-        <div className="row">
+        <div className="row loader-parent">
             <MetaData title={`Order Summary`} />
             <div className="col-12 col-md-2">
             <div style={{display:'flex',flexDirection:'row',position:'fixed',top:'0px',zIndex:99999,backgroundColor:'#fff',minWidth:'100%'}}>
                 <Sidebar isActive={isActive} setIsActive={setIsActive}/>
                 </div>
             </div>
-            <div className="col-12 col-md-9 smalldevice-space-summary ">
+            <div className="col-12 col-md-9 smalldevice-space-summary loader-parent">
                 <h1 className='mb-4 admin-dashboard-x'>User Summary for a Day</h1>
                 <input
                     type="date"
@@ -41,7 +41,9 @@ const SummaryUser = ({isActive,setIsActive}) => {
                     className="form-control mb-3 date-input"
                 />
                 {loading ? (
-                    <Loader />
+                     <div className="container loader-loading-center">
+                     <Loader />
+                 </div>
                 ) : error ? (
                     <p className="text-danger">{error}</p>
                 ) : (

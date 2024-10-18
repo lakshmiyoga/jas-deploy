@@ -125,6 +125,7 @@ import { Link, useLocation, useNavigate } from 'react-router-dom';
 import { Container, NavDropdown, Navbar } from 'react-bootstrap';
 import { useDispatch, useSelector } from 'react-redux';
 import { logout } from '../../actions/userActions';
+import { userOrdersClear } from '../../slices/orderSlice';
 
 const Sidebar = ({ isActive, setIsActive }) => {
     const { user, isAuthenticated } = useSelector(state => state.authState);
@@ -146,7 +147,7 @@ const Sidebar = ({ isActive, setIsActive }) => {
     const location = useLocation();
     const navigate = useNavigate();
     const dispatch = useDispatch();
-    const [refresh,setRefresh]=useState(false);
+    const [refresh, setRefresh] = useState(false);
 
     sessionStorage.setItem('redirectPath', location.pathname);
 
@@ -160,16 +161,22 @@ const Sidebar = ({ isActive, setIsActive }) => {
 
     const logoutHandler = () => {
         dispatch(logout); // Call the action as a function
-        closeSidebar();
+        // sessionStorage.removeItem('redirectPath');
+        // navigate('/');
+        // closeSidebar();
+        // dispatch(userOrdersClear());
         setRefresh(true)
     }
 
     useEffect(() => {
-        if (!isAuthenticated && refresh) {
+        if (!isAuthenticated || !user || refresh) {
             sessionStorage.removeItem('redirectPath');
+            closeSidebar();
+            dispatch(userOrdersClear());
+            // sessionStorage.setItem('redirectPath', '/');
             navigate('/');
         }
-    }, [isAuthenticated, navigate,refresh]);
+    }, [isAuthenticated, user, refresh]);
 
     useEffect(() => {
         if (isActive) {
@@ -179,32 +186,41 @@ const Sidebar = ({ isActive, setIsActive }) => {
         }
     }, [isActive]);
 
+    useEffect(() => {
+        const handleScroll = () => {
+            const headerElement = document.querySelector('.custom-navbar');
+            if (window.scrollY > 20) {
+                headerElement && headerElement.classList.add('custom-navbar-shadow');
+            } else {
+                headerElement && headerElement.classList.remove('custom-navbar-shadow');
+            }
+        };
+
+        window.addEventListener('scroll', handleScroll);
+
+        // Clean up event listener on component unmount
+        return () => {
+            window.removeEventListener('scroll', handleScroll);
+        };
+    }, []);
+
     return (
         <>
-            {!isActive ? (
-                <button id="sidebarCollapse" onClick={toggleSidebar} style={{ zIndex: '99999', border: 'none', position: 'relative', fontSize: '20px' }}>
-                    <i className="fa fa-bars"></i>
-                </button>
-            ) : (
-                <button id="sidebar-close" onClick={toggleSidebar} style={{ zIndex: '99999', border: 'none', fontSize: '20px' }}>
-                    <i className="fa fa-close"></i>
-                </button>
-            )}
-            <div className={`sidebar-wrapper ${isActive ? 'active' : ''}`}>
+            <div className={`sidebar-wrapper ${isActive ? 'active' : ''}`} >
                 <nav id="sidebar">
-                {windowWidth > 767 && (
-                            // <Navbar collapseOnSelect expand="sm" className="bg-body-tertiary custom-navbar">
-                            //     <Container >
-                            //         <Navbar.Brand>
-                                        <Link to="/">
-                                            <img className="logo-admin" src="/images/logo.png" alt="logo" />
-                                        </Link>
-                            //         </Navbar.Brand>
-                            //     </Container>
-                            // </Navbar>
-                        )}
+                    {windowWidth > 767 && (
+                        // <Navbar collapseOnSelect expand="sm" className="bg-body-tertiary custom-navbar">
+                        //     <Container >
+                        //         <Navbar.Brand>
+                        <Link to="/">
+                            <img className="logo-admin" src="/images/logo.png" alt="logo" />
+                        </Link>
+                        //         </Navbar.Brand>
+                        //     </Container>
+                        // </Navbar>
+                    )}
                     <ul className="list-unstyled components">
-                       
+
                         <li>
                             <Link to='/admin/dashboard' onClick={closeSidebar}><i className='fas fa-tachometer-alt'></i> Dashboard</Link>
                         </li>
@@ -261,12 +277,21 @@ const Sidebar = ({ isActive, setIsActive }) => {
             </div>
             {windowWidth < 768 && (
                 <Navbar collapseOnSelect expand="sm" className="bg-body-tertiary custom-navbar">
+                    {!isActive ? (
+                        <button id="sidebarCollapse" onClick={toggleSidebar} style={{ zIndex: '99999', border: 'none', position: 'relative', fontSize: '20px' }}>
+                            <i className="fa fa-bars"></i>
+                        </button>
+                    ) : (
+                        <button id="sidebar-close" onClick={toggleSidebar} style={{ zIndex: '99999', border: 'none', fontSize: '20px' }}>
+                            <i className="fa fa-close"></i>
+                        </button>
+                    )}
                     {/* <Container > */}
-                        <Navbar.Brand>
-                            <Link to="/">
-                                <img width="300px" height="90px" className="logo" src="/images/logo.png" alt="logo" />
-                            </Link>
-                        </Navbar.Brand>
+                    <Navbar.Brand>
+                        <Link to="/">
+                            <img width="300px" height="90px" className="logo admin-logo" src="/images/logo.png" alt="logo" />
+                        </Link>
+                    </Navbar.Brand>
                     {/* </Container> */}
                 </Navbar>
             )}

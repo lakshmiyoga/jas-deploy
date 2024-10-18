@@ -285,7 +285,7 @@ const ConfirmOrder = () => {
                     {!shippingAmount ? <Loader /> : (
                         // {loading || !shippingAmount ? <Loader /> : (
                         <div className="row justify-content-center">
-                            <div className="col-12 col-lg-8 mt-5 order-confirm" id='order_summary'>
+                            <div className="col-10 col-md-10 col-lg-8 mt-5 order-confirm" id='order_summary'>
                                 <h4 className="mb-3">Shipping Info</h4>
                                 <div><b>Name:</b> {user && user.name}</div>
                                 <div><b>Phone:</b> {shippingInfo.phoneNo}</div>
@@ -320,7 +320,7 @@ const ConfirmOrder = () => {
                                     </Fragment>
                                 ))}
                             </div>
-                            <div className="col-12 col-lg-3 my-4">
+                            <div className="col-10 col-md-10  col-lg-3 my-4">
                                 <div id="order_summary">
                                     <h4>Order Summary</h4>
                                     <hr />

@@ -65,6 +65,7 @@ import AllOrders from './components/admin/AllOrders';
 import AdminOrderDetail from './components/admin/AdminOrderDetail';
 import Analysis from './components/admin/Analysis';
 import Unauthorized from './components/Layouts/Unauthorized';
+import PageNotFound from './components/Layouts/PageNotFound';
 
 function App() {
     const location = useLocation();
@@ -85,14 +86,14 @@ function App() {
 
 
     const { isAuthenticated, loading, user } = useSelector(state => state.authState);
-    const { product, loading: productLoading } = useSelector((state) => state.productState);
+    const { products, loading: productLoading } = useSelector((state) => state.productsState);
     const [openSide, setOpenSide] = useState(false);
     const [isActive, setIsActive] = useState(false);
     const [userLoaded, setUserLoaded] = useState(false);
 
     useEffect(() => {
-        store.dispatch(getProducts());
         const loadInitialData = async () => {
+            await store.dispatch(getProducts());
             await store.dispatch(loadUser());
             setUserLoaded(true); // Set the flag once the user data is loaded
         };
@@ -102,19 +103,19 @@ function App() {
 
 
     useEffect(() => {
-        if (!isAuthenticated || !user) {
+        if (!isAuthenticated || !user && userLoaded) {
             store.dispatch(loadUser());
         }
-        if (!product) {
+        if (!products && userLoaded) {
             store.dispatch(getProducts());
         }
-    }, [isAuthenticated, product]);
+    }, [isAuthenticated, products, userLoaded]);
 
 
     // let isAdminRoute = true;
 
     useEffect(() => {
-        if (isAuthenticated && user) {
+        if (isAuthenticated && user && userLoaded) {
             // if (redirectPath) {
             // const redirectPath = sessionStorage.getItem('redirectPath') || '/';
             // return navigate(redirectPath);
@@ -141,7 +142,7 @@ function App() {
 
         // store.dispatch(loadUser());
         // store.dispatch(getProducts());
-    }, [isAuthenticated, navigate]);
+    }, [isAuthenticated, navigate, userLoaded, user]);
 
     // useEffect(() => {
     //     if (!product) {
@@ -152,110 +153,136 @@ function App() {
 
 
     // const isAdminRoute = location.pathname.includes('/admin') || (user && user.role === 'admin');
-    const isAdminRoute = location.pathname.includes('/admin') 
+    const isAdminRoute = location.pathname.includes('/admin') || location.pathname.includes('/unauthorized') || location.pathname.includes('/page-not-found')
 
     // if (!userLoaded || loading) {
     //     return <Loader />;
     // }
 
+    useEffect(() => {
+        const handleScroll = () => {
+            const headerElement = document.querySelector('.header');
+            if (window.scrollY > 20) {
+                headerElement.classList.add('header-shadow');
+            } else {
+                headerElement.classList.remove('header-shadow');
+            }
+        };
+
+        window.addEventListener('scroll', handleScroll);
+
+        // Clean up event listener on component unmount
+        return () => {
+            window.removeEventListener('scroll', handleScroll);
+        };
+    }, []);
+
     return (
-        <div className={`${openSide?"App-blure":isActive?"App-blure":"App"}`}>
+        <div className={`${openSide ? "App-blure" : isActive ? "App-blure" : "App"}`}>
             <HelmetProvider>
                 {
-                    productLoading || !userLoaded ? <Loader /> : (
-                        <div style={{ display: 'flex', flexDirection: 'column', position: 'relative' }}>
-                            {/* <Header /> */}
+                    productLoading || !userLoaded ? (
+                        <div style={{minHeight:'100vh',minWidth:'100vw',position:'absolute',display:'flex',justifyContent:'center',alignItems:'center'}}>
+                            <Loader />
+                        </div>
 
-                            <div className="header">
-                                {!isAdminRoute && <Header openSide={openSide} setOpenSide={setOpenSide}/>}
-                            </div>
-                            <ScrollToTop />
-                            <div className={isAdminRoute ? "" : openSide ? "content-blure":isActive ? "content-blure":"content"}>
-                                <Routes>
-                                    {/* <Route path="/*" element={<Login />} /> */}
-                                    <Route path="/login" element={<Login  email={email} setEmail={setEmail}/>} />
-                                    <Route path="/register" element={<Register />} />
-                                    {
-                                        user && redirectPath && user.role === "admin" ? 
-                                        // <Route path="/" element={<ProtectedRoute isAdmin={true}><Dashboard isActive={isActive} setIsActive={setIsActive}/></ProtectedRoute>} />
-                                        <Route path="/" element={<LandingPage />} />
-                                         :
-                                            <Route path="/" element={<LandingPage />} />
-                                    }
-                                    {
-                                        !user && <Route path="/" element={<LandingPage />} />
-                                    }
-                                    {/* <Route path="/" element={<LandingPage />} /> */}
-                                    <Route path="/vegetables" element={<Vegetables />} />
-                                    <Route path="/fruits" element={<Fruits />} />
-                                    <Route path="/unauthorized" element={<Unauthorized />} />
-                                    <Route path="/keerai" element={<Keerai />} />
-                                    <Route path="/about" element={<About />} />
-                                    <Route path="/enquiry" element={<Enquiry />} />
-                                    <Route path="/termsAndConditions" element={<TermsAndConditions />} />
-                                    <Route path="/privacyPolicy" element={<PrivacyPolicy />} />
-                                    <Route path="/refundPolicy" element={<RefundPolicy />} />
-                                    <Route path="/search/:keyword" element={<ProductSearch />} />
-                                    <Route path="/product/:id" element={<ProductDetail />} />
-                                    <Route path="/cart" element={<Cart />} />
-                                    <Route path="/password/forgot" element={<ForgotPassword email={email} setEmail={setEmail}/>} />
+                    )
 
-                                    <Route path="/myProfile" element={<ProtectedRoute isAdmin={false}><Profile /></ProtectedRoute>} />
-                                    <Route path="/myProfile/update" element={<ProtectedRoute isAdmin={false}><UpdateProfile /></ProtectedRoute>} />
-                                    <Route path="/myProfile/update/password" element={<ProtectedRoute isAdmin={false}><UpdatePassword /></ProtectedRoute>} />
-                                    
-                                    <Route path="/password/reset/:token" element={<ProtectedRoute isAdmin={false}><ResetPassword /></ProtectedRoute>} />
-                                    
-                                    <Route path="/shipping" element={<ProtectedRoute isAdmin={false} ><Shipping /></ProtectedRoute>} />
-                                    {/* <Route path="/refund" element={<Refund />} /> */}
-                                    <Route path="/orders" element={<ProtectedRoute isAdmin={false}><UserOrders /></ProtectedRoute>} />
-                                    <Route path='/order/:id' element={<ProtectedRoute isAdmin={false}><OrderDetail /></ProtectedRoute>} />
-                                    <Route path='/payment/:id' element={<ProtectedRoute isAdmin={false}><PaymentDetails /></ProtectedRoute>} />
-                                    <Route path="/order/confirm" element={<ProtectedRoute isAdmin={false}><ConfirmOrder /></ProtectedRoute>} />
-                                    <Route path="/payment/confirm/:id" element={<ProtectedRoute isAdmin={false}><PaymentConfirm /></ProtectedRoute>} />
-                                    {/* {
+                        : (
+                            <div style={{ display: 'flex', flexDirection: 'column', position: 'relative' }}>
+                                {/* <Header /> */}
+
+                                <div className="header">
+                                    {!isAdminRoute && <Header openSide={openSide} setOpenSide={setOpenSide} />}
+                                </div>
+                                <ScrollToTop />
+                                <div className={isAdminRoute ? "" : openSide ? "content-blure" : isActive ? "content-blure" : "content"}>
+                                    <Routes>
+                                        {/* <Route path="/*" element={<Login />} /> */}
+                                        <Route path="/login" element={<Login email={email} setEmail={setEmail} />} />
+                                        <Route path="/register" element={<Register />} />
+                                        {
+                                            user && redirectPath && user.role === "admin" ?
+                                                // <Route path="/" element={<ProtectedRoute isAdmin={true}><Dashboard isActive={isActive} setIsActive={setIsActive}/></ProtectedRoute>} />
+                                                <Route path="/" element={<LandingPage />} />
+                                                :
+                                                <Route path="/" element={<LandingPage />} />
+                                        }
+                                        {
+                                            !user && <Route path="/" element={<LandingPage />} />
+                                        }
+                                        {/* <Route path="/" element={<LandingPage />} /> */}
+                                        <Route path="/vegetables" element={<Vegetables />} />
+                                        <Route path="/fruits" element={<Fruits />} />
+                                        <Route path="/unauthorized" element={<Unauthorized />} />
+                                        <Route path="/keerai" element={<Keerai />} />
+                                        <Route path="/about" element={<About />} />
+                                        <Route path="/enquiry" element={<Enquiry />} />
+                                        <Route path="/termsAndConditions" element={<TermsAndConditions />} />
+                                        <Route path="/privacyPolicy" element={<PrivacyPolicy />} />
+                                        <Route path="/refundPolicy" element={<RefundPolicy />} />
+                                        <Route path="/search/:keyword" element={<ProductSearch />} />
+                                        <Route path="/product/:id" element={<ProductDetail />} />
+                                        <Route path="/cart" element={<Cart />} />
+                                        <Route path="/password/forgot" element={<ForgotPassword email={email} setEmail={setEmail} />} />
+
+                                        <Route path="/myProfile" element={<ProtectedRoute isAdmin={false}><Profile /></ProtectedRoute>} />
+                                        <Route path="/myProfile/update" element={<ProtectedRoute isAdmin={false}><UpdateProfile /></ProtectedRoute>} />
+                                        <Route path="/myProfile/update/password" element={<ProtectedRoute isAdmin={false}><UpdatePassword /></ProtectedRoute>} />
+
+                                        <Route path="/password/reset/:token" element={<ProtectedRoute isAdmin={false}><ResetPassword /></ProtectedRoute>} />
+
+                                        <Route path="/shipping" element={<ProtectedRoute isAdmin={false} ><Shipping /></ProtectedRoute>} />
+                                        {/* <Route path="/refund" element={<Refund />} /> */}
+                                        <Route path="/orders" element={<ProtectedRoute isAdmin={false}><UserOrders /></ProtectedRoute>} />
+                                        <Route path='/order/:id' element={<ProtectedRoute isAdmin={false}><OrderDetail /></ProtectedRoute>} />
+                                        <Route path='/payment/:id' element={<ProtectedRoute isAdmin={false}><PaymentDetails /></ProtectedRoute>} />
+                                        <Route path="/order/confirm" element={<ProtectedRoute isAdmin={false}><ConfirmOrder /></ProtectedRoute>} />
+                                        <Route path="/payment/confirm/:id" element={<ProtectedRoute isAdmin={false}><PaymentConfirm /></ProtectedRoute>} />
+                                        {/* {
                                     user && (
                                         <> */}
-                                        
-                                    <Route path="/admin/dashboard" element={<ProtectedRoute isAdmin={true}><Dashboard isActive={isActive} setIsActive={setIsActive}/></ProtectedRoute>} />
-                                    <Route path="/admin/products" element={<ProtectedRoute isAdmin={true}><ProductList isActive={isActive} setIsActive={setIsActive}/></ProtectedRoute>} />
-                                    <Route path="/admin/products/create" element={<ProtectedRoute isAdmin={true}><NewProduct isActive={isActive} setIsActive={setIsActive}/></ProtectedRoute>} />
-                                    <Route path="/admin/product/:id" element={<ProtectedRoute isAdmin={true}><UpdateProduct isActive={isActive} setIsActive={setIsActive}/></ProtectedRoute>} />
-                                    <Route path="/admin/getenquiry" element={<ProtectedRoute isAdmin={true}><EnquiryRequest isActive={isActive} setIsActive={setIsActive}/></ProtectedRoute>} />
-                                    <Route path='/admin/users' element={<ProtectedRoute isAdmin={true}><UserList isActive={isActive} setIsActive={setIsActive}/></ProtectedRoute>} />
-                                    <Route path='/admin/payments' element={<ProtectedRoute isAdmin={true}><PaymentList isActive={isActive} setIsActive={setIsActive}/></ProtectedRoute>} />
-                                    <Route path="/admin/dispatch/:id" element={<ProtectedRoute isAdmin={true}><Dispatch isActive={isActive} setIsActive={setIsActive}/></ProtectedRoute>} />
-                                    <Route path="/admin/dispatch" element={<ProtectedRoute isAdmin={true}><DispatchList isActive={isActive} setIsActive={setIsActive}/></ProtectedRoute>} />
-                                    <Route path="/admin/refund/:id" element={<ProtectedRoute isAdmin={true}><RefundOrder isActive={isActive} setIsActive={setIsActive}/></ProtectedRoute>} />
-                                    <Route path="/admin/refund" element={<ProtectedRoute isAdmin={true}><RefundList isActive={isActive} setIsActive={setIsActive}/></ProtectedRoute>} />
-                                    <Route path='/admin/user/:id' element={<ProtectedRoute isAdmin={true}><UpdateUser isActive={isActive} setIsActive={setIsActive}/></ProtectedRoute>} />
-                                    <Route path='/admin/products/updateprice' element={<ProtectedRoute isAdmin={true}><UpdatePrice isActive={isActive} setIsActive={setIsActive}/></ProtectedRoute>} />
-                                    <Route path='/admin/orders' element={<ProtectedRoute isAdmin={true}><OrderList isActive={isActive} setIsActive={setIsActive}/></ProtectedRoute>} />
-                                    <Route path='/admin/analysis' element={<ProtectedRoute isAdmin={true}><Analysis isActive={isActive} setIsActive={setIsActive}/></ProtectedRoute>} />
-                                    <Route path='/admin/order/:id' element={<ProtectedRoute isAdmin={true}><UpdateOrder isActive={isActive} setIsActive={setIsActive}/></ProtectedRoute>} />
-                                    <Route path='/admin/order-summary' element={<ProtectedRoute isAdmin={true}><OrderSummary isActive={isActive} setIsActive={setIsActive}/></ProtectedRoute>} />
-                                    <Route path='/admin/user-summary' element={<ProtectedRoute isAdmin={true}><SummaryUser isActive={isActive} setIsActive={setIsActive}/></ProtectedRoute>} />
-                                    <Route path='/admin/allorders' element={<ProtectedRoute isAdmin={true}><AllOrders isActive={isActive} setIsActive={setIsActive}/></ProtectedRoute>} />
-                                    <Route path='/admin/orderdetail/:id' element={<ProtectedRoute isAdmin={true}><AdminOrderDetail isActive={isActive} setIsActive={setIsActive}/></ProtectedRoute>} />
-                                    {/* <Route path="*" element={<Navigate to="/" replace />} /> */}
-                                    {/* </>
+
+                                        <Route path="/admin/dashboard" element={<ProtectedRoute isAdmin={true}><Dashboard isActive={isActive} setIsActive={setIsActive} /></ProtectedRoute>} />
+                                        <Route path="/admin/products" element={<ProtectedRoute isAdmin={true}><ProductList isActive={isActive} setIsActive={setIsActive} /></ProtectedRoute>} />
+                                        <Route path="/admin/products/create" element={<ProtectedRoute isAdmin={true}><NewProduct isActive={isActive} setIsActive={setIsActive} /></ProtectedRoute>} />
+                                        <Route path="/admin/product/:id" element={<ProtectedRoute isAdmin={true}><UpdateProduct isActive={isActive} setIsActive={setIsActive} /></ProtectedRoute>} />
+                                        <Route path="/admin/getenquiry" element={<ProtectedRoute isAdmin={true}><EnquiryRequest isActive={isActive} setIsActive={setIsActive} /></ProtectedRoute>} />
+                                        <Route path='/admin/users' element={<ProtectedRoute isAdmin={true}><UserList isActive={isActive} setIsActive={setIsActive} /></ProtectedRoute>} />
+                                        <Route path='/admin/payments' element={<ProtectedRoute isAdmin={true}><PaymentList isActive={isActive} setIsActive={setIsActive} /></ProtectedRoute>} />
+                                        <Route path="/admin/dispatch/:id" element={<ProtectedRoute isAdmin={true}><Dispatch isActive={isActive} setIsActive={setIsActive} /></ProtectedRoute>} />
+                                        <Route path="/admin/dispatch" element={<ProtectedRoute isAdmin={true}><DispatchList isActive={isActive} setIsActive={setIsActive} /></ProtectedRoute>} />
+                                        <Route path="/admin/refund/:id" element={<ProtectedRoute isAdmin={true}><RefundOrder isActive={isActive} setIsActive={setIsActive} /></ProtectedRoute>} />
+                                        <Route path="/admin/refund" element={<ProtectedRoute isAdmin={true}><RefundList isActive={isActive} setIsActive={setIsActive} /></ProtectedRoute>} />
+                                        <Route path='/admin/user/:id' element={<ProtectedRoute isAdmin={true}><UpdateUser isActive={isActive} setIsActive={setIsActive} /></ProtectedRoute>} />
+                                        <Route path='/admin/products/updateprice' element={<ProtectedRoute isAdmin={true}><UpdatePrice isActive={isActive} setIsActive={setIsActive} /></ProtectedRoute>} />
+                                        <Route path='/admin/orders' element={<ProtectedRoute isAdmin={true}><OrderList isActive={isActive} setIsActive={setIsActive} /></ProtectedRoute>} />
+                                        <Route path='/admin/analysis' element={<ProtectedRoute isAdmin={true}><Analysis isActive={isActive} setIsActive={setIsActive} /></ProtectedRoute>} />
+                                        <Route path='/admin/order/:id' element={<ProtectedRoute isAdmin={true}><UpdateOrder isActive={isActive} setIsActive={setIsActive} /></ProtectedRoute>} />
+                                        <Route path='/admin/order-summary' element={<ProtectedRoute isAdmin={true}><OrderSummary isActive={isActive} setIsActive={setIsActive} /></ProtectedRoute>} />
+                                        <Route path='/admin/user-summary' element={<ProtectedRoute isAdmin={true}><SummaryUser isActive={isActive} setIsActive={setIsActive} /></ProtectedRoute>} />
+                                        <Route path='/admin/allorders' element={<ProtectedRoute isAdmin={true}><AllOrders isActive={isActive} setIsActive={setIsActive} /></ProtectedRoute>} />
+                                        <Route path='/admin/orderdetail/:id' element={<ProtectedRoute isAdmin={true}><AdminOrderDetail isActive={isActive} setIsActive={setIsActive} /></ProtectedRoute>} />
+                                        <Route path="*" element={<Navigate to="/page-not-found" replace />} />
+                                        <Route path="/page-not-found" element={<PageNotFound />} />
+                                        {/* </>
                                         
                                     )
 
                                 } */}
 
-                                </Routes>
-                                {!isAdminRoute && <Footer className='footer' />}
-                                <ToastContainer theme="dark" />
+                                    </Routes>
+                                    {!isAdminRoute && <Footer className='footer' />}
+                                    <ToastContainer theme="dark" />
 
+                                </div>
+
+                                {/* {!isAdminRoute && <Header/>} */}
+
+
+                                {/* <Footer /> */}
                             </div>
-
-                            {/* {!isAdminRoute && <Header/>} */}
-                           
-
-                            {/* <Footer /> */}
-                        </div>
-                    )
+                        )
                 }
 
 
@@ -266,9 +293,9 @@ function App() {
 
 function RootApp() {
 
-    useEffect(()=>{
+    useEffect(() => {
         store.dispatch(loadUser());
-    },[])
+    }, [])
     return (
         <Router>
             <App />

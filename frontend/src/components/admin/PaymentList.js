@@ -128,17 +128,24 @@ const PaymentList = ({isActive,setIsActive}) => {
         <div>
              <MetaData title={`Payment List`} />
        
-        <div className="row">
+        <div className="row loader-parent">
             <div className="col-12 col-md-2">
             <div style={{display:'flex',flexDirection:'row',position:'fixed',top:'0px',zIndex:99999,backgroundColor:'#fff',minWidth:'100%'}}>
                 <Sidebar isActive={isActive} setIsActive={setIsActive}/>
                 </div>
             </div>
-            <div className="col-12 col-md-10 smalldevice-space">
-                <h1 className="mb-4 admin-dashboard-x">Payment List</h1>
-                <div className='mdb-table' style={{display:'flex',justifyContent:'center', alignItems:'center'}}>
+            <div className="col-12 col-md-10 smalldevice-space loader-parent" >
+                <h1 className="mb-4 admin-dashboard-x" >Payment List</h1>
+               
                 <Fragment>
-                    {loading ? <Loader /> :
+                    {loading ?  (
+                                <div className="container loader-loading-center">
+                                <Loader />
+                            </div>
+
+
+                            ) :
+                            <div className='mdb-table' style={{display:'flex',justifyContent:'center', alignItems:'center'}}>
                         <MDBDataTable
                             data={setOrders()}
                             bordered
@@ -146,9 +153,10 @@ const PaymentList = ({isActive,setIsActive}) => {
                             className="px-3 product-table"
                             noBottomColumns
                         />
+                         </div>
                     }
                 </Fragment>
-                </div>
+               
             </div>
         </div>
         </div>

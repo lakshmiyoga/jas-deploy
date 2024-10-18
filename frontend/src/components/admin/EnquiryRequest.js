@@ -213,19 +213,21 @@ const EnquiryRequest = ({isActive,setIsActive}) => {
       <div>
          <MetaData title={`Enquiry Request`} />
      
-        <div className="row">
+        <div className="row loader-parent">
             <div className="col-12 col-md-2">
             <div style={{display:'flex',flexDirection:'row',position:'fixed',top:'0px',zIndex:99999,backgroundColor:'#fff',minWidth:'100%'}}>
                 <Sidebar isActive={isActive} setIsActive={setIsActive}/>
                 </div>
             </div>
-            <div className="col-12 col-md-10 smalldevice-space">
+            <div className="col-12 col-md-10 smalldevice-space loader-parent">
                 <h1 className="mb-4 admin-dashboard-x">Enquiry List</h1>
-                <div className='mdb-table' style={{display:'flex',justifyContent:'center', alignItems:'center'}}>
+
                 <Fragment>
-                    {loading ? <Loader /> :
+                    {loading ? (<div className="container loader-loading-center">
+                            <Loader />
+                        </div>):
                         // <div className="product-table-wrapper">
-                          
+                                          <div className='mdb-table' style={{display:'flex',justifyContent:'center', alignItems:'center'}}>
                         <MDBDataTable
                             data={setEnquiryDetails()}
                             bordered
@@ -233,10 +235,9 @@ const EnquiryRequest = ({isActive,setIsActive}) => {
                             hover
                             className="px-3 product-table "
                         />
-                    //  </div>
+                    </div>
                     }
                 </Fragment>
-                </div>
             </div>
 
             {showModal && (

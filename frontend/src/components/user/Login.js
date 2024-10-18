@@ -13,6 +13,8 @@ const Login = ({email,setEmail}) => {
     // const [email, setEmail] = useState("");
     const [password, setPassword] = useState("");
     const [showPassword, setShowPassword] = useState(false);
+
+    const [loggedin,setloggedin]=useState(false);
     // const location = useLocation();
     // sessionStorage.setItem('redirectPath', location.pathname);
     const dispatch = useDispatch();
@@ -37,7 +39,7 @@ const Login = ({email,setEmail}) => {
         // if(isAuthenticated){
         //     navigate('/');
         // }
-        if (isAuthenticated) {
+        if (isAuthenticated && loggedin && user) {
             toast('Login successfully',{
                 type:'success',
                 position:"bottom-center",
@@ -47,7 +49,7 @@ const Login = ({email,setEmail}) => {
             if (user.role === 'admin') {
                  sessionStorage.removeItem('redirectPath');
                 // hasShownToast.current = true;
-                const redirectPath = sessionStorage.getItem('redirectPath') || '/';
+                const redirectPath = sessionStorage.getItem('redirectPath') || '/admin/dashboard';
                 navigate(redirectPath);
                 // navigate('/');
             } else {
@@ -68,7 +70,7 @@ const Login = ({email,setEmail}) => {
         //     const redirectPath = sessionStorage.getItem('redirectPath') || '/';
         //     navigate(redirectPath);
         // }
-        if(error){
+        if(error && loggedin){
            toast.error(error,{
             position:"bottom-center", 
             type: 'error',
@@ -77,12 +79,22 @@ const Login = ({email,setEmail}) => {
         // hasShownToast.current = true;
         }
         // return
-    }, [error, isAuthenticated, dispatch, navigate])
+    }, [error, isAuthenticated,user, dispatch, navigate,loggedin])
+
+    useEffect(()=>{
+
+        if(isAuthenticated && user && !loggedin){
+            const redirectPath = sessionStorage.getItem('redirectPath') || '/';
+            navigate(redirectPath); 
+        }
+
+    },[isAuthenticated,loggedin,user])
 
     const submitHandler = async(e) => {
         e.preventDefault();
         // sessionStorage.removeItem('redirectPath');
         dispatch(login({email, password}));
+        setloggedin(true);
     }
     // console.log(email, password);
 

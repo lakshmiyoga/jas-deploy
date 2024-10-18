@@ -1,14 +1,14 @@
 import React, { useState, useEffect, useRef } from 'react'
 import { register, clearAuthError, loadUser } from "../../actions/userActions"
 import { useDispatch, useSelector } from 'react-redux';
-import { toast } from 'react-toastify';
+import { Slide, toast } from 'react-toastify';
 import { useLocation, useNavigate } from 'react-router-dom';
 import { clearError } from '../../slices/userSlice';
 import MetaData from '../Layouts/MetaData';
 import NumberInput from '../Layouts/NumberInput';
 import { sendMailOtp, verifyMailOtp } from '../../actions/otpActions';
 import Loader from '../Layouts/Loader';
-import { otpClear, otpErrorClear } from '../../slices/otpSlice';
+import { mailClearError, otpClear, otpErrorClear } from '../../slices/otpSlice';
 import ButtonLoader from '../Layouts/LoaderButton';
 import store from '../../store';
 
@@ -207,26 +207,64 @@ import store from '../../store';
 // import MetaData from '../layouts/MetaData';
 
 const Register = () => {
-  const [userData, setUserData] = useState({
-    name: '',
-    email: '',
-    password: '',
-    confirmPassword: '',
-    mobile: ''
-  });
+  const getInitialUserData = () => {
+    const savedUserData = sessionStorage.getItem('registerFormData');
+    return savedUserData ? JSON.parse(savedUserData) : {
+      name: '',
+      email: '',
+      password: '',
+      confirmPassword: '',
+      mobile: ''
+    };
+  };
 
+  const getInitialAvatar = () => {
+    const savedAvatar = sessionStorage.getItem('avatar');
+    return savedAvatar || ''; // Return saved avatar or an empty string if not found
+  };
+
+  const getInitialAvatarPreview = () => {
+    const savedAvatar = sessionStorage.getItem('avatar');
+    return savedAvatar ? URL.createObjectURL(new Blob([savedAvatar])) : '/images/default_avatar.png';
+  };
+
+  const getInitialTimeLeft = () => {
+    const sentTime = sessionStorage.getItem('otpSentTime');
+    if (sentTime) {
+      const elapsed = Math.floor((Date.now() - sentTime) / 1000); // Calculate elapsed time in seconds
+      const remaining = 60 - elapsed; // Total countdown is 60 seconds
+      return remaining > 0 ? remaining : null; // Return remaining time or null if expired
+    }
+    return null; // If there's no sent time, return null
+  };
+
+  const getInitialOtpSent = () => {
+    const sentotp = sessionStorage.getItem('otpSentAlready');
+    return sentotp || false;
+  }
+  // const [userData, setUserData] = useState({
+  //   name: '',
+  //   email: '',
+  //   password: '',
+  //   confirmPassword: '',
+  //   mobile: ''
+  // });
+  const [userData, setUserData] = useState(getInitialUserData);
   const [showPassword, setShowPassword] = useState(false);
   const [showConfirmPassword, setShowConfirmPassword] = useState(false);
-  const [avatar, setAvatar] = useState('');
-  const [avatarPreview, setAvatarPreview] = useState('/images/default_avatar.png');
-  const [timeLeft, setTimeLeft] = useState(null);
+  // const [avatar, setAvatar] = useState('');
+  // const [avatarPreview, setAvatarPreview] = useState('/images/default_avatar.png');
+  // const [timeLeft, setTimeLeft] = useState(null);
+  const [avatar, setAvatar] = useState(getInitialAvatar);
+  const [avatarPreview, setAvatarPreview] = useState(getInitialAvatarPreview);
+  const [timeLeft, setTimeLeft] = useState(getInitialTimeLeft);
   const [passwordValidation, setPasswordValidation] = useState({
     capitalLetter: false,
     specialCharacter: false,
     minLength: false,
     maxLength: true,
   });
-  console.log("avatar",avatar);
+  console.log("avatar", avatar);
 
   const dispatch = useDispatch();
   const navigate = useNavigate();
@@ -248,9 +286,43 @@ const Register = () => {
   const [mailButtonDisabled, setMailButtonDisabled] = useState(false);
   const [otpMail, setOtpMail] = useState('');
   const [mailCode, setMailCode] = useState(false);
-  const [otpSent, setOtpSent] = useState(false);
+  const [otpSent, setOtpSent] = useState(getInitialOtpSent);
   const [mailVerified, setMailVerified] = useState(false);
   const registerRef = useRef(null); // Create a ref
+  const [formsubmitted, setFormsubmitted] = useState(false);
+
+
+  // Save form data and avatar preview to sessionStorage whenever they change
+  useEffect(() => {
+    sessionStorage.setItem('registerFormData', JSON.stringify(userData));
+    sessionStorage.setItem('avatar', avatarPreview); // Store base64 or image URL
+  }, [userData, avatarPreview]);
+
+  // Persist timer in sessionStorage when it changes
+  useEffect(() => {
+    if (timeLeft !== null) {
+      sessionStorage.setItem('timeLeft', timeLeft);
+    }
+  }, [timeLeft]);
+
+  useEffect(() => {
+    if (timeLeft) {
+      mailIdRef.current = setInterval(() => {
+        setTimeLeft((prevTime) => {
+          if (prevTime === 1 || prevTime < 1) {
+            clearInterval(mailIdRef.current);
+            setMailCode(false);
+            setMailButtonDisabled(false);
+            return null;
+          } else {
+            return prevTime - 1;
+          }
+        });
+      }, 1000);
+    }
+
+    return () => clearInterval(mailIdRef.current); // Cleanup the interval on unmount
+  }, [timeLeft]);
 
   // Password validation
   const validatePassword = (password) => {
@@ -266,6 +338,18 @@ const Register = () => {
       maxLength,
     });
   };
+
+  useEffect(() => {
+    if (userData && userData.password) {
+      validatePassword(userData.password);
+    }
+  }, [userData])
+
+  useEffect(() => {
+    if (otpdata) {
+      setFormsubmitted(true);
+    }
+  }, [otpdata])
 
   const onChangeAvatar = (e) => {
     const file = e.target.files[0];
@@ -305,25 +389,25 @@ const Register = () => {
     setUserData({ ...userData, [name]: value });
   };
 
-  
-  useEffect(()=>{
-window.scrollTo({ top: 0, behavior: 'smooth' });
-}, [otpdata]);
+
+  useEffect(() => {
+    window.scrollTo({ top: 0, behavior: 'smooth' });
+  }, [otpdata, formsubmitted]);
 
 
   const submitHandler = (e) => {
     e.preventDefault();
     dispatch(otpErrorClear());
     dispatch(otpClear());
-    if( userData.password !== userData.confirmPassword ){
+    if (userData.password !== userData.confirmPassword) {
       toast.error('Password does not match');
       return
     }
-    if(userData.mobile.length<10){
+    if (userData.mobile.length < 10) {
       toast.error('Mobile nunber Invalid!!!');
       return
     }
-       // Scroll to the top of the Register component
+    // Scroll to the top of the Register component
     //    if (registerRef.current) {
     //     registerRef.current.scrollIntoView({ behavior: 'smooth' });
     // }
@@ -331,8 +415,8 @@ window.scrollTo({ top: 0, behavior: 'smooth' });
       passwordValidation.capitalLetter &&
       passwordValidation.specialCharacter &&
       passwordValidation.minLength &&
-      passwordValidation.maxLength 
-     
+      passwordValidation.maxLength
+
     ) {
       const formData = new FormData();
       formData.append('name', userData.name);
@@ -342,8 +426,10 @@ window.scrollTo({ top: 0, behavior: 'smooth' });
       formData.append('avatar', avatar);
       setMailButtonDisabled(true);
       setTimeLeft(null);
+      setOtpSent(false);
       clearInterval(mailIdRef.current);
       dispatch(sendMailOtp(formData));
+      // setFormsubmitted(true);
 
     } else {
       toast.error('Password does not meet all criteria');
@@ -375,18 +461,35 @@ window.scrollTo({ top: 0, behavior: 'smooth' });
   // };
 
   useEffect(() => {
+    sessionStorage.setItem('otpSentAlready', otpSent);
+  }, [otpSent])
+
+  useEffect(() => {
     if (otperror) {
-      toast.error(otperror);
+      toast.error(otperror, {
+        position: 'bottom-center',
+        type: 'error',
+        onOpen: () => dispatch(mailClearError())
+      });
       setMailButtonDisabled(false);
     }
-    if (otpdata && !timeLeft) {
+    if (otpdata && !timeLeft && !otpSent) {
       setMailButtonDisabled(true);
       setTimeLeft(null);
       clearInterval(mailIdRef.current);
       setOtpSent(true);
-      toast.success(otpdata.message);
+      // toast.success(otpdata.message);
+      toast.dismiss();
+      toast.success(otpdata.message, {
+        position: 'bottom-center',
+        type: 'success',
+        // onOpen: () => dispatch(otpClear())
+      });
+
       setMailCode(true);
       setTimeLeft(60);
+      const currentTime = Date.now();
+      sessionStorage.setItem('otpSentTime', currentTime);
       mailIdRef.current = setInterval(() => {
         setTimeLeft((prevTime) => {
           if (prevTime === 1 || prevTime < 1) {
@@ -409,6 +512,13 @@ window.scrollTo({ top: 0, behavior: 'smooth' });
     if (otpdata) {
       dispatch(verifyMailOtp({ email: otpdata.dummyuserData.email, otp: otpMail, otpdata }));
     }
+    else {
+      toast.error('Something Went Wrong!', {
+        position: 'bottom-center',
+        type: 'error',
+        onOpen: () => dispatch(mailClearError())
+      });
+    }
   };
 
   useEffect(() => {
@@ -421,7 +531,18 @@ window.scrollTo({ top: 0, behavior: 'smooth' });
     }
     if (mailVerifyError) {
       // console.log(otpdata)
-      toast.error(mailVerifyError);
+      toast.dismiss();
+      setTimeout(() => {
+      toast.error(mailVerifyError, {
+        position: 'bottom-center',
+        type: 'error',
+        autoClose: 700,
+        transition: Slide,
+        hideProgressBar: true,
+        className: 'small-toast',
+        onOpen: () => dispatch(mailClearError())
+      });
+    }, 300);
       setMailVerified(false);
     }
   }, [mailVerifiedData, mailVerifyError]);
@@ -440,21 +561,28 @@ window.scrollTo({ top: 0, behavior: 'smooth' });
     if (isAuthenticated) {
       dispatch(otpErrorClear());
       dispatch(otpClear());
-      toast('Registered successfully', { type: 'success', position: 'bottom-center',autoClose: 500  });
+      toast('Registered successfully', { type: 'success', position: 'bottom-center', autoClose: 500 });
       navigate('/');
     }
-  }, [dummyisAuthenticated, navigate, dispatch,isAuthenticated]);
+  }, [dummyisAuthenticated, navigate, dispatch, isAuthenticated, error]);
 
   const handleOtpChange = (e) => {
     setOtpMail(e.target.value);
   };
 
-  useEffect(()=>{
+  useEffect(() => {
     if (otpMail.length === 6) {
       verifyMail();
     }
 
-  },[otpMail])
+  }, [otpMail])
+
+  const handelGoBack = () => {
+    dispatch(otpErrorClear());
+    dispatch(otpClear());
+    setFormsubmitted(false);
+    setOtpSent(false);
+  }
 
   return (
     <div >
@@ -463,7 +591,7 @@ window.scrollTo({ top: 0, behavior: 'smooth' });
       <div className="row wrapper mt-0">
         <div className="col-10 col-lg-5">
           {
-            otpdata || otpSent ? (
+            otpdata && otpSent || formsubmitted ? (
               // <div>
               //   <div>enter 6 digit that has sent to email </div>
               //   <div style={{ display: 'flex', width: '90%', position: 'relative', marginBottom: '5px' }}>
@@ -524,10 +652,14 @@ window.scrollTo({ top: 0, behavior: 'smooth' });
                     autocomplete="one-time-code"
                   />
                   <span
-                    onClick={submitHandler}
+                    onClick={() => {
+                      if (!(verifyloading || timeLeft > 0)) {
+                        submitHandler();
+                      }
+                    }}
                     style={{
-                      color: '#007bff',
-                      cursor: 'pointer',
+                      color: (verifyloading || timeLeft > 0) ? '#ccc' : '#007bff', // Change color when disabled
+                      cursor: (verifyloading || timeLeft > 0) ? 'not-allowed' : 'pointer', // Change cursor when disabled
                       textDecoration: 'none',
                       fontSize: '10px',
                       // marginBottom: '10px',
@@ -543,21 +675,45 @@ window.scrollTo({ top: 0, behavior: 'smooth' });
                 <button
                   style={{
                     color: '#fff',
-                    backgroundColor: '#28a745',
+                    backgroundColor: verifyloading ? '#a0d7a5' : '#28a745', 
                     borderRadius: '8px',
                     border: 'none',
                     padding: '10px 20px',
                     fontSize: '16px',
-                    cursor: 'pointer',
+                    cursor: verifyloading ? 'not-allowed' : 'pointer',
                     transition: 'background-color 0.3s ease',
                     width: '100%',
                     marginBottom: '10px',
                   }}
                   onClick={(e) => verifyMail(e)}
+                  disabled={ verifyloading }
                 >
                   {verifyloading ? <ButtonLoader fullPage={false} size={20} /> : <span>Verify</span>}
                 </button>
                 {timeLeft !== null && <p style={{ fontSize: '14px', color: '#555' }}>Time left: {timeLeft}s</p>}
+                {/* Go Back Button */}
+                <span
+                onClick={() => {
+                      if (!(verifyloading)) {
+                        handelGoBack();
+                      }
+                    }}
+                  style={{
+                    color: (verifyloading) ? '#ccc' : '#007bff', // Change color when disabled
+                    cursor: (verifyloading) ? 'not-allowed' : 'pointer', // Change cursor when disabled
+                    textDecoration: 'none',
+                    fontSize: '10px',
+                    // marginBottom: '10px',
+                    alignSelf: 'center',
+                    display: 'flex',
+                    alignItems: 'center',
+                    // minWidth:'20%'
+                  }}
+                  
+                >
+                  <i className="fa fa-arrow-left" style={{ marginRight: '5px' }}></i>
+                  Go Back
+                </span>
               </div>
 
             ) : (
@@ -593,17 +749,17 @@ window.scrollTo({ top: 0, behavior: 'smooth' });
                 <div className="form-group">
                   <label htmlFor="password_field">Password <span style={{ color: 'red' }}>*</span></label>
                   <div style={{ position: 'relative' }}>
-                  <input
-                  type={showPassword ? 'text' : 'password'}
-                    // type="password"
-                    id="password_field"
-                    name="password"
-                    className="form-control"
-                    value={userData.password}
-                    onChange={onChange}
-                    required
-                  />
-                  <span
+                    <input
+                      type={showPassword ? 'text' : 'password'}
+                      // type="password"
+                      id="password_field"
+                      name="password"
+                      className="form-control"
+                      value={userData.password}
+                      onChange={onChange}
+                      required
+                    />
+                    <span
                       onClick={() => setShowPassword(!showPassword)}
                       style={{
                         position: 'absolute',
@@ -615,23 +771,23 @@ window.scrollTo({ top: 0, behavior: 'smooth' });
                     >
                       {showPassword ? '🙈' : '👁️'}
                     </span>
-                    </div>
-                
+                  </div>
+
                 </div>
                 <ul className="password-criteria">
-                    <li className={passwordValidation.minLength ? 'text-success' : 'text-danger'}>
-                      {passwordValidation.minLength ? '✔' : '✘'} Minimum 6 characters
-                    </li>
-                    <li className={passwordValidation.capitalLetter ? 'text-success' : 'text-danger'}>
-                      {passwordValidation.capitalLetter ? '✔' : '✘'} At least one capital letter
-                    </li>
-                    <li className={passwordValidation.specialCharacter ? 'text-success' : 'text-danger'}>
-                      {passwordValidation.specialCharacter ? '✔' : '✘'} At least one special character
-                    </li>
-                    <li className={passwordValidation.maxLength ? 'text-success' : 'text-danger'}>
-                      {passwordValidation.maxLength ? '✔' : '✘'} No more than 20 characters
-                    </li>
-                  </ul>
+                  <li className={passwordValidation.minLength ? 'text-success' : 'text-danger'}>
+                    {passwordValidation.minLength ? '✔' : '✘'} Minimum 6 characters
+                  </li>
+                  <li className={passwordValidation.capitalLetter ? 'text-success' : 'text-danger'}>
+                    {passwordValidation.capitalLetter ? '✔' : '✘'} At least one capital letter
+                  </li>
+                  <li className={passwordValidation.specialCharacter ? 'text-success' : 'text-danger'}>
+                    {passwordValidation.specialCharacter ? '✔' : '✘'} At least one special character
+                  </li>
+                  <li className={passwordValidation.maxLength ? 'text-success' : 'text-danger'}>
+                    {passwordValidation.maxLength ? '✔' : '✘'} No more than 20 characters
+                  </li>
+                </ul>
                 <div className="form-group">
                   <label htmlFor="confirmPassword_field">Confirm Password <span style={{ color: 'red' }}>*</span></label>
                   <div style={{ position: 'relative' }}>
@@ -671,31 +827,31 @@ window.scrollTo({ top: 0, behavior: 'smooth' });
                 </div>
 
                 <div className='form-group'>
-              <label htmlFor='avatar_upload'>Avatar(*Size should be within 1mb)</label>
-              <div className='d-flex align-items-center'>
-                <div>
-                  <figure className='avatar mr-3 item-rtl'>
-                    <img
-                      src={avatarPreview}
-                      className='rounded-circle'
-                      alt='avatar'
-                    />
-                  </figure>
+                  <label htmlFor='avatar_upload'>Avatar(*Size should be within 1mb)</label>
+                  <div className='d-flex align-items-center'>
+                    <div>
+                      <figure className='avatar mr-3 item-rtl'>
+                        <img
+                          src={avatarPreview}
+                          className='rounded-circle'
+                          alt='avatar'
+                        />
+                      </figure>
+                    </div>
+                    <div className='custom-file'>
+                      <input
+                        type='file'
+                        name='avatar'
+                        onChange={onChangeAvatar}
+                        className='custom-file-input'
+                        id='customFile'
+                      />
+                      <label className='custom-file-label' htmlFor='customFile'>
+                        Choose Avatar
+                      </label>
+                    </div>
+                  </div>
                 </div>
-                <div className='custom-file'>
-                  <input
-                    type='file'
-                    name='avatar'
-                    onChange={onChangeAvatar}
-                    className='custom-file-input'
-                    id='customFile'
-                  />
-                  <label className='custom-file-label' htmlFor='customFile'>
-                    Choose Avatar
-                  </label>
-                </div>
-              </div>
-            </div>
                 {/* {
                   otploading ? <ButtonLoader /> : (
                     <button type="submit" className="btn btn-block py-3" disabled={otploading}>

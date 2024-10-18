@@ -12,34 +12,34 @@ import { orderDetailClear } from '../../slices/orderSlice';
 import { porterClearData, porterClearResponse } from '../../slices/porterSlice';
 
 export default function UserOrders() {
-    
-    const {loading, userOrders } = useSelector(state => state.orderState)
+
+    const { loading, userOrders } = useSelector(state => state.orderState)
     const { isAuthenticated, user } = useSelector(state => state.authState);
     const dispatch = useDispatch();
-    const [dummyUser,setDummyUser] = useState(false);
-     console.log("userOrders",userOrders);
-     const navigate = useNavigate();
+    const [dummyUser, setDummyUser] = useState(false);
+    console.log("userOrders", userOrders);
+    const navigate = useNavigate();
     const location = useLocation();
-     sessionStorage.setItem('redirectPath', location.pathname);
-     useEffect(() => {
+    sessionStorage.setItem('redirectPath', location.pathname);
+    useEffect(() => {
         dispatch(orderDetailClear());
         dispatch(porterClearData());
         dispatch(porterClearResponse());
     }, [])
 
-    useEffect(()=>{
-        if(!userOrders){
+    useEffect(() => {
+        if (!userOrders) {
             dispatch(userOrdersAction());
         }
-       
-    },[userOrders])
+
+    }, [userOrders])
 
     // useEffect(()=>{
     //     if(!isAuthenticated){
     //         navigate('/unauthorized');
     //     }
     // },[isAuthenticated])
-    
+
     // const { user } = useSelector(state => state.authState);
 
     // useEffect(() => {
@@ -47,7 +47,7 @@ export default function UserOrders() {
     //         store.dispatch(loadUser());
     //         store.dispatch(getProducts());
     //     }
-       
+
     //     if(user){
     //         setDummyUser(true)
     //         // console.log("hello")
@@ -92,7 +92,7 @@ export default function UserOrders() {
         }
 
         // Sort orders by creation date (newest first)
-        const sortedOrders =userOrders && [...userOrders].sort((a, b) => new Date(b.createdAt) - new Date(a.createdAt));
+        const sortedOrders = userOrders && [...userOrders].sort((a, b) => new Date(b.createdAt) - new Date(a.createdAt));
 
         sortedOrders && sortedOrders.forEach((userOrder, index) => {
             data.rows.push({
@@ -101,9 +101,9 @@ export default function UserOrders() {
                 numOfItems: userOrder.orderItems.length,
                 amount: `${userOrder.totalPrice} Rs`,
                 status: userOrder.orderStatus && userOrder.orderStatus.includes('Delivered') ?
-                    (<p style={{ color: 'green' }}> {userOrder.orderStatus} </p>) :
-                    (<p style={{ color: 'red' }}> {userOrder && userOrder.paymentStatus && userOrder.paymentStatus === 'CHARGED' ? userOrder.orderStatus : 'Cancelled'} </p>),
-                actions: <Link to={`/order/${userOrder.order_id}`} className="btn btn-primary" >
+                    (<p style={{ color: 'green', display: 'flex', justifyContent: 'center', alignItems: 'center', margin: '10px', padding: '0px' }}> {userOrder.orderStatus} </p>) :
+                    (<p style={{ color: 'red', display: 'flex', justifyContent: 'center', alignItems: 'center', margin: '10px', padding: '0px' }}> {userOrder && userOrder.paymentStatus && userOrder.paymentStatus === 'CHARGED' ? userOrder.orderStatus : 'Cancelled'} </p>),
+                actions: <Link to={`/order/${userOrder.order_id}`} className="userorder_btn" >
                     <i className='fa fa-eye'></i>
                 </Link>
             })
@@ -118,19 +118,24 @@ export default function UserOrders() {
         <Fragment>
             <MetaData title={`My Orders`} />
             <div className="products_heading">Orders</div>
-            {loading ? <Loader /> :  <div className='container mdb-table'>
-            <Fragment>
-                    {/* {loading ? <Loader /> : */}
+            {loading ?
+                <div style={{marginTop:'4rem'}}>
+                    <Loader />
+                </div>
+
+                : <div className='mdb-table' style={{ display: 'flex', justifyContent: 'center', alignItems: 'center' }}>
+                    <Fragment>
+                        {/* {loading ? <Loader /> : */}
                         <MDBDataTable
                             data={setOrders()}
                             bordered
                             hover
-                            className="px-3 product-table"
+                            className="px-3 userproduct-table"
                             noBottomColumns
                         />
-                    {/* } */}
-                </Fragment>
-            </div> }
+                        {/* } */}
+                    </Fragment>
+                </div>}
         </Fragment>
     )
 }

@@ -75,7 +75,7 @@ body {
   top: 0;
   /* left: -8px; */
   background-color: #fff;
-  max-height: 120px;
+  max-height: 100px;
   overflow-y: hidden;
   /* min-height: 120px ; */
   overflow: visible;
@@ -102,7 +102,7 @@ body {
   max-height: auto;
   max-width: 100vw;
   /* top: 15%; */
-  margin-top: 120px;
+  margin-top: 90px;
   flex-grow: 1;
   /* padding-top: 70px; Adjust this value to the height of your header */
   overflow-y: auto;
@@ -156,6 +156,16 @@ body {
 
 }
 
+
+.header-shadow {
+  box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1); /* Adds a soft shadow */
+  transition: box-shadow 0.3s ease-in-out;  /* Smooth transition */
+}
+
+.custom-navbar-shadow {
+  box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1); /* Adds a soft shadow */
+  transition: box-shadow 0.3s ease-in-out;  /* Smooth transition */
+}
 
 
 /* *{
@@ -350,7 +360,6 @@ input[type=number]::-webkit-outer-spin-button {
 @media (max-width: 767.98px) {
 
   .custom-select {
-
     width: 80px;
     height: 20px;
     font-size: 10px;
@@ -495,7 +504,12 @@ input[type=number]::-webkit-outer-spin-button {
   color: #2e2e2e;
 }
 
+
 .card-title {
+  color: #2e2e2e;
+}
+
+.card-title-vegetable {
   color: #2e2e2e;
 }
 
@@ -517,6 +531,15 @@ input[type=number]::-webkit-outer-spin-button {
   padding: 1rem;
 }
 
+.card-body-vegetable {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  padding: 1px;
+}
+
+
 .card-text {
   font-size: 1.4rem;
 }
@@ -528,13 +551,55 @@ input[type=number]::-webkit-outer-spin-button {
   /* object-fit: cover; 
   max-height: 200px; */
 }
-.card-img-top-vegetable {
-  width: 100%;
-  height: 100px;
-  /* Fixed height for consistency */
-  /* object-fit: cover; 
-  max-height: 200px; */
+
+/* Make the card square */
+.square-card {
+  position: relative;
+  width: 100%; /* Responsive width */
+  padding-bottom: 100%; /* Aspect ratio to make it square */
+  border-radius: 8px;
+  overflow: hidden;
+  background-color: #fff; /* Optional background color */
+  
 }
+
+.card-content {
+  position: absolute;
+  top: 0;
+  right: 0;
+  bottom: 0;
+  left: 0;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+}
+
+.card-img-top-vegetable {
+  position: relative;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  min-width: 100%;
+  max-width: 100%; /* Ensure image fits inside */
+  min-height: 70%; /* Control image height */
+  object-fit: cover; /* Ensure image scales well */
+}
+
+.card-title-vegetable {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  margin-top: 2px;
+  font-size: 1em;
+  margin-top: 5px;
+  text-align: center;
+}
+
+/* .card-img-top-vegetable {
+  width: 100%;
+  height: 120px;
+} */
 @media (max-width: 768px) {
   .App {
     font-size: 10px;
@@ -558,9 +623,16 @@ input[type=number]::-webkit-outer-spin-button {
   /* .card-img-top {
     height: 150px; 
   } */
-
+  /* .card-img-top-vegetable {
+    width: 100%;
+    height: 80px;
+  } */
   .card-title {
     font-size: 1rem;
+  }
+  .card-title-vegetable {
+    font-size: 8px !important;
+    margin-top: 2px !important;
   }
 }
 
@@ -675,7 +747,7 @@ footer {
   display: block;
   margin-left: auto;
   margin-right: auto;
-  margin-top: 4rem;
+  /* margin-top: 4rem; */
   /* margin-top: 20%; */
   width: 80px;
   height: 80px;
@@ -1313,8 +1385,20 @@ ul.CTAs a {
 
 }
 
+.userproduct-table{
+  margin-top: 20px;
+  max-width: 90vw;
+  font-size: 12px !important;
+}
 
-
+@media (max-width:304px){
+  .userproduct-table{
+    margin-top: 20px;
+    max-width: 90vw;
+    font-size: 12px !important;
+    overflow-x: auto;
+  }
+}
 .product-table {
   margin-top: 20px;
   max-width: 90vw;
@@ -1327,6 +1411,8 @@ ul.CTAs a {
     font-size: 7px;
   }
 }
+
+
 
 
 .product_container {
@@ -1480,7 +1566,7 @@ ul.CTAs a {
   }
 
   .landingpage-card-vegetables {
-    max-width: 50%;
+    max-width: 100%;
   }
 
   .card {
@@ -1518,6 +1604,13 @@ ul.CTAs a {
     justify-content: center;
     padding: 1rem;
   }
+  .card-body-vegetable {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    padding: 10px;
+  }
 
   .card-text {
     font-size: 1.4rem;
@@ -1539,6 +1632,14 @@ ul.CTAs a {
   .landingpage-card {
     max-width: 70% !important;
   }
+
+  .landingpage-card-vegetables {
+    max-width: 40%;
+  }
+  /* .card-img-top-vegetable{
+    width: 100%;
+    height: 60px;
+  } */
 
   .card {
     height: 100%;
@@ -1575,7 +1676,13 @@ ul.CTAs a {
     justify-content: center;
     padding: 1rem;
   }
-
+  .card-body-vegetable {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    padding: 7px;
+  }
   .card-text {
     font-size: 1.4rem;
   }
@@ -2061,6 +2168,15 @@ ul.CTAs a {
 .form-group {
   margin-bottom: 15px;
 }
+.userorder_btn{
+  padding: 7px 16px;
+  font-size: 13px;
+  background-color: #007bff;
+  border-color: #007bff;
+  color: white;
+  border-radius: 5px;
+
+}
 
 .btn {
   padding: 7px 16px;
@@ -2194,6 +2310,10 @@ h5 {
     box-sizing: border-box;
     margin-left: 20px;
   }
+  .card-title-vegetable {
+    font-size: 12px;
+    margin-top: 5px;
+  }
 }
 
 
@@ -2266,9 +2386,9 @@ h5 {
   overflow-x: auto;
 }
 
-.updatetable-responsive {
+/* .updatetable-responsive {
   overflow-x: auto !important;
-}
+} */
 
 .updatetable {
   width: 100%;
@@ -2303,6 +2423,7 @@ h5 {
 .updatetable-bordered th,
 .updatetable-bordered td {
   border: 1px solid #dee2e6;
+  text-align: center;
 }
 
 .updateTableproduct-image {
@@ -2321,10 +2442,10 @@ h5 {
 
 }
 
-@media (max-width: 768px) {
+@media (max-width: 992px) {
   .updatetable-responsive {
     border: 0;
-    overflow-x: auto;
+    /* overflow-x: auto; */
   }
 
   .updatetable th,
@@ -2342,6 +2463,27 @@ h5 {
     width: 100%;
     height: 100%
   }
+}
+
+@media (max-width: 493px) {
+  .updatetable-responsive {
+    border: 0;
+    overflow-x: hidden;  /* Ensure no horizontal scroll */
+  }
+
+  .updatetable {
+    width: 100%;
+    table-layout: auto;  /* Let the table adapt to its content */
+    
+  }
+
+  .updatetable th,
+  .updatetable td {
+    font-size: 6px;
+    padding: 0.1rem;
+    word-wrap: break-word;  /* Prevent overflow by wrapping long content */
+  }
+
 }
 
 
@@ -2711,8 +2853,17 @@ body.no-scroll {
   max-width: 70vw;
 }
 
+.navbar{
+  padding: 0px !important;
+  margin: 0px !important;
+}
+
 @media (max-width: 577px) {
 
+  .custom-navbar{
+    min-width: 100%;
+    position: relative;
+  }
   /* Adjust Logo Size */
   .custom-navbar .logo {
     width: 150px;
@@ -2741,7 +2892,7 @@ body.no-scroll {
     justify-content: space-between;
     align-items: center;
   }
-
+  
   /* .navbar-brand,
   .cart-container :hover{
     color: #FED235;
@@ -2749,6 +2900,18 @@ body.no-scroll {
   .cart-container:hover .cart-icon {
     color: #FED235;
     /* Change the icon color to yellow on hover */
+  }
+}
+
+@media (max-width: 575.98px) {
+  .navbar-expand-sm>.container,
+   .navbar-expand-sm>.container-fluid,
+    .navbar-expand-sm>.container-lg,
+     .navbar-expand-sm>.container-md,
+      .navbar-expand-sm>.container-sm,
+       .navbar-expand-sm>.container-xl {
+      padding-right: 20px;
+      padding-left: 20px;
   }
 }
 
@@ -2916,6 +3079,10 @@ body.no-scroll {
 }
 
 @media (min-width: 577px) {
+  .custom-navbar{
+    position: relative;
+    min-width: 100%;
+  }
   .custom-navbar .custom-collapse {
     display: flex !important;
   }
@@ -2940,6 +3107,10 @@ body.no-scroll {
     height: 50px;
   }
 
+  .admin-logo{
+    padding-left: 20px;
+  }
+
   .content {
     position: relative;
     height: auto;
@@ -2962,7 +3133,8 @@ body.no-scroll {
 
 @media (min-width: 576px) and (max-width: 768px) {
   .navbar-expand-sm .container {
-    margin: 0px;
+    /* margin: 0px; */
+
   }
 
 }
@@ -2972,7 +3144,7 @@ body.no-scroll {
   .custom-navbar .logo {
     width: 100px;
     height: 40px;
-    margin-left: 2px;
+    margin-left: 30px;
   }
 
 }
@@ -3041,6 +3213,17 @@ body.no-scroll {
   .btn {
     padding: 7px 15px;
     font-size: 10px;
+  }
+  .userorder_btn{
+    padding: 7px 12px;
+    font-size: 10px;
+  }
+  
+}
+@media(max-width: 575.9px){
+  .userorder_btn{
+    padding: 5px 9px;
+    font-size: 7px;
   }
 }
 
@@ -3221,13 +3404,23 @@ body.no-scroll {
   /* Adjust font size for smaller screens */
 }
 
+@media (min-width:419px) and (max-width:769px) {
+  .mdb-table thead th {
+    height: 30px !important;
+    /* Set your desired height for small devices */
+    line-height: 30px !important;
+    /* Ensure text is vertically centered */
+  }
+
+}
+
 /* Container styling to ensure the table fits within the viewport */
 
-@media (min-width: 767px) and (max-width: 1110px) {
+@media (min-width: 992.1px) and (max-width: 1202px) {
   .table-product {
     width: 100% !important;
     /* Ensure the container is full width */
-    overflow-x: auto;
+    /* overflow-x: auto; */
     /* Allow scrolling if necessary, but avoid it by resizing */
 
   }
@@ -3271,13 +3464,53 @@ body.no-scroll {
 
 }
 
-@media (min-width:419px) and (max-width:769px) {
-  .mdb-table thead th {
-    height: 30px !important;
-    /* Set your desired height for small devices */
-    line-height: 30px !important;
-    /* Ensure text is vertically centered */
+
+
+@media (min-width: 767px) and (max-width: 992px) {
+  .table-product {
+    width: 100% !important;
+    /* Ensure the container is full width */
+    /* overflow-x: auto; */
+    /* Allow scrolling if necessary, but avoid it by resizing */
+
   }
+
+  /* Ensure table shrinks and adjusts based on screen size */
+  .table-product table {
+    width: 100% !important;
+    /* Make table responsive */
+    table-layout: relative;
+    /* Fix the layout to ensure columns shrink appropriately */
+    /* font-size: 0.5vw !important; */
+  }
+
+  /* Ensure the images and inputs don't break the layout */
+  .table-product img.img-size {
+    max-width: 100px;
+    height: auto;
+  }
+
+  /* Ensure columns with inputs or text wrap properly */
+  .table-product th,
+  .table-product td {
+    white-space: normal !important;
+    /* Allow text to wrap */
+    word-wrap: break-word !important;
+    /* Break long words */
+    padding: 0.5rem;
+    /* Reduce padding for a tighter layout */
+    font-size: 1.4vw !important;
+  }
+
+  /* Make inputs responsive */
+  .table-product input.form-select {
+    width: 100% !important;
+    /* Make input fields stretch to fit their cells */
+    box-sizing: border-box;
+    /* Ensure padding doesn't affect the overall width */
+  }
+
+  /* Reduce the width of certain columns on smaller screens */
 
 }
 
@@ -3557,5 +3790,62 @@ top: '55px',
     border-radius: 10px;
     cursor: pointer;
     box-shadow: 0 2px 5px rgba(0, 0, 0, 0.3);
+  }
+}
+
+
+.loader-loading-center{
+     height: 70%;
+     position: relative;
+     display: flex;
+     justify-content: center;
+     align-items: center;
+}
+
+.loader-parent{
+  min-height: 100vh;
+}
+
+@media (max-width:767.5px){
+  .loader-loading-center{
+    height: 70%;
+    position: relative;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+.loader-parent{
+  min-height: calc(100vh - 100px);
+}
+}
+
+.sidebar-wrapper {
+  transition: box-shadow 0.3s ease-in-out;
+}
+
+.no-scroll {
+  overflow: hidden;
+}
+
+.landingpage-card-vegetables{
+  margin: 10px;
+}
+
+.card-vegetbles {
+  width: auto; /* Automatically adjusts based on screen size */
+}
+
+/* Styling for devices with width less than 768px (smaller screens) */
+@media (max-width: 768px) {
+  .card-vegetbles {
+      width: 45%; /* Adjust the width to make it responsive */
+  }
+}
+
+/* Styling for very small devices, like phones */
+@media (max-width: 576px) {
+  .card-vegetbles {
+      max-width: 30%; /* Larger width for small phones */
+      margin-bottom: 15px; /* Spacing between cards */
   }
 }

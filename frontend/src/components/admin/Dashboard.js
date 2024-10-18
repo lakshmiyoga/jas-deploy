@@ -43,22 +43,49 @@ const Dashboard = ({isActive,setIsActive}) => {
     //     // dispatch(adminOrdersAction());
     //  }, [dispatch])
 
+    //  useEffect(()=>{
+    //   if(!enquiry){
+    //     dispatch(getEnquiryDetails());
+    //   }
+    //   if(!adminOrders){
+    //     dispatch(adminOrdersAction());
+    //   }
+    //   if(!users){
+    //     dispatch(getUsers());
+    //   }
+
+    //   if(!products){
+    //     dispatch(getAdminProducts());
+    //   }
+     
+    //  },[enquiry,adminOrders,users,products])
+
      useEffect(()=>{
       if(!enquiry){
         dispatch(getEnquiryDetails());
       }
+     
+     },[enquiry])
+
+     useEffect(()=>{
       if(!adminOrders){
         dispatch(adminOrdersAction());
       }
+     },[adminOrders])
+
+     useEffect(()=>{
       if(!users){
         dispatch(getUsers());
       }
+     
+     },[users])
 
+     useEffect(()=>{
       if(!products){
         dispatch(getAdminProducts());
       }
      
-     },[enquiry,adminOrders,users,products])
+     },[products])
  
 // console.log(enquiry)
 // console.log(products)

@@ -53,16 +53,18 @@ export default function AdminOrderDetail({ isActive, setIsActive }) {
     });
 
     return (
-        <div className="row">
-            <div className="col-12 col-md-2">
+        <div className="row loader-parent">
+            <div className="col-12 col-md-2 ">
                 <div style={{ display: 'flex', flexDirection: 'row', position: 'fixed', top: '0px', zIndex: 99999, backgroundColor: '#fff', minWidth: '100%' }}>
                     <Sidebar isActive={isActive} setIsActive={setIsActive} />
                 </div>
             </div>
-            {
-                loading ? <Loader /> : (
-                    <div className="col-12 col-md-10 smalldevice-space container order-detail-container">
 
+            <div className="col-12 col-md-10 smalldevice-space container order-detail-container loader-parent">
+                {
+                    loading ? (<div className="container loader-loading-center">
+                        <Loader />
+                    </div>) : (
                         <div className="col-12 col-lg-12 mt-5 order-details">
 
                             <h1>Order # {orderDetail.order_id}</h1>
@@ -81,11 +83,11 @@ export default function AdminOrderDetail({ isActive, setIsActive }) {
 
                             <div><b>Amount:</b> {totalPrice} Rs</div>
                             {orderDetail && orderDetail.statusResponse && orderDetail.statusResponse.payment_method && (
-                                    <div><b>Payment Mode:</b> {orderDetail && orderDetail.statusResponse && orderDetail.statusResponse.payment_method}</div>
+                                <div><b>Payment Mode:</b> {orderDetail && orderDetail.statusResponse && orderDetail.statusResponse.payment_method}</div>
 
-                                )
+                            )
 
-                                }
+                            }
 
                             <hr />
 
@@ -259,8 +261,9 @@ export default function AdminOrderDetail({ isActive, setIsActive }) {
 
 
                         </div>
-                    </div>
-                )}
+                    )}
+            </div>
+
 
 
         </div>

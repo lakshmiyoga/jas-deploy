@@ -86,7 +86,7 @@
 //             const matchesDate = date ? orderDate === date : true; // Match only if date is set
 //             return matchesDate;
 //         });
-       
+
 //             // Map the filtered orders to table rows
 //             // sortedOrders.sort((a, b) => new Date(b.createdAt) - new Date(a.createdAt)).forEach((order, index) => {
 //                  filteredOrders.forEach((order, index) => {
@@ -142,7 +142,7 @@
 //     return (
 //         <div>
 //              <MetaData title={`Order list`} />
-      
+
 //         <div className="row">
 //             <div className="col-12 col-md-2">
 //                 <Sidebar isActive={isActive} setIsActive={setIsActive}/>
@@ -246,11 +246,11 @@ const AllOrders = ({ isActive, setIsActive }) => {
                         {order.orderStatus}
                     </p>
                 ),
-               paymentstatus: (
-                <p style={{ color: order && order.paymentStatus === 'CHARGED' ? 'green' : 'red' }}>
-                    {order && order.paymentStatus}
-                </p>
-            ),
+                paymentstatus: (
+                    <p style={{ color: order && order.paymentStatus === 'CHARGED' ? 'green' : 'red' }}>
+                        {order && order.paymentStatus}
+                    </p>
+                ),
                 actions: (
                     <Fragment>
                         <Link to={`/admin/orderdetail/${order.order_id}`} className="btn btn-primary py-1 px-2 ml-2">
@@ -282,23 +282,23 @@ const AllOrders = ({ isActive, setIsActive }) => {
         // dispatch(adminOrdersAction());
     }, [dispatch, error, isOrderDeleted]);
 
-    useEffect(()=>{
-        if(!orders){
+    useEffect(() => {
+        if (!orders) {
             dispatch(adminOrdersAction());
-        }   
-    },[orders])
+        }
+    }, [orders])
 
     return (
         <div>
             <MetaData title={`Order list`} />
 
-            <div className="row">
+            <div className="row loader-parent">
                 <div className="col-12 col-md-2">
-                <div style={{display:'flex',flexDirection:'row',position:'fixed',top:'0px',zIndex:99999,backgroundColor:'#fff',minWidth:'100%'}}>
-                    <Sidebar isActive={isActive} setIsActive={setIsActive} />
+                    <div style={{ display: 'flex', flexDirection: 'row', position: 'fixed', top: '0px', zIndex: 99999, backgroundColor: '#fff', minWidth: '100%' }}>
+                        <Sidebar isActive={isActive} setIsActive={setIsActive} />
                     </div>
                 </div>
-                <div className="col-12 col-md-10 smalldevice-space">
+                <div className="col-12 col-md-10 smalldevice-space loader-parent" >
                     <h1 className="mb-4 admin-dashboard-x">All Orders</h1>
                     <input
                         type="date"
@@ -306,9 +306,12 @@ const AllOrders = ({ isActive, setIsActive }) => {
                         onChange={(e) => setDate(e.target.value)}
                         className="form-control mb-3 date-input"
                     />
-                    <div className='mdb-table' style={{ display: 'flex', justifyContent: 'center', alignItems: 'center' }}>
-                        <Fragment>
-                            {loading ? <Loader /> :
+
+                    <Fragment>
+                        {loading ? (<div className="container loader-loading-center">
+                            <Loader />
+                        </div>) :
+                            <div className='mdb-table' style={{ display: 'flex', justifyContent: 'center', alignItems: 'center' }}>
                                 <MDBDataTable
                                     data={setOrders()}
                                     bordered
@@ -316,12 +319,13 @@ const AllOrders = ({ isActive, setIsActive }) => {
                                     className="px-3 product-table"
                                     noBottomColumns
                                 />
-                            }
-                        </Fragment>
-                    </div>
+                            </div>
+                        }
+                    </Fragment>
                 </div>
             </div>
         </div>
+
     );
 };
 
