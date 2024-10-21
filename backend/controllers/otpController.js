@@ -53,15 +53,15 @@ const mailOtp = catchAsyncError(async (req, res, next) => {
   
   
     if (req.file) {
+        console.log("req.file",req.file)
   
       const fileExtension = req.file.originalname.split('.').pop().toLowerCase();
       
-      if (fileExtension !== 'jpg' && fileExtension !== 'png') {
+      if (fileExtension !== 'jpg' && fileExtension !== 'png' && fileExtension !== 'jpeg') {
         return next(new ErrorHandler('Only .jpg and .png files are allowed'));
       }
-      avatar = `${BASE_URL}/uploads/user/${req.file.originalname}`;
-  
-      
+    //   avatar = `${BASE_URL}/uploads/user/${req.file.originalname}`;
+    avatar = req.file.location;
     }
   
     // Name validation

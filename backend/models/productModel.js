@@ -13,7 +13,7 @@ const productSchema = new mongoose.Schema({
     },
     buyingPrice:{
         type:Number,
-        default:40.0
+        default:0.0
     }, 
     price:{
         type:Number,

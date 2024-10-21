@@ -335,17 +335,43 @@ const postPackedOrder = catchAsyncError(async (req, res, next) => {
                 return next(new ErrorHandler(`Order not found with this id: ${order_id}`, 404))
             }
 
-            const packedResponseStatus = await Payment.findOneAndUpdate(
+        //     const packedResponseStatus = await Payment.findOneAndUpdate(
+        //         { order_id },
+        //         { orderStatus: 'Packed' },
+        //         { new: true }
+        //     );
+
+        //     // console.log("packedOrder", packedOrder)
+        //    return res.status(200).json({
+        //         success: true,
+        //         packedOrderData: packedOrder
+        //     })
+
+        if(totalDispatchedAmount>0){
+            await Payment.findOneAndUpdate(
                 { order_id },
                 { orderStatus: 'Packed' },
                 { new: true }
             );
 
-            // console.log("packedOrder", packedOrder)
-           return res.status(200).json({
+            return res.status(200).json({
                 success: true,
                 packedOrderData: packedOrder
             })
+
+          }
+          else{
+             await Payment.findOneAndUpdate(
+                { order_id },
+                { orderStatus: 'Cancelled',cancleReason:'Out of Stock' },
+                { new: true }
+            );
+
+            return res.status(200).json({
+                success: true,
+                packedOrderData: packedOrder
+            })
+          }
         }
 
     } catch (error) {

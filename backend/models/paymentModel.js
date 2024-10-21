@@ -126,6 +126,9 @@ const paymentSchema = mongoose.Schema({
         enum: ['Processing','Dispatched', 'Removed','Delivered','Cancelled'],
         default: 'Processing'
     },
+    cancleReason:{
+        type: String,
+    },
     removalReason:{
         type: String,
     },

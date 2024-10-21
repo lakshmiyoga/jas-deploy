@@ -8,6 +8,8 @@ const sendEmail = require("../utils/email");
 const crypto = require('crypto');
 const nodemailer = require('nodemailer')
 const validator = require("validator");
+const s3 = require('../config/awsConfig');
+const { S3Client ,DeleteObjectCommand} = require('@aws-sdk/client-s3');
 
 
 
@@ -26,16 +28,27 @@ const userRegister = catchAsyncError(async (req, res, next) => {
 
 
   if (req.file) {
-
     const fileExtension = req.file.originalname.split('.').pop().toLowerCase();
     
-    if (fileExtension !== 'jpg' && fileExtension !== 'png') {
-      return next(new ErrorHandler('Only .jpg and .png files are allowed'));
+    if (fileExtension !== 'jpg' && fileExtension !== 'png' && fileExtension !== 'jpeg') {
+      return next(new ErrorHandler('Only .jpg,.jpeg and .png files are allowed'));
     }
-    avatar = `${BASE_URL}/uploads/user/${req.file.originalname}`;
-
-    
+    avatar = `${BASE_URL}/uploads/user/${req.file.filename}`;
+    // avatar = req.file.location; // This will be the S3 URL of the uploaded file
   }
+  else {
+    avatar = `${BASE_URL}/uploads/user/default_avatar.jpg`; // Default avatar if no file uploaded
+  }
+  
+  // if (req.file) {
+  //   const fileExtension = path.extname(req.file.originalname).toLowerCase();
+  //   if (fileExtension !== '.jpg' && fileExtension !== '.png' && fileExtension !== '.jpeg') {
+  //     return next(new ErrorHandler('Only .jpg,.jpeg and .png files are allowed', 400));
+  //   }
+  //   avatar = `${BASE_URL}/uploads/user/${req.file.filename}`; // Correct file path with filename
+  // } else {
+  //   avatar = `${BASE_URL}/uploads/user/default_avatar.jpg`; // Default avatar if no file uploaded
+  // }
 
   // Name validation
   if ( !name) {
@@ -127,7 +140,7 @@ const userLogin = catchAsyncError(async (req, res, next) => {
   
     // Password validation
     if (!password || password.length < 6) {
-      return next(new ErrorHandler('Password enter a valid password', 400));
+      return next(new ErrorHandler('Please enter a valid password', 400));
     }
   try{
     let user = await User.findOne({ email }).select('+password');
@@ -314,50 +327,71 @@ const getUserProfile = catchAsyncError(async (req, res, next) => {
 //update user profile
 
 const updateUserProfile = catchAsyncError(async (req, res, next) => {
-
   let newUserData = {
     name: req.body.name,
     email: req.body.email,
-    mobile:req.body.mobile
-  }
+    mobile: req.body.mobile,
+  };
 
   let avatar;
 
-  let BASE_URL = process.env.BACKEND_URL;
+  // Find the existing user
+  const user = await User.findById(req.user._id);
 
-  if (process.env.NODE_ENV === "production") {
-    BASE_URL = `${req.protocol}://${req.get('host')}`
+  if (!user) {
+    return next(new ErrorHandler('User not found', 404));
   }
 
   if (req.file) {
-    
+    // Validate the file type
     const fileExtension = req.file.originalname.split('.').pop().toLowerCase();
-    
-    if (fileExtension !== 'jpg' && fileExtension !== 'png' && fileExtension !== 'jpeg') {
-      return next(new ErrorHandler('Only .jpg and .jpeg and .png files are allowed'));
+    if (fileExtension !== 'jpg' && fileExtension !== 'jpeg' && fileExtension !== 'png') {
+      return next(new ErrorHandler('Only .jpg, .jpeg, and .png files are allowed', 400));
     }
-    avatar = `${BASE_URL}/uploads/user/${req.file.originalname}`;
-    newUserData = { ...newUserData, avatar }
+
+    // Set the new avatar URL
+    avatar = req.file.location; // Get the S3 URL of the new image
+
+    // Delete the previous avatar from S3
+    if (user && user.avatar && user.avatar !== 'default_avatar.jpg') {
+      const key = user.avatar.split('https://')[1].split('/').slice(1).join('/'); // Adjust the extraction based on the URL format
+      console.log('Deleting image from S3 with key:', key);
+    
+      const params = {
+        Bucket: process.env.S3_BUCKET_NAME,
+        Key: key,
+      };
+    
+      const command = new DeleteObjectCommand(params);
+    
+      try {
+        const result = await s3.send(command);
+        console.log('Successfully deleted old image from S3:', result);
+      } catch (error) {
+        console.log('Error deleting old image from S3:', error);
+      }
+    }
+
+    // Add the new avatar to newUserData
+    newUserData = { ...newUserData, avatar };
   }
 
-  const user = await User.findByIdAndUpdate(
+  // Update the user profile
+  const updatedUser = await User.findByIdAndUpdate(
     req.user._id,
     { $set: newUserData },
-    { new: true }
-  ).select
-    ('-password');
-  await user.save();
-  console.log("user", user);
-  // console.log("req",req)
+    { new: true, runValidators: true }
+  ).select('-password');
 
-  if (!user) {
-    return next(new ErrorHandler('User not found'));
+  // If the user was not found or the update failed
+  if (!updatedUser) {
+    return next(new ErrorHandler('Error updating user profile', 500));
   }
-  // console.log(user)
+
   return res.status(200).json({
     success: true,
-    user
-  })
+    user: updatedUser,
+  });
 });
 
 //Admin: Get All Users - /api/v1/admin/users
@@ -413,6 +447,26 @@ const deleteUser = catchAsyncError(async (req, res, next) => {
   if (!user) {
     return next(new ErrorHandler(`User not found with this id ${req.params.id}`));
   }
+
+  if (user && user.avatar && user.avatar !== 'default_avatar.jpg') {
+    const key = user.avatar.split('https://')[1].split('/').slice(1).join('/'); 
+    console.log('Deleting image from S3 with key:', key);
+  
+    const params = {
+      Bucket: process.env.S3_BUCKET_NAME,
+      Key: key,
+    };
+  
+    const command = new DeleteObjectCommand(params);
+  
+    try {
+      const result = await s3.send(command);
+      console.log('Successfully deleted old image from S3:', result);
+    } catch (error) {
+      console.log('Error deleting old image from S3:', error);
+    }
+  }
+
   await User.deleteOne({ _id: req.params.id });
   return res.status(200).json({
     success: true,

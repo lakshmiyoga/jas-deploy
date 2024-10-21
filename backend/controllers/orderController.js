@@ -78,14 +78,16 @@ const getSingleOrder = catchAsyncError(async (req, res, next) => {
     const { id } = req.params
     // console.log("id", id)
     const order = await Payment.findOne({ 'order_id': id }).populate('user', 'name email');
-    // console.log(order)
+    console.log("order",order)
     if (!order) {
         return next(new ErrorHandler(`Order not found with this id: ${req.params.id}`, 404))
     }
     try {
         const statusResponse = await juspay.order.status(id);
+        console.log("statusResponse",statusResponse);
         if (statusResponse) {
             const onepayments = await Payment.findOne({ 'order_id': id });
+            console.log("onepayments",onepayments)
             try {
                 if (onepayments) {
                     const paymentstatus = await Payment.findOneAndUpdate({ 'order_id': id },
@@ -94,6 +96,7 @@ const getSingleOrder = catchAsyncError(async (req, res, next) => {
                             $set: { statusResponse: statusResponse }
                         },
                         { new: true });
+                        console.log("paymentstatus",paymentstatus)
                     if (paymentstatus) {
                         return res.status(200).json({
                             success: true,
@@ -104,13 +107,21 @@ const getSingleOrder = catchAsyncError(async (req, res, next) => {
 
             } catch (error) {
                 return next(new ErrorHandler('Something went wrong', 404))
+                // return res.status(200).json({
+            //     success: true,
+            //     order
+            // })
             }
 
         }
-        // return res.status(200).json({
-        //     success: true,
-        //     order
-        // })
+        else{
+            return next(new ErrorHandler('Order not found in juspay', 404))
+            // return res.status(200).json({
+            //     success: true,
+            //     order
+            // })
+        }
+       
 
     } catch (error) {
         return next(new ErrorHandler('Something went wrong', 404))

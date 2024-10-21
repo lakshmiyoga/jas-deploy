@@ -172,13 +172,14 @@ const downloadPrice = async (req, res) => {
 
     // Separate categories
     const vegetables = items.filter(item => item.category === 'Vegetables').sort((a, b) => a.englishName.localeCompare(b.englishName));
-    const fruits = items.filter(item => item.category === 'Fruits').sort((a, b) => a.englishName.localeCompare(b.englishName));
     const keerai = items.filter(item => item.category === 'Keerai').sort((a, b) => a.englishName.localeCompare(b.englishName));
+    const fruits = items.filter(item => item.category === 'Fruits').sort((a, b) => a.englishName.localeCompare(b.englishName));
 
     const categories = [
         { name: 'Vegetables', items: vegetables },
+        { name: 'Keerai', items: keerai },
         { name: 'Fruits', items: fruits },
-        { name: 'Keerai', items: keerai }
+        
     ];
 
     // Create a new workbook and worksheet
