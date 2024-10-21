@@ -7,13 +7,14 @@ import Loader from './Layouts/Loader';
 import Search from './Layouts/Search';
 import Header from './Layouts/Header';
 import Footer from './Layouts/Footer';
+import MetaData from './Layouts/MetaData';
 
 const LandingPage = () => {
   // const dispatch = useDispatch();
   const location = useLocation();
   sessionStorage.setItem('redirectPath', location.pathname);
   const { products, loading, error } = useSelector((state) => state.productsState);
-  
+
 
   // //  console.log(products);
 
@@ -25,21 +26,25 @@ const LandingPage = () => {
 
   //   }, [error, dispatch])
   return (
-    <div> 
+    <div>
       {/* <Header/> */}
-      
-      <div className="products_heading">Home</div>
-      
 
+      <div className="products_heading">Home</div>
+
+      {/* <MetaData title={'Jas Home'} /> */}
+      <MetaData
+            title="Jas Home"
+            description="Discover a wide variety of fresh fruits,vegetables and keerai at our store. Search, filter, and explore organic and high-quality fruits, vegetables and keerai to add to your shopping cart."
+          />
       <div className="container " style={{ marginTop: '60px' }}>
 
         {
           loading ? <Loader /> : (
             <div className="row d-flex justify-content-center">
-              
+
               <div className="col-sm-12 col-md-6 col-lg-3 my-3 landingpage-card">
-              <Link to="/vegetables" state={{ category: 'Vegetables' }} style={{ textDecoration: 'none' }}>
-                <div className="card p-3 rounded" >
+                <Link to="/vegetables" state={{ category: 'Vegetables' }} style={{ textDecoration: 'none' }}>
+                  <div className="card p-3 rounded" >
                     <div className="d-flex justify-content-center align-items-center">
                       <img
                         className="card-img-top mx-auto"
@@ -47,21 +52,21 @@ const LandingPage = () => {
                         alt="Vegetables"
                       />
                     </div>
-                 
-                  <div className="card-body d-flex flex-column">
-                    {/* <h5 className="card-title"> */}
+
+                    <div className="card-body d-flex flex-column">
+                      {/* <h5 className="card-title"> */}
                       <h3 className="card-title">Vegetables</h3>
-                    {/* </h5> */}
+                      {/* </h5> */}
+                    </div>
                   </div>
-                </div>
                 </Link>
               </div>
-              
-             
+
+
               <div className="col-sm-12 col-md-6 col-lg-3 my-3 landingpage-card">
-              <Link to="/fruits" state={{ category: 'Fruits' }} style={{ textDecoration: 'none' }}>
-                <div className="card p-3 rounded">
-                 
+                <Link to="/fruits" state={{ category: 'Fruits' }} style={{ textDecoration: 'none' }}>
+                  <div className="card p-3 rounded">
+
                     <div className="d-flex justify-content-center align-items-center">
                       <img
                         className="card-img-top mx-auto"
@@ -69,47 +74,47 @@ const LandingPage = () => {
                         alt="fruits"
                       />
                     </div>
-                 
-                  <div className="card-body d-flex flex-column">
-                    {/* <h5 className="card-title"> */}
+
+                    <div className="card-body d-flex flex-column">
+                      {/* <h5 className="card-title"> */}
                       <h3 className="card-title">Fruits</h3>
-                    {/* </h5> */}
+                      {/* </h5> */}
+                    </div>
                   </div>
-                </div>
                 </Link>
               </div>
-             
-              
+
+
               <div className="col-sm-12 col-md-6 col-lg-3 my-3 landingpage-card">
-              <Link to="/keerai" state={{ category: 'Keerai' }} style={{ textDecoration: 'none' }}>
-                <div className="card p-3 rounded">
-                
-                <div className="d-flex justify-content-center align-items-center">
-                  <img
-                    className="card-img-top mx-auto"
-                    src="../images/products/arai_keerai.jpg"
-                    alt="celeries"
-                  />
-                  </div>
-                  
-                  <div className="card-body d-flex flex-column">
-                    {/* <h5 className="card-title"> */}
+                <Link to="/keerai" state={{ category: 'Keerai' }} style={{ textDecoration: 'none' }}>
+                  <div className="card p-3 rounded">
+
+                    <div className="d-flex justify-content-center align-items-center">
+                      <img
+                        className="card-img-top mx-auto"
+                        src="../images/products/arai_keerai.jpg"
+                        alt="celeries"
+                      />
+                    </div>
+
+                    <div className="card-body d-flex flex-column">
+                      {/* <h5 className="card-title"> */}
                       <h3 className="card-title">Keerai</h3>
-                    {/* </h5> */}
+                      {/* </h5> */}
+                    </div>
                   </div>
-                </div>
                 </Link>
               </div>
-             
+
 
             </div>
           )
         }
 
       </div>
-      
+
     </div>
-    
+
   );
 };
 

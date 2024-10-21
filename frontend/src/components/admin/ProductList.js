@@ -5,7 +5,7 @@ import { Link, useLocation } from "react-router-dom";
 import { deleteProduct, getAdminProducts } from '../../actions/productsActions';
 import Loader from '../Layouts/Loader';
 import { MDBDataTable } from 'mdbreact';
-import { toast } from 'react-toastify';
+import { Slide,toast } from 'react-toastify';
 import Sidebar from "../admin/Sidebar";
 import { clearError } from '../../slices/productsSlice';
 import { clearProductDeleted } from "../../slices/productSlice";
@@ -53,8 +53,8 @@ const ProductList = ({isActive,setIsActive}) => {
             ],
             rows: []
         }
-
-        products && products.forEach((product, index) => {
+let allproducts = products && [...products].sort((a, b) => a.englishName.localeCompare(b.englishName))
+allproducts && allproducts.forEach((product, index) => {
             data.rows.push({
                 s_no: index + 1,
                 name: `${product.englishName} / ${product.tamilName}`,
@@ -78,20 +78,47 @@ const ProductList = ({isActive,setIsActive}) => {
 
     useEffect(() => {
         if (error || productError) {
-            toast(error || productError, {
-                position: "bottom-center",
-                type: 'error',
-                onOpen: () => { dispatch(clearError()) }
-            })
+            // toast(error || productError, {
+            //     position: "bottom-center",
+            //     type: 'error',
+            //     onOpen: () => { dispatch(clearError()) }
+            // })
+            toast.dismiss();
+            setTimeout(() => {
+            toast.error(error || productError, {
+              position: 'bottom-center',
+              type: 'error',
+              autoClose: 700,
+              transition: Slide,
+              hideProgressBar: true,
+              className: 'small-toast',
+              onOpen: () => { dispatch(clearError()) }
+            });
+          }, 300);
             return
         }
         if (isProductDeleted) {
-            toast('Product Deleted Successfully!', {
-                type: 'success',
-                position: "bottom-center",
-                onOpen: () => dispatch(clearProductDeleted())
-            })
-            dispatch(getAdminProducts())
+            // toast('Product Deleted Successfully!', {
+            //     type: 'success',
+            //     position: "bottom-center",
+            //     onOpen: () => dispatch(clearProductDeleted())
+            // })
+            toast.dismiss();
+            setTimeout(() => {
+            toast.success('Product Deleted Successfully!', {
+              position: 'bottom-center',
+              type: 'success',
+              autoClose: 700,
+              transition: Slide,
+              hideProgressBar: true,
+              className: 'small-toast',
+              onOpen: () => dispatch(clearProductDeleted())
+            });
+            setTimeout(() => {
+                 dispatch(getAdminProducts())
+            }, 700);
+          }, 300);
+            // dispatch(getAdminProducts())
             return;
         }
         // dispatch(getAdminProducts())
@@ -119,7 +146,12 @@ const ProductList = ({isActive,setIsActive}) => {
 
     return (
         <div>
-            <MetaData title={`Product List`} />
+            {/* <MetaData title={`Product List`} /> */}
+            <MetaData 
+  title="Product List" 
+  description="Manage your product inventory. View, update, or remove products from your catalog to keep your store fresh and relevant." 
+/>
+
       
         <div className="row loader-parent">
             <div className="col-12 col-md-2">

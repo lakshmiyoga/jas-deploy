@@ -7,16 +7,18 @@ import { Link, Navigate, useLocation, useNavigate } from 'react-router-dom';
 import Loader from '../Layouts/Loader';
 import { loadUser } from '../../actions/userActions';
 import store from '../../store';
+import { Slide, toast } from "react-toastify";
 import { getProducts } from '../../actions/productsActions';
-import { orderDetailClear } from '../../slices/orderSlice';
+import { clearError, orderDetailClear } from '../../slices/orderSlice';
 import { porterClearData, porterClearResponse } from '../../slices/porterSlice';
 
 export default function UserOrders() {
 
-    const { loading, userOrders } = useSelector(state => state.orderState)
+    const { loading, userOrders, error } = useSelector(state => state.orderState)
     const { isAuthenticated, user } = useSelector(state => state.authState);
     const dispatch = useDispatch();
     const [dummyUser, setDummyUser] = useState(false);
+    const [iserror, setIserror] = useState(false);
     console.log("userOrders", userOrders);
     const navigate = useNavigate();
     const location = useLocation();
@@ -28,11 +30,35 @@ export default function UserOrders() {
     }, [])
 
     useEffect(() => {
-        if (!userOrders) {
+        if (error) {
+            // toast(error, {
+            //     position: "bottom-center",
+            //     type: 'error',
+            //     onOpen: () => { dispatch(clearError()) }
+            // });
+            toast.dismiss();
+            setTimeout(() => {
+                toast.error(error, {
+                    position: 'bottom-center',
+                    type: 'error',
+                    autoClose: 700,
+                    transition: Slide,
+                    hideProgressBar: true,
+                    className: 'small-toast',
+                    onOpen: () => { dispatch(clearError()) }
+                });
+            }, 300);
+            setIserror(true)
+            return;
+        }
+    }, [error])
+
+    useEffect(() => {
+        if (!userOrders && !iserror) {
             dispatch(userOrdersAction());
         }
 
-    }, [userOrders])
+    }, [userOrders, iserror])
 
     // useEffect(()=>{
     //     if(!isAuthenticated){
@@ -116,10 +142,15 @@ export default function UserOrders() {
 
     return (
         <Fragment>
-            <MetaData title={`My Orders`} />
+            {/* <MetaData title={`My Orders`} /> */}
+            <MetaData
+                title="Your Orders"
+                description="Check all your previous and current orders in one place. Track shipments, view details, and manage your purchases with ease."
+            />
+
             <div className="products_heading">Orders</div>
             {loading ?
-                <div style={{marginTop:'4rem'}}>
+                <div style={{ marginTop: '4rem' }}>
                     <Loader />
                 </div>
 

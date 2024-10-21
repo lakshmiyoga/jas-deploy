@@ -10,8 +10,10 @@ import React, { useRef } from 'react';
 import { useReactToPrint } from 'react-to-print';
 import ReactDOM from 'react-dom';
 import { porterClearData } from '../../slices/porterSlice';
-import { toast } from 'react-toastify';
+import { Slide, toast } from 'react-toastify';
 import { clearError } from '../../slices/orderSlice';
+import MetaData from '../Layouts/MetaData';
+
 
 
 export default function OrderDetail() {
@@ -41,10 +43,21 @@ export default function OrderDetail() {
             dispatch(createPorterOrderResponse({ order_id: porterOrderData && porterOrderData.order_id, porterOrder_id: porterOrderData?.porterOrder?.order_id }))
         }
         if (error) {
-            toast.error(error, {
-                position: 'bottom-center',
-            });
-            dispatch(clearError())
+            // toast.error(error, {
+            //     position: 'bottom-center',
+            // });
+            toast.dismiss();
+            setTimeout(() => {
+                toast.error(error, {
+                    position: 'bottom-center',
+                    type: 'error',
+                    autoClose: 700,
+                    transition: Slide,
+                    hideProgressBar: true,
+                    className: 'small-toast',
+                });
+            }, 300);
+            dispatch(clearError());
 
         }
     }, [porterOrderData, error])
@@ -75,6 +88,11 @@ export default function OrderDetail() {
     return (
         <Fragment>
             {/* {loading ? <Loader /> : ( */}
+            <MetaData
+                title="Order Details"
+                description="View the complete details of your order, including item information, shipping status, and payment history. Track your purchase with ease."
+            />
+
             <Fragment>
                 <div className="products_heading">Order Details</div>
                 {loading ?
@@ -108,7 +126,7 @@ export default function OrderDetail() {
                                         {shippingInfo.area && `${shippingInfo.area},`}
                                         {shippingInfo.landmark && `${shippingInfo.landmark},`}
                                         {shippingInfo.city && `${shippingInfo.city}`}
-                                        {shippingInfo.postalCode && `-${shippingInfo.postalCode}`}
+                                        {shippingInfo.postalCode && -`${shippingInfo.postalCode}`}
                                     </div>
 
                                     <div><b>Amount:</b> {totalPrice} Rs</div>
@@ -126,6 +144,7 @@ export default function OrderDetail() {
                                             <p><b>Payment Status:</b></p>
                                             <p className={orderDetail && orderDetail.paymentStatus && orderDetail.paymentStatus === 'CHARGED' ? 'greenColor' : 'redColor'} style={{ marginLeft: '10px' }}><b>{orderDetail ? orderDetail.paymentStatus : 'Pending'}</b></p>
                                         </div>
+
                                         <div style={{ display: 'flex', alignItems: 'center', margin: '10px' }}>
                                             <p><b>Order Status:</b></p>
                                             <p className={orderStatus && orderStatus.includes('Delivered') ? 'greenColor' : 'redColor'} style={{ marginLeft: '10px' }}><b>{orderDetail && orderDetail.paymentStatus && orderDetail.paymentStatus === 'CHARGED' ? orderStatus : 'Cancelled'}</b></p>
@@ -147,7 +166,7 @@ export default function OrderDetail() {
    </div>
 
    <div className="col-5 col-lg-2">
-       <Link to={`/product/${item.product}`}>{item.name}</Link>
+       <Link to={/product/${item.product}}>{item.name}</Link>
    </div>
 
 

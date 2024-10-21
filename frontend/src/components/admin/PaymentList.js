@@ -5,7 +5,7 @@ import { Link, useLocation } from "react-router-dom";
 import { deleteOrder, adminOrders as adminOrdersAction } from "../../actions/orderActions"
 import Loader from '../Layouts/Loader';
 import { MDBDataTable } from 'mdbreact';
-import { toast } from 'react-toastify';
+import { Slide,toast } from 'react-toastify';
 import Sidebar from "../admin/Sidebar";
 import { clearError } from '../../slices/productsSlice';
 import { clearOrderDeleted, orderDetailClear } from "../../slices/orderSlice";
@@ -101,19 +101,43 @@ const PaymentList = ({isActive,setIsActive}) => {
 
     useEffect(() => {
         if (error) {
-            toast(error, {
-                position: "bottom-center",
-                type: 'error',
-                onOpen: () => { dispatch(clearError()) }
+            // toast(error, {
+            //     position: "bottom-center",
+            //     type: 'error',
+            //     onOpen: () => { dispatch(clearError()) }
+            // });
+            toast.dismiss();
+            setTimeout(() => {
+            toast.error(error, {
+              position: 'bottom-center',
+              type: 'error',
+              autoClose: 700,
+              transition: Slide,
+              hideProgressBar: true,
+              className: 'small-toast',
+              onOpen: () => { dispatch(clearError()) }
             });
+          }, 300);
             return;
         }
         if (isOrderDeleted) {
-            toast('Order Deleted Successfully!', {
-                type: 'success',
-                position: "bottom-center",
-                onOpen: () => dispatch(clearOrderDeleted())
+            // toast('Order Deleted Successfully!', {
+            //     type: 'success',
+            //     position: "bottom-center",
+            //     onOpen: () => dispatch(clearOrderDeleted())
+            // });
+            toast.dismiss();
+            setTimeout(() => {
+            toast.success('Order Deleted Successfully!', {
+              position: 'bottom-center',
+              type: 'success',
+              autoClose: 700,
+              transition: Slide,
+              hideProgressBar: true,
+              className: 'small-toast',
+              onOpen: () => dispatch(clearOrderDeleted())
             });
+          }, 300);
             return;
         }
     }, [dispatch, error, isOrderDeleted]);
@@ -126,7 +150,12 @@ const PaymentList = ({isActive,setIsActive}) => {
 
     return (
         <div>
-             <MetaData title={`Payment List`} />
+             {/* <MetaData title={`Payment List`} /> */}
+             <MetaData 
+  title="Payment List" 
+  description="Track all payments received from customers. View payment statuses and handle any pending or failed transactions." 
+/>
+
        
         <div className="row loader-parent">
             <div className="col-12 col-md-2">

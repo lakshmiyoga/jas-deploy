@@ -88,7 +88,7 @@ export const login = createAsyncThunk('post/login', async ({email,password},{dis
     try {
         dispatch(loadUserRequest())
         const { data }  = await axios.get(`/api/v1/myProfile`);
-        // console.log(data)
+        console.log(data)
         dispatch(loadUserSuccess(data))
         
     } catch (error) {

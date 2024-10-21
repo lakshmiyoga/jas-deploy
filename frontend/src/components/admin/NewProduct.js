@@ -5,7 +5,7 @@ import { useDispatch, useSelector } from 'react-redux';
 import { useLocation, useNavigate } from "react-router-dom";
 import { createNewProduct, getAdminProducts } from '../../actions/productsActions';
 import { clearProductCreated, clearError } from '../../slices/productSlice';
-import { toast } from 'react-toastify';
+import { Slide,toast } from 'react-toastify';
 import MetaData from '../Layouts/MetaData';
 import LoaderButton from '../Layouts/LoaderButton';
 
@@ -69,7 +69,18 @@ const NewProduct = ({ isActive, setIsActive }) => {
 
         // Check if the total size exceeds the maximum allowed size
         if (totalSize > maxSize) {
-            toast.error('The total size of all selected images exceeds the 5MB limit.');
+            // toast.error('The total size of all selected images exceeds the 5MB limit.');
+            toast.dismiss();
+            setTimeout(() => {
+                toast.error('The total size of all selected images exceeds the 5MB limit.', {
+                    position: 'bottom-center',
+                    type: 'error',
+                    autoClose: 700,
+                    transition: Slide,
+                    hideProgressBar: true,
+                    className: 'small-toast',
+                });
+            }, 300);
             return; // Stop further execution if total size exceeds the limit
         }
 
@@ -113,22 +124,46 @@ const NewProduct = ({ isActive, setIsActive }) => {
 
     useEffect(() => {
         if (isProductCreated) {
-            toast('Product Created Succesfully!', {
-                type: 'success',
-                position: "bottom-center",
-                onOpen: () => dispatch(clearProductCreated())
-            })
+            // toast('Product Created Succesfully!', {
+            //     type: 'success',
+            //     position: "bottom-center",
+            //     onOpen: () => dispatch(clearProductCreated())
+            // })
+            toast.dismiss();
+            setTimeout(() => {
+            toast.success('Product Created Succesfully!', {
+              position: 'bottom-center',
+              type: 'success',
+              autoClose: 700,
+              transition: Slide,
+              hideProgressBar: true,
+              className: 'small-toast',
+              onOpen: () => dispatch(clearProductCreated())
+            });
+          }, 300);
             dispatch(getAdminProducts())
             navigate('/admin/products')
             return;
         }
 
         if (error) {
-            toast(error, {
-                position: "bottom-center",
-                type: 'error',
-                onOpen: () => { dispatch(clearError()) }
-            })
+            // toast(error, {
+            //     position: "bottom-center",
+            //     type: 'error',
+            //     onOpen: () => { dispatch(clearError()) }
+            // })
+            toast.dismiss();
+            setTimeout(() => {
+            toast.error(error, {
+              position: 'bottom-center',
+              type: 'error',
+              autoClose: 700,
+              transition: Slide,
+              hideProgressBar: true,
+              className: 'small-toast',
+              onOpen: () => { dispatch(clearError()) }
+            });
+          }, 300);
             return
         }
     }, [isProductCreated, error, dispatch, navigate])
@@ -146,7 +181,12 @@ const NewProduct = ({ isActive, setIsActive }) => {
 
     return (
         <div>
-            <MetaData title={`New Product`} />
+            {/* <MetaData title={`New Product`} /> */}
+            <MetaData 
+  title="Add New Product" 
+  description="Create new products for your store. Define product details, upload images, and manage stock levels to keep your catalog up to date." 
+/>
+
 
             <div className="row">
                 <div className="col-12 col-md-2">

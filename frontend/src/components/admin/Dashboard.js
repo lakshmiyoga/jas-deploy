@@ -9,6 +9,7 @@ import {Link, useLocation} from 'react-router-dom'
 import { getEnquiryDetails } from '../../actions/enquiryActions';
 import LoaderButton from '../Layouts/LoaderButton';
 import store from '../../store';
+import MetaData from '../Layouts/MetaData';
  
 const Dashboard = ({isActive,setIsActive}) => {
  
@@ -172,6 +173,11 @@ const Dashboard = ({isActive,setIsActive}) => {
         //     </div>
         // </div>
 <div >
+<MetaData
+  title="Admin Dashboard" 
+  description="Access a comprehensive overview of your eCommerce store, including order statistics, sales performance, and user activity." 
+/>
+
   <div className="row" style={{margin:'10px'}}>
     <div className="col-md-2 col-12">
     <div style={{display:'flex',flexDirection:'row',position:'fixed',top:'0px',zIndex:99999,backgroundColor:'#fff',minWidth:'100%'}}>

@@ -6,18 +6,18 @@ import { deleteOrder, adminOrders as adminOrdersAction } from "../../actions/ord
 import { allPackedOrder, getporterOrder, updatedPackedOrder } from "../../actions/porterActions"
 import Loader from '../Layouts/Loader';
 import { MDBDataTable } from 'mdbreact';
-import { toast } from 'react-toastify';
+import { Slide, toast } from 'react-toastify';
 import Sidebar from "../admin/Sidebar";
 import { clearError } from '../../slices/productsSlice';
 import { clearOrderDeleted, orderDetailClear } from "../../slices/orderSlice";
 import MetaData from '../Layouts/MetaData';
 import { porterClearData, porterClearResponse } from '../../slices/porterSlice';
 
-const RefundList = ({isActive,setIsActive}) => {
+const RefundList = ({ isActive, setIsActive }) => {
     // const { adminOrders: orders = [], error, isOrderDeleted }  = useSelector(state => state.orderState);
     const location = useLocation();
     sessionStorage.setItem('redirectPath', location.pathname);
-    const { loading, allpackedOrderData: orders, allpackedOrderError,updatepackedOrderData :orderslist   } = useSelector(state => state.porterState);
+    const { loading, allpackedOrderData: orders, allpackedOrderError, updatepackedOrderData: orderslist } = useSelector(state => state.porterState);
     // console.log("allpackedOrderData", orders, allpackedOrderError);
 
     const dispatch = useDispatch();
@@ -28,12 +28,13 @@ const RefundList = ({isActive,setIsActive}) => {
     const formattedCurrentDate = currentDate.toISOString().split('T')[0];
 
     const [date, setDate] = useState(formattedCurrentDate);
+    const [iserror, setIserror] = useState(false);
     const [refresh, setRefresh] = useState(false);
-    useEffect(()=>{
+    useEffect(() => {
         dispatch(orderDetailClear());
-       dispatch(porterClearData());
-       dispatch(porterClearResponse());
-    },[])
+        dispatch(porterClearData());
+        dispatch(porterClearResponse());
+    }, [])
 
 
     const setOrders = () => {
@@ -149,11 +150,24 @@ const RefundList = ({isActive,setIsActive}) => {
 
     useEffect(() => {
         if (allpackedOrderError) {
-            toast(allpackedOrderError, {
-                position: "bottom-center",
-                type: 'error',
-                onOpen: () => { dispatch(clearError()) }
-            });
+            // toast(allpackedOrderError, {
+            //     position: "bottom-center",
+            //     type: 'error',
+            //     onOpen: () => { dispatch(clearError()) }
+            // });
+            toast.dismiss();
+            setTimeout(() => {
+                toast.error(allpackedOrderError, { 
+                    position: 'bottom-center',
+                    type:'error',
+                    autoClose: 700,
+                    transition: Slide,
+                    hideProgressBar: true,
+                    className: 'small-toast',
+                    onOpen: () => { dispatch(clearError()) }
+                });
+            }, 300);
+            setIserror(true)
             return;
         }
         // if (isOrderDeleted) {
@@ -164,19 +178,19 @@ const RefundList = ({isActive,setIsActive}) => {
         //     });
         //     return;
         // }
-// if(refresh){
-    // dispatch(updatedPackedOrder({}));
-// }
-        
+        // if(refresh){
+        // dispatch(updatedPackedOrder({}));
+        // }
+
     }, [dispatch, allpackedOrderError, refresh]);
 
-    useEffect(()=>{
-        if(!orderslist){
-            dispatch(updatedPackedOrder({}));   
+    useEffect(() => {
+        if (!orderslist && !iserror) {
+            dispatch(updatedPackedOrder({}));
         }
-    },[orderslist])
+    }, [orderslist, iserror])
 
-    
+
 
 
 
@@ -213,48 +227,53 @@ const RefundList = ({isActive,setIsActive}) => {
 
     return (
         <div>
-            <MetaData title={`Refund List`} />
-       
-        <div className="row loader-parent" >
-            <div className="col-12 col-md-2">
-            <div style={{display:'flex',flexDirection:'row',position:'fixed',top:'0px',zIndex:99999,backgroundColor:'#fff',minWidth:'100%'}}>
-                <Sidebar isActive={isActive} setIsActive={setIsActive}/>
+            {/* <MetaData title={`Refund List`} /> */}
+            <MetaData 
+  title="Refund List" 
+  description="Review and process customer refund requests. Ensure prompt handling of refunds to maintain customer trust and satisfaction." 
+/>
+
+
+            <div className="row loader-parent" >
+                <div className="col-12 col-md-2">
+                    <div style={{ display: 'flex', flexDirection: 'row', position: 'fixed', top: '0px', zIndex: 99999, backgroundColor: '#fff', minWidth: '100%' }}>
+                        <Sidebar isActive={isActive} setIsActive={setIsActive} />
+                    </div>
                 </div>
-            </div>
-            <div className="col-12 col-md-10 smalldevice-space container loader-parent">
-                <h1 className="mb-4">Refund List</h1>
-                <input
-                    type="date"
-                    value={date}
-                    onChange={(e) => setDate(e.target.value)}
-                    className="form-control mb-3 date-input"
-                />
-                  
-                <Fragment>
-                    {loading ? (
-                                <div className="container loader-loading-center">
-                                    <Loader />
-                                </div>
+                <div className="col-12 col-md-10 smalldevice-space container loader-parent">
+                    <h1 className="mb-4">Refund List</h1>
+                    <input
+                        type="date"
+                        value={date}
+                        onChange={(e) => setDate(e.target.value)}
+                        className="form-control mb-3 date-input"
+                    />
 
-                            )  :
-                         (
-                            <div className='mdb-table'  style={{display:'flex',justifyContent:'center', alignItems:'center'}}>
-                            <MDBDataTable
-                                data={setOrders()}
-                                bordered
-                                hover
-                                className="px-3 product-table"
-                                noBottomColumns
-                            />
+                    <Fragment>
+                        {loading ? (
+                            <div className="container loader-loading-center">
+                                <Loader />
                             </div>
-                        )
 
-                    }
-                </Fragment>
+                        ) :
+                            (
+                                <div className='mdb-table' style={{ display: 'flex', justifyContent: 'center', alignItems: 'center' }}>
+                                    <MDBDataTable
+                                        data={setOrders()}
+                                        bordered
+                                        hover
+                                        className="px-3 product-table"
+                                        noBottomColumns
+                                    />
+                                </div>
+                            )
+
+                        }
+                    </Fragment>
                 </div>
             </div>
         </div>
-      
+
     );
 };
 

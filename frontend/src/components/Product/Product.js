@@ -1,6 +1,6 @@
 import React, { useState } from 'react';
 import { useDispatch } from 'react-redux';
-import { toast } from 'react-toastify';
+import {Slide, toast } from 'react-toastify';
 import { addCartItem } from '../../actions/cartActions';
 import NumberInput from '../Layouts/NumberInput';
 import { useLocation } from 'react-router-dom';
@@ -22,14 +22,25 @@ const Product = ({ products, category }) => {
         if (weightValue < 0) {
             return;
         }
-        if (weightValue > 20) {
+        if (weightValue > 5) {
             setweightvalue(true)
             if(!weightvalue){
-                toast('Weight cannot exceed 20Kg', {
-                    type: 'error',
-                    position: 'bottom-center',
-                    autoClose: 500
+                // toast('Weight cannot exceed 20Kg', {
+                //     type: 'error',
+                //     position: 'bottom-center',
+                //     autoClose: 500
+                // });
+                toast.dismiss();
+                setTimeout(() => {
+                toast.error('Weight cannot exceed 5Kg', {
+                  position: 'bottom-center',
+                  type: 'error',
+                  autoClose: 700,
+                  transition: Slide,
+                  hideProgressBar: true,
+                  className: 'small-toast',
                 });
+              }, 300);
                 return
             }
            else{
@@ -66,11 +77,22 @@ const Product = ({ products, category }) => {
             setWeightToast(true);
             setWeight(prevWeights => ({ ...prevWeights, [productId]: '' }));
             if(!weighttoast){
-                return toast('The value should not be less than 0.25kg', {
-                    type: 'error',
-                    position: 'bottom-center',
-                    autoClose: 500
-                });
+                // return toast('The value should not be less than 0.25kg', {
+                //     type: 'error',
+                //     position: 'bottom-center',
+                //     autoClose: 500
+                // });
+             toast.dismiss();
+            setTimeout(() => {
+            toast.error('The value should not be less than 0.25kg', {
+              position: 'bottom-center',
+              type: 'error',
+              autoClose: 700,
+              transition: Slide,
+              hideProgressBar: true,
+              className: 'small-toast',
+            });
+          }, 300);
             }
             else{
                 return;
@@ -79,21 +101,43 @@ const Product = ({ products, category }) => {
         }
         if (productWeight >= 0.25) {
             dispatch(addCartItem({ productId: product._id, quantity, productWeight }));
+            // toast.success('Item added successfully!', {
+            //     type: 'success',
+            //     position: 'bottom-center',
+            //     autoClose: 500, 
+            // });
+            toast.dismiss();
+            setTimeout(() => {
             toast.success('Item added successfully!', {
-                type: 'success',
-                position: 'bottom-center',
-                autoClose: 500, 
+              position: 'bottom-center',
+              type: 'success',
+              autoClose: 700,
+              transition: Slide,
+              hideProgressBar: true,
+              className: 'small-toast',
             });
+          }, 300);
             setQuantity(1);
             setWeight(prevWeights => ({ ...prevWeights, [product._id]: undefined })); // Reset weight for the added product
         } else {
             setcorrectWeight(true);
             if(!correctWeight){
-                toast.error('Please select weight for the correct item', {
-                    type: 'error',
-                    position: 'bottom-center',
-                    autoClose: 500, 
-                });
+                // toast.error('Please select weight for the correct item', {
+                //     type: 'error',
+                //     position: 'bottom-center',
+                //     autoClose: 500, 
+                // });
+            toast.dismiss();
+            setTimeout(() => {
+            toast.error('Please select weight for the correct item', {
+              position: 'bottom-center',
+              type: 'error',
+              autoClose: 700,
+              transition: Slide,
+              hideProgressBar: true,
+              className: 'small-toast',
+            });
+          }, 300);
             }
             else{
                return

@@ -6,7 +6,7 @@ import { deleteOrder, adminOrders as adminOrdersAction, updateadminOrders } from
 import { orderDetail as orderDetailAction } from '../../actions/orderActions';
 import Loader from '../Layouts/Loader';
 import { MDBDataTable } from 'mdbreact';
-import { toast } from 'react-toastify';
+import { Slide,toast } from 'react-toastify';
 import Sidebar from "../admin/Sidebar";
 import { clearError } from '../../slices/productsSlice';
 import { clearOrderDeleted, adminOrderClear, orderDetailClear } from "../../slices/orderSlice";
@@ -30,6 +30,7 @@ const DispatchList = ({ isActive, setIsActive }) => {
     const [date, setDate] = useState(formattedPreviousDate);
     const [refresh, setRefresh] = useState(false);
     const [pageloading, setPageLoading] = useState(true)
+    const [iserror, setIserror] = useState(false);
 
     useEffect(() => {
         dispatch(orderDetailClear());
@@ -148,11 +149,24 @@ const DispatchList = ({ isActive, setIsActive }) => {
 
     useEffect(() => {
         if (error) {
-            toast(error, {
-                position: "bottom-center",
-                type: 'error',
-                onOpen: () => { dispatch(clearError()) }
-            });
+            // toast(error, {
+            //     position: "bottom-center",
+            //     type: 'error',
+            //     onOpen: () => { dispatch(clearError()) }
+            // });
+            toast.dismiss();
+            setTimeout(() => {
+                toast.error(error, {
+                    position: 'bottom-center',
+                    type: 'error',
+                    autoClose: 700,
+                    transition: Slide,
+                    hideProgressBar: true,
+                    className: 'small-toast',
+                    onOpen: () => { dispatch(clearError()) }
+                });
+            }, 300);
+            setIserror(true)
             return;
         }
         // if (isOrderDeleted) {
@@ -173,10 +187,10 @@ const DispatchList = ({ isActive, setIsActive }) => {
     }, [dispatch, error, refresh]);
 
     useEffect(() => {
-        if (!orders) {
+        if (!orders && !iserror) {
             dispatch(adminOrdersAction());
         }
-    }, [orders])
+    }, [orders,iserror])
 
     //   useEffect(()=>{
     //     const updateOrders = async () => {
@@ -214,7 +228,12 @@ const DispatchList = ({ isActive, setIsActive }) => {
 
     return (
         <div>
-            <MetaData title={`Dispatch List`} />
+            {/* <MetaData title={`Dispatch List`} /> */}
+            <MetaData 
+  title="Dispatch List" 
+  description="View and manage a list of orders ready for dispatch, ensuring timely and accurate delivery to customers." 
+/>
+
 
             <div className="row loader-parent">
                 <div className="col-12 col-md-2">

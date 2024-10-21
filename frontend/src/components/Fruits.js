@@ -45,7 +45,11 @@ const Fruits = () => {
             {/* <Header/> */}
             {loading ? <Loader /> :
                 <Fragment>
-                    <MetaData title={'Buy Best Products'} />
+                    {/* <MetaData title={'Fruits'} /> */}
+                    <MetaData
+                        title="Fresh Fruits"
+                        description="Discover a wide variety of fresh Fruits at our store. Search, filter, and explore organic and high-quality Fruits to add to your shopping cart."
+                    />
                     <div className="products_heading">Fruits</div>
                     {/* <div className=" search-responsive col-12 col-md-6 mt-2 mt-md-0" style={{ display: 'flex', alignItems: 'center', justifyContent: 'center', position: 'relative', minWidth: '100%', height: 'auto' }}>
                         <Search keyword={keyword} setKeyword={setKeyword} />

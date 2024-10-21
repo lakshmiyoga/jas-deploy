@@ -11,10 +11,13 @@ import { useReactToPrint } from 'react-to-print';
 import ReactDOM from 'react-dom';
 import Sidebar from './Sidebar';
 import { porterClearData } from '../../slices/porterSlice';
+import { clearError } from '../../slices/orderSlice';
+import { Slide, toast } from 'react-toastify';
+import MetaData from '../Layouts/MetaData';
 
 
 export default function AdminOrderDetail({ isActive, setIsActive }) {
-    const { orderDetail, loading } = useSelector(state => state.orderState)
+    const { error, orderDetail, loading } = useSelector(state => state.orderState)
     const { shippingInfo = {}, user = {}, orderStatus = "Processing", orderItems = [], totalPrice = 0, paymentInfo = {} } = orderDetail;
     const { porterOrderData, porterOrderResponse, porterCancelResponse, porterCancelError, portererror, getpackedOrderData } = useSelector((state) => state.porterState);
     const isPaid = paymentInfo && paymentInfo.status === "succeeded" ? true : false;
@@ -42,6 +45,29 @@ export default function AdminOrderDetail({ isActive, setIsActive }) {
     }, [porterOrderData])
 
     useEffect(() => {
+        if (error) {
+            // toast(error, {
+            //     position: "bottom-center",
+            //     type: 'error',
+            //     onOpen: () => { dispatch(clearError()) }
+            // });
+            toast.dismiss();
+            setTimeout(() => {
+                toast.error(error, {
+                    position: 'bottom-center',
+                    type: 'error',
+                    autoClose: 700,
+                    transition: Slide,
+                    hideProgressBar: true,
+                    className: 'small-toast',
+                    onOpen: () => { dispatch(clearError()) }
+                });
+            }, 300);
+            return;
+        }
+    }, [error])
+
+    useEffect(() => {
         if (refreshData && porterOrderResponse) {
             // dispatch(porterClearData())
             dispatch(getporterOrder({ order_id: id }))
@@ -53,63 +79,70 @@ export default function AdminOrderDetail({ isActive, setIsActive }) {
     });
 
     return (
-        <div className="row loader-parent">
-            <div className="col-12 col-md-2 ">
-                <div style={{ display: 'flex', flexDirection: 'row', position: 'fixed', top: '0px', zIndex: 99999, backgroundColor: '#fff', minWidth: '100%' }}>
-                    <Sidebar isActive={isActive} setIsActive={setIsActive} />
+        <Fragment>
+            <MetaData
+                title="Admin Order Detail"
+                description="View detailed information about a specific order, including product details, customer information, payment status, and dispatch status."
+            />
+
+
+            <div className="row loader-parent">
+                <div className="col-12 col-md-2 ">
+                    <div style={{ display: 'flex', flexDirection: 'row', position: 'fixed', top: '0px', zIndex: 99999, backgroundColor: '#fff', minWidth: '100%' }}>
+                        <Sidebar isActive={isActive} setIsActive={setIsActive} />
+                    </div>
                 </div>
-            </div>
 
-            <div className="col-12 col-md-10 smalldevice-space container order-detail-container loader-parent">
-                {
-                    loading ? (<div className="container loader-loading-center">
-                        <Loader />
-                    </div>) : (
-                        <div className="col-12 col-lg-12 mt-5 order-details">
+                <div className="col-12 col-md-10 smalldevice-space container order-detail-container loader-parent">
+                    {
+                        loading ? (<div className="container loader-loading-center">
+                            <Loader />
+                        </div>) : (
+                            <div className="col-12 col-lg-12 mt-5 order-details">
 
-                            <h1>Order # {orderDetail.order_id}</h1>
+                                <h1>Order # {orderDetail.order_id}</h1>
 
-                            <h4 className="mb-4">Shipping Info</h4>
-                            <div><b>Name:</b> {user.name}</div>
-                            <div><b>Phone:</b> {shippingInfo.phoneNo}</div>
-                            <div>
-                                <b>Address:</b>
-                                {shippingInfo.address && `${shippingInfo.address},`}
-                                {shippingInfo.area && `${shippingInfo.area},`}
-                                {shippingInfo.landmark && `${shippingInfo.landmark},`}
-                                {shippingInfo.city && `${shippingInfo.city}`}
-                                {shippingInfo.postalCode && `-${shippingInfo.postalCode}`}
-                            </div>
-
-                            <div><b>Amount:</b> {totalPrice} Rs</div>
-                            {orderDetail && orderDetail.statusResponse && orderDetail.statusResponse.payment_method && (
-                                <div><b>Payment Mode:</b> {orderDetail && orderDetail.statusResponse && orderDetail.statusResponse.payment_method}</div>
-
-                            )
-
-                            }
-
-                            <hr />
-
-                            <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', flexWrap: 'wrap' }}>
-                                <div style={{ display: 'flex', alignItems: 'center', margin: '10px' }}>
-                                    <p><b>Payment Status:</b></p>
-                                    <p className={orderDetail && orderDetail.paymentStatus && orderDetail.paymentStatus === 'CHARGED' ? 'greenColor' : 'redColor'} style={{ marginLeft: '10px' }}><b>{orderDetail ? orderDetail.paymentStatus : 'Pending'}</b></p>
+                                <h4 className="mb-4">Shipping Info</h4>
+                                <div><b>Name:</b> {user.name}</div>
+                                <div><b>Phone:</b> {shippingInfo.phoneNo}</div>
+                                <div>
+                                    <b>Address:</b>
+                                    {shippingInfo.address && `${shippingInfo.address},`}
+                                    {shippingInfo.area && `${shippingInfo.area},`}
+                                    {shippingInfo.landmark && `${shippingInfo.landmark},`}
+                                    {shippingInfo.city && `${shippingInfo.city}`}
+                                    {shippingInfo.postalCode && -`${shippingInfo.postalCode}`}
                                 </div>
-                                <div style={{ display: 'flex', alignItems: 'center', margin: '10px' }}>
-                                    <p><b>Order Status:</b></p>
-                                    <p className={orderStatus && orderStatus.includes('Delivered') ? 'greenColor' : 'redColor'} style={{ marginLeft: '10px' }}><b>{orderStatus}</b></p>
-                                </div>
-                                {getpackedOrderData && getpackedOrderData.totalRefundableAmount > 0 && (
+
+                                <div><b>Amount:</b> {totalPrice} Rs</div>
+                                {orderDetail && orderDetail.statusResponse && orderDetail.statusResponse.payment_method && (
+                                    <div><b>Payment Mode:</b> {orderDetail && orderDetail.statusResponse && orderDetail.statusResponse.payment_method}</div>
+
+                                )
+
+                                }
+
+                                <hr />
+
+                                <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', flexWrap: 'wrap' }}>
                                     <div style={{ display: 'flex', alignItems: 'center', margin: '10px' }}>
-                                        <p><b>Refund Status:</b></p>
-                                        <p className={getpackedOrderData.refundStatus && getpackedOrderData.refundStatus.includes('SUCCESS') ? 'greenColor' : 'redColor'} style={{ marginLeft: '10px' }}><b>{getpackedOrderData.refundStatus}</b></p>
+                                        <p><b>Payment Status:</b></p>
+                                        <p className={orderDetail && orderDetail.paymentStatus && orderDetail.paymentStatus === 'CHARGED' ? 'greenColor' : 'redColor'} style={{ marginLeft: '10px' }}><b>{orderDetail ? orderDetail.paymentStatus : 'Pending'}</b></p>
                                     </div>
-                                )}
-                            </div>
-                            <hr />
-                            <h4 className="my-4">Order Items:</h4>
-                            {/* <div className="cart-item my-1">
+                                    <div style={{ display: 'flex', alignItems: 'center', margin: '10px' }}>
+                                        <p><b>Order Status:</b></p>
+                                        <p className={orderStatus && orderStatus.includes('Delivered') ? 'greenColor' : 'redColor'} style={{ marginLeft: '10px' }}><b>{orderStatus}</b></p>
+                                    </div>
+                                    {getpackedOrderData && getpackedOrderData.totalRefundableAmount > 0 && (
+                                        <div style={{ display: 'flex', alignItems: 'center', margin: '10px' }}>
+                                            <p><b>Refund Status:</b></p>
+                                            <p className={getpackedOrderData.refundStatus && getpackedOrderData.refundStatus.includes('SUCCESS') ? 'greenColor' : 'redColor'} style={{ marginLeft: '10px' }}><b>{getpackedOrderData.refundStatus}</b></p>
+                                        </div>
+                                    )}
+                                </div>
+                                <hr />
+                                <h4 className="my-4">Order Items:</h4>
+                                {/* <div className="cart-item my-1">
                   {orderItems && orderItems.map((item, index) => (
                       <div className="row my-5" key={index}>
                           <div className="col-4 col-lg-2">
@@ -117,7 +150,7 @@ export default function AdminOrderDetail({ isActive, setIsActive }) {
                           </div>
 
                           <div className="col-5 col-lg-2">
-                              <Link to={`/product/${item.product}`}>{item.name}</Link>
+                              <Link to={/product/${item.product}}>{item.name}</Link>
                           </div>
 
 
@@ -129,143 +162,144 @@ export default function AdminOrderDetail({ isActive, setIsActive }) {
 
               </div> */}
 
-                            <div className="invoice-table-container">
-                                <div className="updatetable-responsive">
-                                    <table className="updatetable updatetable-bordered">
-                                        <thead>
-                                            <tr>
+                                <div className="invoice-table-container">
+                                    <div className="updatetable-responsive">
+                                        <table className="updatetable updatetable-bordered">
+                                            <thead>
+                                                <tr>
+                                                    {getpackedOrderData && getpackedOrderData.dispatchedTable ? (
+                                                        <>
+                                                            <th>S.No</th>
+                                                            <th>Image</th>
+                                                            <th>Name</th>
+                                                            <th>Ordered Weight</th>
+                                                            <th>Price per kg</th>
+                                                            <th>Dispatched Weight</th>
+                                                            <th>Refundable Weight</th>
+                                                            <th>Refundable Amount</th>
+                                                        </>
+                                                    ) : (
+                                                        <>
+                                                            <th>S.No</th>
+                                                            <th>Image</th>
+                                                            <th>Name</th>
+                                                            <th>Price per kg</th>
+                                                            <th>Ordered Weight</th>
+                                                            {/* <th>Dispatch Weight</th> */}
+                                                            <th>Total Price</th>
+                                                            {/* <th>Status</th> */}
+                                                        </>
+                                                    )}
+                                                </tr>
+                                            </thead>
+                                            <tbody>
                                                 {getpackedOrderData && getpackedOrderData.dispatchedTable ? (
-                                                    <>
-                                                        <th>S.No</th>
-                                                        <th>Image</th>
-                                                        <th>Name</th>
-                                                        <th>Ordered Weight</th>
-                                                        <th>Price per kg</th>
-                                                        <th>Dispatched Weight</th>
-                                                        <th>Refundable Weight</th>
-                                                        <th>Refundable Amount</th>
-                                                    </>
-                                                ) : (
-                                                    <>
-                                                        <th>S.No</th>
-                                                        <th>Image</th>
-                                                        <th>Name</th>
-                                                        <th>Price per kg</th>
-                                                        <th>Ordered Weight</th>
-                                                        {/* <th>Dispatch Weight</th> */}
-                                                        <th>Total Price</th>
-                                                        {/* <th>Status</th> */}
-                                                    </>
-                                                )}
-                                            </tr>
-                                        </thead>
-                                        <tbody>
-                                            {getpackedOrderData && getpackedOrderData.dispatchedTable ? (
-                                                getpackedOrderData.dispatchedTable.map((item, index) => (
-                                                    <tr key={index}>
-                                                        <td>{index + 1}</td>
-                                                        <td>
-                                                            <img src={item.image} alt={item.name} className="updateTableproduct-image" />
-                                                        </td>
-                                                        <td>{item.name}</td>
-                                                        <td>{item.orderedWeight} kg</td>
-                                                        <td>Rs. {item.pricePerKg}</td>
-                                                        <td>{item.dispatchedWeight} kg</td>
-                                                        <td>{item.refundableWeight} kg</td>
-                                                        <td>Rs. {parseFloat(item.pricePerKg * item.refundableWeight).toFixed(2)}</td>
-                                                    </tr>
-                                                ))
-                                            ) : (
-                                                orderItems.map((item, index) => {
-                                                    // const product = products.find((product) => product.englishName === item.name);
-                                                    // if (!product) return null;
-
-                                                    return (
+                                                    getpackedOrderData.dispatchedTable.map((item, index) => (
                                                         <tr key={index}>
                                                             <td>{index + 1}</td>
                                                             <td>
                                                                 <img src={item.image} alt={item.name} className="updateTableproduct-image" />
                                                             </td>
                                                             <td>{item.name}</td>
-                                                            <td>Rs. {(item.price).toFixed(2)}</td>
-                                                            <td>{item.productWeight} kg</td>
-                                                            <td>Rs.{(item.productWeight * item.price).toFixed(2)}</td>
-
-                                                            {/* <td>{product.stocks ? <p>{product.stocks}</p> : <p>Out of Stock</p>}</td> */}
+                                                            <td>{item.orderedWeight} kg</td>
+                                                            <td>Rs. {item.pricePerKg}</td>
+                                                            <td>{item.dispatchedWeight} kg</td>
+                                                            <td>{item.refundableWeight} kg</td>
+                                                            <td>Rs. {parseFloat(item.pricePerKg * item.refundableWeight).toFixed(2)}</td>
                                                         </tr>
-                                                    );
-                                                })
-                                            )}
+                                                    ))
+                                                ) : (
+                                                    orderItems.map((item, index) => {
+                                                        // const product = products.find((product) => product.englishName === item.name);
+                                                        // if (!product) return null;
 
-                                        </tbody>
-                                        <tfoot>
-                                            {getpackedOrderData && getpackedOrderData.dispatchedTable ? (
-                                                <tr>
-                                                    <td colSpan="7" style={{ textAlign: 'right' }}>
-                                                        <strong>Total Refund Amount</strong>
-                                                    </td>
-                                                    <td>
-                                                        Rs. {getpackedOrderData.dispatchedTable.reduce((total, item) => total + parseFloat(item.pricePerKg * item.refundableWeight), 0).toFixed(2)}
-                                                    </td>
-                                                </tr>
-                                            ) : (
-                                                <>
+                                                        return (
+                                                            <tr key={index}>
+                                                                <td>{index + 1}</td>
+                                                                <td>
+                                                                    <img src={item.image} alt={item.name} className="updateTableproduct-image" />
+                                                                </td>
+                                                                <td>{item.name}</td>
+                                                                <td>Rs. {(item.price).toFixed(2)}</td>
+                                                                <td>{item.productWeight} kg</td>
+                                                                <td>Rs.{(item.productWeight * item.price).toFixed(2)}</td>
+
+                                                                {/* <td>{product.stocks ? <p>{product.stocks}</p> : <p>Out of Stock</p>}</td> */}
+                                                            </tr>
+                                                        );
+                                                    })
+                                                )}
+
+                                            </tbody>
+                                            <tfoot>
+                                                {getpackedOrderData && getpackedOrderData.dispatchedTable ? (
                                                     <tr>
-                                                        <td colSpan="5" style={{ textAlign: 'right' }}>
-                                                            <strong>Subtotal</strong>
+                                                        <td colSpan="7" style={{ textAlign: 'right' }}>
+                                                            <strong>Total Refund Amount</strong>
                                                         </td>
                                                         <td>
-                                                            Rs. {orderItems.reduce((total, item) => total + parseFloat(item.productWeight * item.price), 0).toFixed(2)}
+                                                            Rs. {getpackedOrderData.dispatchedTable.reduce((total, item) => total + parseFloat(item.pricePerKg * item.refundableWeight), 0).toFixed(2)}
                                                         </td>
                                                     </tr>
-                                                    <tr>
-                                                        <td colSpan="5" style={{ textAlign: 'right' }}>
-                                                            <strong>Shipping</strong>
-                                                        </td>
-                                                        <td>
-                                                            Rs. {parseFloat(orderDetail.shippingPrice).toFixed(2)}
-                                                        </td>
-                                                    </tr>
-                                                    <tr>
-                                                        <td colSpan="5" style={{ textAlign: 'right' }}>
-                                                            <strong>Total Amount</strong>
-                                                        </td>
-                                                        <td>
-                                                            Rs. {(orderItems.reduce((total, item) => total + parseFloat(item.productWeight * item.price), 0) + parseFloat(orderDetail.shippingPrice)).toFixed(2)}
-                                                        </td>
-                                                    </tr>
-                                                </>
-                                            )}
-                                        </tfoot>
+                                                ) : (
+                                                    <>
+                                                        <tr>
+                                                            <td colSpan="5" style={{ textAlign: 'right' }}>
+                                                                <strong>Subtotal</strong>
+                                                            </td>
+                                                            <td>
+                                                                Rs. {orderItems.reduce((total, item) => total + parseFloat(item.productWeight * item.price), 0).toFixed(2)}
+                                                            </td>
+                                                        </tr>
+                                                        <tr>
+                                                            <td colSpan="5" style={{ textAlign: 'right' }}>
+                                                                <strong>Shipping</strong>
+                                                            </td>
+                                                            <td>
+                                                                Rs. {parseFloat(orderDetail.shippingPrice).toFixed(2)}
+                                                            </td>
+                                                        </tr>
+                                                        <tr>
+                                                            <td colSpan="5" style={{ textAlign: 'right' }}>
+                                                                <strong>Total Amount</strong>
+                                                            </td>
+                                                            <td>
+                                                                Rs. {(orderItems.reduce((total, item) => total + parseFloat(item.productWeight * item.price), 0) + parseFloat(orderDetail.shippingPrice)).toFixed(2)}
+                                                            </td>
+                                                        </tr>
+                                                    </>
+                                                )}
+                                            </tfoot>
 
 
-                                    </table>
-                                </div>
-                            </div>
-                            <div>
-                                {orderStatus && orderStatus === 'Delivered' && (
-                                    <div style={{ marginTop: '20px' }}>
-                                        <button onClick={handlePrint} className='btn btn-primary'>Download Invoice</button>
-                                        {ReactDOM.createPortal(
-                                            <div style={{ position: 'absolute', top: '-9999px', left: '-9999px', zIndex: '-9999999999' }}>
-                                                <JasInvoice ref={invoiceRef} invoice={getpackedOrderData} />
-                                            </div>,
-                                            document.body
-                                        )}
+                                        </table>
                                     </div>
+                                </div>
+                                <div>
+                                    {orderStatus && orderStatus === 'Delivered' && (
+                                        <div style={{ marginTop: '20px' }}>
+                                            <button onClick={handlePrint} className='btn btn-primary'>Download Invoice</button>
+                                            {ReactDOM.createPortal(
+                                                <div style={{ position: 'absolute', top: '-9999px', left: '-9999px', zIndex: '-9999999999' }}>
+                                                    <JasInvoice ref={invoiceRef} invoice={getpackedOrderData} />
+                                                </div>,
+                                                document.body
+                                            )}
+                                        </div>
 
-                                )
+                                    )
 
-                                }
+                                    }
+                                </div>
+
+
                             </div>
+                        )}
+                </div>
 
 
-                        </div>
-                    )}
+
             </div>
-
-
-
-        </div>
+        </Fragment>
     )
 }

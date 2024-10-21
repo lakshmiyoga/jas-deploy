@@ -91,7 +91,7 @@ import { useDispatch, useSelector } from 'react-redux';
 import { Link, useLocation } from "react-router-dom";
 import { adminOrders as adminOrdersAction } from "../../actions/orderActions";
 import Loader from '../Layouts/Loader';
-import { toast } from 'react-toastify';
+import { Slide, toast } from 'react-toastify';
 import Sidebar from "../admin/Sidebar";
 import { clearError } from '../../slices/productsSlice';
 import { clearOrderDeleted, orderDetailClear } from "../../slices/orderSlice";
@@ -117,18 +117,35 @@ const Analysis = ({ isActive, setIsActive }) => {
 
     useEffect(() => {
         if (error) {
-            toast.error(error, {
-                position: "bottom-center",
-                onOpen: () => { dispatch(clearError()) }
-            });
+            // toast.error(error, {
+            //     position: "bottom-center",
+            //     onOpen: () => { dispatch(clearError()) }
+            // });
+            toast.dismiss();
+            setTimeout(() => {
+                toast.error(error, {
+                    position: 'bottom-center',
+                    type: 'error',
+                    autoClose: 700,
+                    transition: Slide,
+                    hideProgressBar: true,
+                    className: 'small-toast',
+                    onOpen: () => { dispatch(clearError()) }
+                });
+            }, 300);
         }
         dispatch(analysisOrders({ startDate, endDate }));
     }, [dispatch, error, startDate, endDate]);
 
     return (
         <div>
-            <MetaData title={`Analysis Dashboard`} />
-            <div className="row loader-parent" style={{margin:'5px'}}>
+            {/* <MetaData title={`Analysis Dashboard`} /> */}
+            <MetaData
+                title="Analysis"
+                description="Gain insights into sales trends, customer behavior, and product performance through detailed analytics and reports."
+            />
+
+            <div className="row loader-parent" style={{ margin: '5px' }}>
                 <div className="col-12 col-md-2">
                     <div className="sidebar-fixed">
                         <Sidebar isActive={isActive} setIsActive={setIsActive} />
@@ -137,41 +154,41 @@ const Analysis = ({ isActive, setIsActive }) => {
                 <div className="col-12 col-md-10 smalldevice-space loader-parent">
                     <h1 className="admin-dashboard-x mb-4">Analysis</h1>
                     <div className="filter-row">
-                        <div style={{display:'flex',flexDirection:'row', marginRight:'20px'}}>
-                        <label>StartDate : </label>
-                        <input
-                            type="date"
-                            value={startDate}
-                            onChange={(e) => setStartDate(e.target.value)}
-                            className="form-control mb-3 date-input"
-                            placeholder="Start Date"
-                        />
+                        <div style={{ display: 'flex', flexDirection: 'row', marginRight: '20px' }}>
+                            <label>StartDate : </label>
+                            <input
+                                type="date"
+                                value={startDate}
+                                onChange={(e) => setStartDate(e.target.value)}
+                                className="form-control mb-3 date-input"
+                                placeholder="Start Date"
+                            />
                         </div>
-                       <div style={{display:'flex',flexDirection:'row', marginRight:'20px'}}>
-                       <label>EndDate : </label>
-                        <input
-                            type="date"
-                            value={endDate}
-                            onChange={(e) => setEndDate(e.target.value)}
-                            className="form-control mb-3 date-input"
-                            placeholder="End Date"
-                        />
-                       </div>
-                        
+                        <div style={{ display: 'flex', flexDirection: 'row', marginRight: '20px' }}>
+                            <label>EndDate : </label>
+                            <input
+                                type="date"
+                                value={endDate}
+                                onChange={(e) => setEndDate(e.target.value)}
+                                className="form-control mb-3 date-input"
+                                placeholder="End Date"
+                            />
+                        </div>
+
                     </div>
 
                     {loading ? (
                         <div className="container loader-loading-center">
-                        <Loader />
-                    </div>
+                            <Loader />
+                        </div>
                     ) : (
 
                         <div className="row " style={{ display: 'flex', justifyContent: 'center', alignItems: 'center', flexWrap: 'wrap' }}>
                             <div className="col-lg-3 col-md-3 col-6 mb-3">
-                                <div className="card text-white o-hidden " style={{ backgroundColor: '#FED235',minHeight:'150px' }}>
+                                <div className="card text-white o-hidden " style={{ backgroundColor: '#FED235', minHeight: '150px' }}>
                                     <div className="card-body">
                                         <div className="text-center card-font-size">
-                                        Total Orders<br />
+                                            Total Orders<br />
                                             <b>{totalOrders && totalOrders}</b>
                                         </div>
                                     </div>
@@ -179,22 +196,22 @@ const Analysis = ({ isActive, setIsActive }) => {
                             </div>
 
                             <div className="col-lg-3 col-md-3 col-6 mb-3">
-                                <div className="card text-white o-hidden " style={{ backgroundColor: '#02441E',minHeight:'150px'  }}>
+                                <div className="card text-white o-hidden " style={{ backgroundColor: '#02441E', minHeight: '150px' }}>
                                     <div className="card-body">
                                         <div className="text-center card-font-size">
-                                        Total Amount<br />
+                                            Total Amount<br />
                                             <b>{totalAmount?.toFixed(2)}</b>
                                         </div>
                                     </div>
                                 </div>
                             </div>
 
-                            
+
                             <div className="col-lg-3 col-md-3 col-6 mb-3">
-                                <div className="card text-white o-hidden " style={{ backgroundColor: '#FED235',minHeight:'150px'  }}>
+                                <div className="card text-white o-hidden " style={{ backgroundColor: '#FED235', minHeight: '150px' }}>
                                     <div className="card-body">
                                         <div className="text-center card-font-size">
-                                        Dispatched Amount<br />
+                                            Dispatched Amount<br />
                                             <b>{dispatchedAmount?.toFixed(2)}</b>
                                         </div>
                                     </div>
@@ -202,10 +219,10 @@ const Analysis = ({ isActive, setIsActive }) => {
                             </div>
 
                             <div className="col-lg-3 col-md-3 col-6 mb-3">
-                                <div className="card text-white o-hidden " style={{ backgroundColor: '#02441E',minHeight:'150px'  }}>
+                                <div className="card text-white o-hidden " style={{ backgroundColor: '#02441E', minHeight: '150px' }}>
                                     <div className="card-body">
                                         <div className="text-center card-font-size">
-                                        Refunded Amount<br />
+                                            Refunded Amount<br />
                                             <b>{refundedAmount?.toFixed(2)}</b>
                                         </div>
                                     </div>
@@ -213,20 +230,20 @@ const Analysis = ({ isActive, setIsActive }) => {
                             </div>
 
                             <div className="col-lg-3 col-md-3 col-6 mb-3">
-                                <div className="card text-white o-hidden " style={{ backgroundColor: '#FED235',minHeight:'150px'  }}>
+                                <div className="card text-white o-hidden " style={{ backgroundColor: '#FED235', minHeight: '150px' }}>
                                     <div className="card-body">
                                         <div className="text-center card-font-size">
-                                        Users Count<br />
+                                            Users Count<br />
                                             <b>{usersCount}</b>
                                         </div>
                                     </div>
                                 </div>
                             </div>
                             <div className="col-lg-3 col-md-3 col-6 mb-3">
-                                <div className="card text-white o-hidden " style={{ backgroundColor: '#02441E',minHeight:'150px'  }}>
+                                <div className="card text-white o-hidden " style={{ backgroundColor: '#02441E', minHeight: '150px' }}>
                                     <div className="card-body">
                                         <div className="text-center card-font-size">
-                                        Total Enquiries<br />
+                                            Total Enquiries<br />
                                             <b>{totalEnquiries}</b>
                                         </div>
                                     </div>

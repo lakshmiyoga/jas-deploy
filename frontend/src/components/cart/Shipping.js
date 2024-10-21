@@ -176,7 +176,7 @@ import { useDispatch, useSelector } from "react-redux";
 import { useLocation, useNavigate } from "react-router-dom";
 import { saveShippingInfo } from "../../slices/cartSlice";
 import StepsCheckOut from './StepsCheckOut';
-import { toast } from 'react-toastify';
+import { Slide, toast } from 'react-toastify';
 import axios from 'axios';
 import NumberInput from '../Layouts/NumberInput';
 import MetaData from '../Layouts/MetaData';
@@ -196,9 +196,20 @@ export const validateShipping = (shippingInfo, navigate) => {
         !shippingInfo.phoneNo ||
         !shippingInfo.postalCode
     ) {
-        toast.error('Please fill the shipping Information', {
-            position: 'bottom-center',
-        });
+        // toast.error('Please fill the shipping Information', {
+        //     position: 'bottom-center',
+        // });
+        toast.dismiss();
+        setTimeout(() => {
+            toast.error('Please fill the shipping Information', {
+                position: 'bottom-center',
+                type: 'error',
+                autoClose: 700,
+                transition: Slide,
+                hideProgressBar: true,
+                className: 'small-toast',
+            });
+        }, 300);
         navigate('/shipping');
     }
 }
@@ -207,8 +218,8 @@ const libraries = ["places"];
 
 const Shipping = () => {
     // const { shippingInfo = {} } = useSelector(state => state.cartState);
-    const shippingInfo = localStorage.getItem('shippingInfo') 
-        ? JSON.parse(localStorage.getItem('shippingInfo')) 
+    const shippingInfo = localStorage.getItem('shippingInfo')
+        ? JSON.parse(localStorage.getItem('shippingInfo'))
         : {};
     const { isAuthenticated, user } = useSelector(state => state.authState);
     const location = useLocation();
@@ -237,7 +248,7 @@ const Shipping = () => {
     const [isButtonDisabled, setIsButtonDisabled] = useState(false);
     const [hasExceededPostalCode, setHasExceededPostalCode] = useState(false);
     const [showMapModal, setShowMapModal] = useState(false);
-    const [cancelbutton,setCancelbutton]=useState(false);
+    const [cancelbutton, setCancelbutton] = useState(false);
     // const [position, setPosition] = useState({ lat: 12.984820441742858, lng: 80.23556581985943 });
     const navigate = useNavigate();
     const dispatch = useDispatch();
@@ -249,7 +260,7 @@ const Shipping = () => {
     // const navigate = useNavigate();
     // const dispatch = useDispatch();
     // const [isMap, setIsMap] = useState(false);
-    
+
 
     console.log("shippingInfo", shippingInfo)
 
@@ -278,8 +289,19 @@ const Shipping = () => {
                 });
             }
         } catch (error) {
-            console.error('Error fetching address:', error);
-            toast.error(error);
+            // console.error('Error fetching address:', error);
+            // toast.error(error);
+            toast.dismiss();
+            setTimeout(() => {
+                toast.error('Error fetching address', {
+                    position: 'bottom-center',
+                    type: 'error',
+                    autoClose: 700,
+                    transition: Slide,
+                    hideProgressBar: true,
+                    className: 'small-toast',
+                });
+            }, 300);
         }
     };
 
@@ -309,11 +331,22 @@ const Shipping = () => {
                         setAllowed(true);
                         setShowModal(false);
                         setIsButtonDisabled(false);
-                        toast.success(`Location accuracy is ${Math.round(accuracy)} meters.`, {
-                            position: "bottom-center",
-                            type:
-                                'success',
-                        });
+                        // toast.success(`Location accuracy is ${Math.round(accuracy)} meters.`, {
+                        //     position: "bottom-center",
+                        //     type:
+                        //         'success',
+                        // });
+                        toast.dismiss();
+                        setTimeout(() => {
+                            toast.success(`Location accuracy is ${Math.round(accuracy)} meters.`, {
+                                position: 'bottom-center',
+                                type: 'success',
+                                autoClose: 700,
+                                transition: Slide,
+                                hideProgressBar: true,
+                                className: 'small-toast',
+                            });
+                        }, 300);
                         // }
                         // else {
                         //     toast.error(`Could not get your precious location.`, {
@@ -324,9 +357,20 @@ const Shipping = () => {
 
                     },
                     error => {
-                        toast.error('Location access denied or not available.', {
-                            position: "bottom-center",
-                        });
+                        // toast.error('Location access denied or not available.', {
+                        //     position: "bottom-center",
+                        // });
+                        toast.dismiss();
+                        setTimeout(() => {
+                            toast.error('Location access denied or not available.', {
+                                position: 'bottom-center',
+                                type: 'error',
+                                autoClose: 700,
+                                transition: Slide,
+                                hideProgressBar: true,
+                                className: 'small-toast',
+                            });
+                        }, 300);
                         setIsButtonDisabled(false);
                         setCancelbutton(true);
                     },
@@ -357,11 +401,22 @@ const Shipping = () => {
                         setAllowed(true);
                         setShowModal(false);
                         setIsButtonDisabled(false);
-                        toast.success(`Location accuracy is ${Math.round(accuracy)} meters.`, {
-                            position: "bottom-center",
-                            type:
-                                'success',
-                        });
+                        // toast.success(`Location accuracy is ${Math.round(accuracy)} meters.`, {
+                        //     position: "bottom-center",
+                        //     type:
+                        //         'success',
+                        // });
+                        toast.dismiss();
+                        setTimeout(() => {
+                            toast.success(`Location accuracy is ${Math.round(accuracy)} meters.`, {
+                                position: 'bottom-center',
+                                type: 'success',
+                                autoClose: 700,
+                                transition: Slide,
+                                hideProgressBar: true,
+                                className: 'small-toast',
+                            });
+                        }, 300);
                         // }
                         // else{
                         //     toast.error(`Could not get your precious location.`, {
@@ -372,9 +427,20 @@ const Shipping = () => {
 
                     },
                     error => {
-                        toast.error('Location access denied or not available.', {
-                            position: "bottom-center",
-                        });
+                        // toast.error('Location access denied or not available.', {
+                        //     position: "bottom-center",
+                        // });
+                        toast.dismiss();
+                        setTimeout(() => {
+                            toast.error('Location access denied or not available.', {
+                                position: 'bottom-center',
+                                type: 'error',
+                                autoClose: 700,
+                                transition: Slide,
+                                hideProgressBar: true,
+                                className: 'small-toast',
+                            });
+                        }, 300);
                         setIsButtonDisabled(false);
                         setCancelbutton(true);
                     },
@@ -391,17 +457,17 @@ const Shipping = () => {
         if (navigator.permissions) {
             navigator.permissions.query({ name: 'geolocation' }).then(permissionStatus => {
                 if (permissionStatus.state === 'granted') {
-                    if(shippingInfo.latitude && shippingInfo.longitude){
+                    if (shippingInfo.latitude && shippingInfo.longitude) {
                         return
                     }
-                    else{
+                    else {
                         setShowModal(true);
                         setCancelbutton(true);
                         setAddress('');
                         setArea('');
                         setLandmark('');
                     }
-                    
+
                     // If permission is already granted, fetch the location without showing the modal
                     // handleCurrentLocation();
                 } else if (permissionStatus.state === 'prompt') {
@@ -472,10 +538,32 @@ const Shipping = () => {
                 setDummyLng(location.lng());
                 // setAddress(place.formatted_address);  
             } else {
-                console.log("Selected place does not have a geometry or location");
+                // console.log("Selected place does not have a geometry or location");
+                toast.dismiss();
+                        setTimeout(() => {
+                            toast.error('Selected place does not have a geometry or location', {
+                                position: 'bottom-center',
+                                type: 'error',
+                                autoClose: 700,
+                                transition: Slide,
+                                hideProgressBar: true,
+                                className: 'small-toast',
+                            });
+                        }, 300);
             }
         } else {
-            console.log("Autocomplete is not loaded yet!");
+            // console.log("Autocomplete is not loaded yet!");
+            toast.dismiss();
+            setTimeout(() => {
+                toast.error('Autocomplete is not loaded yet!', {
+                    position: 'bottom-center',
+                    type: 'error',
+                    autoClose: 700,
+                    transition: Slide,
+                    hideProgressBar: true,
+                    className: 'small-toast',
+                });
+            }, 300);
         }
     };
 
@@ -490,10 +578,21 @@ const Shipping = () => {
 
         if (value.length > 10) {
             if (!hasExceeded) {
-                toast.error('Phone number cannot exceed 10 digits', {
-                    position: "bottom-center",
-                    type: 'error',
-                });
+                // toast.error('Phone number cannot exceed 10 digits', {
+                //     position: "bottom-center",
+                //     type: 'error',
+                // });
+                toast.dismiss();
+                setTimeout(() => {
+                    toast.error('Phone number cannot exceed 10 digits', {
+                        position: 'bottom-center',
+                        type: 'error',
+                        autoClose: 700,
+                        transition: Slide,
+                        hideProgressBar: true,
+                        className: 'small-toast',
+                    });
+                }, 300);
                 setHasExceeded(true);
             }
         } else {
@@ -508,10 +607,21 @@ const Shipping = () => {
 
         if (value.length > 6) {
             if (!hasExceededPostalCode) {
-                toast.error('Postal code cannot exceed 6 digits', {
-                    position: "bottom-center",
-                    type: 'error',
-                });
+                // toast.error('Postal code cannot exceed 6 digits', {
+                //     position: "bottom-center",
+                //     type: 'error',
+                // });
+                toast.dismiss();
+                setTimeout(() => {
+                    toast.error('Postal code cannot exceed 6 digits', {
+                        position: 'bottom-center',
+                        type: 'error',
+                        autoClose: 700,
+                        transition: Slide,
+                        hideProgressBar: true,
+                        className: 'small-toast',
+                    });
+                }, 300);
                 setHasExceededPostalCode(true);
             }
         } else {
@@ -533,9 +643,20 @@ const Shipping = () => {
         if (isAuthenticated && latitude && longitude) {
             navigate('/order/confirm');
         } else {
-            toast.error('Please allow the location to proceed.', {
-                position: "bottom-center",
-            });
+            // toast.error('Please allow the location to proceed.', {
+            //     position: "bottom-center",
+            // });
+            toast.dismiss();
+            setTimeout(() => {
+                toast.error('Please allow the location to proceed.', {
+                    position: 'bottom-center',
+                    type: 'error',
+                    autoClose: 700,
+                    transition: Slide,
+                    hideProgressBar: true,
+                    className: 'small-toast',
+                });
+            }, 300);
         }
     };
 
@@ -580,7 +701,12 @@ const Shipping = () => {
 
     return (
         <Fragment >
-            <MetaData title={"Shipping"} />
+            {/* <MetaData title={"Shipping"} /> */}
+            <MetaData
+                title="Shipping Information"
+                description="Provide or confirm your shipping details to ensure timely and accurate delivery of your order. Choose your preferred shipping method before proceeding."
+            />
+
             {!showMapModal && (
                 <>
                     <div className="products_heading">Shipping</div>
@@ -734,12 +860,12 @@ const Shipping = () => {
                                 {
                                     isButtonDisabled || cancelbutton ? <></> : (
                                         <button type="button" className="close" onClick={handleCancelDelete} disabled={isButtonDisabled || cancelbutton}>
-                                        <span aria-hidden="true">&times;</span>
-                                    </button>
+                                            <span aria-hidden="true">&times;</span>
+                                        </button>
                                     )
 
                                 }
-                               
+
                             </div>
                             <div className="modal-body d-flex justify-content-center">
                                 {/* <p>Are you sure you want to delete this item?</p> */}
@@ -781,25 +907,25 @@ const Shipping = () => {
                                         className='map-search-bar'
                                         value={searchValue}
                                         onChange={(e) => setSearchValue(e.target.value)}
-                                        // style={{
-                                        //     position: 'relative',
-                                        //     display: 'flex',
-                                        //     width: "40%",
-                                        //     height: "40px",
-                                        //     left: '50%', // Center it horizontally
-                                        //     transform: 'translateX(-50%)',
-                                        //     paddingLeft: "16px",
-                                        //     fontSize: "13px",
-                                        //     // position: 'absolute',
-                                        //     outline: 'none',
-                                        //     zIndex: 999999999,
-                                        //     borderRadius: '10px',
-                                        //     border: '1px solid black',
-                                        //     top: '55px',
-                                        //     // color:'#fff',
-                                        //     // backgroundColor:'#343a40'
-                                        //     // alignItems: 'center', justifyContent: 'center'
-                                        // }}
+                                    // style={{
+                                    //     position: 'relative',
+                                    //     display: 'flex',
+                                    //     width: "40%",
+                                    //     height: "40px",
+                                    //     left: '50%', // Center it horizontally
+                                    //     transform: 'translateX(-50%)',
+                                    //     paddingLeft: "16px",
+                                    //     fontSize: "13px",
+                                    //     // position: 'absolute',
+                                    //     outline: 'none',
+                                    //     zIndex: 999999999,
+                                    //     borderRadius: '10px',
+                                    //     border: '1px solid black',
+                                    //     top: '55px',
+                                    //     // color:'#fff',
+                                    //     // backgroundColor:'#343a40'
+                                    //     // alignItems: 'center', justifyContent: 'center'
+                                    // }}
                                     />
                                 </Autocomplete>
                                 {/* </div> */}
@@ -813,7 +939,7 @@ const Shipping = () => {
                                     onClick={handlegeoLocation}
                                     className='current-location-icon'
                                 >
-                                    <MyLocationIcon style={{ color: '#4285F4', fontSize: '20px',display:'flex',justifyContent:'center',alignItems:'center' }} />
+                                    <MyLocationIcon style={{ color: '#4285F4', fontSize: '20px', display: 'flex', justifyContent: 'center', alignItems: 'center' }} />
                                 </button>
                             </GoogleMap>
                             <div style={{ position: 'absolute', zIndex: '9999', bottom: '20px', left: '50%', transform: 'translateX(-50%)', }}>

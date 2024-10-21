@@ -5,7 +5,7 @@ import { useDispatch, useSelector } from 'react-redux';
 import { useLocation, useNavigate, useParams } from "react-router-dom";
 import { getAdminProducts, updateProduct } from '../../actions/productsActions';
 import { clearProductUpdated, clearError, clearproduct } from '../../slices/productSlice';
-import { toast } from 'react-toastify';
+import { Slide,toast } from 'react-toastify';
 import { getProduct } from '../../actions/productAction';
 import MetaData from '../Layouts/MetaData';
 import LoaderButton from '../Layouts/LoaderButton';
@@ -275,7 +275,18 @@ const UpdateProduct = ({ isActive, setIsActive }) => {
 
         // Check if total size exceeds the maximum allowed size
         if (totalSize > maxSize) {
-            toast.error('The total size of all selected images exceeds the 5MB limit.');
+            // toast.error('The total size of all selected images exceeds the 5MB limit.');
+            toast.dismiss();
+            setTimeout(() => {
+                toast.error('The total size of all selected images exceeds the 5MB limit.', {
+                    position: 'bottom-center',
+                    type: 'error',
+                    autoClose: 700,
+                    transition: Slide,
+                    hideProgressBar: true,
+                    className: 'small-toast',
+                });
+            }, 300);
             return; // Stop further execution if total size exceeds the limit
         }
 
@@ -384,27 +395,58 @@ const UpdateProduct = ({ isActive, setIsActive }) => {
     // }, [dispatch, isProductUpdated, error]);
     useEffect(() => {
         if (isProductUpdated) {
-            toast('Product updated successfully!', {
-                type: 'success',
-                position: "bottom-center",
-                onOpen: () => dispatch(clearProductUpdated())
-            });
+            // toast('Product updated successfully!', {
+            //     type: 'success',
+            //     position: "bottom-center",
+            //     onOpen: () => dispatch(clearProductUpdated())
+            // });
+            toast.dismiss();
+            setTimeout(() => {
+                toast.success('Product updated successfully!', {
+                    position: 'bottom-center',
+                    type: 'success',
+                    autoClose: 700,
+                    transition: Slide,
+                    hideProgressBar: true,
+                    className: 'small-toast',
+                    onOpen: () => dispatch(clearProductUpdated())
+                });
+            }, 300);
             dispatch(getAdminProducts())
             navigate('/admin/products');
         }
 
         if (error) {
-            toast(error, {
-                position: "bottom-center",
-                type: 'error',
-                onOpen: () => dispatch(clearError())
-            });
+            // toast(error, {
+            //     position: "bottom-center",
+            //     type: 'error',
+            //     onOpen: () => dispatch(clearError())
+            // });
+            toast.dismiss();
+            setTimeout(() => {
+                toast.error(error, {
+                    position: 'bottom-center',
+                    type: 'error',
+                    autoClose: 700,
+                    transition: Slide,
+                    hideProgressBar: true,
+                    className: 'small-toast',
+                    onOpen: () => dispatch(clearError())
+                });
+            }, 300);
         }
     }, [dispatch, isProductUpdated, error, navigate]);
 
     return (
+        <div>
+            <MetaData 
+  title="Update Product" 
+  description="Edit product details, update stock levels, or change product images to keep your catalog accurate and up to date." 
+/>
+
+       
         <div className="row loader-parent">
-            <MetaData title={`Update Product`} />
+            {/* <MetaData title={`Update Product`} /> */}
             <div className="col-12 col-md-2">
                 <div style={{ display: 'flex', flexDirection: 'row', position: 'fixed', top: '0px', zIndex: 99999, backgroundColor: '#fff', minWidth: '100%' }}>
                     <Sidebar isActive={isActive} setIsActive={setIsActive} />
@@ -577,6 +619,7 @@ const UpdateProduct = ({ isActive, setIsActive }) => {
                 }
 
             </div>
+        </div>
         </div>
     );
 }

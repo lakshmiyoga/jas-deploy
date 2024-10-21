@@ -3,8 +3,8 @@ import Sidebar from "./Sidebar";
 import { useDispatch, useSelector } from 'react-redux';
 import { useLocation, useNavigate, useParams } from "react-router-dom";
 import { orderDetail as orderDetailAction, updateOrder, porterOrder, RemoveOrderResponse, adminOrders } from "../../actions/orderActions";
-import { CancelOrderResponse, createPorterOrderResponse, getporterOrder, packedOrder } from "../../actions/porterActions";
-import { toast } from "react-toastify";
+import { CancelOrderResponse, createPorterOrderResponse, getPackedOrder, getporterOrder, packedOrder } from "../../actions/porterActions";
+import { Slide, toast } from "react-toastify";
 import { clearOrderUpdated, clearError, adminOrderRemoveClearError } from "../../slices/orderSlice";
 import { Link } from "react-router-dom";
 import { v4 as uuidv4 } from 'uuid';
@@ -28,7 +28,7 @@ const UpdateOrder = ({ isActive, setIsActive }) => {
     sessionStorage.setItem('redirectPath', location.pathname);
     const { loading, isOrderUpdated, error, orderDetail, porterOrderDetail, orderRemoveResponse, orderRemoveError } = useSelector(state => state.orderState);
     const { products } = useSelector((state) => state.productsState);
-    const { porterOrderData, porterOrderResponse, porterCancelResponse, porterCancelError, portererror, packedOrderData } = useSelector((state) => state.porterState);
+    const { porterOrderData, porterOrderResponse, porterCancelResponse, porterCancelError, portererror, packedOrderData, getpackedOrderData } = useSelector((state) => state.porterState);
     const { user = {}, orderItems = [], shippingInfo = {}, totalPrice = 0, statusResponse = {} } = orderDetail;
     const [orderStatus, setOrderStatus] = useState("Processing");
     const [dropStatus, setDropStatus] = useState("");
@@ -58,9 +58,9 @@ const UpdateOrder = ({ isActive, setIsActive }) => {
 
     }, [orderDetail]);
 
-    useEffect(() => {
-        dispatch(porterClearData())
-    }, [])
+    // useEffect(() => {
+    //     dispatch(porterClearData())
+    // }, [])
 
     const handleItemSelection = (index) => {
         const newSelectedItems = [...selectedItems];
@@ -85,7 +85,7 @@ const UpdateOrder = ({ isActive, setIsActive }) => {
     // const submitHandler = async (e) => {
     //     e.preventDefault();
     //     // setRefreshData(false)
-    //     const requestId = `TEST_0_${uuidv4()}`;
+    //     const requestId = TEST_0_${uuidv4()};
     //     const porterData = {
     //         "request_id": requestId,
     //         "delivery_instructions": {
@@ -168,7 +168,7 @@ const UpdateOrder = ({ isActive, setIsActive }) => {
 
 
     //     console.log("detailedTable", detailedTable);
-    //     console.log(`Total Refundable Amount: ₹${totalRefundableAmount}`);
+    //     console.log(Total Refundable Amount: ₹${totalRefundableAmount});
 
     //     console.log("updatedItems", updatedItems)
 
@@ -204,7 +204,18 @@ const UpdateOrder = ({ isActive, setIsActive }) => {
             const numericValue = parseFloat(value);
             if (numericValue < 0) {
                 // If the entered value is negative, reset to the original weight and show an error
-                toast.error("Weight cannot be negative. Reverting to original weight.");
+                // toast.error("Weight cannot be negative. Reverting to original weight.");
+                toast.dismiss();
+                setTimeout(() => {
+                    toast.error('Weight cannot be negative. Reverting to original weight.', {
+                        position: 'bottom-center',
+                        type: 'error',
+                        autoClose: 700,
+                        transition: Slide,
+                        hideProgressBar: true,
+                        className: 'small-toast',
+                    });
+                }, 300);
                 const newWeights = [...editableWeights];
                 newWeights[index] = originalWeights[index]; // Reset to original weight
                 setEditableWeights(newWeights);
@@ -212,7 +223,18 @@ const UpdateOrder = ({ isActive, setIsActive }) => {
             }
 
             if (numericValue > orderItems[index].productWeight) {
-                toast.error("Entered Kg is greater than requested Kg. Reverting to original weight.");
+                // toast.error("Entered Kg is greater than requested Kg. Reverting to original weight.");
+                toast.dismiss();
+                setTimeout(() => {
+                    toast.error('Entered Kg is greater than requested Kg. Reverting to original weight.', {
+                        position: 'bottom-center',
+                        type: 'error',
+                        autoClose: 700,
+                        transition: Slide,
+                        hideProgressBar: true,
+                        className: 'small-toast',
+                    });
+                }, 300);
             }
 
             const weight = Math.min(numericValue, orderItems[index].productWeight); // Ensure weight does not exceed initially ordered weight
@@ -251,11 +273,11 @@ const UpdateOrder = ({ isActive, setIsActive }) => {
         // if (currentHour < 21) { // Before 9 PM
         //     orderDate = new Date(currentDate);
         //     orderDate.setDate(orderDate.getDate() + 1); // Next day
-        //     // setOrderDescription(`The order will be delivered on this day: ${orderDate.toDateString()}`);
+        //     // setOrderDescription(The order will be delivered on this day: ${orderDate.toDateString()});
         // } else { // After 9 PM
         //     orderDate = new Date(currentDate);
         //     orderDate.setDate(orderDate.getDate() + 2); // Day after tomorrow
-        //     // setOrderDescription(`The order will be delivered on this day: ${orderDate.toDateString()}`);
+        //     // setOrderDescription(The order will be delivered on this day: ${orderDate.toDateString()});
         // }
 
         let totalDispatchedAmount = 0;
@@ -291,7 +313,7 @@ const UpdateOrder = ({ isActive, setIsActive }) => {
 
 
         // console.log("dispatchedTable", dispatchedTable);
-        // console.log(`Total Amount: ₹${totalDispatchedAmount}`);
+        // console.log(Total Amount: ₹${totalDispatchedAmount});
 
         const reqPackedData = {
             user: user,
@@ -313,7 +335,18 @@ const UpdateOrder = ({ isActive, setIsActive }) => {
             // setRefreshData(true)
             // await dispatch(getporterOrder({ order_id: id }));
         } catch (error) {
-            toast.error(error);
+            // toast.error(error);
+            toast.dismiss();
+                setTimeout(() => {
+                    toast.error(error, {
+                        position: 'bottom-center',
+                        type: 'error',
+                        autoClose: 700,
+                        transition: Slide,
+                        hideProgressBar: true,
+                        className: 'small-toast',
+                    });
+                }, 300);
             // setRefreshData(true)
         }
 
@@ -322,23 +355,23 @@ const UpdateOrder = ({ isActive, setIsActive }) => {
     }
 
     useEffect(() => {
-        if (isOrderUpdated) {
-            toast('Order Updated Successfully!', {
-                type: 'success',
-                position: "bottom-center",
-                onOpen: () => dispatch(clearOrderUpdated())
-            });
-            dispatch(adminOrders());
-            return
+        // if (isOrderUpdated) {
+        //     toast('Order Updated Successfully!', {
+        //         type: 'success',
+        //         position: "bottom-center",
+        //         onOpen: () => dispatch(clearOrderUpdated())
+        //     });
+        //     dispatch(adminOrders());
+        //     return
 
-        }
-        if (error) {
-            toast(error, {
-                position: "bottom-center",
-                type: 'error',
-                onOpen: () => { dispatch(clearError()) }
-            });
-        }
+        // }
+        // if (error) {
+        //     toast(error, {
+        //         position: "bottom-center",
+        //         type: 'error',
+        //         onOpen: () => { dispatch(clearError()) }
+        //     });
+        // }
         // if (portererror) {
         //     toast(portererror, {
         //         position: "bottom-center",
@@ -347,7 +380,8 @@ const UpdateOrder = ({ isActive, setIsActive }) => {
         //     });
         // }
         dispatch(orderDetailAction(id));
-        dispatch(getporterOrder({ order_id: id }))
+        dispatch(getporterOrder({ order_id: id }));
+        dispatch(getPackedOrder({ order_id: id }));
         // if (!refreshData) {
         //     const fetchData = async () => {
         //          dispatch(porterClearData())
@@ -380,7 +414,58 @@ const UpdateOrder = ({ isActive, setIsActive }) => {
         // }
         setRefreshData(true)
 
-    }, [dispatch, id, porterOrderDetail, error, packedOrderData]);
+    }, [dispatch, id, porterOrderDetail, packedOrderData]);
+
+    useEffect(() => {
+
+    })
+    useEffect(() => {
+        if (isOrderUpdated) {
+            // toast('Order Updated Successfully!', {
+            //     type: 'success',
+            //     position: "bottom-center",
+            //     onOpen: () => dispatch(clearOrderUpdated())
+            // });
+            toast.dismiss();
+                setTimeout(() => {
+                    toast.success('Order Updated Successfully!', {
+                        position: 'bottom-center',
+                        type: 'success',
+                        autoClose: 700,
+                        transition: Slide,
+                        hideProgressBar: true,
+                        className: 'small-toast',
+                        onOpen: () => dispatch(clearOrderUpdated())
+                    });
+                }, 300);
+            dispatch(adminOrders());
+        }
+    }, [isOrderUpdated])
+
+    useEffect(() => {
+        if (error) {
+            // toast(error, {
+            //     position: "bottom-center",
+            //     type: 'error',
+            //     onOpen: () => { dispatch(clearError()) }
+            // });
+            toast.dismiss();
+                setTimeout(() => {
+                    toast.error(error, {
+                        position: 'bottom-center',
+                        type: 'error',
+                        autoClose: 700,
+                        transition: Slide,
+                        hideProgressBar: true,
+                        className: 'small-toast',
+                        onOpen: () => { dispatch(clearError()) }
+                    });
+                }, 300);
+            return;
+        }
+    }, [error])
+
+
     useEffect(() => {
         if (porterOrderData && refreshData) {
             dispatch(createPorterOrderResponse({ order_id: porterOrderData && porterOrderData.order_id, porterOrder_id: porterOrderData?.porterOrder?.order_id }))
@@ -407,18 +492,32 @@ const UpdateOrder = ({ isActive, setIsActive }) => {
     //     handlePorterOrder();
     // }, [porterOrderResponse, refreshData])
 
-    return (
+    // console.log("getpackedOrderData",getpackedOrderData);
 
-        <div className="row">
-            <MetaData title={`Update Order`} />
+    return (
+        <div>
+            <MetaData 
+  title="Update Order" 
+  description="Modify order details, update order status, and handle special requests from customers to ensure order accuracy." 
+/>
+
+        
+
+        <div className="row loader-parent">
+            {/* <MetaData title={`Update Order`} /> */}
             <div className="col-12 col-md-2">
                 <div style={{ display: 'flex', flexDirection: 'row', position: 'fixed', top: '0px', zIndex: 99999, backgroundColor: '#fff', minWidth: '100%' }}>
                     <Sidebar isActive={isActive} setIsActive={setIsActive} />
                 </div>
             </div>
-            {
-                loading ? <Loader /> : (
-                    <div className="col-12 col-md-10 smalldevice-space container order-detail-container">
+
+            <div className="col-12 col-md-10 smalldevice-space container order-detail-container loader-parent">
+                {
+                    loading ? (
+                        <div className="container loader-loading-center">
+                            <Loader />
+                        </div>
+                    ) : (
                         <Fragment>
                             {/* <div className="row d-flex justify-content-around"> */}
                             <div className="col-12 col-lg-12 mt-5 order-details">
@@ -433,7 +532,7 @@ const UpdateOrder = ({ isActive, setIsActive }) => {
                                     {shippingInfo.area && `${shippingInfo.area},`}
                                     {shippingInfo.landmark && `${shippingInfo.landmark},`}
                                     {shippingInfo.city && `${shippingInfo.city}`}
-                                    {shippingInfo.postalCode && `-${shippingInfo.postalCode}`}
+                                    {shippingInfo.postalCode && -`${shippingInfo.postalCode}`}
                                 </div>
 
                                 <div><b>Amount:</b> Rs.{parseFloat(totalPrice).toFixed(2)}</div>
@@ -560,7 +659,7 @@ const UpdateOrder = ({ isActive, setIsActive }) => {
                                         <table className="updatetable updatetable-bordered">
                                             <thead>
                                                 <tr>
-                                                    {porterOrderData && porterOrderData.detailedTable ? (
+                                                    {getpackedOrderData && getpackedOrderData.dispatchedTable ? (
                                                         <>
                                                             <th>Image</th>
                                                             <th>Name</th>
@@ -585,8 +684,8 @@ const UpdateOrder = ({ isActive, setIsActive }) => {
                                                 </tr>
                                             </thead>
                                             <tbody>
-                                                {porterOrderData && porterOrderData.detailedTable ? (
-                                                    porterOrderData.detailedTable.map((item, index) => (
+                                                {getpackedOrderData && getpackedOrderData.dispatchedTable ? (
+                                                    getpackedOrderData.dispatchedTable.map((item, index) => (
                                                         <tr key={index}>
                                                             <td>
                                                                 <img src={item.image} alt={item.name} className="updateTableproduct-image" />
@@ -594,9 +693,10 @@ const UpdateOrder = ({ isActive, setIsActive }) => {
                                                             <td>{item.name}</td>
                                                             <td>{item.orderedWeight} kg</td>
                                                             <td>Rs. {item.pricePerKg}</td>
-                                                            <td>{item.dispatchedWeight} kg</td>
-                                                            <td>{item.refundableWeight} kg</td>
-                                                            <td>Rs. {item.refundableAmount}</td>
+                                                            <td>{item.dispatchedWeight ? item.dispatchedWeight : 0} kg</td>
+                                                            <td>{item.refundableWeight ? item.refundableWeight : 0} kg</td>
+                                                            <td>Rs. {item.refundableWeight ? item.refundableWeight * item.pricePerKg  : 0}</td>
+                                                            
                                                         </tr>
                                                     ))
                                                 ) : (
@@ -678,11 +778,13 @@ const UpdateOrder = ({ isActive, setIsActive }) => {
                                 } */}
                             </div>
                         </Fragment>
-                    </div>
-                )
-            }
+                    )
+                }
+            </div>
 
 
+
+        </div>
         </div>
     );
 

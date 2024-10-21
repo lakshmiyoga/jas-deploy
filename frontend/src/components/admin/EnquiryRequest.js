@@ -2,7 +2,7 @@ import React, { useEffect, Fragment, useState } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 import { MDBDataTable } from 'mdbreact';
 import { Button } from "react-bootstrap";
-import { toast } from 'react-toastify';
+import { Slide, toast } from 'react-toastify';
 import Sidebar from "../admin/Sidebar";
 import Loader from '../Layouts/Loader';
 import { getEnquiryDetails, deleteEnquiryDetails } from '../../actions/enquiryActions';
@@ -164,19 +164,43 @@ const EnquiryRequest = ({isActive,setIsActive}) => {
 
     useEffect(() => {
         if (error ) {
-            toast(Error, {
-                position: "bottom-center",
-                type: 'error',
-                // onOpen: () => { dispatch(clearError()) }
-            })
+            // toast(Error, {
+            //     position: "bottom-center",
+            //     type: 'error',
+            //     // onOpen: () => { dispatch(clearError()) }
+            // })
+            toast.dismiss();
+            setTimeout(() => {
+            toast.error(error, {
+              position: 'bottom-center',
+              type: 'error',
+              autoClose: 700,
+              transition: Slide,
+              hideProgressBar: true,
+              className: 'small-toast',
+              onOpen: () => { dispatch(clearError()) }
+            });
+          }, 300);
             return
         }
         if (isEnquiryDeleted) {
-            toast('Enquiry Deleted Succesfully!', {
-                type: 'success',
-                position: "bottom-center",
-                onOpen: () => dispatch(clearEnquiryDeleted())
-            })
+            // toast('Enquiry Deleted Succesfully!', {
+            //     type: 'success',
+            //     position: "bottom-center",
+            //     onOpen: () => dispatch(clearEnquiryDeleted())
+            // })
+            toast.dismiss();
+            setTimeout(() => {
+            toast.success('Enquiry Deleted Succesfully!', {
+              position: 'bottom-center',
+              type: 'success',
+              autoClose: 700,
+              transition: Slide,
+              hideProgressBar: true,
+              className: 'small-toast',
+              onOpen: () => dispatch(clearEnquiryDeleted())
+            });
+          }, 300);
             return;
         }
         // dispatch(getEnquiryDetails())
@@ -211,7 +235,12 @@ const EnquiryRequest = ({isActive,setIsActive}) => {
 
     return (
       <div>
-         <MetaData title={`Enquiry Request`} />
+         {/* <MetaData title={`Enquiry Request`} /> */}
+         <MetaData 
+  title="Enquiry Request" 
+  description="Handle customer inquiries and requests efficiently, ensuring prompt responses and high customer satisfaction." 
+/>
+
      
         <div className="row loader-parent">
             <div className="col-12 col-md-2">
@@ -251,7 +280,7 @@ const EnquiryRequest = ({isActive,setIsActive}) => {
                                 </button>
                             </div>
                             <div className="modal-body">
-                                <p>Are you sure you want to delete this product?</p>
+                                <p>Are you sure you want to delete this Enquiry?</p>
                             </div>
                             <div className="modal-footer">
                                 <button type="button" className="btn btn-danger" onClick={handleConfirmDelete}>OK</button>

@@ -14,7 +14,7 @@ import Card from 'react-bootstrap/Card';
 const Keerai = () => {
     const location = useLocation();
     sessionStorage.setItem('redirectPath', location.pathname);
-  const { category } = location.state || { category: 'Keerai' };
+    const { category } = location.state || { category: 'Keerai' };
     const { products, loading, error } = useSelector((state) => state.productsState);
     const [keyword, setKeyword] = useState("")
 
@@ -31,9 +31,9 @@ const Keerai = () => {
 
     const Keeraigal = products ? products.filter((product) => product.category === 'Keerai') : [];
     const filteredKeerai = keyword ? Keeraigal.filter((Keerai) => Keerai.englishName.toLowerCase().includes(keyword.toLowerCase())) : Keeraigal;
-     console.log(filteredKeerai);
+    console.log(filteredKeerai);
 
-     // Sort the filtered keerai in ascending order by name
+    // Sort the filtered keerai in ascending order by name
     const sortedKeerai = filteredKeerai.sort((a, b) => a.englishName.localeCompare(b.englishName));
 
     return (
@@ -41,7 +41,11 @@ const Keerai = () => {
             {/* <Header/> */}
             {loading ? <Loader /> :
                 <Fragment>
-                    <MetaData title={'Buy Best Products'} />
+                    {/* <MetaData title={'Keerai'} /> */}
+                    <MetaData
+                        title="Fresh Keerai"
+                        description="Discover a wide variety of fresh Keerai at our store. Search, filter, and explore organic and high-quality Keerai to add to your shopping cart."
+                    />
                     <div className="products_heading">Keerai</div>
                     {/* <div className=" search-responsive col-12 col-md-6 mt-2 mt-md-0" style={{ display: 'flex', alignItems: 'center', justifyContent: 'center', position: 'relative', minWidth: '100%', height: 'auto' }}>
                         <Search keyword={keyword} setKeyword={setKeyword} />
@@ -82,39 +86,39 @@ const Keerai = () => {
                                 </Card>
                             </Link>
                         </div> */}
-                        <div style={{ display: 'flex', flexDirection: 'row', position: 'relative', width: '100%', justifyContent: 'center', alignItems: 'center',marginTop:'20px' }}>
-                        <div className="card card-vegetbles col-sm-2 col-md-2 col-lg-2 my-2 landingpage-card-vegetables">
+                        <div style={{ display: 'flex', flexDirection: 'row', position: 'relative', width: '100%', justifyContent: 'center', alignItems: 'center', marginTop: '20px' }}>
+                            <div className="card card-vegetbles col-sm-2 col-md-2 col-lg-2 my-2 landingpage-card-vegetables">
                                 <Link to="/vegetables" state={{ category: 'Vegetables' }} style={{ textDecoration: 'none' }}>
-                                <div className="square-card">
+                                    <div className="square-card">
                                         <div className="card-content">
                                             <img
                                                 className="card-img-top-vegetable "
                                                 src="../images/vegetables.jpg"
                                                 alt="celeries"
                                             />
-                                             <div className="card-title-vegetable">Vegetables</div>
+                                            <div className="card-title-vegetable">Vegetables</div>
                                         </div>
-                                           
-                                         
+
+
                                     </div>
                                 </Link>
                             </div>
                             <div className="card card-vegetbles col-sm-2 col-md-2 col-lg-2 my-2 landingpage-card-vegetables">
                                 <Link to="/fruits" state={{ category: 'Fruits' }} style={{ textDecoration: 'none' }}>
-                                <div className="square-card">
+                                    <div className="square-card">
                                         <div className="card-content">
                                             <img
                                                 className="card-img-top-vegetable"
                                                 src="../images/fruits.jpg"
                                                 alt="fruits"
                                             />
-                                              <div className="card-title-vegetable">Fruits</div>
+                                            <div className="card-title-vegetable">Fruits</div>
                                         </div>
-                                          
+
                                     </div>
                                 </Link>
                             </div>
-                           
+
                         </div>
 
 

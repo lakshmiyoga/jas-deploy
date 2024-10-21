@@ -4,7 +4,7 @@ import { validateShipping } from './Shipping';
 import { Link, useNavigate } from 'react-router-dom';
 import StepsCheckOut from './StepsCheckOut';
 import axios from 'axios';
-import { toast } from 'react-toastify';
+import { Slide, toast } from 'react-toastify';
 import Loader from '../Layouts/Loader'; // Ensure this path is correct based on your project structure
 import { createOrder } from '../../actions/orderActions';
 import { useDispatch, useSelector } from 'react-redux';
@@ -24,7 +24,7 @@ const ConfirmOrder = () => {
     // const { loading: orderLoading, orderDetail, error } = useSelector(state => state.orderState);
     const { shippingInfo, items: cartItems } = useSelector(state => state.cartState);
     const { user } = useSelector(state => state.authState);
-    console.log("user",user)
+    console.log("user", user)
     const navigate = useNavigate();
     const [loading, setLoading] = useState(false);
     const [dummyUser, setDummyUser] = useState(false);
@@ -114,9 +114,20 @@ const ConfirmOrder = () => {
                 }
                 else {
 
-                    toast.error(`No 2 Wheeler found in the vehicle list.`, {
-                        position: "bottom-center",
-                    });
+                    // toast.error(`No 2 Wheeler found in the vehicle list.`, {
+                    //     position: "bottom-center",
+                    // });
+                    toast.dismiss();
+                    setTimeout(() => {
+                        toast.error('No 2 Wheeler found in the vehicle list', {
+                            position: 'bottom-center',
+                            type: 'error',
+                            autoClose: 700,
+                            transition: Slide,
+                            hideProgressBar: true,
+                            className: 'small-toast',
+                        });
+                    }, 300);
                     navigate("/shipping")
                 }
 
@@ -125,7 +136,18 @@ const ConfirmOrder = () => {
             } catch (error) {
                 // console.log(error)
                 navigate("/shipping")
-                toast.error(error.response.data.message);
+                // toast.error(error.response.data.message);
+                toast.dismiss();
+                setTimeout(() => {
+                    toast.error(error.response.data.message, {
+                        position: 'bottom-center',
+                        type: 'error',
+                        autoClose: 700,
+                        transition: Slide,
+                        hideProgressBar: true,
+                        className: 'small-toast',
+                    });
+                }, 300);
                 // Handle error as needed
             }
         }
@@ -218,7 +240,18 @@ const ConfirmOrder = () => {
 
                 dispatch(createOrder(order));
             } else {
-                toast.error('Failed to Create the Order');
+                // toast.error('Failed to Create the Order');
+                toast.dismiss();
+                setTimeout(() => {
+                    toast.error('Failed to Create the Order', {
+                        position: 'bottom-center',
+                        type: 'error',
+                        autoClose: 700,
+                        transition: Slide,
+                        hideProgressBar: true,
+                        className: 'small-toast',
+                    });
+                }, 300);
             }
 
             if (data && data.sessionResponse) {
@@ -228,14 +261,36 @@ const ConfirmOrder = () => {
                 if (payloadAmount === totalAmount) {
                     initPayment(data.sessionResponse);
                 } else {
-                    toast.error('Mismatch initial Amount, possible data tampering detected');
+                    // toast.error('Mismatch initial Amount, possible data tampering detected');
+                    toast.dismiss();
+                    setTimeout(() => {
+                        toast.error('Mismatch initial Amount, possible data tampering detected', {
+                            position: 'bottom-center',
+                            type: 'error',
+                            autoClose: 700,
+                            transition: Slide,
+                            hideProgressBar: true,
+                            className: 'small-toast',
+                        });
+                    }, 300);
                     setLoading(false);
                 }
             }
         } catch (error) {
             // console.log(error)
             if (error && error.response && error.response.data && error.response.data.message) {
-                toast.error(error && error.response.data.message)
+                // toast.error(error && error.response.data.message)
+                toast.dismiss();
+                setTimeout(() => {
+                    toast.error(error && error.response.data.message, {
+                        position: 'bottom-center',
+                        type: 'error',
+                        autoClose: 700,
+                        transition: Slide,
+                        hideProgressBar: true,
+                        className: 'small-toast',
+                    });
+                }, 300);
             }
             setLoading(false);
             setShowModal(false);
@@ -270,7 +325,18 @@ const ConfirmOrder = () => {
         //     toast.error(error);
         // }
         if (message) {
-            toast.error(message, { position: "bottom-center" });
+            // toast.error(message, { position: "bottom-center" });
+            toast.dismiss();
+            setTimeout(() => {
+                toast.error(message, {
+                    position: 'bottom-center',
+                    type: 'error',
+                    autoClose: 700,
+                    transition: Slide,
+                    hideProgressBar: true,
+                    className: 'small-toast',
+                });
+            }, 300);
         }
     }, [shippingInfo, navigate, message]);
 
@@ -278,7 +344,12 @@ const ConfirmOrder = () => {
         <Fragment>
             {/* { shippingAmount ? ( */}
             <Fragment>
-                <MetaData title="Confirm Order" />
+                {/* <MetaData title="Confirm Order" /> */}
+                <MetaData
+                    title="Confirm Your Order"
+                    description="Verify your order details before finalizing your purchase. Review your selected items, shipping information, and total cost before confirming."
+                />
+
                 <div className="products_heading">Confirm Order</div>
                 <StepsCheckOut shipping confirmOrder />
                 <div className="container confirm-order-container">
@@ -331,12 +402,12 @@ const ConfirmOrder = () => {
                                     <hr />
                                     {shippingCharge ? (
                                         <button id="checkout_btn" className="btn btn-primary btn-block" onClick={handelopenModal} disabled={loading}>
-                                             {/* {loading ? <LoaderButton fullPage={false} size={20} /> : (
+                                            {/* {loading ? <LoaderButton fullPage={false} size={20} /> : (
                                                                 <span>  Proceed to Payment</span>
                                                             )
 
                                                             } */}
-                                           Proceed to Payment  
+                                            Proceed to Payment
                                         </button>
                                     ) : (
                                         <button id="checkout_btn" className="btn btn-block" disabled>
@@ -352,11 +423,11 @@ const ConfirmOrder = () => {
                                                         {
                                                             !loading ? (
                                                                 <button type="button" className="close" onClick={handleCancelModal} disabled={loading}>
-                                                                <span aria-hidden="true">&times;</span>
-                                                            </button>
+                                                                    <span aria-hidden="true">&times;</span>
+                                                                </button>
                                                             ) : <></>
                                                         }
-                                                       
+
                                                     </div>
                                                     <div className="modal-body">
                                                         <p>{orderDescription && orderDescription}</p>
@@ -369,7 +440,7 @@ const ConfirmOrder = () => {
                                                             )
 
                                                             }
-                                                            
+
                                                         </button>
                                                     </div>
                                                 </div>

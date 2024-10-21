@@ -22,7 +22,7 @@ const authSlice = createSlice({
         loginSuccess(state, action) {
             return {
                 loading: false,
-                isAuthenticated: true,
+                isAuthenticated: action.payload.success ? action.payload.success : false ,
                 user: action.payload.user
             }
         },
@@ -52,7 +52,7 @@ const authSlice = createSlice({
         registerSuccess(state, action) {
             return {
                 loading: false,
-                isAuthenticated: true,
+                isAuthenticated: action.payload.success ? action.payload.success : false,
                 user: action.payload.user
             }
         },
@@ -75,7 +75,7 @@ const authSlice = createSlice({
             return {
                 ...state,
                 loading: false,
-                isAuthenticated: true,
+                isAuthenticated: action.payload.success ? action.payload.success : false,
                 user: action.payload.user
             }
         },

@@ -4,7 +4,7 @@ import { useLocation, useNavigate } from 'react-router-dom';
 import { Link } from 'react-router-dom';
 import { decreaseCartItemQty, increaseCartItemQty, removeItemFromCart } from '../../slices/cartSlice';
 import MetaData from '../Layouts/MetaData';
-import { toast } from 'react-toastify';
+import { Slide, toast } from 'react-toastify';
 
 const Cart = () => {
     const { items } = useSelector(state => state.cartState);
@@ -13,14 +13,14 @@ const Cart = () => {
     sessionStorage.setItem('redirectPath', location.pathname);
     const dispatch = useDispatch();
     const navigate = useNavigate();
-    console.log("items",items)
+    console.log("items", items)
 
     const [showModal, setShowModal] = useState(false);
     const [productToDelete, setProductToDelete] = useState(null);
 
-    const shippingCharge = 30.0;
+    // const shippingCharge = 30.0;
     const subtotal = items.reduce((acc, item) => acc + item.price * item.productWeight, 0).toFixed(2);
-    const total = (parseFloat(subtotal) + shippingCharge).toFixed(2);
+    // const total = (parseFloat(subtotal) + shippingCharge).toFixed(2);
 
     const checkOutHandler = () => {
         if (isAuthenticated) {
@@ -40,11 +40,22 @@ const Cart = () => {
     const handleConfirmDelete = () => {
         dispatch(removeItemFromCart(productToDelete));
         setShowModal(false);
-        toast.success('Item removed from Cart', {
-            position: "bottom-center",
-            type: 'success',
-            autoClose: 500, 
-        });
+        // toast.success('Item removed from Cart', {
+        //     position: "bottom-center",
+        //     type: 'success',
+        //     autoClose: 500, 
+        // });
+        toast.dismiss();
+        setTimeout(() => {
+            toast.success('Item removed from Cart', {
+                position: 'bottom-center',
+                type: 'success',
+                autoClose: 700,
+                transition: Slide,
+                hideProgressBar: true,
+                className: 'small-toast',
+            });
+        }, 300);
     };
 
     const handleCancelDelete = () => {
@@ -62,55 +73,60 @@ const Cart = () => {
 
     return (
         <Fragment>
-        <MetaData title={"Cart"} />
-        {items && items.length === 0 ? (
-            <h2 className="mt-5" style={{ display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
-                Your Cart is Empty
-            </h2>
-        ) : (
-            <Fragment>
-                <div className="products_heading">Cart</div>
-                <div className="container cart-detail-container mt-5 " >
-                    <div className="" >
-                        <h2 className="mt-5">Your Cart: <b>{items.length}</b></h2>
-                        <div className="updatetable-responsive">
-                            <table className="updatetable updatetable-bordered">
-                                <thead>
-                                    <tr>
-                                        <th>S.No</th>
-                                        <th>Name</th>
-                                        <th>Price</th>
-                                        <th>Weight/Piece</th>
-                                        <th>Total</th>
-                                        <th>Actions</th>
-                                    </tr>
-                                </thead>
-                                <tbody>
+            {/* <MetaData title={"Cart"} /> */}
+            <MetaData
+                title="Your Shopping Cart"
+                description="Review the items in your shopping cart. Adjust quantities, remove products, or proceed to checkout for a seamless shopping experience."
+            />
 
-                                    {items.map((item, index) => (
-
-                                        <tr key={item.product}>
-                                            <td>{index + 1}</td>
-                                            <td>{capitalizeFirstLetter(item.name)} </td>
-                                            <td>RS.{(item.price).toFixed(2)}</td>
-                                            <td>{item.productWeight}</td>
-                                            <td>Rs.{(item.price * item.productWeight).toFixed(2)}</td>
-                                            <td>
-                                                <i
-                                                    id="delete_cart_item"
-                                                    className="fa fa-trash btn btn-danger"
-                                                    onClick={() => handleDeleteClick(item.product)}
-                                                ></i>
-                                            </td>
+            {items && items.length === 0 ? (
+                <h2 className="cart_text mt-5" style={{ display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
+                    Your Cart is Empty
+                </h2>
+            ) : (
+                <Fragment>
+                    <div className="products_heading">Cart</div>
+                    <div className="container cart-detail-container mt-5 " >
+                        <div className="" >
+                            <h2 className="cart_text mt-5">Your Cart: <b>{items.length}</b></h2>
+                            <div className="updatetable-responsive">
+                                <table className="updatetable updatetable-bordered">
+                                    <thead>
+                                        <tr>
+                                            <th>S.No</th>
+                                            <th>Name</th>
+                                            <th>Price</th>
+                                            <th>Weight/Piece</th>
+                                            <th>Total</th>
+                                            <th>Actions</th>
                                         </tr>
-                                    ))}
-                                </tbody>
+                                    </thead>
+                                    <tbody>
 
-                            </table>
-                        </div>
+                                        {items.map((item, index) => (
 
-                        <div className="row"  style={{display:'flex', justifyContent:'flex-end'}}>
-                            {/* <div className="col-12 col-lg-8 my-4 float-left">
+                                            <tr key={item.product}>
+                                                <td>{index + 1}</td>
+                                                <td>{capitalizeFirstLetter(item.name)} </td>
+                                                <td>RS.{(item.price).toFixed(2)}</td>
+                                                <td>{item.productWeight}</td>
+                                                <td>Rs.{(item.price * item.productWeight).toFixed(2)}</td>
+                                                <td>
+                                                    <i
+                                                        id="delete_cart_item"
+                                                        className="fa fa-trash btn btn-danger"
+                                                        onClick={() => handleDeleteClick(item.product)}
+                                                    ></i>
+                                                </td>
+                                            </tr>
+                                        ))}
+                                    </tbody>
+
+                                </table>
+                            </div>
+
+                            <div className="row" style={{ display: 'flex', justifyContent: 'flex-end' }}>
+                                {/* <div className="col-12 col-lg-8 my-4 float-left">
                                 <div id="order_summary">
                                     <h4>Delivery Offers<span><i className='fa fa-truck' style={{ paddingLeft: '20px' }}></i></span></h4>
                                     <hr />
@@ -119,42 +135,42 @@ const Cart = () => {
                                     <p>Free delivery for all orders above Rs.1000</p>
                                 </div>
                             </div> */}
-                            <div className="col-12 col-lg-4 my-4">
-                                <div id="order_summary">
-                                    <h4>Cart Totals</h4>
-                                    <hr />
-                                    <p>Subtotal:  <span className="order-summary-values">Rs.{subtotal}</span></p>
-                                    <hr />
-                                    <button id="checkout_btn" className="btn btn-block" onClick={checkOutHandler}>Proceed to Payment</button>
+                                <div className="col-12 col-lg-4 my-4">
+                                    <div id="order_summary">
+                                        <h4 className="cart_text">Cart Totals</h4>
+                                        <hr />
+                                        <p>Subtotal:  <span className="order-summary-values">Rs.{subtotal}</span></p>
+                                        <hr />
+                                        <button id="checkout_btn" className="btn btn-block" onClick={checkOutHandler}>Proceed to Payment</button>
+                                    </div>
                                 </div>
                             </div>
                         </div>
                     </div>
-                </div>
-                {showModal && (
-                    <div className="modal" tabIndex="-1" role="dialog" style={modalStyle}>
-                        <div className="modal-dialog" role="document">
-                            <div className="modal-content">
-                                <div className="modal-header">
-                                    <h5 className="modal-title">Confirm Delete</h5>
-                                    <button type="button" className="close" onClick={handleCancelDelete}>
-                                        <span aria-hidden="true">&times;</span>
-                                    </button>
-                                </div>
-                                <div className="modal-body">
-                                    <p>Are you sure you want to delete this item?</p>
-                                </div>
-                                <div className="modal-footer">
-                                    <button type="button" className="btn btn-danger" onClick={handleConfirmDelete}>OK</button>
-                                    <button type="button" className="btn btn-secondary" onClick={handleCancelDelete}>Cancel</button>
+                    {showModal && (
+                        <div className="modal" tabIndex="-1" role="dialog" style={modalStyle}>
+                            <div className="modal-dialog" role="document">
+                                <div className="modal-content">
+                                    <div className="modal-header">
+                                        <h5 className="modal-title">Confirm Delete</h5>
+                                        <button type="button" className="close" onClick={handleCancelDelete}>
+                                            <span aria-hidden="true">&times;</span>
+                                        </button>
+                                    </div>
+                                    <div className="modal-body">
+                                        <p>Are you sure you want to delete this item?</p>
+                                    </div>
+                                    <div className="modal-footer">
+                                        <button type="button" className="btn btn-danger" onClick={handleConfirmDelete}>OK</button>
+                                        <button type="button" className="btn btn-secondary" onClick={handleCancelDelete}>Cancel</button>
+                                    </div>
                                 </div>
                             </div>
                         </div>
-                    </div>
-                )}
-            </Fragment>
-        )}
-    </Fragment>
+                    )}
+                </Fragment>
+            )}
+        </Fragment>
     );
 };
 

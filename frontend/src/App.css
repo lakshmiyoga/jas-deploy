@@ -3133,7 +3133,10 @@ body.no-scroll {
 
 @media (min-width: 576px) and (max-width: 768px) {
   .navbar-expand-sm .container {
-    /* margin: 0px; */
+    margin: 0px;
+    min-width: 100%;
+    display: flex;
+    justify-content: space-between;
 
   }
 
@@ -3847,5 +3850,49 @@ top: '55px',
   .card-vegetbles {
       max-width: 30%; /* Larger width for small phones */
       margin-bottom: 15px; /* Spacing between cards */
+  }
+}
+
+.small-toast{
+  width: 100%;
+  max-width: 500px;
+  box-shadow: none;
+}
+
+@media (max-width: 600px) {
+  .small-toast {
+    width: 100%;  /* Makes the toast 90% of the viewport width */
+    height: auto; /* Adjust the height based on the content */
+    padding: 10px; /* Smaller padding for a more compact look */
+    font-size: 14px; /* Slightly smaller text size */
+    position: relative; /* Fix the toast to the bottom */
+    display: flex;
+    z-index: 9999; /* Ensure it's on top of other content */
+    transition: none !important;
+  }
+}
+
+.cart_text {
+  font-size: 24px; 
+}
+
+/* Media Query for tablets (min-width: 768px) */
+@media (max-width: 768px) {
+  .cart_text {
+      font-size: 20px; 
+  }
+}
+
+/* Media Query for mobile devices (max-width: 576px) */
+@media (max-width: 576px) {
+  .cart_text {
+      font-size: 18px; 
+  }
+}
+
+/* Media Query for extra small devices (max-width: 480px) */
+@media (max-width: 480px) {
+  .cart_text {
+      font-size: 16px;
   }
 }

@@ -2,9 +2,9 @@ import { Fragment, useEffect, useState } from "react";
 import Sidebar from "./Sidebar";
 import { useDispatch, useSelector } from 'react-redux';
 import { useLocation, useNavigate, useParams } from "react-router-dom";
-import { orderDetail as orderDetailAction, updateOrder, porterOrder, RemoveOrderResponse } from "../../actions/orderActions";
+import { orderDetail as orderDetailAction, updateOrder, porterOrder, RemoveOrderResponse, adminOrders } from "../../actions/orderActions";
 import { CancelOrderResponse, createPorterOrderResponse, getPackedOrder, getporterOrder, packedOrder } from "../../actions/porterActions";
-import { toast } from "react-toastify";
+import { Slide, toast } from "react-toastify";
 import { clearOrderUpdated, clearError, adminOrderRemoveClearError, orderDetailClear } from "../../slices/orderSlice";
 import { Link } from "react-router-dom";
 import { v4 as uuidv4 } from 'uuid';
@@ -52,7 +52,7 @@ const Dispatch = ({ isActive, setIsActive }) => {
     });
 
     useEffect(() => {
-        if (orderDetail.order_id) {
+        if (orderDetail && orderDetail.order_id) {
             setOrderStatus(orderDetail.orderStatus);
             setDropStatus(orderDetail.orderStatus);
         }
@@ -130,11 +130,11 @@ const Dispatch = ({ isActive, setIsActive }) => {
                     "state": shippingInfo.state,
                     "pincode": shippingInfo.postalCode,
                     "country": shippingInfo.country,
-                    "lat": shippingInfo.latitude,
-                    "lng": shippingInfo.longitude,
+                    "lat": shippingInfo && shippingInfo.latitude && shippingInfo.latitude,
+                    "lng": shippingInfo && shippingInfo.longitude && shippingInfo.longitude,
                     "contact_details": {
-                        "name": user.name,
-                        "phone_number": shippingInfo.phoneNo
+                        "name": user && user.name,
+                        "phone_number": shippingInfo && shippingInfo.phoneNo && shippingInfo.phoneNo
                     }
                 }
             },
@@ -174,7 +174,7 @@ const Dispatch = ({ isActive, setIsActive }) => {
 
 
         // console.log("detailedTable", detailedTable);
-        // console.log(`Total Refundable Amount: ₹${totalRefundableAmount}`);
+        // console.log(Total Refundable Amount: ₹${totalRefundableAmount});
 
         // console.log("updatedItems", updatedItems)
 
@@ -191,15 +191,43 @@ const Dispatch = ({ isActive, setIsActive }) => {
             totalRefundableAmount: Number(getpackedOrderData && getpackedOrderData.totalRefundableAmount)
         };
         console.log('reqPorterData', reqPorterData);
+        if (orderDetail && shippingInfo && shippingInfo.latitude && shippingInfo.longitude && user && user.name && shippingInfo.phoneNo) {
 
-        try {
-            await dispatch(porterOrder({ id: orderDetail.order_id, reqPorterData }));
-            // setShowDispatchModal(false);
-            // setRefreshData(true)
-            // await dispatch(getporterOrder({ order_id: id }));
-        } catch (error) {
-            toast.error(error);
-            // setRefreshData(true)
+            try {
+
+                await dispatch(porterOrder({ id: orderDetail.order_id, reqPorterData }));
+                // setShowDispatchModal(false);
+                // setRefreshData(true)
+                // await dispatch(getporterOrder({ order_id: id }));
+            } catch (error) {
+                // toast.error(error);
+                // setRefreshData(true)
+                toast.dismiss();
+                setTimeout(() => {
+                    toast.error(error, {
+                        position: 'bottom-center',
+                        type: 'error',
+                        autoClose: 700,
+                        transition: Slide,
+                        hideProgressBar: true,
+                        className: 'small-toast',
+                    });
+                }, 300);
+            }
+        }
+        else {
+            // toast.error('Can’t Dispatch because some user drop details are missing!');
+            toast.dismiss();
+            setTimeout(() => {
+                toast.error('Can’t Dispatch because some user drop details are missing!', {
+                    position: 'bottom-center',
+                    type: 'error',
+                    autoClose: 700,
+                    transition: Slide,
+                    hideProgressBar: true,
+                    className: 'small-toast',
+                });
+            }, 300);
         }
 
         // setRefreshData(true)
@@ -212,7 +240,18 @@ const Dispatch = ({ isActive, setIsActive }) => {
             const numericValue = parseFloat(value);
             if (numericValue < 0) {
                 // If the entered value is negative, reset to the original weight and show an error
-                toast.error("Weight cannot be negative. Reverting to original weight.");
+                // toast.error("Weight cannot be negative. Reverting to original weight.");
+                toast.dismiss();
+                setTimeout(() => {
+                    toast.error('Weight cannot be negative. Reverting to original weight.', {
+                        position: 'bottom-center',
+                        type: 'error',
+                        autoClose: 700,
+                        transition: Slide,
+                        hideProgressBar: true,
+                        className: 'small-toast',
+                    });
+                }, 300);
                 const newWeights = [...editableWeights];
                 newWeights[index] = originalWeights[index]; // Reset to original weight
                 setEditableWeights(newWeights);
@@ -220,7 +259,18 @@ const Dispatch = ({ isActive, setIsActive }) => {
             }
 
             if (numericValue > orderItems[index].productWeight) {
-                toast.error("Entered Kg is greater than requested Kg. Reverting to original weight.");
+                // toast.error("Entered Kg is greater than requested Kg. Reverting to original weight.");
+                toast.dismiss();
+                setTimeout(() => {
+                    toast.error('Entered Kg is greater than requested Kg. Reverting to original weight.', {
+                        position: 'bottom-center',
+                        type: 'error',
+                        autoClose: 700,
+                        transition: Slide,
+                        hideProgressBar: true,
+                        className: 'small-toast',
+                    });
+                }, 300);
             }
 
             const weight = Math.min(numericValue, orderItems[index].productWeight); // Ensure weight does not exceed initially ordered weight
@@ -280,7 +330,7 @@ const Dispatch = ({ isActive, setIsActive }) => {
 
 
     //     console.log("dispatchedTable", dispatchedTable);
-    //     console.log(`Total Amount: ₹${totalDispatchedAmount}`);
+    //     console.log(Total Amount: ₹${totalDispatchedAmount});
 
     //     const reqPackedData = {
     //         user: user,
@@ -310,15 +360,14 @@ const Dispatch = ({ isActive, setIsActive }) => {
     // }
 
     useEffect(() => {
-        if (isOrderUpdated) {
-            toast('Order Updated Successfully!', {
-                type: 'success',
-                position: "bottom-center",
-                onOpen: () => dispatch(clearOrderUpdated())
-            });
-            setShowModal(false);
-
-        }
+        // if (isOrderUpdated) {
+        //     toast('Order Updated Successfully!', {
+        //         type: 'success',
+        //         position: "bottom-center",
+        //         onOpen: () => dispatch(clearOrderUpdated())
+        //     });
+        //     setShowModal(false);
+        // }
         // if (error) {
         //     toast(error, {
         //         position: "bottom-center",
@@ -358,12 +407,48 @@ const Dispatch = ({ isActive, setIsActive }) => {
     }, [dispatch, id, porterOrderDetail]);
 
     useEffect(() => {
+        if (isOrderUpdated) {
+            // toast('Order Dispatched Successfully!', {
+            //     type: 'success',
+            //     position: "bottom-center",
+            //     onOpen: () => dispatch(clearOrderUpdated())
+            // });
+            toast.dismiss();
+            setTimeout(() => {
+                toast.success('Order Dispatched Successfully!', {
+                    position: 'bottom-center',
+                    type: 'success',
+                    autoClose: 700,
+                    transition: Slide,
+                    hideProgressBar: true,
+                    className: 'small-toast',
+                    onOpen: () => dispatch(clearOrderUpdated())
+                });
+            }, 300);
+            dispatch(adminOrders());
+            setShowModal(false);
+        }
+    }, [isOrderUpdated])
+
+    useEffect(() => {
         if (error) {
-            toast(error, {
-                position: "bottom-center",
-                type: 'error',
-                onOpen: () => { dispatch(clearError()) }
-            });
+            // toast(error, {
+            //     position: "bottom-center",
+            //     type: 'error',
+            //     onOpen: () => { dispatch(clearError()) }
+            // });
+            toast.dismiss();
+            setTimeout(() => {
+                toast.error(error, {
+                    position: 'bottom-center',
+                    type: 'error',
+                    autoClose: 700,
+                    transition: Slide,
+                    hideProgressBar: true,
+                    className: 'small-toast',
+                    onOpen: () => { dispatch(clearError()) }
+                });
+            }, 300);
             return;
         }
     }, [error])
@@ -399,17 +484,27 @@ const Dispatch = ({ isActive, setIsActive }) => {
 
     return (
         <div>
-            <MetaData title={`Dispatch`} />
+            {/* <MetaData title={Dispatch} /> */}
+            <MetaData
+                title="Dispatch"
+                description="Manage the dispatch of orders, track shipping status, and ensure products reach customers on time."
+            />
 
-            <div className="row">
+
+            <div className="row loader-parent">
                 <div className="col-12 col-md-2">
                     <div style={{ display: 'flex', flexDirection: 'row', position: 'fixed', top: '0px', zIndex: 99999, backgroundColor: '#fff', minWidth: '100%' }}>
                         <Sidebar isActive={isActive} setIsActive={setIsActive} />
                     </div>
                 </div>
-                {
-                    loading ? <Loader /> : (
-                        <div className="col-12 col-md-10 col-sm-10 smalldevice-space container order-detail-container">
+
+                <div className="col-12 col-md-10 col-sm-10 smalldevice-space container order-detail-container loader-parent">
+                    {
+                        loading ? (
+                            <div className="container loader-loading-center">
+                                <Loader />
+                            </div>
+                        ) : (
                             <Fragment>
                                 {/* <div className="row d-flex justify-content-around"> */}
                                 <div className="col-12 col-lg-12 mt-5 order-details">
@@ -434,7 +529,7 @@ const Dispatch = ({ isActive, setIsActive }) => {
                                         {shippingInfo.area && `${shippingInfo.area},`}
                                         {shippingInfo.landmark && `${shippingInfo.landmark},`}
                                         {shippingInfo.city && `${shippingInfo.city}`}
-                                        {shippingInfo.postalCode && `-${shippingInfo.postalCode}`}
+                                        {shippingInfo.postalCode && -`${shippingInfo.postalCode}`}
                                     </div>
 
                                     <div><b>Amount:</b> Rs.{parseFloat(totalPrice).toFixed(2)}</div>
@@ -595,7 +690,15 @@ const Dispatch = ({ isActive, setIsActive }) => {
                                                     )}
                                                     <tr>
                                                         <td colSpan="5" style={{ textAlign: 'right' }}><strong>Total Dispatched Amount</strong></td>
-                                                        <td className="amount"><strong>Rs. {getpackedOrderData && getpackedOrderData.totalDispatchedAmount && getpackedOrderData.totalDispatchedAmount}</strong></td>
+                                                        {/* <td className="amount"><strong>Rs. {getpackedOrderData && getpackedOrderData.totalDispatchedAmount && getpackedOrderData.totalDispatchedAmount}</strong></td> */}
+                                                        <td className="amount">
+                                                            <strong>
+                                                                Rs. {getpackedOrderData && getpackedOrderData.totalDispatchedAmount
+                                                                    ? parseFloat(getpackedOrderData.totalDispatchedAmount).toFixed(2)
+                                                                    : "0.00"}
+                                                            </strong>
+                                                        </td>
+
                                                     </tr>
 
                                                 </tbody>
@@ -605,9 +708,17 @@ const Dispatch = ({ isActive, setIsActive }) => {
 
                                     <hr />
                                     <div>
-                                        <button className='btn btn-primary' onClick={handeldispatch} disabled={dropStatus === "Dispatched" || dropStatus === "Delivered"}>Dispatch</button>
+                                        {/* <button className='btn btn-primary' onClick={handeldispatch} disabled={dropStatus === "Dispatched" || dropStatus === "Delivered"}>Dispatch</button> */}
 
                                         {/* <button className='btn btn-primary' onClick={(e)=>submitHandlerPacked(e)} disabled={dropStatus === "Packed"}>Packed</button> */}
+                                        <button
+                                            className='btn btn-primary'
+                                            onClick={handeldispatch}
+                                            disabled={dropStatus === "Dispatched" || dropStatus === "Delivered" || dropStatus === "Cancelled"}
+                                            style={{ cursor: (dropStatus === "Dispatched" || dropStatus === "Delivered" || dropStatus === "Cancelled") ? 'not-allowed' : 'pointer' }}
+                                        >
+                                            {dropStatus === "Dispatched" ? "Already Dispatched" : dropStatus === "Delivered" ? "Order Delivered" : dropStatus === "Cancelled" ? "Order Cancelled" : "Dispatch"}
+                                        </button>
 
                                     </div>
 
@@ -646,7 +757,7 @@ const Dispatch = ({ isActive, setIsActive }) => {
                                                             )
 
                                                             }
-                                                            
+
                                                         </button>
                                                     </div>
                                                 </div>
@@ -677,9 +788,10 @@ const Dispatch = ({ isActive, setIsActive }) => {
                                     }
                                 </div>
                             </Fragment>
-                        </div>
-                    )
-                }
+                        )
+                    }
+                </div>
+
 
 
 

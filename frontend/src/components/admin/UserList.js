@@ -6,7 +6,7 @@ import { deleteUser, getUsers } from "../../actions/userActions";
 import { clearError, clearUserDeleted } from "../../slices/userSlice";
 import Loader from '../Layouts/Loader';
 import { MDBDataTable } from 'mdbreact';
-import { toast } from 'react-toastify';
+import { Slide,toast } from 'react-toastify';
 import Sidebar from "./Sidebar";
 import MetaData from "../Layouts/MetaData";
 
@@ -93,19 +93,43 @@ export default function UserList({isActive,setIsActive}) {
 
     useEffect(() => {
         if (error) {
-            toast(error, {
-                position: "bottom-center",
-                type: 'error',
-                onOpen: () => { dispatch(clearError()) }
-            });
+            // toast(error, {
+            //     position: "bottom-center",
+            //     type: 'error',
+            //     onOpen: () => { dispatch(clearError()) }
+            // });
+            toast.dismiss();
+            setTimeout(() => {
+                toast.error(error, {
+                    position: 'bottom-center',
+                    type: 'error',
+                    autoClose: 700,
+                    transition: Slide,
+                    hideProgressBar: true,
+                    className: 'small-toast',
+                    onOpen: () => { dispatch(clearError()) }
+                });
+            }, 300);
             return;
         }
         if (isUserDeleted) {
-            toast('User Deleted Successfully!', {
-                type: 'success',
-                position: "bottom-center",
-                onOpen: () => dispatch(clearUserDeleted())
-            });
+            // toast('User Deleted Successfully!', {
+            //     type: 'success',
+            //     position: "bottom-center",
+            //     onOpen: () => dispatch(clearUserDeleted())
+            // });
+            toast.dismiss();
+            setTimeout(() => {
+                toast.success('User Deleted Successfully!', {
+                    position: 'bottom-center',
+                    type: 'success',
+                    autoClose: 700,
+                    transition: Slide,
+                    hideProgressBar: true,
+                    className: 'small-toast',
+                    onOpen: () => dispatch(clearUserDeleted())
+                });
+            }, 300);
             dispatch(getUsers());
             return;
         }
@@ -121,8 +145,15 @@ export default function UserList({isActive,setIsActive}) {
     },[])
 
     return (
+        <div>
+            <MetaData 
+  title="User List" 
+  description="View and manage a complete list of registered users. Handle user roles, profile updates, and account management tasks." 
+/>
+
+     
         <div className="row loader-parent">
-            <MetaData title={`User List`} />
+            {/* <MetaData title={`User List`} /> */}
             <div className="col-12 col-md-2">
             <div style={{display:'flex',flexDirection:'row',position:'fixed',top:'0px',zIndex:99999,backgroundColor:'#fff',minWidth:'100%'}}>
                 <Sidebar isActive={isActive} setIsActive={setIsActive}/>
@@ -173,6 +204,7 @@ export default function UserList({isActive,setIsActive}) {
                     </div>
                 </div>
             )}
+        </div>
         </div>
     );
 }

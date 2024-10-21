@@ -1,6 +1,6 @@
 import React, { Fragment, useState, useEffect } from 'react';
 import axios from 'axios';
-import { toast } from 'react-toastify';
+import {Slide, toast } from 'react-toastify';
 import Loader from '../Layouts/Loader';
 import Sidebar from '../admin/Sidebar'; // Assuming Sidebar component is in this path
 import { useLocation } from 'react-router-dom';
@@ -40,7 +40,18 @@ const UpdatePrice = ({ isActive, setIsActive }) => {
             setloading(true);
             const formData = new FormData();
             if (!file) {
-                toast.error('Please Select the File.');
+                // toast.error('Please Select the File.');
+                toast.dismiss();
+                setTimeout(() => {
+                toast.error('Please Select the File.', {
+                  position: 'bottom-center',
+                  type: 'error',
+                  autoClose: 700,
+                  transition: Slide,
+                  hideProgressBar: true,
+                  className: 'small-toast',
+                });
+              }, 300);
                 setloading(false);
                 return;
             }
@@ -57,21 +68,57 @@ const UpdatePrice = ({ isActive, setIsActive }) => {
                 setloading(false); 
                 setItems([]);                 // Clear items
                 setFile(null);                // Clear file
+                // toast.success('Prices updated successfully', {
+                //     onClose: () => {
+                //         dispatch(getAdminProducts()); // Dispatch after toast is closed
+                //     },
+                //     autoClose: 3000, // Optional: Define how long the toast will stay open
+                // });
+                toast.dismiss();
+                setTimeout(() => {
                 toast.success('Prices updated successfully', {
-                    onClose: () => {
-                        dispatch(getAdminProducts()); // Dispatch after toast is closed
-                    },
-                    autoClose: 3000, // Optional: Define how long the toast will stay open
+                  position: 'bottom-center',
+                  type: 'success',
+                  autoClose: 700,
+                  transition: Slide,
+                  hideProgressBar: true,
+                  className: 'small-toast',
+                  onClose: () => {
+                            dispatch(getAdminProducts()); // Dispatch after toast is closed
+                        },
                 });
+              }, 300);
             }
             else {
-                toast.error('Error uploading file. Please try again.');
+                // toast.error('Error uploading file. Please try again.');
+                toast.dismiss();
+                setTimeout(() => {
+                toast.error('Error uploading file. Please try again.', {
+                  position: 'bottom-center',
+                  type: 'error',
+                  autoClose: 700,
+                  transition: Slide,
+                  hideProgressBar: true,
+                  className: 'small-toast',
+                });
+              }, 300);
             }
 
 
         } catch (error) {
             setloading(false);
-            toast.error('Error uploading file. Please try again.');
+            // toast.error('Error uploading file. Please try again.');
+            toast.dismiss();
+                setTimeout(() => {
+                toast.error('Error uploading file. Please try again.', {
+                  position: 'bottom-center',
+                  type: 'error',
+                  autoClose: 700,
+                  transition: Slide,
+                  hideProgressBar: true,
+                  className: 'small-toast',
+                });
+              }, 300);
         }
     };
 
@@ -81,7 +128,21 @@ const UpdatePrice = ({ isActive, setIsActive }) => {
             .then(data => {
                 setItems(data.getitems);
             })
-            .catch(error => console.error('Error fetching data:', error));
+            // .catch(error => console.error('Error fetching data:', error));
+            .catch(error => {
+                toast.dismiss();
+                setTimeout(() => {
+                    toast.error('Error uploading file. Please try again.', {
+                        position: 'bottom-center',
+                        type: 'error',
+                        autoClose: 700,
+                        transition: Slide,
+                        hideProgressBar: true,
+                        className: 'small-toast',
+                    });
+                }, 300);
+            });
+            
     }, []);
 
     const downloadCSV = () => {
@@ -99,13 +160,34 @@ const UpdatePrice = ({ isActive, setIsActive }) => {
                 link.parentNode.removeChild(link);
                 setdownloadloading(false);
             })
-            .catch(error => toast.error('Error downloading file:', error));
+            // .catch(error => toast.error('Error downloading file:', error));
+            .catch(error => {
+                toast.dismiss();
+                setTimeout(() => {
+                    toast.error('Error downloading file:', {
+                        position: 'bottom-center',
+                        type: 'error',
+                        autoClose: 700,
+                        transition: Slide,
+                        hideProgressBar: true,
+                        className: 'small-toast',
+                    });
+                }, 300);
+            });
+            
         setdownloadloading(false);
     };
 
     return (
+        <div>
+            <MetaData 
+  title="Update Price" 
+  description="Update product pricing across your catalog. Adjust prices based on sales, market trends, or product performance." 
+/>
+
+     
         <div className="container-fluid" style={{ height: 'auto' }}>
-            <MetaData title={`Update Price`} />
+            {/* <MetaData title={`Update Price`} /> */}
             <div className="row">
                 <div className="col-12 col-md-2 p-0">
                     <div style={{ display: 'flex', flexDirection: 'row', position: 'fixed', top: '0px', zIndex: 99999, backgroundColor: '#fff', minWidth: '100%' }}>
@@ -154,6 +236,7 @@ const UpdatePrice = ({ isActive, setIsActive }) => {
                     </Fragment>
                 </div>
             </div>
+        </div>
         </div>
     );
 };

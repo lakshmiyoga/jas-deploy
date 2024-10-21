@@ -2,9 +2,9 @@ import { Fragment, useEffect, useState } from "react";
 import Sidebar from "./Sidebar";
 import { useDispatch, useSelector } from 'react-redux';
 import { useLocation, useNavigate, useParams } from "react-router-dom";
-import { orderDetail as orderDetailAction, updateOrder, porterOrder, RemoveOrderResponse } from "../../actions/orderActions";
+import { orderDetail as orderDetailAction, updateOrder, porterOrder, RemoveOrderResponse, adminOrders } from "../../actions/orderActions";
 import { CancelOrderResponse, createPorterOrderResponse, getPackedOrder, getporterOrder, initRefund, packedOrder, updatedPackedOrder } from "../../actions/porterActions";
-import { toast } from "react-toastify";
+import { Slide,toast } from "react-toastify";
 import { clearOrderUpdated, clearError, adminOrderRemoveClearError, orderDetailClear } from "../../slices/orderSlice";
 import { clearRefundError } from "../../slices/porterSlice";
 import { Link } from "react-router-dom";
@@ -79,7 +79,7 @@ const RefundOrder = ({ isActive, setIsActive }) => {
     // const submitHandler = async (e) => {
     //     e.preventDefault();
     //     // setRefreshData(false)
-    //     const requestId = `TEST_0_${uuidv4()}`;
+    //     const requestId = TEST_0_${uuidv4()};
     //     const porterData = {
     //         "request_id": requestId,
     //         "delivery_instructions": {
@@ -162,7 +162,7 @@ const RefundOrder = ({ isActive, setIsActive }) => {
 
 
     //     // console.log("detailedTable", detailedTable);
-    //     // console.log(`Total Refundable Amount: ₹${totalRefundableAmount}`);
+    //     // console.log(Total Refundable Amount: ₹${totalRefundableAmount});
 
     //     // console.log("updatedItems", updatedItems)
 
@@ -267,7 +267,7 @@ const RefundOrder = ({ isActive, setIsActive }) => {
 
 
     //     console.log("dispatchedTable", dispatchedTable);
-    //     console.log(`Total Amount: ₹${totalDispatchedAmount}`);
+    //     console.log(Total Amount: ₹${totalDispatchedAmount});
 
     //     const reqPackedData = {
     //         user: user,
@@ -305,13 +305,26 @@ const RefundOrder = ({ isActive, setIsActive }) => {
 
     useEffect(() => {
         if (refundData) {
-            toast(refundData, {
-                type: 'success',
-                position: "bottom-center",
-                onOpen: () => dispatch(clearRefundError())
-            });
+            // toast(refundData, {
+            //     type: 'success',
+            //     position: "bottom-center",
+            //     onOpen: () => dispatch(clearRefundError())
+            // });
+            toast.dismiss();
+            setTimeout(() => {
+                toast.success(refundData, {
+                    position: 'bottom-center',
+                    type: 'success',
+                    autoClose: 700,
+                    transition: Slide,
+                    hideProgressBar: true,
+                    className: 'small-toast',
+                    onOpen: () => dispatch(clearRefundError())
+                });
+            }, 300);
             setRefundLoading(false);
             dispatch(updatedPackedOrder({}));
+            dispatch(adminOrders()); 
             return;
 
         }
@@ -330,19 +343,43 @@ const RefundOrder = ({ isActive, setIsActive }) => {
 
     useEffect(() => {
         if (error) {
-            toast(error, {
-                position: "bottom-center",
-                type: 'error',
-                onOpen: () => { dispatch(clearError()) }
-            });
+            // toast(error, {
+            //     position: "bottom-center",
+            //     type: 'error',
+            //     onOpen: () => { dispatch(clearError()) }
+            // });
+            toast.dismiss();
+            setTimeout(() => {
+                toast.error(error, {
+                    position: 'bottom-center',
+                    type: 'error',
+                    autoClose: 700,
+                    transition: Slide,
+                    hideProgressBar: true,
+                    className: 'small-toast',
+                    onOpen: () => { dispatch(clearError()) }
+                });
+            }, 300);
             setRefundLoading(false);
         }
         if (refundError) {
-            toast(refundError, {
-                position: "bottom-center",
-                type: 'error',
-                onOpen: () => { dispatch(clearRefundError()) }
-            });
+            // toast(refundError, {
+            //     position: "bottom-center",
+            //     type: 'error',
+            //     onOpen: () => { dispatch(clearRefundError()) }
+            // });
+            toast.dismiss();
+            setTimeout(() => {
+                toast.error(refundError, {
+                    position: 'bottom-center',
+                    type: 'error',
+                    autoClose: 700,
+                    transition: Slide,
+                    hideProgressBar: true,
+                    className: 'small-toast',
+                    onOpen: () => { dispatch(clearRefundError()) }
+                });
+            }, 300);
             setRefundLoading(false);
         }
     }, [refundError, error])
@@ -362,63 +399,74 @@ const RefundOrder = ({ isActive, setIsActive }) => {
     }, [refreshData, porterOrderResponse])
     return (
         <div>
-            <MetaData title={`Refund Order`} />
+            {/* <MetaData title={`Refund Order`} /> */}
+            <MetaData 
+  title="Refund Order" 
+  description="Process individual order refunds. Manage refunds based on order details and customer requests, ensuring a smooth refund process." 
+/>
 
-            <div className="row">
+
+            <div className="row loader-parent">
                 <div className="col-12 col-md-2">
                     <div style={{ display: 'flex', flexDirection: 'row', position: 'fixed', top: '0px', zIndex: 99999, backgroundColor: '#fff', minWidth: '100%' }}>
                         <Sidebar isActive={isActive} setIsActive={setIsActive} />
                     </div>
                 </div>
-                {
-                    loading ? <Loader /> : (
-                        <div className="col-12 col-md-10 smalldevice-space container order-detail-container">
-                            <Fragment>
-                                {/* <div className="row d-flex justify-content-around"> */}
-                                <div className="col-12 col-lg-12 mt-5 order-details">
-                                    <h1 className="my-5">Order # {orderDetail.order_id}</h1>
 
-                                    <h4 className="mb-4">Shipping Info</h4>
-                                    <div><b>Name:</b> {user.name}</div>
-                                    <div><b>Phone:</b> {shippingInfo.phoneNo}</div>
-                                    <div>
-                                        <b>Address:</b>
-                                        {shippingInfo.address && `${shippingInfo.address},`}
-                                        {shippingInfo.area && `${shippingInfo.area},`}
-                                        {shippingInfo.landmark && `${shippingInfo.landmark},`}
-                                        {shippingInfo.city && `${shippingInfo.city}`}
-                                        {shippingInfo.postalCode && `-${shippingInfo.postalCode}`}
-                                    </div>
+                <div className="col-12 col-md-10 smalldevice-space container order-detail-container loader-parent">
+                    {
+                        loading ? (
+                            <div className="container loader-loading-center">
+                                <Loader />
+                            </div>
+                        )
+                            : (
+                                <Fragment>
+                                    {/* <div className="row d-flex justify-content-around"> */}
+                                    <div className="col-12 col-lg-12 mt-5 order-details">
+                                        <h1 className="my-5">Order # {orderDetail.order_id}</h1>
 
-                                    <div><b>Amount:</b> Rs.{parseFloat(totalPrice).toFixed(2)}</div>
-                                    {orderDetail && orderDetail.statusResponse && orderDetail.statusResponse.payment_method && (
-                                        <div><b>Payment Mode:</b> {orderDetail && orderDetail.statusResponse && orderDetail.statusResponse.payment_method}</div>
-
-                                    )
-
-                                    }
-
-                                    <hr />
-
-                                    <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', flexWrap: 'wrap' }}>
-                                        <div style={{ display: 'flex', alignItems: 'center' }}>
-                                            <p><b>Payment Status:</b></p>
-                                            <p className={orderDetail && orderDetail.paymentStatus && orderDetail.paymentStatus === 'CHARGED' ? 'greenColor' : 'redColor'} style={{ marginLeft: '10px' }}><b>{orderDetail ? orderDetail.paymentStatus : 'Pending'}</b></p>
-                                        </div>
-                                        <div style={{ display: 'flex', alignItems: 'center', marginRight: '50px' }}>
-                                            {
-                                                orderDetail && orderDetail.statusResponse && orderDetail.statusResponse.refunds && (
-                                                    <>
-                                                        <p><b>Refund Status:</b></p>
-                                                        <p className={orderDetail && orderDetail.statusResponse && orderDetail.statusResponse.refunds && orderDetail.statusResponse.refunds[0].status === 'SUCCESS' ? 'greenColor' : 'redColor'}><b>{orderDetail && orderDetail.statusResponse && orderDetail.statusResponse.refunds && orderDetail.statusResponse.refunds[0].status}</b></p>
-                                                    </>
-                                                )
-                                            }
+                                        <h4 className="mb-4">Shipping Info</h4>
+                                        <div><b>Name:</b> {user.name}</div>
+                                        <div><b>Phone:</b> {shippingInfo.phoneNo}</div>
+                                        <div>
+                                            <b>Address:</b>
+                                            {shippingInfo.address && `${shippingInfo.address},`}
+                                            {shippingInfo.area && `${shippingInfo.area},`}
+                                            {shippingInfo.landmark && `${shippingInfo.landmark},`}
+                                            {shippingInfo.city && `${shippingInfo.city}`}
+                                            {shippingInfo.postalCode && -`${shippingInfo.postalCode}`}
                                         </div>
 
-                                    </div>
+                                        <div><b>Amount:</b> Rs.{parseFloat(totalPrice).toFixed(2)}</div>
+                                        {orderDetail && orderDetail.statusResponse && orderDetail.statusResponse.payment_method && (
+                                            <div><b>Payment Mode:</b> {orderDetail && orderDetail.statusResponse && orderDetail.statusResponse.payment_method}</div>
 
-                                    {/* <h4 className="my-4">Payment status</h4>
+                                        )
+
+                                        }
+
+                                        <hr />
+
+                                        <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', flexWrap: 'wrap' }}>
+                                            <div style={{ display: 'flex', alignItems: 'center' }}>
+                                                <p><b>Payment Status:</b></p>
+                                                <p className={orderDetail && orderDetail.paymentStatus && orderDetail.paymentStatus === 'CHARGED' ? 'greenColor' : 'redColor'} style={{ marginLeft: '10px' }}><b>{orderDetail ? orderDetail.paymentStatus : 'Pending'}</b></p>
+                                            </div>
+                                            <div style={{ display: 'flex', alignItems: 'center', marginRight: '50px' }}>
+                                                {
+                                                    orderDetail && orderDetail.statusResponse && orderDetail.statusResponse.refunds && (
+                                                        <>
+                                                            <p><b>Refund Status:</b></p>
+                                                            <p className={orderDetail && orderDetail.statusResponse && orderDetail.statusResponse.refunds && orderDetail.statusResponse.refunds[0].status === 'SUCCESS' ? 'greenColor' : 'redColor'}><b>{orderDetail && orderDetail.statusResponse && orderDetail.statusResponse.refunds && orderDetail.statusResponse.refunds[0].status}</b></p>
+                                                        </>
+                                                    )
+                                                }
+                                            </div>
+
+                                        </div>
+
+                                        {/* <h4 className="my-4">Payment status</h4>
                                 <p className={orderDetail.paymentStatus === 'CHARGED' ? 'greenColor' : 'redColor'}><b>{orderDetail.paymentStatus || 'Pending'}</b></p>
                                 {
                                     orderDetail && orderDetail.statusResponse &&  orderDetail.statusResponse.refunds && (
@@ -429,11 +477,11 @@ const RefundOrder = ({ isActive, setIsActive }) => {
                                     )
                                 } */}
 
-                                    {/* <hr /> */}
-                                    {/* <h4 className="my-4">Order Status:</h4>
+                                        {/* <hr /> */}
+                                        {/* <h4 className="my-4">Order Status:</h4>
                                 <p className={dropStatus.includes('Delivered') ? 'greenColor' : 'redColor'}><b>{dropStatus}</b></p> */}
 
-                                    {/* {porterOrderData && porterOrderData.porterResponse && (
+                                        {/* {porterOrderData && porterOrderData.porterResponse && (
                                     <Fragment>
                                         <hr />
                                         <h4 className="my-4">Delivery Details:</h4>
@@ -521,145 +569,146 @@ const RefundOrder = ({ isActive, setIsActive }) => {
                                 )} */}
 
 
-                                    <hr />
-                                    <h4 className="my-4">Order Items:</h4>
+                                        <hr />
+                                        <h4 className="my-4">Order Items:</h4>
 
-                                    <div className="invoice-table-container">
-                                        <div className="updatetable-responsive">
-                                            {
-                                                getpackedOrderData && getpackedOrderData.totalRefundableAmount > 0 ? (
-                                                    // <table className="updatetable updatetable-bordered">
-                                                    //     <thead>
-                                                    //         <tr>
-                                                    //             {getpackedOrderData && getpackedOrderData.dispatchedTable && (
-                                                    //                 <>
-                                                    //                     <th>Image</th>
-                                                    //                     <th>Name</th>
-                                                    //                     <th>Price per kg</th>
-                                                    //                     <th>Ordered Weight</th>
-                                                    //                     <th>Refund Weight</th>
-                                                    //                     <th>Refundable Amount</th>
-                                                    //                     {/* <th>Refundable Amount</th> */}
-                                                    //                 </>
-                                                    //             )}
-                                                    //         </tr>
-                                                    //     </thead>
-                                                    //     <tbody>
-                                                    //         {getpackedOrderData && getpackedOrderData.dispatchedTable && (
-                                                    //             getpackedOrderData.dispatchedTable.map((item, index) => (
-                                                    //                 <tr key={index}>
-                                                    //                     <td>
-                                                    //                         <img src={item.image} alt={item.name} className="updateTableproduct-image" />
-                                                    //                     </td>
-                                                    //                     <td>{item.name}</td>
-                                                    //                     <td>Rs. {parseFloat(item.pricePerKg).toFixed(2)}</td>
-                                                    //                     <td>{item.orderedWeight} kg</td>
-                                                    //                     <td>{item.refundableWeight} kg</td>
-                                                    //                     <td>Rs. {parseFloat(item.pricePerKg * item.refundableWeight).toFixed(2)}</td>
-                                                    //                     {/* <td>Rs. {item.refundableAmount}</td> */}
-                                                    //                 </tr>
-                                                    //             ))
+                                        <div className="invoice-table-container">
+                                            <div className="updatetable-responsive">
+                                                {
+                                                    getpackedOrderData && getpackedOrderData.totalRefundableAmount > 0 ? (
+                                                        // <table className="updatetable updatetable-bordered">
+                                                        //     <thead>
+                                                        //         <tr>
+                                                        //             {getpackedOrderData && getpackedOrderData.dispatchedTable && (
+                                                        //                 <>
+                                                        //                     <th>Image</th>
+                                                        //                     <th>Name</th>
+                                                        //                     <th>Price per kg</th>
+                                                        //                     <th>Ordered Weight</th>
+                                                        //                     <th>Refund Weight</th>
+                                                        //                     <th>Refundable Amount</th>
+                                                        //                     {/* <th>Refundable Amount</th> */}
+                                                        //                 </>
+                                                        //             )}
+                                                        //         </tr>
+                                                        //     </thead>
+                                                        //     <tbody>
+                                                        //         {getpackedOrderData && getpackedOrderData.dispatchedTable && (
+                                                        //             getpackedOrderData.dispatchedTable.map((item, index) => (
+                                                        //                 <tr key={index}>
+                                                        //                     <td>
+                                                        //                         <img src={item.image} alt={item.name} className="updateTableproduct-image" />
+                                                        //                     </td>
+                                                        //                     <td>{item.name}</td>
+                                                        //                     <td>Rs. {parseFloat(item.pricePerKg).toFixed(2)}</td>
+                                                        //                     <td>{item.orderedWeight} kg</td>
+                                                        //                     <td>{item.refundableWeight} kg</td>
+                                                        //                     <td>Rs. {parseFloat(item.pricePerKg * item.refundableWeight).toFixed(2)}</td>
+                                                        //                     {/* <td>Rs. {item.refundableAmount}</td> */}
+                                                        //                 </tr>
+                                                        //             ))
 
-                                                    //         )}
-                                                    //         <tr>
-                                                    //             <td colSpan="5" style={{ textAlign: 'right' }}><strong>TotalRefundableAmount</strong></td>
-                                                    //             <td className="amount"><strong>Rs. {getpackedOrderData && getpackedOrderData.totalRefundableAmount && getpackedOrderData.totalRefundableAmount}</strong></td>
-                                                    //         </tr>
+                                                        //         )}
+                                                        //         <tr>
+                                                        //             <td colSpan="5" style={{ textAlign: 'right' }}><strong>TotalRefundableAmount</strong></td>
+                                                        //             <td className="amount"><strong>Rs. {getpackedOrderData && getpackedOrderData.totalRefundableAmount && getpackedOrderData.totalRefundableAmount}</strong></td>
+                                                        //         </tr>
 
-                                                    //     </tbody>
-                                                    // </table>
-                                                    <table className="updatetable updatetable-bordered">
-                                                        <thead>
-                                                            <tr>
+                                                        //     </tbody>
+                                                        // </table>
+                                                        <table className="updatetable updatetable-bordered">
+                                                            <thead>
+                                                                <tr>
+                                                                    {getpackedOrderData && getpackedOrderData.dispatchedTable && (
+                                                                        <>
+                                                                            <th>Image</th>
+                                                                            <th>Name</th>
+                                                                            <th>Price per kg</th>
+                                                                            <th>Ordered Weight</th>
+                                                                            <th>Refund Weight</th>
+                                                                            <th>Refundable Amount</th>
+                                                                        </>
+                                                                    )}
+                                                                </tr>
+                                                            </thead>
+                                                            <tbody>
                                                                 {getpackedOrderData && getpackedOrderData.dispatchedTable && (
-                                                                    <>
-                                                                        <th>Image</th>
-                                                                        <th>Name</th>
-                                                                        <th>Price per kg</th>
-                                                                        <th>Ordered Weight</th>
-                                                                        <th>Refund Weight</th>
-                                                                        <th>Refundable Amount</th>
-                                                                    </>
+                                                                    getpackedOrderData.dispatchedTable
+                                                                        .filter(item => item.refundableWeight > 0) // Filter rows with refundable weight
+                                                                        .map((item, index) => (
+                                                                            <tr key={index}>
+                                                                                <td>
+                                                                                    <img src={item.image} alt={item.name} className="updateTableproduct-image" />
+                                                                                </td>
+                                                                                <td>{item.name}</td>
+                                                                                <td>Rs. {parseFloat(item.pricePerKg).toFixed(2)}</td>
+                                                                                <td>{item.orderedWeight} kg</td>
+                                                                                <td>{item.refundableWeight} kg</td>
+                                                                                <td>Rs. {parseFloat(item.pricePerKg * item.refundableWeight).toFixed(2)}</td>
+                                                                            </tr>
+                                                                        ))
                                                                 )}
-                                                            </tr>
-                                                        </thead>
-                                                        <tbody>
-                                                            {getpackedOrderData && getpackedOrderData.dispatchedTable && (
-                                                                getpackedOrderData.dispatchedTable
-                                                                    .filter(item => item.refundableWeight > 0) // Filter rows with refundable weight
-                                                                    .map((item, index) => (
-                                                                        <tr key={index}>
-                                                                            <td>
-                                                                                <img src={item.image} alt={item.name} className="updateTableproduct-image" />
-                                                                            </td>
-                                                                            <td>{item.name}</td>
-                                                                            <td>Rs. {parseFloat(item.pricePerKg).toFixed(2)}</td>
-                                                                            <td>{item.orderedWeight} kg</td>
-                                                                            <td>{item.refundableWeight} kg</td>
-                                                                            <td>Rs. {parseFloat(item.pricePerKg * item.refundableWeight).toFixed(2)}</td>
-                                                                        </tr>
-                                                                    ))
-                                                            )}
-                                                            {/* Calculate total refundable amount */}
-                                                            <tr>
-                                                                <td colSpan="5" style={{ textAlign: 'right' }}>
-                                                                    <strong>Total Refundable Amount</strong>
-                                                                </td>
-                                                                <td className="amount">
-                                                                    <strong>
-                                                                        Rs. {getpackedOrderData && getpackedOrderData.dispatchedTable &&
-                                                                            getpackedOrderData.dispatchedTable
-                                                                                .filter(item => item.refundableWeight > 0)
-                                                                                .reduce((total, item) => total + (item.pricePerKg * item.refundableWeight), 0)
-                                                                                .toFixed(2)
-                                                                        }
-                                                                    </strong>
-                                                                </td>
-                                                            </tr>
-                                                            {/* <tr>
+                                                                {/* Calculate total refundable amount */}
+                                                                <tr>
+                                                                    <td colSpan="5" style={{ textAlign: 'right' }}>
+                                                                        <strong>Total Refundable Amount</strong>
+                                                                    </td>
+                                                                    <td className="amount">
+                                                                        <strong>
+                                                                            Rs. {getpackedOrderData && getpackedOrderData.dispatchedTable &&
+                                                                                getpackedOrderData.dispatchedTable
+                                                                                    .filter(item => item.refundableWeight > 0)
+                                                                                    .reduce((total, item) => total + (item.pricePerKg * item.refundableWeight), 0)
+                                                                                    .toFixed(2)
+                                                                            }
+                                                                        </strong>
+                                                                    </td>
+                                                                </tr>
+                                                                {/* <tr>
                                                                 <td colSpan="5" style={{ textAlign: 'right' }}><strong>TotalRefundableAmount</strong></td>
                                                                 <td className="amount"><strong>Rs. {getpackedOrderData && getpackedOrderData.totalRefundableAmount && getpackedOrderData.totalRefundableAmount}</strong></td>
                                                             </tr> */}
-                                                        </tbody>
-                                                    </table>
+                                                            </tbody>
+                                                        </table>
 
 
+                                                    ) : (
+                                                        <>
+                                                            there is no refund data
+                                                        </>
+                                                    )
+                                                }
+
+                                            </div>
+                                        </div>
+
+                                        <hr />
+                                        <div>
+                                            {
+                                                orderDetail && orderDetail.statusResponse && orderDetail.statusResponse.refunds ? (
+                                                    <button className='btn btn-primary' onClick={submitRefundHandler} disabled={true}>Already initiated</button>
                                                 ) : (
-                                                    <>
-                                                        there is no refund data
-                                                    </>
+                                                    <button className='btn btn-primary' onClick={submitRefundHandler} disabled={dropStatus === "Refund" || refundloading}>
+                                                        {refundloading ? <LoaderButton fullPage={false} size={20} /> : (
+                                                            <span>  Refund</span>
+                                                        )
+
+                                                        }
+
+                                                    </button>
                                                 )
+
                                             }
 
                                         </div>
-                                    </div>
-
-                                    <hr />
-                                    <div>
-                                        {
-                                            orderDetail && orderDetail.statusResponse && orderDetail.statusResponse.refunds ? (
-                                                <button className='btn btn-primary' onClick={submitRefundHandler} disabled={true}>Already initiated</button>
-                                            ) : (
-                                                <button className='btn btn-primary' onClick={submitRefundHandler} disabled={dropStatus === "Refund" || refundloading}>
-                                                    {refundloading ? <LoaderButton fullPage={false} size={20} /> : (
-                                                        <span>  Refund</span>
-                                                    )
-
-                                                    }
-                                                    
-                                                </button>
-                                            )
-
-                                        }
 
                                     </div>
+                                </Fragment>
+                            )
+                    }
 
-                                </div>
-                            </Fragment>
-                        </div>
-                    )
-                }
 
+                </div>
 
 
             </div>

@@ -83,6 +83,8 @@ function App() {
     //     sessionStorage.setItem('redirectPath', '/');
     // }
     console.log("redirectPath", redirectPath);
+    
+    
 
 
     const { isAuthenticated, loading, user } = useSelector(state => state.authState);
@@ -90,6 +92,8 @@ function App() {
     const [openSide, setOpenSide] = useState(false);
     const [isActive, setIsActive] = useState(false);
     const [userLoaded, setUserLoaded] = useState(false);
+    console.log("isAuthenticated", isAuthenticated);
+    console.log("user", user);
 
     useEffect(() => {
         const loadInitialData = async () => {
@@ -115,11 +119,11 @@ function App() {
     // let isAdminRoute = true;
 
     useEffect(() => {
-        if (isAuthenticated && user && userLoaded) {
+        if ( userLoaded) {
             // if (redirectPath) {
             // const redirectPath = sessionStorage.getItem('redirectPath') || '/';
             // return navigate(redirectPath);
-            const redirectPath = sessionStorage.getItem('redirectPath');
+            // const redirectPath = sessionStorage.getItem('redirectPath');
             if (redirectPath && location.pathname === redirectPath) {
                 sessionStorage.removeItem('redirectPath');
                 navigate(redirectPath, { replace: true });
@@ -142,7 +146,7 @@ function App() {
 
         // store.dispatch(loadUser());
         // store.dispatch(getProducts());
-    }, [isAuthenticated, navigate, userLoaded, user]);
+    }, [navigate, userLoaded]);
 
     // useEffect(() => {
     //     if (!product) {
@@ -163,9 +167,9 @@ function App() {
         const handleScroll = () => {
             const headerElement = document.querySelector('.header');
             if (window.scrollY > 20) {
-                headerElement.classList.add('header-shadow');
+                headerElement && headerElement.classList.add('header-shadow');
             } else {
-                headerElement.classList.remove('header-shadow');
+                headerElement && headerElement.classList.remove('header-shadow');
             }
         };
 
@@ -230,7 +234,7 @@ function App() {
                                         <Route path="/myProfile/update" element={<ProtectedRoute isAdmin={false}><UpdateProfile /></ProtectedRoute>} />
                                         <Route path="/myProfile/update/password" element={<ProtectedRoute isAdmin={false}><UpdatePassword /></ProtectedRoute>} />
 
-                                        <Route path="/password/reset/:token" element={<ProtectedRoute isAdmin={false}><ResetPassword /></ProtectedRoute>} />
+                                        <Route path="/password/reset/:token" element={<ResetPassword />} />
 
                                         <Route path="/shipping" element={<ProtectedRoute isAdmin={false} ><Shipping /></ProtectedRoute>} />
                                         {/* <Route path="/refund" element={<Refund />} /> */}

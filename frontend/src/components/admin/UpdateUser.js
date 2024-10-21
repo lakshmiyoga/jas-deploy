@@ -4,7 +4,7 @@ import { useDispatch, useSelector } from 'react-redux';
 import { useLocation, useNavigate, useParams } from "react-router-dom";
 import { getUser, getUsers, updateUser } from "../../actions/userActions";
 import { clearError, clearUserUpdated } from "../../slices/userSlice";
-import { toast } from "react-toastify";
+import { Slide,toast } from "react-toastify";
 import MetaData from "../Layouts/MetaData";
 import LoaderButton from "../Layouts/LoaderButton";
 import Loader from "../Layouts/Loader";
@@ -22,6 +22,7 @@ export default function UpdateUser({ isActive, setIsActive }) {
     const { user: authUser } = useSelector(state => state.authState)
 
     const dispatch = useDispatch();
+    const navigate = useNavigate();
 
     const submitHandler = (e) => {
         e.preventDefault();
@@ -35,21 +36,46 @@ export default function UpdateUser({ isActive, setIsActive }) {
 
     useEffect(() => {
         if (isUserUpdated) {
-            toast('User Updated Succesfully!', {
-                type: 'success',
-                position: 'bottom-center',
-                onOpen: () => dispatch(clearUserUpdated())
-            })
+            // toast('User Updated Succesfully!', {
+            //     type: 'success',
+            //     position: 'bottom-center',
+            //     onOpen: () => dispatch(clearUserUpdated())
+            // })
+            toast.dismiss();
+                setTimeout(() => {
+                    toast.success('User Updated Succesfully!', {
+                        position: 'bottom-center',
+                        type: 'success',
+                        autoClose: 700,
+                        transition: Slide,
+                        hideProgressBar: true,
+                        className: 'small-toast',
+                        onOpen: () => dispatch(clearUserUpdated())
+                    });
+                }, 300);
             dispatch(getUsers());
+            navigate('/admin/users')
             return;
         }
 
         if (error) {
-            toast(error, {
-                position: 'bottom-center',
-                type: 'error',
-                onOpen: () => { dispatch(clearError()) }
-            })
+            // toast(error, {
+            //     position: 'bottom-center',
+            //     type: 'error',
+            //     onOpen: () => { dispatch(clearError()) }
+            // })
+            toast.dismiss();
+            setTimeout(() => {
+                toast.error(error, {
+                    position: 'bottom-center',
+                    type: 'error',
+                    autoClose: 700,
+                    transition: Slide,
+                    hideProgressBar: true,
+                    className: 'small-toast',
+                    onOpen: () => { dispatch(clearError()) }
+                });
+            }, 300);
             return
         }
 
@@ -68,8 +94,15 @@ export default function UpdateUser({ isActive, setIsActive }) {
 
 
     return (
+        <div>
+            <MetaData 
+  title="Update User" 
+  description="Manage user profiles, update user information, and control user access to various sections of the platform." 
+/>
+
+        
         <div className="row loader-parent">
-            <MetaData title={`Update User`} />
+            {/* <MetaData title={`Update User`} /> */}
             <div className="col-12 col-md-2">
                 <div style={{ display: 'flex', flexDirection: 'row', position: 'fixed', top: '0px', zIndex: 99999, backgroundColor: '#fff', minWidth: '100%' }}>
                     <Sidebar isActive={isActive} setIsActive={setIsActive} />
@@ -134,6 +167,6 @@ export default function UpdateUser({ isActive, setIsActive }) {
 
             </div>
         </div>
-
+        </div>
     )
 }

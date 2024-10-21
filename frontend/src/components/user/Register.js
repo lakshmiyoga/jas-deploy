@@ -256,6 +256,7 @@ const Register = () => {
   // const [avatarPreview, setAvatarPreview] = useState('/images/default_avatar.png');
   // const [timeLeft, setTimeLeft] = useState(null);
   const [avatar, setAvatar] = useState(getInitialAvatar);
+  const [avatarName, setAvatarName] = useState('');
   const [avatarPreview, setAvatarPreview] = useState(getInitialAvatarPreview);
   const [timeLeft, setTimeLeft] = useState(getInitialTimeLeft);
   const [passwordValidation, setPasswordValidation] = useState({
@@ -290,6 +291,7 @@ const Register = () => {
   const [mailVerified, setMailVerified] = useState(false);
   const registerRef = useRef(null); // Create a ref
   const [formsubmitted, setFormsubmitted] = useState(false);
+  
 
 
   // Save form data and avatar preview to sessionStorage whenever they change
@@ -356,10 +358,22 @@ const Register = () => {
     const fileSizeLimit = 1 * 1024 * 1024; // 1 MB
 
     if (file && file.size > fileSizeLimit) {
-      toast.error('The size of selected image exceeds the 1MB limit.', {
-        position: "bottom-center"
-      });
+      // toast.error('The size of selected image exceeds the 1MB limit.', {
+      //   position: "bottom-center"
+      // });
+      toast.dismiss();
+      setTimeout(() => {
+        toast.error('The size of selected image exceeds the 1MB limit.', {
+          position: 'bottom-center',
+          type: 'error',
+          autoClose: 700,
+          transition: Slide,
+          hideProgressBar: true,
+          className: 'small-toast',
+        });
+      }, 300);
       e.target.value = ''; // Clear the file input
+      setAvatarName('');
       return;
     }
 
@@ -368,6 +382,7 @@ const Register = () => {
       if (reader.readyState === 2) {
         setAvatarPreview(reader.result);
         setAvatar(file);
+        setAvatarName(file.name);
       }
     };
 
@@ -400,11 +415,34 @@ const Register = () => {
     dispatch(otpErrorClear());
     dispatch(otpClear());
     if (userData.password !== userData.confirmPassword) {
-      toast.error('Password does not match');
+      // toast.error('Password does not match');
+      toast.dismiss();
+      setTimeout(() => {
+        toast.error('Password does not match', {
+          position: 'bottom-center',
+          type: 'error',
+          autoClose: 700,
+          transition: Slide,
+          hideProgressBar: true,
+          className: 'small-toast',
+        });
+      }, 300);
+
       return
     }
     if (userData.mobile.length < 10) {
-      toast.error('Mobile nunber Invalid!!!');
+      // toast.error('Mobile nunber Invalid!!!');
+      toast.dismiss();
+      setTimeout(() => {
+        toast.error('Mobile number Invalid!!!', {
+          position: 'bottom-center',
+          type: 'error',
+          autoClose: 700,
+          transition: Slide,
+          hideProgressBar: true,
+          className: 'small-toast',
+        });
+      }, 300);
       return
     }
     // Scroll to the top of the Register component
@@ -432,7 +470,18 @@ const Register = () => {
       // setFormsubmitted(true);
 
     } else {
-      toast.error('Password does not meet all criteria');
+      // toast.error('Password does not meet all criteria');
+      toast.dismiss();
+      setTimeout(() => {
+        toast.error('Password does not meet all criteria', {
+          position: 'bottom-center',
+          type: 'error',
+          autoClose: 700,
+          transition: Slide,
+          hideProgressBar: true,
+          className: 'small-toast',
+        });
+      }, 300);
     }
   };
 
@@ -466,11 +515,23 @@ const Register = () => {
 
   useEffect(() => {
     if (otperror) {
-      toast.error(otperror, {
-        position: 'bottom-center',
-        type: 'error',
-        onOpen: () => dispatch(mailClearError())
-      });
+      // toast.error(otperror, {
+      //   position: 'bottom-center',
+      //   type: 'error',
+      //   onOpen: () => dispatch(mailClearError())
+      // });
+      toast.dismiss();
+      setTimeout(() => {
+        toast.error(otperror, {
+          position: 'bottom-center',
+          type: 'error',
+          autoClose: 700,
+          transition: Slide,
+          hideProgressBar: true,
+          className: 'small-toast',
+          onOpen: () => dispatch(mailClearError())
+        });
+      }, 300);
       setMailButtonDisabled(false);
     }
     if (otpdata && !timeLeft && !otpSent) {
@@ -478,13 +539,25 @@ const Register = () => {
       setTimeLeft(null);
       clearInterval(mailIdRef.current);
       setOtpSent(true);
-      // toast.success(otpdata.message);
+      toast.success(otpdata.message);
+      // toast.dismiss();
+      // toast.success(otpdata.message, {
+      //   position: 'bottom-center',
+      //   type: 'success',
+      //   // onOpen: () => dispatch(otpClear())
+      // });
+
       toast.dismiss();
-      toast.success(otpdata.message, {
-        position: 'bottom-center',
-        type: 'success',
-        // onOpen: () => dispatch(otpClear())
-      });
+      setTimeout(() => {
+        toast.success(otpdata.message, {
+          position: 'bottom-center',
+          type: 'success',
+          autoClose: 700,
+          transition: Slide,
+          hideProgressBar: true,
+          className: 'small-toast',
+        });
+      }, 300);
 
       setMailCode(true);
       setTimeLeft(60);
@@ -513,17 +586,40 @@ const Register = () => {
       dispatch(verifyMailOtp({ email: otpdata.dummyuserData.email, otp: otpMail, otpdata }));
     }
     else {
-      toast.error('Something Went Wrong!', {
-        position: 'bottom-center',
-        type: 'error',
-        onOpen: () => dispatch(mailClearError())
-      });
+      // toast.error('Something Went Wrong!', {
+      //   position: 'bottom-center',
+      //   type: 'error',
+      //   onOpen: () => dispatch(mailClearError())
+      // });
+      toast.dismiss();
+      setTimeout(() => {
+        toast.error('Something Went Wrong!', {
+          position: 'bottom-center',
+          type: 'error',
+          autoClose: 700,
+          transition: Slide,
+          hideProgressBar: true,
+          className: 'small-toast',
+          onOpen: () => dispatch(mailClearError())
+        });
+      }, 300);
     }
   };
 
   useEffect(() => {
     if (mailVerifiedData) {
-      toast.success(mailVerifiedData.message);
+      // toast.success(mailVerifiedData.message);
+      toast.dismiss();
+      setTimeout(() => {
+        toast.success(mailVerifiedData.message, {
+          position: 'bottom-center',
+          type: 'success',
+          autoClose: 700,
+          transition: Slide,
+          hideProgressBar: true,
+          className: 'small-toast',
+        });
+      }, 300);
       setMailVerified(true);
       clearInterval(mailIdRef.current);
       setMailCode(false);
@@ -533,16 +629,16 @@ const Register = () => {
       // console.log(otpdata)
       toast.dismiss();
       setTimeout(() => {
-      toast.error(mailVerifyError, {
-        position: 'bottom-center',
-        type: 'error',
-        autoClose: 700,
-        transition: Slide,
-        hideProgressBar: true,
-        className: 'small-toast',
-        onOpen: () => dispatch(mailClearError())
-      });
-    }, 300);
+        toast.error(mailVerifyError, {
+          position: 'bottom-center',
+          type: 'error',
+          autoClose: 700,
+          transition: Slide,
+          hideProgressBar: true,
+          className: 'small-toast',
+          onOpen: () => dispatch(mailClearError())
+        });
+      }, 300);
       setMailVerified(false);
     }
   }, [mailVerifiedData, mailVerifyError]);
@@ -552,16 +648,39 @@ const Register = () => {
       store.dispatch(loadUser());
     }
     if (error) {
-      toast.error(error, {
-        position: 'bottom-center',
-        type: 'error',
-        onOpen: () => dispatch(clearError())
-      });
+      // toast.error(error, {
+      //   position: 'bottom-center',
+      //   type: 'error',
+      //   onOpen: () => dispatch(clearError())
+      // });
+      toast.dismiss();
+      setTimeout(() => {
+        toast.error(error, {
+          position: 'bottom-center',
+          type: 'error',
+          autoClose: 700,
+          transition: Slide,
+          hideProgressBar: true,
+          className: 'small-toast',
+          onOpen: () => dispatch(clearError())
+        });
+      }, 300);
     }
     if (isAuthenticated) {
       dispatch(otpErrorClear());
       dispatch(otpClear());
-      toast('Registered successfully', { type: 'success', position: 'bottom-center', autoClose: 500 });
+      // toast('Registered successfully', { type: 'success', position: 'bottom-center', autoClose: 500 });
+      toast.dismiss();
+      setTimeout(() => {
+        toast.success('Registered successfully', {
+          position: 'bottom-center',
+          type: 'success',
+          autoClose: 700,
+          transition: Slide,
+          hideProgressBar: true,
+          className: 'small-toast',
+        });
+      }, 300);
       navigate('/');
     }
   }, [dummyisAuthenticated, navigate, dispatch, isAuthenticated, error]);
@@ -586,7 +705,12 @@ const Register = () => {
 
   return (
     <div >
-      <MetaData title="Register" />
+      {/* <MetaData title="Register" /> */}
+      <MetaData
+        title="Register"
+        description="Create an account to enjoy exclusive benefits. Register quickly and securely to manage your orders, track deliveries, and save your favorite products."
+      />
+
       <div className="products_heading" ref={registerRef}>Register</div>
       <div className="row wrapper mt-0">
         <div className="col-10 col-lg-5">
@@ -675,7 +799,7 @@ const Register = () => {
                 <button
                   style={{
                     color: '#fff',
-                    backgroundColor: verifyloading ? '#a0d7a5' : '#28a745', 
+                    backgroundColor: verifyloading ? '#a0d7a5' : '#28a745',
                     borderRadius: '8px',
                     border: 'none',
                     padding: '10px 20px',
@@ -686,18 +810,18 @@ const Register = () => {
                     marginBottom: '10px',
                   }}
                   onClick={(e) => verifyMail(e)}
-                  disabled={ verifyloading }
+                  disabled={verifyloading}
                 >
                   {verifyloading ? <ButtonLoader fullPage={false} size={20} /> : <span>Verify</span>}
                 </button>
                 {timeLeft !== null && <p style={{ fontSize: '14px', color: '#555' }}>Time left: {timeLeft}s</p>}
                 {/* Go Back Button */}
                 <span
-                onClick={() => {
-                      if (!(verifyloading)) {
-                        handelGoBack();
-                      }
-                    }}
+                  onClick={() => {
+                    if (!(verifyloading)) {
+                      handelGoBack();
+                    }
+                  }}
                   style={{
                     color: (verifyloading) ? '#ccc' : '#007bff', // Change color when disabled
                     cursor: (verifyloading) ? 'not-allowed' : 'pointer', // Change cursor when disabled
@@ -709,7 +833,7 @@ const Register = () => {
                     alignItems: 'center',
                     // minWidth:'20%'
                   }}
-                  
+
                 >
                   <i className="fa fa-arrow-left" style={{ marginRight: '5px' }}></i>
                   Go Back
@@ -847,7 +971,8 @@ const Register = () => {
                         id='customFile'
                       />
                       <label className='custom-file-label' htmlFor='customFile'>
-                        Choose Avatar
+                        {/* Choose Avatar */}
+                        {avatarName ? avatarName : 'Choose Avatar'}
                       </label>
                     </div>
                   </div>

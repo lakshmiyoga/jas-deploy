@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from 'react'
 import { useSelector, useDispatch } from 'react-redux';
 import { updateProfile, clearAuthError } from '../../actions/userActions';
-import { toast } from 'react-toastify'
+import { Slide, toast } from 'react-toastify'
 import { clearUpdateProfile } from '../../slices/authSlice';
 import { useLocation, useNavigate } from 'react-router-dom';
 import MetaData from '../Layouts/MetaData';
@@ -10,11 +10,12 @@ import NumberInput from '../Layouts/NumberInput';
 
 const UpdateProfile = () => {
 
-    const { profileupdateloading,error, user, isUpdated } = useSelector(state => state.authState);
+    const { profileupdateloading, error, user, isUpdated } = useSelector(state => state.authState);
     const [name, setName] = useState("");
     const [email, setEmail] = useState("");
-    const [mobile,setMobile]=useState("");
+    const [mobile, setMobile] = useState("");
     const [avatar, setAvatar] = useState("");
+    const [avatarName, setAvatarName] = useState('');
     const [avatarPreview, setAvatarPreview] = useState("/images/default_avatar.png");
     const navigate = useNavigate()
     const dispatch = useDispatch();
@@ -23,7 +24,7 @@ const UpdateProfile = () => {
     // console.log(error, user, isUpdated)
 
     // const onChangeAvatar = (e) => {
-        
+
     //     const reader = new FileReader();
     //     reader.onload = () => {
     //         if (reader.readyState === 2) {
@@ -41,11 +42,24 @@ const UpdateProfile = () => {
         const fileSizeLimit = 1 * 1024 * 1024; // 1 MB
 
         if (file && file.size > fileSizeLimit) {
-            toast('The size of selected images exceeds the 1MB limit.', {
-                type: 'error',
-                position: "bottom-center"
-            });
+            // toast('The size of selected images exceeds the 1MB limit.', {
+            //     type: 'error',
+            //     position: "bottom-center"
+            // });
+
+            toast.dismiss();
+            setTimeout(() => {
+                toast.error('The size of selected images exceeds the 1MB limit.', {
+                    position: 'bottom-center',
+                    type: 'error',
+                    autoClose: 700,
+                    transition: Slide,
+                    hideProgressBar: true,
+                    className: 'small-toast',
+                });
+            }, 300);
             e.target.value = ''; // Clear the file input
+            setAvatarName('');
             return;
         }
 
@@ -54,6 +68,8 @@ const UpdateProfile = () => {
             if (reader.readyState === 2) {
                 setAvatarPreview(reader.result);
                 setAvatar(file);
+                setAvatarName(file.name);
+
             }
         };
 
@@ -85,22 +101,50 @@ const UpdateProfile = () => {
         }
 
         if (isUpdated) {
-            toast('Profile updated successfully', {
-                type: 'success',
-                position: "bottom-center",
-                onOpen: () => { dispatch(clearUpdateProfile()) }
+            // toast('Profile updated successfully', {
+            //     type: 'success',
+            //     position: "bottom-center",
+            //     onOpen: () => { dispatch(clearUpdateProfile()) }
 
-            })
-            navigate('/myProfile')
+            // })
+            toast.dismiss();
+            setTimeout(() => {
+                toast.success('Profile updated successfully', {
+                    position: 'bottom-center',
+                    type: 'success',
+                    autoClose: 700,
+                    transition: Slide,
+                    hideProgressBar: true,
+                    className: 'small-toast',
+                    onOpen: () => { dispatch(clearUpdateProfile()) }
+                });
+                // Navigate after the toast has been shown
+                setTimeout(() => {
+                    navigate('/myProfile');
+                }, 700); // This delay should match the toast duration
+            }, 300);
+            // navigate('/myProfile')
             return;
         }
 
         if (error) {
-            toast(error, {
-                position: "bottom-center",
-                type: 'error',
-                onOpen: () => { dispatch(clearUpdateProfile()) }
-            })
+            // toast(error, {
+            //     position: "bottom-center",
+            //     type: 'error',
+            //     onOpen: () => { dispatch(clearUpdateProfile()) }
+            // })
+            toast.dismiss();
+            setTimeout(() => {
+                toast.error(error, {
+                    position: 'bottom-center',
+                    type: 'error',
+                    autoClose: 700,
+                    transition: Slide,
+                    hideProgressBar: true,
+                    className: 'small-toast',
+                    onOpen: () => { dispatch(clearUpdateProfile()) }
+                });
+            }, 300);
             return
         }
     }, [user, isUpdated, error, dispatch])
@@ -109,7 +153,12 @@ const UpdateProfile = () => {
 
     return (
         <div>
-            <MetaData title={`Update Profile`} />
+            {/* <MetaData title={`Update Profile`} /> */}
+            <MetaData
+                title="Update Profile"
+                description="Update your personal details, manage your account settings, and ensure your information is always up-to-date for a smooth shopping experience."
+            />
+
 
             <div className="products_heading">Update Profile</div>
 
@@ -144,13 +193,13 @@ const UpdateProfile = () => {
                         </div>
 
                         <div className="form-group">
-                            <label htmlFor="phone_field">Phone No (+91) <span style={{color:'red'}}>*</span></label>
+                            <label htmlFor="phone_field">Phone No (+91) <span style={{ color: 'red' }}>*</span></label>
                             <NumberInput
                                 id="mobile_field"
                                 name="mobile"
                                 className="no-arrow-input form-control"
                                 value={mobile}
-                                onChange={(e) => setMobile(e.target.value)}  
+                                onChange={(e) => setMobile(e.target.value)}
                             />
                         </div>
 
@@ -177,18 +226,19 @@ const UpdateProfile = () => {
                                         multiple={false}           // Ensures only one file can be selected
                                     />
                                     <label className='custom-file-label' htmlFor='customFile'>
-                                        Choose Avatar
+                                        {/* Choose Avatar */}
+                                        {avatarName ? avatarName : 'Choose Avatar'}
                                     </label>
                                 </div>
                             </div>
                         </div>
 
                         <button type="submit" className="btn update-btn btn-block mt-4 mb-3" disabled={profileupdateloading}>
-                        {profileupdateloading ? <LoaderButton fullPage={false} size={20} /> : (
-                                    <span> Update </span>
-                                )
-                                }
-                            </button>
+                            {profileupdateloading ? <LoaderButton fullPage={false} size={20} /> : (
+                                <span> Update </span>
+                            )
+                            }
+                        </button>
                     </form>
                 </div>
             </div>

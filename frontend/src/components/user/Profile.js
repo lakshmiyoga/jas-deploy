@@ -12,13 +12,18 @@ const Profile = () => {
 
     return (
         <Fragment>
-            <MetaData title={`Profile`} />
-          
+            {/* <MetaData title={`Profile`} /> */}
+            <MetaData
+                title="Profile"
+                description="View and edit your profile information, manage addresses, and update your account preferences for a personalized shopping experience."
+            />
+
+
             <div className="products_heading">Profile</div>
 
             <div className="row justify-content-around mt-5 user-info">
 
-                <div className="col-12 col-md-3 " style={{display:'flex',flexDirection:'column',alignItems:'center',justifyContent:'center'}}>
+                <div className="col-12 col-md-3 " style={{ display: 'flex', flexDirection: 'column', alignItems: 'center', justifyContent: 'center' }}>
                     <figure className='avatar avatar-profile'>
                         <img className="rounded-circle img-fluid" src={user && user.avatar ? user.avatar : '/images/default_avatar.png'} alt='avatar' />
                     </figure>
@@ -27,10 +32,10 @@ const Profile = () => {
                     </Link>
                 </div>
 
-                <div className="col-12  col-md-5" style={{display:'flex',flexDirection:'column',alignItems:'center',justifyContent:'center'}} >
+                <div className="col-12  col-md-5" style={{ display: 'flex', flexDirection: 'column', alignItems: 'center', justifyContent: 'center' }} >
                     <h5>Full Name: {user && user.name}</h5>
-                    
-                    <h5>Mobile Number: {user && user.mobile ? `+91 ${ user.mobile} `:'Not available' }</h5>
+
+                    <h5>Mobile Number: {user && user.mobile ? `+91 ${user.mobile} ` : 'Not available'}</h5>
                     {/* <p>{user.name}</p> */}
 
                     <h5>Email Address: {user && user.email}</h5>
