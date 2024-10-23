@@ -173,17 +173,29 @@ const userLogin = catchAsyncError(async (req, res, next) => {
 
 //logout user
 
+// const logoutUser = (req, res, next) => {
+//   return res.cookie('token', null, {
+//     expires: new Date(Date.now()),
+//     httpOnly: true
+//   })
+//     .status(200)
+//     .json({
+//       success: true,
+//       message: "user LoggedOut"
+//     })
+// }
 const logoutUser = (req, res, next) => {
-  return res.cookie('token', null, {
-    expires: new Date(Date.now()),
-    httpOnly: true
-  })
-    .status(200)
-    .json({
-      success: true,
-      message: "user LoggedOut"
-    })
-}
+  res.cookie('token', '', {
+    expires: new Date(0), // Set expiry to a past date to immediately clear the cookie
+    httpOnly: true,
+    path: '/' // Ensure that the cookie is cleared from all paths
+  });
+
+  res.status(200).json({
+    success: true,
+    message: "User successfully logged out"
+  });
+};
 
 //Requesting Password Reset
 
@@ -335,7 +347,6 @@ const updateUserProfile = catchAsyncError(async (req, res, next) => {
 
   let avatar;
 
-  // Find the existing user
   const user = await User.findById(req.user._id);
 
   if (!user) {
@@ -343,47 +354,28 @@ const updateUserProfile = catchAsyncError(async (req, res, next) => {
   }
 
   if (req.file) {
-    // Validate the file type
-    const fileExtension = req.file.originalname.split('.').pop().toLowerCase();
-    if (fileExtension !== 'jpg' && fileExtension !== 'jpeg' && fileExtension !== 'png') {
-      return next(new ErrorHandler('Only .jpg, .jpeg, and .png files are allowed', 400));
+    // Same logic for handling file upload
+    avatar = req.file.location;
+    if (user.avatar && user.avatar !== 'default_avatar.png') {
+      await deleteOldAvatarFromS3(user.avatar);
     }
-
-    // Set the new avatar URL
-    avatar = req.file.location; // Get the S3 URL of the new image
-
-    // Delete the previous avatar from S3
-    if (user && user.avatar && user.avatar !== 'default_avatar.jpg') {
-      const key = user.avatar.split('https://')[1].split('/').slice(1).join('/'); // Adjust the extraction based on the URL format
-      console.log('Deleting image from S3 with key:', key);
-    
-      const params = {
-        Bucket: process.env.S3_BUCKET_NAME,
-        Key: key,
-      };
-    
-      const command = new DeleteObjectCommand(params);
-    
-      try {
-        const result = await s3.send(command);
-        console.log('Successfully deleted old image from S3:', result);
-      } catch (error) {
-        console.log('Error deleting old image from S3:', error);
-      }
+  } else if (req.body.avatar === 'null') {
+    // Remove previous avatar from S3 if user removes it
+    if (user.avatar && user.avatar !== 'default_avatar.png') {
+      await deleteOldAvatarFromS3(user.avatar);
     }
-
-    // Add the new avatar to newUserData
-    newUserData = { ...newUserData, avatar };
+    avatar = 'default_avatar.png'; // Set to default avatar
   }
 
-  // Update the user profile
-  const updatedUser = await User.findByIdAndUpdate(
-    req.user._id,
-    { $set: newUserData },
-    { new: true, runValidators: true }
-  ).select('-password');
+  // Add the new avatar to the update data
+  if (avatar) {
+    newUserData.avatar = avatar;
+  }
 
-  // If the user was not found or the update failed
+  const updatedUser = await User.findByIdAndUpdate(req.user._id, {
+    $set: newUserData
+  }, { new: true, runValidators: true }).select('-password');
+
   if (!updatedUser) {
     return next(new ErrorHandler('Error updating user profile', 500));
   }
@@ -393,6 +385,90 @@ const updateUserProfile = catchAsyncError(async (req, res, next) => {
     user: updatedUser,
   });
 });
+
+// Helper function to delete old avatar from S3
+const deleteOldAvatarFromS3 = async (avatarUrl) => {
+  const key = avatarUrl.split('https://')[1].split('/').slice(1).join('/');
+  const params = {
+    Bucket: process.env.S3_BUCKET_NAME,
+    Key: key,
+  };
+  const command = new DeleteObjectCommand(params);
+  try {
+    const result = await s3.send(command);
+    console.log('Successfully deleted old image from S3:', result);
+  } catch (error) {
+    console.log('Error deleting old image from S3:', error);
+  }
+};
+
+// const updateUserProfile = catchAsyncError(async (req, res, next) => {
+//   let newUserData = {
+//     name: req.body.name,
+//     email: req.body.email,
+//     mobile: req.body.mobile,
+//   };
+
+//   let avatar;
+
+//   // Find the existing user
+//   const user = await User.findById(req.user._id);
+
+//   if (!user) {
+//     return next(new ErrorHandler('User not found', 404));
+//   }
+
+//   if (req.file) {
+//     // Validate the file type
+//     const fileExtension = req.file.originalname.split('.').pop().toLowerCase();
+//     if (fileExtension !== 'jpg' && fileExtension !== 'jpeg' && fileExtension !== 'png') {
+//       return next(new ErrorHandler('Only .jpg, .jpeg, and .png files are allowed', 400));
+//     }
+
+//     // Set the new avatar URL
+//     avatar = req.file.location; // Get the S3 URL of the new image
+
+//     // Delete the previous avatar from S3
+//     if (user && user.avatar && user.avatar !== 'default_avatar.png') {
+//       const key = user.avatar.split('https://')[1].split('/').slice(1).join('/'); // Adjust the extraction based on the URL format
+//       console.log('Deleting image from S3 with key:', key);
+    
+//       const params = {
+//         Bucket: process.env.S3_BUCKET_NAME,
+//         Key: key,
+//       };
+    
+//       const command = new DeleteObjectCommand(params);
+    
+//       try {
+//         const result = await s3.send(command);
+//         console.log('Successfully deleted old image from S3:', result);
+//       } catch (error) {
+//         console.log('Error deleting old image from S3:', error);
+//       }
+//     }
+
+//     // Add the new avatar to newUserData
+//     newUserData = { ...newUserData, avatar };
+//   }
+
+//   // Update the user profile
+//   const updatedUser = await User.findByIdAndUpdate(
+//     req.user._id,
+//     { $set: newUserData },
+//     { new: true, runValidators: true }
+//   ).select('-password');
+
+//   // If the user was not found or the update failed
+//   if (!updatedUser) {
+//     return next(new ErrorHandler('Error updating user profile', 500));
+//   }
+
+//   return res.status(200).json({
+//     success: true,
+//     user: updatedUser,
+//   });
+// });
 
 //Admin: Get All Users - /api/v1/admin/users
 const getAllUsers = catchAsyncError(async (req, res, next) => {

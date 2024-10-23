@@ -94,7 +94,7 @@ const mailOtp = catchAsyncError(async (req, res, next) => {
   
       try {
         const existingOTP = await mailOTP.findOne({ email });
-    
+       console.log(existingOTP,"existingOTP");
         if (existingOTP) {
           // If the mobile number exists, delete the old data
           await mailOTP.findOneAndDelete({ email });

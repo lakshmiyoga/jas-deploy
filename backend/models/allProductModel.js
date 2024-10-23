@@ -39,9 +39,19 @@ const allproductSchema = new mongoose.Schema({
         }
         
     },
+    measurement:{
+        type:String,
+        required:true,
+        enum: {
+            values:['Kg','Piece','Box']
+        },
+        default:'Kg',
+        
+    },
     stocks:{
         type:String,
-        // default:'Stock',
+        required:true,
+        default:'Stock',
     },
     user:{
         type:mongoose.Schema.Types.ObjectId
