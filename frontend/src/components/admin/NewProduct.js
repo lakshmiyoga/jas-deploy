@@ -5,7 +5,7 @@ import { useDispatch, useSelector } from 'react-redux';
 import { useLocation, useNavigate } from "react-router-dom";
 import { createNewProduct, getAdminProducts } from '../../actions/productsActions';
 import { clearProductCreated, clearError } from '../../slices/productSlice';
-import { Slide,toast } from 'react-toastify';
+import { Slide, toast } from 'react-toastify';
 import MetaData from '../Layouts/MetaData';
 import LoaderButton from '../Layouts/LoaderButton';
 
@@ -23,6 +23,7 @@ const NewProduct = ({ isActive, setIsActive }) => {
     const [images, setImages] = useState([]);
     const [imagesPreview, setImagesPreview] = useState([]);
     const [imagesCleared, setImagesCleared] = useState(false);
+    const [measurement, setMeasurement] = useState("");
 
 
     const { newloading, isProductCreated, error } = useSelector(state => state.productState)
@@ -108,6 +109,7 @@ const NewProduct = ({ isActive, setIsActive }) => {
         formData.append('price', price);
         formData.append('percentage', percentage);
         formData.append('category', category);
+        formData.append('measurement', measurement);
         formData.append('stocks', stocks);
         images.forEach(image => {
             formData.append('images', image)
@@ -131,16 +133,16 @@ const NewProduct = ({ isActive, setIsActive }) => {
             // })
             toast.dismiss();
             setTimeout(() => {
-            toast.success('Product Created Succesfully!', {
-              position: 'bottom-center',
-              type: 'success',
-              autoClose: 700,
-              transition: Slide,
-              hideProgressBar: true,
-              className: 'small-toast',
-              onOpen: () => dispatch(clearProductCreated())
-            });
-          }, 300);
+                toast.success('Product Created Succesfully!', {
+                    position: 'bottom-center',
+                    type: 'success',
+                    autoClose: 700,
+                    transition: Slide,
+                    hideProgressBar: true,
+                    className: 'small-toast',
+                    onOpen: () => dispatch(clearProductCreated())
+                });
+            }, 300);
             dispatch(getAdminProducts())
             navigate('/admin/products')
             return;
@@ -154,16 +156,16 @@ const NewProduct = ({ isActive, setIsActive }) => {
             // })
             toast.dismiss();
             setTimeout(() => {
-            toast.error(error, {
-              position: 'bottom-center',
-              type: 'error',
-              autoClose: 700,
-              transition: Slide,
-              hideProgressBar: true,
-              className: 'small-toast',
-              onOpen: () => { dispatch(clearError()) }
-            });
-          }, 300);
+                toast.error(error, {
+                    position: 'bottom-center',
+                    type: 'error',
+                    autoClose: 700,
+                    transition: Slide,
+                    hideProgressBar: true,
+                    className: 'small-toast',
+                    onOpen: () => { dispatch(clearError()) }
+                });
+            }, 300);
             return
         }
     }, [isProductCreated, error, dispatch, navigate])
@@ -182,10 +184,10 @@ const NewProduct = ({ isActive, setIsActive }) => {
     return (
         <div>
             {/* <MetaData title={`New Product`} /> */}
-            <MetaData 
-  title="Add New Product" 
-  description="Create new products for your store. Define product details, upload images, and manage stock levels to keep your catalog up to date." 
-/>
+            <MetaData
+                title="Add New Product"
+                description="Create new products for your store. Define product details, upload images, and manage stock levels to keep your catalog up to date."
+            />
 
 
             <div className="row">
@@ -201,7 +203,7 @@ const NewProduct = ({ isActive, setIsActive }) => {
                                 <h1 className="mb-4">New Product</h1>
 
                                 <div className="form-group">
-                                    <label htmlFor="englishName_field">English Name  <span style={{color:'red'}}>*</span></label>
+                                    <label htmlFor="englishName_field">English Name  <span style={{ color: 'red' }}>*</span></label>
                                     <input
                                         type="text"
                                         id="englishName_field"
@@ -213,7 +215,7 @@ const NewProduct = ({ isActive, setIsActive }) => {
                                 </div>
 
                                 <div className="form-group">
-                                    <label htmlFor="tamilName_field">Tamil Name  <span style={{color:'red'}}>*</span></label>
+                                    <label htmlFor="tamilName_field">Tamil Name  <span style={{ color: 'red' }}>*</span></label>
                                     <input
                                         type="text"
                                         id="tamilName_field"
@@ -225,7 +227,7 @@ const NewProduct = ({ isActive, setIsActive }) => {
                                 </div>
 
                                 <div className="form-group">
-                                    <label htmlFor="buyingPrice">Buying Price  <span style={{color:'red'}}>*</span></label>
+                                    <label htmlFor="buyingPrice">Buying Price  <span style={{ color: 'red' }}>*</span></label>
                                     <input
                                         type="text"
                                         id="buyingPrice"
@@ -236,7 +238,7 @@ const NewProduct = ({ isActive, setIsActive }) => {
                                     />
                                 </div>
                                 <div className="form-group">
-                                    <label htmlFor="percentage">Percentage  <span style={{color:'red'}}>*</span></label>
+                                    <label htmlFor="percentage">Percentage  <span style={{ color: 'red' }}>*</span></label>
                                     <input
                                         type="text"
                                         id="percentage"
@@ -265,7 +267,7 @@ const NewProduct = ({ isActive, setIsActive }) => {
               </div> */}
 
                                 <div className="form-group">
-                                    <label for="category_field">Category  <span style={{color:'red'}}>*</span></label>
+                                    <label for="category_field">Category  <span style={{ color: 'red' }}>*</span></label>
                                     <select onChange={e => setCategory(e.target.value)} className="form-control" id="category_field" required>
                                         <option value="">Select</option>
                                         {categories.map(category => (
@@ -292,9 +294,24 @@ const NewProduct = ({ isActive, setIsActive }) => {
                   value=""
                 />
               </div> */}
-
                                 <div className="form-group">
-                                    <label for="stock_field">Stocks  <span style={{color:'red'}}>*</span></label>
+                                    <label for="measurement_field">Measurement  <span style={{ color: 'red' }}>*</span></label>
+                                    <select
+                                        type="text"
+                                        id="measurement_field"
+                                        className="form-control"
+                                        onChange={e => setMeasurement(e.target.value)}
+                                        value={measurement}
+                                        required
+                                    >
+                                        <option value="">Select</option>
+                                        <option value="Kg">Kg</option>
+                                        <option value="Piece">Piece</option>
+                                        <option value="Box">Box</option>
+                                    </select>
+                                </div>
+                                <div className="form-group">
+                                    <label for="stock_field">Stocks  <span style={{ color: 'red' }}>*</span></label>
                                     <select
                                         type="text"
                                         id="stock_field"
@@ -303,14 +320,15 @@ const NewProduct = ({ isActive, setIsActive }) => {
                                         value={stocks}
                                         required
                                     >
-                                     <option value="">Select</option>
-                                     <option value="Stock">Stock</option>
-                                    <option value="No Stock">No Stock</option>
-                                </select>
+                                        <option value="">Select</option>
+                                        <option value="Stock">Stock</option>
+                                        <option value="No Stock">No Stock</option>
+                                    </select>
                                 </div>
 
+
                                 <div className='form-group'>
-                                    <label>Images  (*Size should be within 5mb)  <span style={{color:'red'}}>*</span> </label>
+                                    <label>Images  (*Size should be within 5mb)  <span style={{ color: 'red' }}>*</span> </label>
 
                                     <div className='custom-file'>
                                         <input
@@ -365,11 +383,11 @@ const NewProduct = ({ isActive, setIsActive }) => {
                                     disabled={newloading}
                                 >
                                     {newloading ? <LoaderButton fullPage={false} size={20} /> : (
-                                    <span>  CREATE</span>
-                                )
+                                        <span>  CREATE</span>
+                                    )
 
-                                }
-                                    
+                                    }
+
                                 </button>
 
                             </form>

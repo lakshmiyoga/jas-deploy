@@ -5,7 +5,7 @@ import MetaData from '../Layouts/MetaData';
 
 const Profile = () => {
     const location = useLocation();
-    sessionStorage.setItem('redirectPath', location.pathname);
+    // sessionStorage.setItem('redirectPath', location.pathname);
 
     const { user } = useSelector(state => state.authState);
     console.log("user", user)

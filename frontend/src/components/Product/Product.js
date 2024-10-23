@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import { useDispatch } from 'react-redux';
 import {Slide, toast } from 'react-toastify';
 import { addCartItem } from '../../actions/cartActions';
@@ -15,41 +15,126 @@ const Product = ({ products, category }) => {
     const [correctWeight,setcorrectWeight]=useState(false)
     sessionStorage.setItem('redirectPath', location.pathname);
 
-    console.log("products",products)
+    // console.log("products",products)
+    useEffect(() => {
+        const initialWeights =products && products.reduce((acc, product) => {
+            acc[product._id] = ''; // Set each product's weight as an empty string
+            return acc;
+        }, {});
+        setWeight(initialWeights);
+    }, [products]);
 
-    const handleWeightChange = (productId, value) => {
-        const weightValue = parseFloat(value);
+    const handleWeightChange = (productId, value, productCategory) => {
+        // const weightValue = parseFloat(value);
+        let validValue;
+        if (productCategory === 'Keerai') {
+            validValue = value.match(/^\d*$/) ? value : weight[productId]; // Only whole numbers allowed
+        } else {
+            // For non-"Keerai", allow up to two decimal places
+            validValue = value.match(/^\d*\.?\d{0,2}$/) ? value : weight[productId];
+        }
+    
+    // Allow empty value for resetting
+    if (value === '') {
+        setWeight(prevWeights => ({ ...prevWeights, [productId]: '' }));
+        return;
+    }
+
+    const weightValue = parseFloat(validValue);
+
         if (weightValue < 0) {
             return;
         }
-        if (weightValue > 5) {
-            setweightvalue(true)
-            if(!weightvalue){
-                // toast('Weight cannot exceed 20Kg', {
-                //     type: 'error',
-                //     position: 'bottom-center',
-                //     autoClose: 500
-                // });
-                toast.dismiss();
-                setTimeout(() => {
-                toast.error('Weight cannot exceed 5Kg', {
-                  position: 'bottom-center',
-                  type: 'error',
-                  autoClose: 700,
-                  transition: Slide,
-                  hideProgressBar: true,
-                  className: 'small-toast',
-                });
-              }, 300);
-                return
-            }
-           else{
-            return;
-           }
+
+        // if (isNaN(weightValue) || value === '') {
+        //     setWeight(prevWeights => ({ ...prevWeights, [productId]: '' }));
+        //     return;
+        // }
            
+        // Handling Keerai (bundle) weight
+        if(!weightvalue){
+            if (productCategory === 'Keerai') {
+                if (weightValue > 10) {
+                    setweightvalue(true);
+                    if (!weightvalue) {
+                        toast.dismiss();
+                        setTimeout(() => {
+                            toast.error('Bundle count cannot exceed 10', {
+                                position: 'bottom-center',
+                                type: 'error',
+                                autoClose: 700,
+                                transition: Slide,
+                                hideProgressBar: true,
+                                className: 'small-toast',
+                            });
+                            setweightvalue(false);
+                        }, 300);
+                        setWeight(prevWeights => ({ ...prevWeights, [productId]: '' }));
+                        return;
+                    }
+                }
+            } else if (weightValue > 5) {
+                // Handling non-Keerai weight limit (Kg)
+                setweightvalue(true);
+                if (!weightvalue) {
+                    toast.dismiss();
+                    setTimeout(() => {
+                        toast.error('Weight cannot exceed 5Kg', {
+                            position: 'bottom-center',
+                            type: 'error',
+                            autoClose: 700,
+                            transition: Slide,
+                            hideProgressBar: true,
+                            className: 'small-toast',
+                        });
+                        setweightvalue(false);
+                    }, 300);
+                    setWeight(prevWeights => ({ ...prevWeights, [productId]: '' }));
+                    return;
+                }
+            }
+            setWeight(prevWeights => ({ ...prevWeights, [productId]: weightValue }));
         }
-        setWeight(prevWeights => ({ ...prevWeights, [productId]: weightValue }));
+       
     };
+
+    // const handleWeightChange = (productId, value) => {
+    //     const weightValue = parseFloat(value);
+    //     if (weightValue < 0) {
+    //         return;
+    //     }
+    //     if (weightValue > 5) {
+    //         setweightvalue(true)
+    //         if(!weightvalue){
+    //             // toast('Weight cannot exceed 20Kg', {
+    //             //     type: 'error',
+    //             //     position: 'bottom-center',
+    //             //     autoClose: 500
+    //             // });
+    //             toast.dismiss();
+    //             setTimeout(() => {
+    //             toast.error('Weight cannot exceed 5Kg', {
+    //               position: 'bottom-center',
+    //               type: 'error',
+    //               autoClose: 700,
+    //               transition: Slide,
+    //               hideProgressBar: true,
+    //               className: 'small-toast',
+    //             });
+    //             setweightvalue(false);
+    //           }, 300);
+    //           setWeight(prevWeights => ({ ...prevWeights, [productId]: '' }));
+    //             return
+    //         }
+    //        else{
+    //         setweightvalue(false);
+    //         setWeight(prevWeights => ({ ...prevWeights, [productId]: '' }));
+    //         return;
+    //        }
+           
+    //     }
+    //     setWeight(prevWeights => ({ ...prevWeights, [productId]: weightValue }));
+    // };
     // const handleWeightChange = (productId, value) => {
     //     const weightValue = parseFloat(value);
     //     // if (!isNaN(weightValue) && weightValue < 0.2) {
@@ -70,81 +155,206 @@ const Product = ({ products, category }) => {
         return (price * weight).toFixed(2);
     };
 
-    const handleAddToCart = (product, productId) => {
+    // const handleAddToCart = (product, productId) => {
 
+    //     const productWeight = weight[product._id];
+    //     console.log("productWeight",isNaN(productWeight))
+    //     if (!isNaN(productWeight) && productWeight < 0.25) {
+    //         setWeightToast(true);
+    //         setWeight(prevWeights => ({ ...prevWeights, [productId]: '' }));
+    //         if(!weighttoast){
+    //             // return toast('The value should not be less than 0.25kg', {
+    //             //     type: 'error',
+    //             //     position: 'bottom-center',
+    //             //     autoClose: 500
+    //             // });
+    //          toast.dismiss();
+    //         setTimeout(() => {
+    //          toast.error('The value should not be less than 0.25kg', {
+    //           position: 'bottom-center',
+    //           type: 'error',
+    //           autoClose: 700,
+    //           transition: Slide,
+    //           hideProgressBar: true,
+    //           className: 'small-toast',
+    //         });
+    //         setWeightToast(false);
+    //         return
+    //       }, 300);
+    //         }
+    //         else{
+    //             return;
+    //         }
+    //         return
+
+    //     }
+    //     if (productWeight >= 0.25) {
+    //         dispatch(addCartItem({ productId: product._id, quantity, productWeight }));
+    //         // toast.success('Item added successfully!', {
+    //         //     type: 'success',
+    //         //     position: 'bottom-center',
+    //         //     autoClose: 500, 
+    //         // });
+    //         toast.dismiss();
+    //         setTimeout(() => {
+    //         toast.success('Item added successfully!', {
+    //           position: 'bottom-center',
+    //           type: 'success',
+    //           autoClose: 700,
+    //           transition: Slide,
+    //           hideProgressBar: true,
+    //           className: 'small-toast',
+    //         });
+    //       }, 300);
+    //         setQuantity(1);
+    //         setWeight(prevWeights => ({ ...prevWeights, [product._id]: '' })); // Reset weight for the added product
+    //         return
+    //     }
+    //      else {
+    //         setcorrectWeight(true);
+    //         if(!correctWeight){
+    //             // toast.error('Please select weight for the correct item', {
+    //             //     type: 'error',
+    //             //     position: 'bottom-center',
+    //             //     autoClose: 500, 
+    //             // });
+    //         toast.dismiss();
+    //         setTimeout(() => {
+    //         toast.error('Please select weight for the correct item', {
+    //           position: 'bottom-center',
+    //           type: 'error',
+    //           autoClose: 700,
+    //           transition: Slide,
+    //           hideProgressBar: true,
+    //           className: 'small-toast',
+    //         });
+    //         setcorrectWeight(false);
+    //         return
+    //       }, 300);
+    //         }
+    //         else{
+    //            return
+    //         }
+    //        return
+    //     }
+    // };
+
+    const handleAddToCart = (product, productId) => {
         const productWeight = weight[product._id];
+    
+        if (product && product.category === 'Keerai') {
+            // For Keerai, bundle validation
+            if (!isNaN(productWeight) && productWeight <= 0) {
+                setWeightToast(true);
+                setWeight(prevWeights => ({ ...prevWeights, [productId]: '' }));
+                if (!weighttoast) {
+                    toast.dismiss();
+                    setTimeout(() => {
+                        toast.error('Please select at least 1 bundle of Keerai', {
+                            position: 'bottom-center',
+                            type: 'error',
+                            autoClose: 700,
+                            transition: Slide,
+                            hideProgressBar: true,
+                            className: 'small-toast',
+                        });
+                        setWeightToast(false);
+                    }, 300);
+                }
+                return;
+            }
+    
+            // Adding Keerai to cart
+            if (productWeight >= 1 && productWeight <= 10) {
+                dispatch(addCartItem({ productId: product._id, quantity, productWeight }));
+                toast.dismiss();
+                setTimeout(() => {
+                    toast.success('Keerai added to cart successfully!', {
+                        position: 'bottom-center',
+                        type: 'success',
+                        autoClose: 700,
+                        transition: Slide,
+                        hideProgressBar: true,
+                        className: 'small-toast',
+                    });
+                }, 300);
+                setQuantity(1);
+                setWeight(prevWeights => ({ ...prevWeights, [product._id]: '' }));
+                return;
+            } else {
+                toast.dismiss();
+                setTimeout(() => {
+                    toast.error('Keerai bundles should be between 1 and 10', {
+                        position: 'bottom-center',
+                        type: 'error',
+                        autoClose: 700,
+                        transition: Slide,
+                        hideProgressBar: true,
+                        className: 'small-toast',
+                    });
+                }, 300);
+                return;
+            }
+        }
+    
+        // For non-Keerai products
         if (!isNaN(productWeight) && productWeight < 0.25) {
             setWeightToast(true);
             setWeight(prevWeights => ({ ...prevWeights, [productId]: '' }));
-            if(!weighttoast){
-                // return toast('The value should not be less than 0.25kg', {
-                //     type: 'error',
-                //     position: 'bottom-center',
-                //     autoClose: 500
-                // });
-             toast.dismiss();
-            setTimeout(() => {
-            toast.error('The value should not be less than 0.25kg', {
-              position: 'bottom-center',
-              type: 'error',
-              autoClose: 700,
-              transition: Slide,
-              hideProgressBar: true,
-              className: 'small-toast',
-            });
-          }, 300);
+            if (!weighttoast) {
+                toast.dismiss();
+                setTimeout(() => {
+                    toast.error('The value should not be less than 0.25kg', {
+                        position: 'bottom-center',
+                        type: 'error',
+                        autoClose: 700,
+                        transition: Slide,
+                        hideProgressBar: true,
+                        className: 'small-toast',
+                        
+                    });
+                    setWeightToast(false);
+                }, 300);
             }
-            else{
-                return;
-            }
-
+            return;
         }
+    
         if (productWeight >= 0.25) {
             dispatch(addCartItem({ productId: product._id, quantity, productWeight }));
-            // toast.success('Item added successfully!', {
-            //     type: 'success',
-            //     position: 'bottom-center',
-            //     autoClose: 500, 
-            // });
             toast.dismiss();
             setTimeout(() => {
-            toast.success('Item added successfully!', {
-              position: 'bottom-center',
-              type: 'success',
-              autoClose: 700,
-              transition: Slide,
-              hideProgressBar: true,
-              className: 'small-toast',
-            });
-          }, 300);
+                toast.success('Item added to cart successfully!', {
+                    position: 'bottom-center',
+                    type: 'success',
+                    autoClose: 700,
+                    transition: Slide,
+                    hideProgressBar: true,
+                    className: 'small-toast',
+                });
+            }, 300);
             setQuantity(1);
-            setWeight(prevWeights => ({ ...prevWeights, [product._id]: undefined })); // Reset weight for the added product
+            setWeight(prevWeights => ({ ...prevWeights, [product._id]: '' }));
+            return;
         } else {
             setcorrectWeight(true);
-            if(!correctWeight){
-                // toast.error('Please select weight for the correct item', {
-                //     type: 'error',
-                //     position: 'bottom-center',
-                //     autoClose: 500, 
-                // });
-            toast.dismiss();
-            setTimeout(() => {
-            toast.error('Please select weight for the correct item', {
-              position: 'bottom-center',
-              type: 'error',
-              autoClose: 700,
-              transition: Slide,
-              hideProgressBar: true,
-              className: 'small-toast',
-            });
-          }, 300);
+            if (!correctWeight) {
+                toast.dismiss();
+                setTimeout(() => {
+                    toast.error('Please select weight for the correct item', {
+                        position: 'bottom-center',
+                        type: 'error',
+                        autoClose: 700,
+                        transition: Slide,
+                        hideProgressBar: true,
+                        className: 'small-toast',
+                    });
+                    setcorrectWeight(false);
+                }, 300);
             }
-            else{
-               return
-            }
-           
+            return;
         }
     };
+    
 
     const capitalizeFirstLetter = (str) => {
         return str
@@ -174,7 +384,7 @@ const Product = ({ products, category }) => {
                         {products && products.map((product, index) => (
                             <tr key={product._id}>
                                 <td className="serial-number">{index + 1}</td>
-                                <td className="products-image">
+                                <td className="products-image" >
                                     {product.images[0] && product.images[0].image && (
                                         <img
                                             className="img-size"
@@ -207,8 +417,8 @@ const Product = ({ products, category }) => {
                                 <td className="Weight">
                                     <NumberInput
                                         // list={`weight-options-${product._id}`}
-                                        value={weight[product._id] || ''}
-                                        onChange={(e) => handleWeightChange(product._id, e.target.value)}
+                                        value={weight[product._id] }
+                                        onChange={(e) => handleWeightChange(product && product._id, e.target.value,product && product.category)}
                                         onFocus={(e) => {
                                             e.target.setAttribute('list', `weight-options-${product._id}`);
                                         }}
@@ -223,11 +433,11 @@ const Product = ({ products, category }) => {
                                         // min="0"
                                     />
                                     <datalist id={`weight-options-${product._id}`}>
-                                        {product.category === 'Keerai'
+                                        {product && product.category === 'Keerai'
                                             ? [...Array(10).keys()].map(i => (
                                                 <option key={i} value={i + 1}>{i + 1}</option>
                                             ))
-                                            : [...Array(20).keys()].map(i => (
+                                            : [...Array(10).keys()].map(i => (
                                                 <option key={i} value={(i + 1) * 0.5}></option>
                                             ))}
                                     </datalist>

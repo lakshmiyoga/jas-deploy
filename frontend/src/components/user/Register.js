@@ -207,6 +207,8 @@ import store from '../../store';
 // import MetaData from '../layouts/MetaData';
 
 const Register = () => {
+  //  const location = useLocation();
+    // sessionStorage.setItem('redirectPath', location.pathname);
   const getInitialUserData = () => {
     const savedUserData = sessionStorage.getItem('registerFormData');
     return savedUserData ? JSON.parse(savedUserData) : {
@@ -258,6 +260,7 @@ const Register = () => {
   const [avatar, setAvatar] = useState(getInitialAvatar);
   const [avatarName, setAvatarName] = useState('');
   const [avatarPreview, setAvatarPreview] = useState(getInitialAvatarPreview);
+  const [loggedin, setloggedin] = useState(false);
   const [timeLeft, setTimeLeft] = useState(getInitialTimeLeft);
   const [passwordValidation, setPasswordValidation] = useState({
     capitalLetter: false,
@@ -269,7 +272,7 @@ const Register = () => {
 
   const dispatch = useDispatch();
   const navigate = useNavigate();
-  const { loading, error, isAuthenticated } = useSelector((state) => state.authState);
+  const { loading, error, isAuthenticated,user } = useSelector((state) => state.authState);
   const {
     otpdata,
     otperror,
@@ -293,7 +296,24 @@ const Register = () => {
   const [formsubmitted, setFormsubmitted] = useState(false);
   
 
+  useEffect(() => {
 
+    if (isAuthenticated && user && !loggedin) {
+      setTimeout(() => {
+        toast.success('Already Login...', {
+            position: 'bottom-center',
+            type: 'success',
+            autoClose: 700,
+            transition: Slide,
+            hideProgressBar: true,
+            className: 'small-toast',
+        });
+    }, 300);
+        const redirectPath = sessionStorage.getItem('redirectPath') || '/';
+        navigate(redirectPath);
+    }
+
+}, [isAuthenticated, loggedin, user])
   // Save form data and avatar preview to sessionStorage whenever they change
   useEffect(() => {
     sessionStorage.setItem('registerFormData', JSON.stringify(userData));
@@ -465,6 +485,7 @@ const Register = () => {
       setMailButtonDisabled(true);
       setTimeLeft(null);
       setOtpSent(false);
+      setloggedin(true);
       clearInterval(mailIdRef.current);
       dispatch(sendMailOtp(formData));
       // setFormsubmitted(true);
@@ -539,7 +560,7 @@ const Register = () => {
       setTimeLeft(null);
       clearInterval(mailIdRef.current);
       setOtpSent(true);
-      toast.success(otpdata.message);
+      // toast.success(otpdata.message);
       // toast.dismiss();
       // toast.success(otpdata.message, {
       //   position: 'bottom-center',
@@ -619,11 +640,13 @@ const Register = () => {
           hideProgressBar: true,
           className: 'small-toast',
         });
+        setMailVerified(true);
+        clearInterval(mailIdRef.current);
+        setMailCode(false);
+        setTimeLeft(null);
+
       }, 300);
-      setMailVerified(true);
-      clearInterval(mailIdRef.current);
-      setMailCode(false);
-      setTimeLeft(null);
+    
     }
     if (mailVerifyError) {
       // console.log(otpdata)
@@ -638,8 +661,9 @@ const Register = () => {
           className: 'small-toast',
           onOpen: () => dispatch(mailClearError())
         });
+        setMailVerified(false);
       }, 300);
-      setMailVerified(false);
+     
     }
   }, [mailVerifiedData, mailVerifyError]);
 
@@ -666,7 +690,11 @@ const Register = () => {
         });
       }, 300);
     }
-    if (isAuthenticated) {
+    
+  }, [dummyisAuthenticated, navigate, dispatch, error]);
+
+  useEffect(()=>{
+    if (isAuthenticated && user && loggedin ) {
       dispatch(otpErrorClear());
       dispatch(otpClear());
       // toast('Registered successfully', { type: 'success', position: 'bottom-center', autoClose: 500 });
@@ -681,9 +709,21 @@ const Register = () => {
           className: 'small-toast',
         });
       }, 300);
+      setTimeout(() => {
+                toast.success('Already Login...', {
+                    position: 'bottom-center',
+                    type: 'success',
+                    autoClose: 700,
+                    transition: Slide,
+                    hideProgressBar: true,
+                    className: 'small-toast',
+                });
+            }, 300);
       navigate('/');
     }
-  }, [dummyisAuthenticated, navigate, dispatch, isAuthenticated, error]);
+  },[isAuthenticated])
+
+
 
   const handleOtpChange = (e) => {
     setOtpMail(e.target.value);

@@ -125,10 +125,20 @@ import { Link, useLocation, useNavigate } from 'react-router-dom';
 import { Container, NavDropdown, Navbar } from 'react-bootstrap';
 import { useDispatch, useSelector } from 'react-redux';
 import { logout } from '../../actions/userActions';
-import { userOrdersClear } from '../../slices/orderSlice';
+import { adminOrderClear, userOrdersClear } from '../../slices/orderSlice';
+import { Slide, toast } from 'react-toastify';
+import { clearlogout, reset } from '../../slices/authSlice';
+import { clearProducts } from '../../slices/productsSlice';
 
 const Sidebar = ({ isActive, setIsActive }) => {
-    const { user, isAuthenticated } = useSelector(state => state.authState);
+    const { user, isAuthenticated,loggedoutmessage,isloggedout } = useSelector(state => state.authState);
+    const { loading, userOrders, error } = useSelector(state => state.orderState)
+    const { adminOrders  } = useSelector( state => state.orderState);
+    useEffect(() => {
+        console.log({ isloggedout, isAuthenticated, user });
+    }, [isloggedout, isAuthenticated, user]);
+
+ 
     const useWindowWidth = () => {
         const [windowWidth, setWindowWidth] = useState(window.innerWidth);
 
@@ -149,7 +159,7 @@ const Sidebar = ({ isActive, setIsActive }) => {
     const dispatch = useDispatch();
     const [refresh, setRefresh] = useState(false);
 
-    sessionStorage.setItem('redirectPath', location.pathname);
+    // sessionStorage.setItem('redirectPath', location.pathname);
 
     const toggleSidebar = () => {
         setIsActive(!isActive);
@@ -159,24 +169,63 @@ const Sidebar = ({ isActive, setIsActive }) => {
         setIsActive(false);
     }
 
-    const logoutHandler = () => {
-        dispatch(logout); // Call the action as a function
-        // sessionStorage.removeItem('redirectPath');
-        // navigate('/');
-        // closeSidebar();
-        // dispatch(userOrdersClear());
-        setRefresh(true)
+    // const logoutHandler = (e) => {
+    //     // e.preventDefault();
+    //     // sessionStorage.removeItem('redirectPath');
+    //     // closeSidebar();
+    //     // dispatch(userOrdersClear());
+    //     // sessionStorage.setItem('redirectPath', '/');
+    //     // navigate('/');
+    //     dispatch(logout); // Call the action as a function
+    //     setRefresh(true);
+    //     // return;
+    // }
+    const logoutHandler =  (e) => {
+        e.preventDefault();
+        // Dispatch the logout action
+        if(userOrders){
+            dispatch(userOrdersClear());
+          }
+        //   if(adminOrders){
+        //     dispatch(adminOrderClear());
+        //   }
+        
+         dispatch(logout);
+         sessionStorage.clear(); 
+        setRefresh(true); // Set refresh to true to trigger useEffect
+        // dispatch(clearProducts());
     }
 
-    useEffect(() => {
-        if (!isAuthenticated || !user || refresh) {
-            sessionStorage.removeItem('redirectPath');
-            closeSidebar();
-            dispatch(userOrdersClear());
-            // sessionStorage.setItem('redirectPath', '/');
-            navigate('/');
-        }
-    }, [isAuthenticated, user, refresh]);
+    // useEffect(() => {
+    //     if (isloggedout && !isAuthenticated && !user && refresh) {
+    //         setRefresh(false);
+    //         // dispatch(userOrdersClear());
+    //         // dispatch(clearUser());
+    //         // setOpenSide(!openSide);
+    //         toast.dismiss();
+    //         setTimeout(() => {
+    //           toast.success(loggedoutmessage, {
+    //             position: 'bottom-center',
+    //             type: 'success',
+    //             autoClose: 700,
+    //             transition: Slide,
+    //             hideProgressBar: true,
+    //             className: 'small-toast',
+    //             onClose: () => {window.close(); },
+    //           });
+    //           dispatch(clearlogout());
+    //             setTimeout(() => {
+    //                 window.open('/', '_blank');
+    //                 // window.close();
+    //                 // window.open('/', '_blank');
+    //                 window.location.replace('/'); // Fallback to replace current page
+    //             }, 200);
+    //             // Clear session storage and dispatch necessary actions
+                
+    //         }, 300);
+    //         // return;
+    //     }
+    // }, [isloggedout,dispatch, refresh]);
 
     useEffect(() => {
         if (isActive) {
@@ -270,7 +319,7 @@ const Sidebar = ({ isActive, setIsActive }) => {
                             <Link to="/admin/refund" onClick={closeSidebar}><i className="fa fa-reply"></i> Refund</Link>
                         </li>
                         <li>
-                            <Link onClick={logoutHandler}><i className="fa fa-sign-out"></i> Logout</Link>
+                            <Link onClick={(e) =>logoutHandler(e)}><i className="fa fa-sign-out"></i> Logout</Link>
                         </li>
                     </ul>
                 </nav>

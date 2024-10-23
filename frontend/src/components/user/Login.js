@@ -107,6 +107,17 @@ const Login = ({ email, setEmail }) => {
     useEffect(() => {
 
         if (isAuthenticated && user && !loggedin) {
+            toast.dismiss();
+            setTimeout(() => {
+                toast.success('Already Login...', {
+                    position: 'bottom-center',
+                    type: 'success',
+                    autoClose: 700,
+                    transition: Slide,
+                    hideProgressBar: true,
+                    className: 'small-toast',
+                });
+            }, 300);
             const redirectPath = sessionStorage.getItem('redirectPath') || '/';
             navigate(redirectPath);
         }

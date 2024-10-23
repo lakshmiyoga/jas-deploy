@@ -101,9 +101,10 @@ export const logout =  async (dispatch) => {
 
   try {
       dispatch(logoutRequest())
-      await axios.get(`/api/v1/logout`);
+      const {data} = await axios.get(`/api/v1/logout`);
       // sessionStorage.removeItem('redirectPath');
-      dispatch(logoutSuccess())
+      console.log("data",data);
+      dispatch(logoutSuccess(data))
   } catch (error) {
       dispatch(logoutFail())
   }

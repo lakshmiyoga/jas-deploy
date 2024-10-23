@@ -1,23 +1,106 @@
-import { useSelector } from 'react-redux';
+import { useDispatch, useSelector } from 'react-redux';
 import { Navigate, useLocation, useNavigate } from 'react-router-dom';
 import Loader from '../Layouts/Loader';
 import { loadUser } from '../../actions/userActions';
 import store from '../../store';
 import { useEffect } from 'react';
+import { Slide, toast } from 'react-toastify';
+import { clearlogout } from '../../slices/authSlice';
+import { clearProducts } from '../../slices/productsSlice';
 
 export default function ProtectedRoute({ children, isAdmin }) {
-    const { isAuthenticated, loading, user } = useSelector(state => state.authState);
+    // const { isAuthenticated, loading, user } = useSelector(state => state.authState);
+    const { user, isAuthenticated,loggedoutmessage,isloggedout,loading } = useSelector(state => state.authState);
+    const { products  } = useSelector( state => state.productsState);
   
     const location = useLocation();
     const navigate = useNavigate();
+    const dispatch = useDispatch();
 
-    useEffect(() => {
-        if (!isAuthenticated && !loading) {
-            store.dispatch(loadUser()); // Load user if not already loaded
-        }
-    }, [isAuthenticated, loading]);
+    // useEffect(() => {
+    //     if (!isAuthenticated && !loading) {
+    //         store.dispatch(loadUser()); // Load user if not already loaded
+    //     }
+    // }, [isAuthenticated, loading]);
 
     // console.log("protecteduser",user)
+
+    // useEffect(() => {
+    //     if (isloggedout && !isAuthenticated && !user ) {
+    //         // setRefresh(false);
+    //         // dispatch(userOrdersClear());
+    //         // dispatch(clearUser());
+    //         // setOpenSide(!openSide);
+    //         dispatch(clearProducts());
+    //         toast.dismiss();
+    //         setTimeout(() => {
+    //           toast.success(loggedoutmessage, {
+    //             position: 'bottom-center',
+    //             type: 'success',
+    //             autoClose: 700,
+    //             transition: Slide,
+    //             hideProgressBar: true,
+    //             className: 'small-toast',
+    //             // onOpen: () => { dispatch(clearlogout()) ; dispatch(clearProducts())},
+    //             // onOpen: () => {window.close();},
+    //           });
+    //           window.close();
+    //           dispatch(clearlogout());
+    //           sessionStorage.clear();
+  
+    //           // Open a new tab with the target URL (home or login page)
+              
+  
+    //           // Close the current tab
+              
+    //           setTimeout(() => {
+    //             window.open('/', '_blank');
+    //             window.location.replace('/'); // Fallback to replace current page
+    //         }, 300);
+        
+    //         }, 300);
+    //         // return;
+    //     }
+    // }, [isloggedout,dispatch,isAuthenticated]);
+    useEffect(() => {
+        if (isloggedout && !isAuthenticated && !user && isAdmin) {
+            sessionStorage.clear();
+            // if(products){
+            //     dispatch(clearProducts());
+            // }
+            
+            toast.dismiss();
+    
+            setTimeout(() => {
+                toast.success(loggedoutmessage, {
+                    position: 'bottom-center',
+                    type: 'success',
+                    autoClose: 700,
+                    transition: Slide,
+                    hideProgressBar: true,
+                    className: 'small-toast',
+                    onClose: () => { window.close();window.open('/', '_blank');},
+                });
+                dispatch(clearlogout());
+                // setTimeout(() => {
+                //     // window.close();
+                //     // window.open('/', '_blank');
+                //     window.open('/', '_blank');
+                //     window.location.replace('/'); // Fallback to replace current page
+                // }, 200);
+                // Clear session storage and dispatch necessary actions
+               
+                
+    
+                // Open a new tab first
+                // const newTab = window.open('/', '_blank');
+                
+                // Attempt to close the current tab (it may not work if this tab wasn't opened programmatically
+    
+            }, 300);
+        }
+    }, [isloggedout, dispatch, isAuthenticated, user, loggedoutmessage]);
+    
 
     if (loading) {
         return <Loader />;
@@ -91,7 +174,7 @@ export default function ProtectedRoute({ children, isAdmin }) {
     }
     
     else if(!isAuthenticated || !user ){
-        return <Navigate to="/" replace />;
+        return <Navigate to="/unauthorized" replace />;
     }
 
     else{

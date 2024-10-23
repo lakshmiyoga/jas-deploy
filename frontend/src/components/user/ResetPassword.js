@@ -11,7 +11,7 @@ const ResetPassword = () => {
     const [password, setPassword] = useState("");
     const [confirmPassword, setConfirmPassword] = useState("");
     const location = useLocation();
-    sessionStorage.setItem('redirectPath', location.pathname);
+    // sessionStorage.setItem('redirectPath', location.pathname);
     const dispatch = useDispatch();
     const { resetloading, isAuthenticated, error } = useSelector(state => state.authState);
     const navigate = useNavigate();

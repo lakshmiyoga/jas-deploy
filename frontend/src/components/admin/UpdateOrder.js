@@ -46,6 +46,21 @@ const UpdateOrder = ({ isActive, setIsActive }) => {
     console.log("orderDetail", orderDetail)
     const invoiceRef = useRef();
 
+    const [showModal, setShowModal] = useState(false); // State to manage modal visibility
+    const [totalDispatchedAmount, setTotalDispatchedAmount] = useState(0); // To store total dispatched amount
+
+    const calculateTotalDispatchedAmount = (updatedItems) => {
+        let total = 0;
+
+        updatedItems && updatedItems.forEach((item, index) => {
+            const dispatchedWeight = parseFloat(item.productWeight);
+            const pricePerKg = parseFloat(orderItems[index].price);
+            total += dispatchedWeight * pricePerKg;
+        });
+
+        return total;
+    };
+
 
     useEffect(() => {
         if (orderDetail.order_id) {
@@ -256,15 +271,28 @@ const UpdateOrder = ({ isActive, setIsActive }) => {
             setEditableWeights(newWeights);
         }
     };
+    const updatedItems = orderItems && orderItems.map((item, index) => ({
+        ...item,
+        status: editableWeights[index] > 0 ? 'confirm' : 'cancel',
+        productWeight: editableWeights[index]
+    }));
+    const handlePack = async (e) => {
+        e.preventDefault();
+        const dispatchedAmount = calculateTotalDispatchedAmount(updatedItems && updatedItems);
+        setTotalDispatchedAmount(dispatchedAmount); // Update the total dispatched amount
+
+        // Open modal
+        setShowModal(true);
+    };
 
     const submitHandlerPacked = async (e) => {
         e.preventDefault();
 
-        const updatedItems = orderItems.map((item, index) => ({
-            ...item,
-            status: editableWeights[index] > 0 ? 'confirm' : 'cancel',
-            productWeight: editableWeights[index]
-        }));
+        // const updatedItems = orderItems.map((item, index) => ({
+        //     ...item,
+        //     status: editableWeights[index] > 0 ? 'confirm' : 'cancel',
+        //     productWeight: editableWeights[index]
+        // }));
 
         // const currentDate = new Date();
         // const currentHour = currentDate.getHours();
@@ -337,16 +365,16 @@ const UpdateOrder = ({ isActive, setIsActive }) => {
         } catch (error) {
             // toast.error(error);
             toast.dismiss();
-                setTimeout(() => {
-                    toast.error(error, {
-                        position: 'bottom-center',
-                        type: 'error',
-                        autoClose: 700,
-                        transition: Slide,
-                        hideProgressBar: true,
-                        className: 'small-toast',
-                    });
-                }, 300);
+            setTimeout(() => {
+                toast.error(error, {
+                    position: 'bottom-center',
+                    type: 'error',
+                    autoClose: 700,
+                    transition: Slide,
+                    hideProgressBar: true,
+                    className: 'small-toast',
+                });
+            }, 300);
             // setRefreshData(true)
         }
 
@@ -427,18 +455,23 @@ const UpdateOrder = ({ isActive, setIsActive }) => {
             //     onOpen: () => dispatch(clearOrderUpdated())
             // });
             toast.dismiss();
+            setTimeout(() => {
+                toast.success('Order Updated Successfully!', {
+                    position: 'bottom-center',
+                    type: 'success',
+                    autoClose: 700,
+                    transition: Slide,
+                    hideProgressBar: true,
+                    className: 'small-toast',
+                    onOpen: () => dispatch(clearOrderUpdated())
+                });
                 setTimeout(() => {
-                    toast.success('Order Updated Successfully!', {
-                        position: 'bottom-center',
-                        type: 'success',
-                        autoClose: 700,
-                        transition: Slide,
-                        hideProgressBar: true,
-                        className: 'small-toast',
-                        onOpen: () => dispatch(clearOrderUpdated())
-                    });
-                }, 300);
-            dispatch(adminOrders());
+                    dispatch(adminOrders());
+               }, 700);
+               
+            }, 300);
+            setShowModal(true);
+           
         }
     }, [isOrderUpdated])
 
@@ -450,17 +483,17 @@ const UpdateOrder = ({ isActive, setIsActive }) => {
             //     onOpen: () => { dispatch(clearError()) }
             // });
             toast.dismiss();
-                setTimeout(() => {
-                    toast.error(error, {
-                        position: 'bottom-center',
-                        type: 'error',
-                        autoClose: 700,
-                        transition: Slide,
-                        hideProgressBar: true,
-                        className: 'small-toast',
-                        onOpen: () => { dispatch(clearError()) }
-                    });
-                }, 300);
+            setTimeout(() => {
+                toast.error(error, {
+                    position: 'bottom-center',
+                    type: 'error',
+                    autoClose: 700,
+                    transition: Slide,
+                    hideProgressBar: true,
+                    className: 'small-toast',
+                    onOpen: () => { dispatch(clearError()) }
+                });
+            }, 300);
             return;
         }
     }, [error])
@@ -496,74 +529,74 @@ const UpdateOrder = ({ isActive, setIsActive }) => {
 
     return (
         <div>
-            <MetaData 
-  title="Update Order" 
-  description="Modify order details, update order status, and handle special requests from customers to ensure order accuracy." 
-/>
+            <MetaData
+                title="Update Order"
+                description="Modify order details, update order status, and handle special requests from customers to ensure order accuracy."
+            />
 
-        
 
-        <div className="row loader-parent">
-            {/* <MetaData title={`Update Order`} /> */}
-            <div className="col-12 col-md-2">
-                <div style={{ display: 'flex', flexDirection: 'row', position: 'fixed', top: '0px', zIndex: 99999, backgroundColor: '#fff', minWidth: '100%' }}>
-                    <Sidebar isActive={isActive} setIsActive={setIsActive} />
+
+            <div className="row loader-parent">
+                {/* <MetaData title={`Update Order`} /> */}
+                <div className="col-12 col-md-2">
+                    <div style={{ display: 'flex', flexDirection: 'row', position: 'fixed', top: '0px', zIndex: 99999, backgroundColor: '#fff', minWidth: '100%' }}>
+                        <Sidebar isActive={isActive} setIsActive={setIsActive} />
+                    </div>
                 </div>
-            </div>
 
-            <div className="col-12 col-md-10 smalldevice-space container order-detail-container loader-parent">
-                {
-                    loading ? (
-                        <div className="container loader-loading-center">
-                            <Loader />
-                        </div>
-                    ) : (
-                        <Fragment>
-                            {/* <div className="row d-flex justify-content-around"> */}
-                            <div className="col-12 col-lg-12 mt-5 order-details">
-                                <h1 className="my-5">Order # {orderDetail.order_id}</h1>
+                <div className="col-12 col-md-10 smalldevice-space container order-detail-container loader-parent">
+                    {
+                        loading ? (
+                            <div className="container loader-loading-center">
+                                <Loader />
+                            </div>
+                        ) : (
+                            <Fragment>
+                                {/* <div className="row d-flex justify-content-around"> */}
+                                <div className="col-12 col-lg-12 mt-5 order-details">
+                                    <h1 className="my-5">Order # {orderDetail.order_id}</h1>
 
-                                <h4 className="mb-4">Shipping Info</h4>
-                                <div><b>Name:</b> {user.name}</div>
-                                <div><b>Phone:</b> {shippingInfo.phoneNo}</div>
-                                <div>
-                                    <b>Address:</b>
-                                    {shippingInfo.address && `${shippingInfo.address},`}
-                                    {shippingInfo.area && `${shippingInfo.area},`}
-                                    {shippingInfo.landmark && `${shippingInfo.landmark},`}
-                                    {shippingInfo.city && `${shippingInfo.city}`}
-                                    {shippingInfo.postalCode && -`${shippingInfo.postalCode}`}
-                                </div>
-
-                                <div><b>Amount:</b> Rs.{parseFloat(totalPrice).toFixed(2)}</div>
-                                {orderDetail && orderDetail.statusResponse && orderDetail.statusResponse.payment_method && (
-                                    <div><b>Payment Mode:</b> {orderDetail && orderDetail.statusResponse && orderDetail.statusResponse.payment_method}</div>
-
-                                )
-
-                                }
-
-                                <hr />
-
-                                <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', flexWrap: 'wrap' }}>
-                                    <div style={{ display: 'flex', alignItems: 'center' }}>
-                                        <p><b>Payment Status:</b></p>
-                                        <p className={orderDetail && orderDetail.paymentStatus && orderDetail.paymentStatus === 'CHARGED' ? 'greenColor' : 'redColor'} style={{ marginLeft: '10px' }}><b>{orderDetail ? orderDetail.paymentStatus : 'Pending'}</b></p>
-                                    </div>
-                                    <div style={{ display: 'flex', alignItems: 'center', marginRight: '50px' }}>
-                                        <p><b>Order Status:</b></p>
-                                        <p className={orderStatus && orderStatus.includes('Delivered') ? 'greenColor' : 'redColor'} style={{ marginLeft: '10px' }}><b>{orderStatus}</b></p>
+                                    <h4 className="mb-4">Shipping Info</h4>
+                                    <div><b>Name:</b> {user.name}</div>
+                                    <div><b>Phone:</b> {shippingInfo.phoneNo}</div>
+                                    <div>
+                                        <b>Address:</b>
+                                        {shippingInfo.address && `${shippingInfo.address},`}
+                                        {shippingInfo.area && `${shippingInfo.area},`}
+                                        {shippingInfo.landmark && `${shippingInfo.landmark},`}
+                                        {shippingInfo.city && `${shippingInfo.city}`}
+                                        {shippingInfo.postalCode && -`${shippingInfo.postalCode}`}
                                     </div>
 
-                                </div>
+                                    <div><b>Amount:</b> Rs.{parseFloat(totalPrice).toFixed(2)}</div>
+                                    {orderDetail && orderDetail.statusResponse && orderDetail.statusResponse.payment_method && (
+                                        <div><b>Payment Mode:</b> {orderDetail && orderDetail.statusResponse && orderDetail.statusResponse.payment_method}</div>
 
-                                {/* <h4 className="my-4">Payment status</h4>
+                                    )
+
+                                    }
+
+                                    <hr />
+
+                                    <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', flexWrap: 'wrap' }}>
+                                        <div style={{ display: 'flex', alignItems: 'center' }}>
+                                            <p><b>Payment Status:</b></p>
+                                            <p className={orderDetail && orderDetail.paymentStatus && orderDetail.paymentStatus === 'CHARGED' ? 'greenColor' : 'redColor'} style={{ marginLeft: '10px' }}><b>{orderDetail ? orderDetail.paymentStatus : 'Pending'}</b></p>
+                                        </div>
+                                        <div style={{ display: 'flex', alignItems: 'center', marginRight: '50px' }}>
+                                            <p><b>Order Status:</b></p>
+                                            <p className={orderStatus && orderStatus.includes('Delivered') ? 'greenColor' : 'redColor'} style={{ marginLeft: '10px' }}><b>{orderStatus}</b></p>
+                                        </div>
+
+                                    </div>
+
+                                    {/* <h4 className="my-4">Payment status</h4>
                                 <p className={orderDetail.paymentStatus === 'CHARGED' ? 'greenColor' : 'redColor'}><b>{orderDetail.paymentStatus || 'Pending'}</b></p>
                                 <hr />
                                 <h4 className="my-4">Order Status:</h4>
                                 <p className={dropStatus.includes('Delivered') ? 'greenColor' : 'redColor'}><b>{dropStatus}</b></p> */}
 
-                                {/* {porterOrderData && porterOrderData.porterResponse && (
+                                    {/* {porterOrderData && porterOrderData.porterResponse && (
                                     <Fragment>
                                         <hr />
                                         <h4 className="my-4">Delivery Details:</h4>
@@ -651,110 +684,110 @@ const UpdateOrder = ({ isActive, setIsActive }) => {
                                 )} */}
 
 
-                                <hr />
-                                <h4 className="my-4">Order Items:</h4>
+                                    <hr />
+                                    <h4 className="my-4">Order Items:</h4>
 
-                                <div className="invoice-table-container">
-                                    <div className="updatetable-responsive">
-                                        <table className="updatetable updatetable-bordered">
-                                            <thead>
-                                                <tr>
+                                    <div className="invoice-table-container">
+                                        <div className="updatetable-responsive">
+                                            <table className="updatetable updatetable-bordered">
+                                                <thead>
+                                                    <tr>
+                                                        {getpackedOrderData && getpackedOrderData.dispatchedTable ? (
+                                                            <>
+                                                                <th>Image</th>
+                                                                <th>Name</th>
+                                                                <th>Ordered Weight</th>
+                                                                <th>Price per kg</th>
+                                                                <th>Dispatched Weight</th>
+                                                                <th>Refundable Weight</th>
+                                                                <th>Refundable Amount</th>
+                                                            </>
+                                                        ) : (
+                                                            <>
+                                                                <th>Select Item</th>
+                                                                <th>Image</th>
+                                                                <th>Name</th>
+                                                                <th>Price per kg</th>
+                                                                <th>Ordered Weight</th>
+                                                                <th>Dispatch Weight</th>
+                                                                <th>Total Price</th>
+                                                                {/* <th>Status</th> */}
+                                                            </>
+                                                        )}
+                                                    </tr>
+                                                </thead>
+                                                <tbody>
                                                     {getpackedOrderData && getpackedOrderData.dispatchedTable ? (
-                                                        <>
-                                                            <th>Image</th>
-                                                            <th>Name</th>
-                                                            <th>Ordered Weight</th>
-                                                            <th>Price per kg</th>
-                                                            <th>Dispatched Weight</th>
-                                                            <th>Refundable Weight</th>
-                                                            <th>Refundable Amount</th>
-                                                        </>
-                                                    ) : (
-                                                        <>
-                                                            <th>Select Item</th>
-                                                            <th>Image</th>
-                                                            <th>Name</th>
-                                                            <th>Price per kg</th>
-                                                            <th>Ordered Weight</th>
-                                                            <th>Dispatch Weight</th>
-                                                            <th>Total Price</th>
-                                                            {/* <th>Status</th> */}
-                                                        </>
-                                                    )}
-                                                </tr>
-                                            </thead>
-                                            <tbody>
-                                                {getpackedOrderData && getpackedOrderData.dispatchedTable ? (
-                                                    getpackedOrderData.dispatchedTable.map((item, index) => (
-                                                        <tr key={index}>
-                                                            <td>
-                                                                <img src={item.image} alt={item.name} className="updateTableproduct-image" />
-                                                            </td>
-                                                            <td>{item.name}</td>
-                                                            <td>{item.orderedWeight} kg</td>
-                                                            <td>Rs. {item.pricePerKg}</td>
-                                                            <td>{item.dispatchedWeight ? item.dispatchedWeight : 0} kg</td>
-                                                            <td>{item.refundableWeight ? item.refundableWeight : 0} kg</td>
-                                                            <td>Rs. {item.refundableWeight ? item.refundableWeight * item.pricePerKg  : 0}</td>
-                                                            
-                                                        </tr>
-                                                    ))
-                                                ) : (
-                                                    orderItems.map((item, index) => {
-                                                        const product = products.find((product) => product.englishName === item.name);
-                                                        if (!product) return null;
-
-                                                        return (
+                                                        getpackedOrderData.dispatchedTable.map((item, index) => (
                                                             <tr key={index}>
-                                                                <td>
-                                                                    <input
-                                                                        type="checkbox"
-                                                                        className="updatecheck-input"
-                                                                        checked={selectedItems[index]}
-                                                                        onChange={() => handleItemSelection(index)}
-                                                                    />
-                                                                </td>
                                                                 <td>
                                                                     <img src={item.image} alt={item.name} className="updateTableproduct-image" />
                                                                 </td>
                                                                 <td>{item.name}</td>
-                                                                <td>Rs. {item.price}</td>
-                                                                <td>{item.productWeight} kg</td>
-                                                                {editableWeights && (
-                                                                    <>
-                                                                        <td style={{ maxWidth: '70px' }}>
-                                                                            <input
-                                                                                type="number"
-                                                                                className="no-arrow-input form-control updateTableInput"
-                                                                                value={editableWeights[index] === 0 ? '' : editableWeights[index]}
-                                                                                onChange={(e) => changeWeight(e, index)}
-                                                                                placeholder={editableWeights[index] === 0 ? 0 : ''}
-                                                                                onBlur={() => handleBlur(index)}
-                                                                                disabled={!selectedItems[index]}
-                                                                                required
-                                                                            />
-                                                                        </td>
-                                                                        <td>Rs. {(editableWeights[index] * item.price).toFixed(2)}</td>
-                                                                    </>
-                                                                )}
-                                                                {/* <td>{product.stocks ? <p>{product.stocks}</p> : <p>Out of Stock</p>}</td> */}
+                                                                <td>{item.orderedWeight} kg</td>
+                                                                <td>Rs. {item.pricePerKg}</td>
+                                                                <td>{item.dispatchedWeight ? item.dispatchedWeight : 0} kg</td>
+                                                                <td>{item.refundableWeight ? item.refundableWeight : 0} kg</td>
+                                                                <td>Rs. {item.refundableWeight ? item.refundableWeight * item.pricePerKg : 0}</td>
+
                                                             </tr>
-                                                        );
-                                                    })
-                                                )}
-                                            </tbody>
-                                        </table>
+                                                        ))
+                                                    ) : (
+                                                        orderItems.map((item, index) => {
+                                                            const product = products.find((product) => product.englishName === item.name);
+                                                            if (!product) return null;
+
+                                                            return (
+                                                                <tr key={index}>
+                                                                    <td>
+                                                                        <input
+                                                                            type="checkbox"
+                                                                            className="updatecheck-input"
+                                                                            checked={selectedItems[index]}
+                                                                            onChange={() => handleItemSelection(index)}
+                                                                        />
+                                                                    </td>
+                                                                    <td>
+                                                                        <img src={item.image} alt={item.name} className="updateTableproduct-image" />
+                                                                    </td>
+                                                                    <td>{item.name}</td>
+                                                                    <td>Rs. {item.price}</td>
+                                                                    <td>{item.productWeight} kg</td>
+                                                                    {editableWeights && (
+                                                                        <>
+                                                                            <td style={{ maxWidth: '70px' }}>
+                                                                                <input
+                                                                                    type="number"
+                                                                                    className="no-arrow-input form-control updateTableInput"
+                                                                                    value={editableWeights[index] === 0 ? '' : editableWeights[index]}
+                                                                                    onChange={(e) => changeWeight(e, index)}
+                                                                                    placeholder={editableWeights[index] === 0 ? 0 : ''}
+                                                                                    onBlur={() => handleBlur(index)}
+                                                                                    disabled={!selectedItems[index]}
+                                                                                    required
+                                                                                />
+                                                                            </td>
+                                                                            <td>Rs. {(editableWeights[index] * item.price).toFixed(2)}</td>
+                                                                        </>
+                                                                    )}
+                                                                    {/* <td>{product.stocks ? <p>{product.stocks}</p> : <p>Out of Stock</p>}</td> */}
+                                                                </tr>
+                                                            );
+                                                        })
+                                                    )}
+                                                </tbody>
+                                            </table>
+                                        </div>
                                     </div>
-                                </div>
 
-                                <hr />
-                                <div>
-                                    {/* <button className='btn btn-primary' onClick={submitHandler} disabled={dropStatus === "Dispatched"}>Dispatch</button> */}
-                                    <button className='btn btn-primary' onClick={(e) => submitHandlerPacked(e)} disabled={dropStatus === "Processing" ? false : true}>Packed</button>
+                                    <hr />
+                                    <div>
+                                        {/* <button className='btn btn-primary' onClick={submitHandler} disabled={dropStatus === "Dispatched"}>Dispatch</button> */}
+                                        <button className='btn btn-primary' onClick={(e) => handlePack(e)} disabled={dropStatus === "Processing" ? false : true}>Packed</button>
 
-                                </div>
+                                    </div>
 
-                                {/* {porterOrderData && (
+                                    {/* {porterOrderData && (
                  <div style={{marginTop:'20px'}}>
                     <button onClick={handlePrint} className='btn btn-primary'>Download Invoice</button>
                     {ReactDOM.createPortal(
@@ -770,21 +803,56 @@ const UpdateOrder = ({ isActive, setIsActive }) => {
             } */}
 
 
-                                {/* {porterOrderData && (
+                                    {/* {porterOrderData && (
                                     <Invoice porterOrderData={porterOrderData} />
 
                                 )
 
                                 } */}
-                            </div>
-                        </Fragment>
-                    )
-                }
+                                </div>
+                            </Fragment>
+                        )
+                    }
+                </div>
+
+
+
             </div>
-
-
-
-        </div>
+            {showModal && (
+                <div className="modal" tabIndex="-1" role="dialog">
+                    <div className="modal-dialog" role="document">
+                        <div className="modal-content">
+                            <div className="modal-header">
+                                <h5 className="modal-title">Confirm Action</h5>
+                                <button type="button" className="close" onClick={() => setShowModal(false)}>
+                                    <span aria-hidden="true">&times;</span>
+                                </button>
+                            </div>
+                            <div className="modal-body">
+                                {totalDispatchedAmount > 0 ? (
+                                    <p>Do you want to confirm the pack?</p>
+                                ) : (
+                                    <p>There is no item to pack. Please confirm to cancel this order.</p>
+                                )}
+                            </div>
+                            <div className="modal-footer">
+                                {totalDispatchedAmount > 0 ? (
+                                    <button type="button" className="btn btn-primary" onClick={submitHandlerPacked}>
+                                        Confirm Pack
+                                    </button>
+                                ) : (
+                                    <button type="button" className="btn btn-danger" onClick={submitHandlerPacked}>
+                                        Cancel Order
+                                    </button>
+                                )}
+                                {/* <button type="button" className="btn btn-secondary" onClick={() => setShowModal(false)}>
+                                    Close
+                                </button> */}
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            )}
         </div>
     );
 

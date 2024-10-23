@@ -16,7 +16,7 @@ const PrivacyPolicy = () => {
 
       <div className="products_heading">Privacy Policy</div>
 
-      <div className="privacy_container">
+      {/* <div className="privacy_container">
         <h3>Privacy Policy</h3>
         <h5>Personal Information</h5>
         <p>“RVP Sourcing” is the licensed owner for RVP Sourcing Online and the company respects your privacy. This Privacy Policy provides succinctly the manner your data is collected and used by RVP Sourcing Online on the Site. As a visitor to the Site/ Customer you are advised to please read the Privacy Policy carefully. By accessing the services provided by the Site you agree to the collection and use of your data by RVP Sourcing Online in the manner provided in this Privacy Policy.</p>
@@ -44,7 +44,59 @@ const PrivacyPolicy = () => {
         <h5>Policy updates</h5>
         <p>“RVP Sourcing Online” reserves the right to change or update this policy at any time. Such changes shall be effective immediately upon posting to the Site.</p>
 
-      </div>
+      </div> */}
+      <div className="refund-policy-container">
+  <h3>Privacy Policy</h3>
+  <p>Effective Date: [22-10-2024]</p>
+
+  <h5>Introduction</h5>
+  <p>This Privacy Policy outlines how we collect, use, disclose, and protect your personal information when you use our online platform for purchasing fruits and vegetables.</p>
+
+  <h5>Information We Collect</h5>
+  <ul>
+    <li>Personal Information: We collect information that can identify you, such as your name, email address, phone number, billing address, and shipping address when you create an account or place an order.</li>
+    <li>Payment Information: We collect payment information through our secure payment processor. We do not store your credit card details.</li>
+    <li>Usage Data: We may collect information about how you interact with our website, including IP addresses, browser types, and pages visited.</li>
+  </ul>
+
+  <h5>How We Use Your Information</h5>
+  <ul>
+    <li>To process and fulfill your orders.</li>
+    <li>To communicate with you regarding your account and orders.</li>
+    <li>To improve our website and services based on user feedback and usage patterns.</li>
+    <li>To send promotional communications, if you have opted in.</li>
+  </ul>
+
+  <h5>Sharing Your Information</h5>
+  <p>We do not sell or rent your personal information to third parties. We may share your information with:</p>
+  <ul>
+    <li>Service Providers: Trusted third-party vendors who assist with payment processing, order fulfillment, and delivery.</li>
+    <li>Legal Authorities: When required by law or to protect our rights.</li>
+  </ul>
+
+  <h5>Data Security</h5>
+  <p>We implement appropriate security measures to protect your personal information from unauthorized access, alteration, disclosure, or destruction. However, no online platform can guarantee complete security.</p>
+
+  <h5>Your Rights</h5>
+  <ul>
+    <li>You have the right to access the personal information we hold about you.</li>
+    <li>You may request correction of any inaccuracies in your information.</li>
+    <li>You may request deletion of your personal information, subject to legal obligations.</li>
+  </ul>
+
+  <h5>Cookies and Tracking Technologies</h5>
+  <p>We use cookies and similar technologies to enhance your browsing experience. You can manage your cookie preferences through your browser settings.</p>
+
+  <h5>Third-Party Links</h5>
+  <p>Our website may contain links to third-party sites. We are not responsible for the privacy practices of these sites. We encourage you to read their privacy policies.</p>
+
+  <h5>Changes to This Privacy Policy</h5>
+  <p>We may update this policy from time to time. Changes will be posted on our website, and your continued use constitutes acceptance of the new terms.</p>
+
+  <h5>Contact Us</h5>
+  <p>If you have any questions or concerns about this Privacy Policy, please contact us at Jasfruitsandvegetables@gmail.com.</p>
+</div>
+
     </div>
 
   )

@@ -10,6 +10,8 @@ import { getEnquiryDetails } from '../../actions/enquiryActions';
 import LoaderButton from '../Layouts/LoaderButton';
 import store from '../../store';
 import MetaData from '../Layouts/MetaData';
+import { Slide, toast } from 'react-toastify';
+import { clearlogout } from '../../slices/authSlice';
  
 const Dashboard = ({isActive,setIsActive}) => {
  
@@ -18,6 +20,11 @@ const Dashboard = ({isActive,setIsActive}) => {
     const { users  } = useSelector( state => state.userState);
     const { adminOrders  } = useSelector( state => state.orderState);
     const dispatch = useDispatch();
+    const { user, isAuthenticated,loggedoutmessage,isloggedout } = useSelector(state => state.authState);
+    // useEffect(() => {
+    //     console.log({ isloggedout, isAuthenticated, user });
+    // }, [isloggedout, isAuthenticated, user]);
+
     // const { isAuthenticated, user } = useSelector(state => state.authState);
 
     // useEffect(()=>{
@@ -25,6 +32,32 @@ const Dashboard = ({isActive,setIsActive}) => {
     //     store.dispatch(loadUser());  
     //   }
     // },[isAuthenticated])
+
+  //   useEffect(() => {
+  //     if (isloggedout && !isAuthenticated && !user ) {
+  //         // setRefresh(false);
+  //         // dispatch(userOrdersClear());
+  //         // dispatch(clearUser());
+  //         // setOpenSide(!openSide);
+  //         toast.dismiss();
+  //         setTimeout(() => {
+  //           toast.success(loggedoutmessage, {
+  //             position: 'bottom-center',
+  //             type: 'success',
+  //             autoClose: 700,
+  //             transition: Slide,
+  //             hideProgressBar: true,
+  //             className: 'small-toast',
+  //             // onOpen: () => { dispatch(clearlogout()) ; dispatch(clearProducts())},
+  //           });
+  //           dispatch(clearlogout());
+  //           sessionStorage.clear(); 
+  //         // Redirect without leaving a history entry
+  //         window.location.replace('/'); 
+  //         }, 300);
+  //         // return;
+  //     }
+  // }, [isloggedout,dispatch,isAuthenticated]);
 
     console.log("adminOrders",adminOrders)
 

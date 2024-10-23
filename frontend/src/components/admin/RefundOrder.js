@@ -40,7 +40,7 @@ const RefundOrder = ({ isActive, setIsActive }) => {
     const navigate = useNavigate();
     const dispatch = useDispatch();
     const [refundloading, setRefundLoading] = useState(false)
-    console.log("orderDetail", orderDetail)
+    console.log("getpackedOrderData", getpackedOrderData)
 
 
     useEffect(() => {
@@ -297,10 +297,47 @@ const RefundOrder = ({ isActive, setIsActive }) => {
     // }
 
     const submitRefundHandler = () => {
-        const RefundableAmount = Number(getpackedOrderData.totalRefundableAmount);
-        setRefundLoading(true)
-        // console.log("RefundableAmount",RefundableAmount)
-        dispatch(initRefund({ order_id: id, RefundableAmount }))
+        // const RefundableAmount = Number(getpackedOrderData.totalRefundableAmount);
+        // setRefundLoading(true)
+        // // console.log("RefundableAmount",RefundableAmount)
+        // dispatch(initRefund({ order_id: id, RefundableAmount }))
+          // Extract relevant data from getpackedOrderData
+    const totalDispatchedAmount = Number(getpackedOrderData && getpackedOrderData.totalDispatchedAmount);
+    const totalRefundableAmount = Number(getpackedOrderData && getpackedOrderData.totalRefundableAmount);
+    const shippingCharge = Number(getpackedOrderData && getpackedOrderData.orderDetail.shippingPrice);
+
+    let RefundableAmount;
+
+    // Check if totalDispatchedAmount is greater than 0
+    if (totalDispatchedAmount > 0) {
+        // Use totalRefundableAmount if dispatched amount is greater than 0
+        RefundableAmount = totalRefundableAmount;
+    } else {
+        // Add shipping charge to totalRefundableAmount if no dispatched amount
+        RefundableAmount = totalRefundableAmount + shippingCharge;
+    }
+
+    setRefundLoading(true); // Set loading state
+    if(RefundableAmount>0){
+        dispatch(initRefund({ order_id: id, RefundableAmount }));
+    }
+    else{
+        toast.dismiss();
+        setTimeout(() => {
+            toast.error('Cannot refund because of invalid refund amount!', {
+                position: 'bottom-center',
+                type: 'error',
+                autoClose: 700,
+                transition: Slide,
+                hideProgressBar: true,
+                className: 'small-toast',
+                // onOpen: () => dispatch(clearRefundError())
+            });
+        }, 300);
+    }
+
+    // Dispatch the refund with the calculated RefundableAmount
+    
     }
 
     useEffect(() => {
@@ -321,10 +358,13 @@ const RefundOrder = ({ isActive, setIsActive }) => {
                     className: 'small-toast',
                     onOpen: () => dispatch(clearRefundError())
                 });
+                setTimeout(() => {
+                    dispatch(updatedPackedOrder({}));
+                    dispatch(adminOrders()); 
+               }, 700);
             }, 300);
             setRefundLoading(false);
-            dispatch(updatedPackedOrder({}));
-            dispatch(adminOrders()); 
+           
             return;
 
         }
@@ -660,6 +700,17 @@ const RefundOrder = ({ isActive, setIsActive }) => {
                                                                                     .filter(item => item.refundableWeight > 0)
                                                                                     .reduce((total, item) => total + (item.pricePerKg * item.refundableWeight), 0)
                                                                                     .toFixed(2)
+                                                                            }
+                                                                        </strong>
+                                                                    </td>
+                                                                </tr>
+                                                                <tr>
+                                                                    <td colSpan="5" style={{ textAlign: 'right' }}>
+                                                                        <strong>Amount Refunded</strong>
+                                                                    </td>
+                                                                    <td className="amount">
+                                                                        <strong>
+                                                                            Rs. {getpackedOrderData && getpackedOrderData.statusResponse && getpackedOrderData.statusResponse.amount_refunded ? getpackedOrderData.statusResponse.amount_refunded : 0
                                                                             }
                                                                         </strong>
                                                                     </td>

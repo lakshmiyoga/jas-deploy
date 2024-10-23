@@ -9,6 +9,9 @@ import Nav from 'react-bootstrap/Nav';
 import Navbar from 'react-bootstrap/Navbar';
 import NavDropdown from 'react-bootstrap/NavDropdown';
 import { userOrdersClear } from '../../slices/orderSlice';
+import { clearUser, clearlogout, reset } from '../../slices/authSlice';
+import { Slide, toast } from 'react-toastify';
+import { clearProducts } from '../../slices/productsSlice';
 
 // import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 // import { faShoppingCart } from '@fortawesome/free-solid-svg-icons';
@@ -30,33 +33,95 @@ const Header = ({ openSide, setOpenSide }) => {
     return windowWidth;
   };
   const windowWidth = useWindowWidth();
-  const { isAuthenticated, user } = useSelector(state => state.authState);
+  const { isAuthenticated, user, loggedoutmessage, isloggedout } = useSelector(state => state.authState);
   const { items: cartItems } = useSelector(state => state.cartState);
   const dispatch = useDispatch();
   const navigate = useNavigate();
   const [refresh, setRefresh] = useState(false);
-  const logoutHandler = () => {
+  const { loading, userOrders, error } = useSelector(state => state.orderState)
+
+  console.log('loggedout message',loggedoutmessage,isloggedout)
+
+  const logoutHandler =  (e) => {
+    // e.preventDefault();
     // setOpenSide(!openSide);
-    dispatch(logout);
-    // dispatch(userOrdersClear());
     // sessionStorage.removeItem('redirectPath');
-    // navigate('/');
+    // sessionStorage.setItem('redirectPath', '/');
+    // dispatch(userOrdersClear());
+    if(userOrders){
+      dispatch(userOrdersClear());
+    }
+     dispatch(logout);
+     sessionStorage.clear();
+    // sessionStorage.removeItem('redirectPath');
+    // navigate('/');   
     setRefresh(true);
-    return
+    // return
     // sessionStorage.removeItem('redirectPath');
     // navigate('/')
   }
 
   useEffect(() => {
-    if (!isAuthenticated || !user || refresh) {
-      dispatch(userOrdersClear());
-      setOpenSide(!openSide);
-      // sessionStorage.removeItem('redirectPath');
-      sessionStorage.setItem('redirectPath', '/');
-      navigate('/');
-      return
+    if (isloggedout && !isAuthenticated && !user && refresh) {
+      sessionStorage.clear();
+      setRefresh(false);
+      // if(userOrders){
+      //   dispatch(userOrdersClear());
+      // }
+     
+      // dispatch(clearUser());
+      // setOpenSide(!openSide);
+      toast.dismiss();
+      setTimeout(() => {
+        toast.success(loggedoutmessage, {
+          position: 'bottom-center',
+          type: 'success',
+          autoClose: 700,
+          transition: Slide,
+          hideProgressBar: true,
+          className: 'small-toast',
+          // onOpen: () => { window.location.replace('/'); },
+          onClose: () => {  window.close();window.open('/', '_blank');},
+        });
+           
+       
+        dispatch(clearlogout());
+      //   setTimeout(() => {
+      //     // window.close();
+      //     // window.open('/', '_blank');
+      //     window.location.replace('/'); // Fallback to replace current page
+      //     // window.open('/', '_blank');
+      // }, 200);
+       
+      //   sessionStorage.clear(); 
+      // // Redirect without leaving a history entry
+      // window.location.replace('/'); 
+      // dispatch(clearlogout());
+            // sessionStorage.clear();
+            // window.close();
+
+            // Open a new tab with the target URL (home or login page)
+           
+           
+
+            // Close the current tab
+            // window.close();
+      }, 100);
+      // Clear session storage
+      // setTimeout(() => {  
+      // sessionStorage.clear(); 
+      // // Redirect without leaving a history entry
+      // window.location.replace('/'); 
+     
+      // }, 400);
+
+   
+      
+      // sessionStorage.setItem('redirectPath', '/');
+     
+      // return
     }
-  }, [isAuthenticated, user, refresh])
+  }, [isloggedout,dispatch, refresh])
 
   // const [openSide, setOpenSide] = useState(false);
   const changeToggle = () => {
@@ -167,7 +232,7 @@ const Header = ({ openSide, setOpenSide }) => {
                 <Link to="/enquiry" className="navbar-link">CONTACT</Link>
                 {/* </Nav.Link> */}
 
-                {isAuthenticated ? (
+                {isAuthenticated && user ? (
                   <NavDropdown title={<div className="d-inline-flex align-items-center"><div className="avatar-initials">{getInitials(user.name)}</div></div>} id="collapsible-nav-dropdown" className='dropdown-nav-menu'>
                     {user.role === 'admin' && (
                       <NavDropdown.Item onClick={() => navigate('admin/dashboard')} className="text-dark">
@@ -176,7 +241,7 @@ const Header = ({ openSide, setOpenSide }) => {
                     )}
                     <NavDropdown.Item onClick={() => navigate('/myprofile')}>Profile</NavDropdown.Item>
                     <NavDropdown.Item onClick={() => navigate('/orders')}>Orders</NavDropdown.Item>
-                    <NavDropdown.Item onClick={logoutHandler}>Logout</NavDropdown.Item>
+                    <NavDropdown.Item onClick={(e) => logoutHandler(e)}>Logout</NavDropdown.Item>
                   </NavDropdown>
                 ) : (
                   // <Nav.Link>
@@ -254,14 +319,14 @@ const Header = ({ openSide, setOpenSide }) => {
                       <>
                         {/* <Nav.Link> */}
                         {user.role === 'admin' && (
-                           <Link to="/admin/dashboard" className="navbar-names"  onClick={changeToggle}>Dashboard</Link>
+                          <Link to="/admin/dashboard" className="navbar-names" onClick={changeToggle}>Dashboard</Link>
                         )}
                         <Link to="/myprofile" className="navbar-names" onClick={changeToggle}>Profile</Link>
                         {/* </Nav.Link> */}
                         {/* <Nav.Link> */}
                         <Link to="/orders" className="navbar-names" onClick={changeToggle}>Orders</Link>
 
-                       
+
                         {/* </Nav.Link> */}
                       </>
 

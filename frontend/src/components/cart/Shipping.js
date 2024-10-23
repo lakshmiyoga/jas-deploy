@@ -256,13 +256,30 @@ const Shipping = () => {
     const mapRef = useRef(null);
     // const libraries = ['places'];
     const apiKey = process.env.REACT_APP_GOOGLEMAP_API_KEY;
+    const { items: cartItems } = useSelector(state => state.cartState);
 
     // const navigate = useNavigate();
     // const dispatch = useDispatch();
     // const [isMap, setIsMap] = useState(false);
 
 
-    console.log("shippingInfo", shippingInfo)
+    console.log("shippingInfo", shippingInfo);
+    useEffect(() => {
+        if ( !cartItems.length) {
+            toast.dismiss();
+            setTimeout(() => {
+                toast.error('Cart is empty. Please add at least one item to proceed! ', {
+                    position: 'bottom-center',
+                    type: 'error',
+                    autoClose: 700,
+                    transition: Slide,
+                    hideProgressBar: true,
+                    className: 'small-toast',
+                });
+            }, 300);
+            navigate('/cart');
+        }
+    }, [cartItems, navigate]);
 
     const fetchAddress = async (latitude, longitude) => {
         try {

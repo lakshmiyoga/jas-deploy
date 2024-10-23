@@ -20,7 +20,8 @@ const UpdateProfile = () => {
     const navigate = useNavigate()
     const dispatch = useDispatch();
     const location = useLocation();
-    sessionStorage.setItem('redirectPath', location.pathname);
+    console.log("avatar",avatar);
+    // sessionStorage.setItem('redirectPath', location.pathname);
     // console.log(error, user, isUpdated)
 
     // const onChangeAvatar = (e) => {
@@ -78,6 +79,12 @@ const UpdateProfile = () => {
         }
     };
 
+    const removeAvatar = () => {
+        setAvatar(null); // Reset avatar
+        setAvatarPreview("/images/default_avatar.png"); // Reset avatar preview to default
+        setAvatarName(''); // Clear the file name
+    };
+
 
     const submitHandler = (e) => {
         e.preventDefault();
@@ -95,7 +102,7 @@ const UpdateProfile = () => {
             setName(user.name);
             setEmail(user.email);
             setMobile(user.mobile);
-            if (user.avatar) {
+            if (user.avatar && user.avatar!=='default_avatar.png') {
                 setAvatarPreview(user.avatar)
             }
         }
@@ -121,7 +128,7 @@ const UpdateProfile = () => {
                 // Navigate after the toast has been shown
                 setTimeout(() => {
                     navigate('/myProfile');
-                }, 700); // This delay should match the toast duration
+                }, 300); // This delay should match the toast duration
             }, 300);
             // navigate('/myProfile')
             return;
@@ -208,6 +215,21 @@ const UpdateProfile = () => {
                             <div className='d-flex align-items-center'>
                                 <div>
                                     <figure className='avatar mr-3 item-rtl'>
+                                        {avatarPreview && avatarPreview !== '/images/default_avatar.png' && (
+                                            <button
+                                                type="button"
+                                                style={{
+                                                    position: 'absolute',
+                                                    backgroundColor: 'transparent',
+                                                    border: 'none',
+                                                    outline: 'none',
+                                                    color: 'red'
+                                                }}
+                                                onClick={removeAvatar}
+                                            >
+                                                <i className="fa fa-trash"></i>
+                                            </button>
+                                        )}
                                         <img
                                             src={avatarPreview}
                                             className='rounded-circle'
@@ -229,6 +251,7 @@ const UpdateProfile = () => {
                                         {/* Choose Avatar */}
                                         {avatarName ? avatarName : 'Choose Avatar'}
                                     </label>
+
                                 </div>
                             </div>
                         </div>

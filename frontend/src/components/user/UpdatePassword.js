@@ -19,7 +19,7 @@ const UpdatePassword = () => {
 
   const location = useLocation();
   const navigate = useNavigate();
-  sessionStorage.setItem('redirectPath', location.pathname);
+  // sessionStorage.setItem('redirectPath', location.pathname);
   const [showPassword, setShowPassword] = useState(false);
   const [showOldPassword, setShowOldPassword] = useState(false);
   const dispatch = useDispatch();

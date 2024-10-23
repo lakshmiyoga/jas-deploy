@@ -1962,6 +1962,8 @@ ul.CTAs a {
 .privacy_container h3,
 .refund-policy-container h3 {
   color: #02441E;
+  display: flex;
+  flex-wrap: wrap;
   font-weight: 600;
   margin-bottom: 20px;
 }
@@ -3520,6 +3522,16 @@ body.no-scroll {
 /* .products-image{
   background-color: #FFFFE0;
 }  */
+.products-image img {
+  pointer-events: none; /* Prevent right-click */
+  user-drag: none;
+  -webkit-user-drag: none; /* For WebKit browsers */
+}
+img {
+  pointer-events: none;
+  user-drag: none;
+  -webkit-user-drag: none; /* Disable image dragging in WebKit browsers */
+}
 
 .sidebar-closed {
   transform: translateX(-100%);

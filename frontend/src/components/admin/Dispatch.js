@@ -424,9 +424,13 @@ const Dispatch = ({ isActive, setIsActive }) => {
                     className: 'small-toast',
                     onOpen: () => dispatch(clearOrderUpdated())
                 });
+                setTimeout(() => {
+                    dispatch(adminOrders());
+               }, 700);
+                
             }, 300);
-            dispatch(adminOrders());
             setShowModal(false);
+           
         }
     }, [isOrderUpdated])
 

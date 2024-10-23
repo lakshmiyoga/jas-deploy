@@ -157,8 +157,33 @@ const ConfirmOrder = () => {
 
     }, [dummyUser])
     useEffect(() => {
-        if (!shippingInfo || !cartItems.length) {
+        if (!shippingInfo) {
+            toast.dismiss();
+                setTimeout(() => {
+                    toast.error('Shipping information is missing. Please complete these steps to proceed!', {
+                        position: 'bottom-center',
+                        type: 'error',
+                        autoClose: 700,
+                        transition: Slide,
+                        hideProgressBar: true,
+                        className: 'small-toast',
+                    });
+                }, 300);
             navigate('/shipping');
+        }
+        if ( !cartItems.length) {
+            toast.dismiss();
+                setTimeout(() => {
+                    toast.error('Cart is empty. Please add at least one item to proceed! ', {
+                        position: 'bottom-center',
+                        type: 'error',
+                        autoClose: 700,
+                        transition: Slide,
+                        hideProgressBar: true,
+                        className: 'small-toast',
+                    });
+                }, 300);
+            navigate('/cart');
         }
     }, [shippingInfo, cartItems, navigate]);
 

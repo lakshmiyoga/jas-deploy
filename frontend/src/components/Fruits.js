@@ -17,7 +17,7 @@ import Card from 'react-bootstrap/Card';
 
 const Fruits = () => {
     const location = useLocation();
-    sessionStorage.setItem('redirectPath', location.pathname);
+    // sessionStorage.setItem('redirectPath', location.pathname);
     const { category } = location.state || { category: 'Fruits' };
     // const dispatch = useDispatch();
     const { products, loading, error } = useSelector((state) => state.productsState);

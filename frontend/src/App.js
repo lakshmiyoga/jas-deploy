@@ -2,7 +2,7 @@ import './App.css';
 import Footer from './components/Layouts/Footer';
 import Header from './components/Layouts/Header';
 import Home from './components/Home';
-import { BrowserRouter as Router, Route, Routes, useLocation, useNavigate, Navigate } from "react-router-dom";
+import { BrowserRouter as Router, Route, Routes, useLocation, useNavigate, Navigate, matchPath } from "react-router-dom";
 import { HelmetProvider } from "react-helmet-async";
 import { ToastContainer } from "react-toastify";
 import 'react-toastify/dist/ReactToastify.css';
@@ -30,7 +30,7 @@ import ResetPassword from './components/user/ResetPassword';
 import Cart from './components/cart/Cart';
 import Shipping from './components/cart/Shipping';
 import ConfirmOrder from './components/cart/ConfirmOrder';
-import { getProducts } from './actions/productsActions';
+import { getAdminProducts, getProducts } from './actions/productsActions';
 import About from './components/Layouts/About';
 import Keerai from './components/Keerai';
 import TermsAndConditions from './components/Layouts/TermsAndConditions'
@@ -59,7 +59,7 @@ import Dispatch from './components/admin/Dispatch';
 import RefundOrder from './components/admin/RefundOrder';
 import DispatchList from './components/admin/DispatchList';
 import RefundList from './components/admin/RefundList';
-import { useSelector } from 'react-redux';
+import { useDispatch, useSelector } from 'react-redux';
 import Loader from './components/Layouts/Loader';
 import AllOrders from './components/admin/AllOrders';
 import AdminOrderDetail from './components/admin/AdminOrderDetail';
@@ -69,8 +69,8 @@ import PageNotFound from './components/Layouts/PageNotFound';
 
 function App() {
     const location = useLocation();
-    const navigate = useNavigate();
-    const redirectPath = sessionStorage.getItem('redirectPath') || location.pathname;
+    // const navigate = useNavigate();
+    // const redirectPath = sessionStorage.getItem('redirectPath') || location.pathname;
     const [email, setEmail] = useState("");
     // console.log("location path",location.pathname)
     // const redirectPath = useMemo(() => sessionStorage.getItem('redirectPath') || '/', []);
@@ -82,35 +82,79 @@ function App() {
     // if(!redirectPath){
     //     sessionStorage.setItem('redirectPath', '/');
     // }
-    console.log("redirectPath", redirectPath);
-    
-    
+    // console.log("redirectPath", redirectPath);
 
 
     const { isAuthenticated, loading, user } = useSelector(state => state.authState);
     const { products, loading: productLoading } = useSelector((state) => state.productsState);
     const [openSide, setOpenSide] = useState(false);
     const [isActive, setIsActive] = useState(false);
+    const dispatch = useDispatch();
     const [userLoaded, setUserLoaded] = useState(false);
-    console.log("isAuthenticated", isAuthenticated);
-    console.log("user", user);
+    console.log("isAuthenticated",isAuthenticated,user);
+    console.log("userLoaded",userLoaded)
 
     useEffect(() => {
         const loadInitialData = async () => {
-            await store.dispatch(getProducts());
             await store.dispatch(loadUser());
+            await store.dispatch(getProducts());
             setUserLoaded(true); // Set the flag once the user data is loaded
         };
         loadInitialData();
     }, [])
 
+    useEffect(()=>{
+          if(user && user.role === 'admin'){
+                  dispatch(getAdminProducts());
+          }
+    },[user])
+
+    // const validRoutes = [
+    //     '/', '/login', '/register', '/vegetables', '/fruits', '/unauthorized', '/keerai', '/about', 
+    //     '/enquiry', '/termsAndConditions', '/privacyPolicy', '/refundPolicy', '/search/:keyword', 
+    //     '/product/:id', '/cart', '/password/forgot', '/password/reset/:token', '/myProfile', 
+    //     '/myProfile/update', '/myProfile/update/password', '/shipping', '/orders', '/order/:id', 
+    //     '/payment/:id', '/order/confirm', '/payment/confirm/:id', '/admin/dashboard', 
+    //     '/admin/products', '/admin/products/create', '/admin/product/:id', '/admin/getenquiry', 
+    //     '/admin/users', '/admin/payments', '/admin/dispatch/:id', '/admin/dispatch', 
+    //     '/admin/refund/:id', '/admin/refund', '/admin/user/:id', '/admin/products/updateprice', 
+    //     '/admin/orders', '/admin/analysis', '/admin/order/:id', '/admin/order-summary', 
+    //     '/admin/user-summary', '/admin/allorders', '/admin/orderdetail/:id'
+    // ];
+
+    // useEffect(() => {
+    //     const isValidRoute = validRoutes.some((route) => matchPath(route, location.pathname));
+
+    //     if (!isValidRoute) {
+    //         navigate('/page-not-found');
+    //     }
+    // }, [location.pathname, navigate]);
 
 
+
+    // useEffect(() => {
+    //     if (!isAuthenticated || !user && !userLoaded ) {
+    //         const loadInitialData = async () => {
+    //             await store.dispatch(loadUser());
+    //             setUserLoaded(true); // Set the flag once the user data is loaded
+    //         };
+    //         loadInitialData();
+    //     }
+    //     if (!products) {
+    //         store.dispatch(getProducts());
+    //     }
+    // }, [isAuthenticated, products, userLoaded]);
+    
+
+    
     useEffect(() => {
         if (!isAuthenticated || !user && userLoaded) {
-            store.dispatch(loadUser());
+            
+                 store.dispatch(loadUser());
+                // setUserLoaded(true); // Set the flag once the user data is loaded
+         
         }
-        if (!products && userLoaded) {
+        if (!products) {
             store.dispatch(getProducts());
         }
     }, [isAuthenticated, products, userLoaded]);
@@ -118,35 +162,58 @@ function App() {
 
     // let isAdminRoute = true;
 
-    useEffect(() => {
-        if ( userLoaded) {
-            // if (redirectPath) {
-            // const redirectPath = sessionStorage.getItem('redirectPath') || '/';
-            // return navigate(redirectPath);
-            // const redirectPath = sessionStorage.getItem('redirectPath');
-            if (redirectPath && location.pathname === redirectPath) {
-                sessionStorage.removeItem('redirectPath');
-                navigate(redirectPath, { replace: true });
-            }
-            // else if (redirectPath && location.pathname === redirectPath){
-            //     sessionStorage.removeItem('redirectPath');
-            //     navigate(redirectPath, { replace: true });
-            // }
-            // sessionStorage.removeItem('redirectPath');
-            // }
-        }
-        // if (redirectPath) {
-        //     const redirectPath = sessionStorage.getItem('redirectPath') || '/';
-        //     return navigate(redirectPath);
-        //     // sessionStorage.removeItem('redirectPath');
-        // }
-        // if (!isAuthenticated || !user) {
-        //     navigate('/')
-        // }
+    // useEffect(() => {
+    //     if ( userLoaded) {
+    //         // if (redirectPath) {
+    //         // const redirectPath = sessionStorage.getItem('redirectPath') || '/';
+    //         // return navigate(redirectPath);
+    //         // const redirectPath = sessionStorage.getItem('redirectPath');
+    //         if (redirectPath && location.pathname === redirectPath) {
+    //             sessionStorage.removeItem('redirectPath');
+    //             navigate(redirectPath, { replace: true });
+    //         }
+    //         // else if (redirectPath && location.pathname === redirectPath){
+    //         //     sessionStorage.removeItem('redirectPath');
+    //         //     navigate(redirectPath, { replace: true });
+    //         // }
+    //         // sessionStorage.removeItem('redirectPath');
+    //         // }
+    //     }
+    //     // if (redirectPath) {
+    //     //     const redirectPath = sessionStorage.getItem('redirectPath') || '/';
+    //     //     return navigate(redirectPath);
+    //     //     // sessionStorage.removeItem('redirectPath');
+    //     // }
+    //     // if (!isAuthenticated || !user) {
+    //     //     navigate('/')
+    //     // }
 
-        // store.dispatch(loadUser());
-        // store.dispatch(getProducts());
-    }, [navigate, userLoaded]);
+    //     // store.dispatch(loadUser());
+    //     // store.dispatch(getProducts());
+    // }, [ navigate, userLoaded]);
+
+    
+    // useEffect(() => {
+    //     // const redirectPath = sessionStorage.getItem('redirectPath') || ;
+    //     // console.log("redirectPath before navigation:", redirectPath);
+    //     // console.log("location.pathname:", location.pathname);
+    //     // const isPasswordResetRoute = location.pathname.includes("/password/reset");
+        
+    //     if (
+    //         // isAuthenticated && 
+    //         // user && 
+    //         userLoaded
+    //         //  || 
+    //         //  isPasswordResetRoute
+    //     ) {
+    //         if (redirectPath && location.pathname === redirectPath) {
+    //             sessionStorage.removeItem('redirectPath');
+    //             console.log("Navigating to redirectPath:", redirectPath);
+    //             navigate(redirectPath, { replace: true });
+    //         }
+    //     }
+    // }, [isAuthenticated, navigate, userLoaded, user, location.pathname]);
+    
 
     // useEffect(() => {
     //     if (!product) {
@@ -206,15 +273,14 @@ function App() {
                                         <Route path="/login" element={<Login email={email} setEmail={setEmail} />} />
                                         <Route path="/register" element={<Register />} />
                                         {
-                                            user && redirectPath && user.role === "admin" ?
-                                                // <Route path="/" element={<ProtectedRoute isAdmin={true}><Dashboard isActive={isActive} setIsActive={setIsActive}/></ProtectedRoute>} />
-                                                <Route path="/" element={<LandingPage />} />
+                                            user  && user.role === "admin" ?
+                                                <Route path="/admin/dashboard" element={<ProtectedRoute isAdmin={true}><Dashboard isActive={isActive} setIsActive={setIsActive}/></ProtectedRoute>} />
+                                                // <Route path="/admin/dashboard" element={<LandingPage />} />
                                                 :
                                                 <Route path="/" element={<LandingPage />} />
                                         }
-                                        {
-                                            !user && <Route path="/" element={<LandingPage />} />
-                                        }
+                                       <Route path="/" element={<LandingPage />} />
+                                        
                                         {/* <Route path="/" element={<LandingPage />} /> */}
                                         <Route path="/vegetables" element={<Vegetables />} />
                                         <Route path="/fruits" element={<Fruits />} />
@@ -229,12 +295,13 @@ function App() {
                                         <Route path="/product/:id" element={<ProductDetail />} />
                                         <Route path="/cart" element={<Cart />} />
                                         <Route path="/password/forgot" element={<ForgotPassword email={email} setEmail={setEmail} />} />
+                                           <Route path="/password/reset/:token" element={<ResetPassword />} />
 
                                         <Route path="/myProfile" element={<ProtectedRoute isAdmin={false}><Profile /></ProtectedRoute>} />
                                         <Route path="/myProfile/update" element={<ProtectedRoute isAdmin={false}><UpdateProfile /></ProtectedRoute>} />
                                         <Route path="/myProfile/update/password" element={<ProtectedRoute isAdmin={false}><UpdatePassword /></ProtectedRoute>} />
 
-                                        <Route path="/password/reset/:token" element={<ResetPassword />} />
+                                        <Route path="/password/reset/:token" element={<ProtectedRoute isAdmin={false}><ResetPassword /></ProtectedRoute>} />
 
                                         <Route path="/shipping" element={<ProtectedRoute isAdmin={false} ><Shipping /></ProtectedRoute>} />
                                         {/* <Route path="/refund" element={<Refund />} /> */}
@@ -297,9 +364,9 @@ function App() {
 
 function RootApp() {
 
-    useEffect(() => {
-        store.dispatch(loadUser());
-    }, [])
+    // useEffect(() => {
+    //     store.dispatch(loadUser());
+    // }, [])
     return (
         <Router>
             <App />

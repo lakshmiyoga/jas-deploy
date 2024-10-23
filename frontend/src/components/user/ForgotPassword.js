@@ -10,7 +10,7 @@ const ForgotPassword = ({ email, setEmail }) => {
 
     // const [email, setEmail] = useState("")
     const location = useLocation();
-    sessionStorage.setItem('redirectPath', location.pathname);
+    // sessionStorage.setItem('redirectPath', location.pathname);
     const dispatch = useDispatch()
     const { error, message, loading } = useSelector(state => state.authState);
     const [flag, setFlag] = useState(false);

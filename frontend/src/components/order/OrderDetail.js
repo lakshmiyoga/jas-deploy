@@ -80,9 +80,15 @@ export default function OrderDetail() {
 
     const [trackurl, setTrackurl] = useState(false);
     const handleClick = (tracking_url) => {
-        setTrackurl(true)
-        window.location.href = tracking_url;
+        setTrackurl(true);
+        window.open(tracking_url, '_blank');
+        setTrackurl(false);
     }
+
+    const subtotal =  getpackedOrderData && getpackedOrderData.dispatchedTable.reduce((acc, item) => {
+        return acc + item.pricePerKg * item.dispatchedWeight;
+    }, 0);
+
     console.log("porterOrderData", porterOrderData)
 
     return (
@@ -155,6 +161,15 @@ export default function OrderDetail() {
                                                 <p className={getpackedOrderData.refundStatus && getpackedOrderData.refundStatus.includes('SUCCESS') ? 'greenColor' : 'redColor'} style={{ marginLeft: '10px' }}><b>{getpackedOrderData.refundStatus}</b></p>
                                             </div>
                                         )}
+                                        {getpackedOrderData && getpackedOrderData.statusResponse && getpackedOrderData.statusResponse.amount_refunded && getpackedOrderData.statusResponse.amount_refunded > 0 ? (
+                                            <div style={{ display: 'flex', alignItems: 'center', margin: '10px' }}>
+                                                <p><b>Amount Refunded:</b></p>
+                                                <p style={{ marginLeft: '10px' }}>{getpackedOrderData.statusResponse && getpackedOrderData.statusResponse.amount_refunded} </p>
+                                            </div>
+                                        ) :
+                                            <>
+                                            </>
+                                        }
                                     </div>
                                     <hr />
                                     <h4 className="my-4">Order Items:</h4>
@@ -192,7 +207,7 @@ export default function OrderDetail() {
                                                                 <th>Price per kg</th>
                                                                 <th>Dispatched Weight</th>
                                                                 <th>Refundable Weight</th>
-                                                                <th>Refundable Amount</th>
+                                                                <th>Amount</th>
                                                             </>
                                                         ) : (
                                                             <>
@@ -221,7 +236,7 @@ export default function OrderDetail() {
                                                                 <td>Rs. {item.pricePerKg}</td>
                                                                 <td>{item.dispatchedWeight} kg</td>
                                                                 <td>{item.refundableWeight} kg</td>
-                                                                <td>Rs. {parseFloat(item.pricePerKg * item.refundableWeight).toFixed(2)}</td>
+                                                                <td>Rs. {parseFloat(item.pricePerKg * item.dispatchedWeight).toFixed(2)}</td>
                                                             </tr>
                                                         ))
                                                     ) : (
@@ -249,14 +264,46 @@ export default function OrderDetail() {
                                                 </tbody>
                                                 <tfoot>
                                                     {getpackedOrderData && getpackedOrderData.dispatchedTable ? (
-                                                        <tr>
+                                                        <>
+                                                            <tr>
+                                                                <td colSpan="7" style={{ textAlign: 'right' }}>
+                                                                    <strong>Subtotal</strong>
+                                                                </td>
+                                                                <td>
+                                                                    {/* Rs. {orderItems.reduce((total, item) => total + parseFloat(item.dispatchedWeight * item.price), 0).toFixed(2)} */}
+                                                                    Rs. {subtotal.toFixed(2)}
+
+                                                                </td>
+                                                            </tr>
+
+                                                            <tr>
+                                                                <td colSpan="7" style={{ textAlign: 'right' }}>
+                                                                    <strong>Shipping</strong>
+                                                                </td>
+                                                                <td>
+                                                                    Rs. {parseFloat(orderDetail.shippingPrice).toFixed(2)}
+                                                                </td>
+                                                            </tr>
+                                                            <tr>
+                                                                <td colSpan="7" style={{ textAlign: 'right' }}>
+                                                                    <strong>Dispatched Amount</strong>
+                                                                </td>
+                                                                <td>
+                                                                    Rs. {parseFloat(subtotal + orderDetail.shippingPrice).toFixed(2)}
+                                                                </td>
+                                                            </tr>
+                                                            {/* <tr>
                                                             <td colSpan="7" style={{ textAlign: 'right' }}>
-                                                                <strong>Total Refund Amount</strong>
+                                                                <strong> Refund Amount</strong>
                                                             </td>
                                                             <td>
                                                                 Rs. {getpackedOrderData.dispatchedTable.reduce((total, item) => total + parseFloat(item.pricePerKg * item.refundableWeight), 0).toFixed(2)}
+                                                                Rs. {Refund.toFixed(2)}
                                                             </td>
-                                                        </tr>
+                                                        </tr> */}
+                                                        </>
+
+
                                                     ) : (
                                                         <>
                                                             <tr>

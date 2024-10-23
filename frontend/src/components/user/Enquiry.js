@@ -20,7 +20,7 @@ const Enquiry = () => {
     const dispatch = useDispatch();
     const navigate = useNavigate();
     const location = useLocation();
-    sessionStorage.setItem('redirectPath', location.pathname);
+    // sessionStorage.setItem('redirectPath', location.pathname);
     const { loading, error, isSubmitted } = useSelector(state => state.enquiryState);
 
     // const hasShownToast = useRef(false);

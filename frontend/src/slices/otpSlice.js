@@ -45,7 +45,7 @@ const otpSlice = createSlice({
     mailVerifySuccess(state, action) {
       state.verifyloading = false;
       state.mailVerifiedData = action.payload;
-      state.dummyisAuthenticated= true;
+      state.dummyisAuthenticated= action.payload.success?action.payload.success :false;
       state.dummyuser= action.payload.user;
     },
     mailVerifyFail(state, action) {

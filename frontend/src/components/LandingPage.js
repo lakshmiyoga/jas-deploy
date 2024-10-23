@@ -11,8 +11,8 @@ import MetaData from './Layouts/MetaData';
 
 const LandingPage = () => {
   // const dispatch = useDispatch();
-  const location = useLocation();
-  sessionStorage.setItem('redirectPath', location.pathname);
+  // const location = useLocation();
+  // sessionStorage.setItem('redirectPath', location.pathname);
   const { products, loading, error } = useSelector((state) => state.productsState);
 
 

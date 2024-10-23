@@ -13,7 +13,7 @@ import Card from 'react-bootstrap/Card';
 
 const Keerai = () => {
     const location = useLocation();
-    sessionStorage.setItem('redirectPath', location.pathname);
+    // sessionStorage.setItem('redirectPath', location.pathname);
     const { category } = location.state || { category: 'Keerai' };
     const { products, loading, error } = useSelector((state) => state.productsState);
     const [keyword, setKeyword] = useState("")
