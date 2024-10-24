@@ -48,7 +48,7 @@ const transporter = nodemailer.createTransport({
 
 const juspay = new Juspay({
 	merchantId: config.MERCHANT_ID,
-	baseUrl: SANDBOX_BASE_URL, // Using sandbox base URL for testing
+	baseUrl: PRODUCTION_BASE_URL, // Using sandbox base URL for testing
 	jweAuth: {
 		keyId: config.KEY_UUID,
 		publicKey,

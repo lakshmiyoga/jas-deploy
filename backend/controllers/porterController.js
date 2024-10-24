@@ -28,7 +28,7 @@ const paymentPageClientId = config.PAYMENT_PAGE_CLIENT_ID; // used in orderSessi
 
 const juspay = new Juspay({
     merchantId: config.MERCHANT_ID,
-    baseUrl: SANDBOX_BASE_URL, // Using sandbox base URL for testing
+    baseUrl: PRODUCTION_BASE_URL, // Using sandbox base URL for testing
     jweAuth: {
         keyId: config.KEY_UUID,
         publicKey,
@@ -143,8 +143,8 @@ const getPorterResponse = catchAsyncError(async (req, res, next) => {
     if (!order || !porterOrder_id) {
         return next(new ErrorHandler(`Order not found with this id: ${order_id}`, 404))
     }
-    const apiEndpoint = `https://pfe-apigw-uat.porter.in/v1/orders/${porterOrder_id}`
-    // const apiEndpoint = `https://pfe-apigw.porter.in/v1/orders/${porterOrder_id}`
+    // const apiEndpoint = `https://pfe-apigw-uat.porter.in/v1/orders/${porterOrder_id}`
+    const apiEndpoint = `https://pfe-apigw.porter.in/v1/orders/${porterOrder_id}`
     // apiEndpoint = `https://pfe-apigw-uat.porter.in/v1/orders/{order_id:CRN93814651}`
     const response = await axios.get(apiEndpoint, {
         headers: {
@@ -252,8 +252,8 @@ const getCancelResponse = catchAsyncError(async (req, res, next) => {
     // apiEndpoint = `https://pfe-apigw-uat.porter.in/v1/orders/${porterOrder_id}/cancel`
 
     try {
-        apiEndpoint = `https://pfe-apigw-uat.porter.in/v1/orders/${porterOrder_id}/cancel`
-        // apiEndpoint = `https://pfe-apigw.porter.in/v1/orders/${porterOrder_id}/cancel`
+        // apiEndpoint = `https://pfe-apigw-uat.porter.in/v1/orders/${porterOrder_id}/cancel`
+        apiEndpoint = `https://pfe-apigw.porter.in/v1/orders/${porterOrder_id}/cancel`
         const response = await axios.post(apiEndpoint, {}, {
             headers: {
                 'X-API-KEY': process.env.PORTER_API_KEY,
