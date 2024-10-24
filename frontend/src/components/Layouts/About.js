@@ -19,12 +19,16 @@ const About = () => {
       <div className='about_container'>
 
         <div className='about_text'>
-          <h3>JAS FRUITS AND VEGETABLES</h3>
-          <p>Jas fruits and vegetables which is a part of RVP Sourcing have started in the Retail market online. This one is selling vegetables, fruits and Lettuce through an online portal and a mobile application.
+          {/* <h3>JAS FRUITS AND VEGETABLES</h3> */}
+          <p>I am Balasanthanam G., and I have over 10 years of experience in the service industry, specializing in the supply of high-quality fruits and vegetables. Throughout my journey, I have built strong relationships with more than 50 restaurant chains and 30 supermarkets, ensuring they receive fresh and reliable produce. Our commitment to quality, competitive pricing, and exceptional service has earned us a reputation for excellence. A2B (Adyar Ananda Bhavan) is one of our key clients, and we take pride in maintaining the high standards they expect.
+            At our core, we are dedicated to meeting the evolving needs of our clients, consistently delivering the best produce, and fostering long-term partnerships based on trust and reliability.
             <br /><br />
-            Our aim is to make vegetables, fruits and lettuce available to our customer at affordable prices. We think we can make this possible. Because RVP Sourcing is a wholesaler, we have all kinds of vegetables and fruits that are fresh and nutritious so that we can offer the best to our customers.
+            <h3>Introducing Jas Fruits and Vegetables</h3>
+            We are excited to expand into the online retail space, focusing on delivering fresh fruits and vegetables directly to customers at the best prices. At Jas Fruits and Vegetables, our mission is to provide high-quality produce with the convenience of direct delivery, ensuring both affordability and freshness.
+
+            Our motto, “Best Price and Best Saving,” reflects our commitment to offering competitive prices while helping our customers save without compromising on quality. We are dedicated to making healthy, fresh food accessible and affordable for everyone.
             <br /><br />
-            RVP Sourcing is a wholesale trader established in 2014. We are wholesale trading in Vegetables and Fruits.
+            {/* RVP Sourcing is a wholesale trader established in 2014. We are wholesale trading in Vegetables and Fruits. */}
           </p>
         </div>
         <div className='about_image'>
