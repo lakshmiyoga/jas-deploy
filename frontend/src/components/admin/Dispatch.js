@@ -26,7 +26,7 @@ import LoaderButton from "../Layouts/LoaderButton";
 
 const Dispatch = ({ isActive, setIsActive }) => {
     const location = useLocation();
-    sessionStorage.setItem('redirectPath', location.pathname);
+    // sessionStorage.setItem('redirectPath', location.pathname);
     const { loading, isOrderUpdated, error, orderDetail, porterloading, porterOrderDetail, orderRemoveResponse, orderRemoveError } = useSelector(state => state.orderState);
     const { products } = useSelector((state) => state.productsState);
     const { porterOrderData, porterOrderResponse, porterCancelResponse, porterCancelError, portererror, getpackedOrderData } = useSelector((state) => state.porterState);
@@ -113,7 +113,7 @@ const Dispatch = ({ isActive, setIsActive }) => {
                     "pincode": "600107",
                     "country": "India",
                     "lat": 13.0671844,
-                    "lng": 80.1798047,
+                    "lng": 80.1775087,
                     "contact_details": {
                         "name": "Bala Santhanam",
                         "phone_number": "+919176720068"
@@ -424,9 +424,9 @@ const Dispatch = ({ isActive, setIsActive }) => {
                     className: 'small-toast',
                     onOpen: () => dispatch(clearOrderUpdated())
                 });
-                setTimeout(() => {
+                // setTimeout(() => {
                     dispatch(adminOrders());
-               }, 700);
+            //    }, 700);
                 
             }, 300);
             setShowModal(false);
@@ -667,8 +667,8 @@ const Dispatch = ({ isActive, setIsActive }) => {
                                                                 <th>Image</th>
                                                                 <th>Name</th>
                                                                 <th>Price per kg</th>
-                                                                <th>Ordered Weight</th>
-                                                                <th>Dispatched Weight</th>
+                                                                <th>Ordered Quantity</th>
+                                                                <th>Dispatched Quantity</th>
                                                                 <th>Total Amount</th>
                                                                 {/* <th>Refundable Amount</th> */}
                                                             </>
@@ -684,8 +684,8 @@ const Dispatch = ({ isActive, setIsActive }) => {
                                                                 </td>
                                                                 <td>{item.name}</td>
                                                                 <td>Rs. {parseFloat(item.pricePerKg).toFixed(2)}</td>
-                                                                <td>{item.orderedWeight} kg</td>
-                                                                <td>{item.dispatchedWeight} kg</td>
+                                                                <td>{item.orderedWeight} {item.measurement}</td>
+                                                                <td>{item.dispatchedWeight} {item.measurement}</td>
                                                                 <td>Rs. {parseFloat(item.pricePerKg * item.dispatchedWeight).toFixed(2)}</td>
                                                                 {/* <td>Rs. {item.refundableAmount}</td> */}
                                                             </tr>
@@ -746,7 +746,7 @@ const Dispatch = ({ isActive, setIsActive }) => {
                                                                         .filter(item => item.pricePerKg * item.dispatchedWeight > 0) // Filter items with total amount > 0
                                                                         .map((item, index) => (
                                                                             <li key={index} style={{ paddingBottom: '10px' }}>
-                                                                                <strong>{item.name}</strong> - {item.dispatchedWeight} kg
+                                                                                <strong>{item.name}</strong> - {item.dispatchedWeight} {item.measurement}
                                                                             </li>
                                                                         ))}
                                                                 </ul>

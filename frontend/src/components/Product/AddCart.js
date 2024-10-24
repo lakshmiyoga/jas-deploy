@@ -8,7 +8,7 @@ import { useLocation } from 'react-router-dom';
 const AddCart = ({ productId }) => {
   const [quantity, setQuantity] = useState(0);
   const location = useLocation();
-  sessionStorage.setItem('redirectPath', location.pathname);
+  // sessionStorage.setItem('redirectPath', location.pathname);
   const dispatch = useDispatch();
   const {items} = useSelector(state => state.cartState);
 //   console.log(items);

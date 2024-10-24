@@ -5,7 +5,7 @@ import { useLocation } from 'react-router-dom';
 
 const TermsAndConditions = () => {
   const location = useLocation();
-  sessionStorage.setItem('redirectPath', location.pathname);
+  // sessionStorage.setItem('redirectPath', location.pathname);
   return (
     <div>
       {/* <MetaData title={'Terms And Conditions'} /> */}
@@ -63,10 +63,10 @@ const TermsAndConditions = () => {
         <p>We reserve the right to modify these terms at any time. Changes will be posted on our website, and your continued use constitutes acceptance of the new terms.</p>
 
         <h5>Governing Law</h5>
-        <p>These terms are governed by the laws of India. Any disputes will be resolved in the courts of India.</p>
+        <p>These terms are governed by the laws of Chennai. Any disputes will be resolved in the courts of Chennai.</p>
 
         <h5>Contact Information</h5>
-        <p>For questions or concerns regarding these terms, please contact us at Jasfruitsandvegetables@gmail.com.</p>
+        <p>If you have any questions or concerns about this Privacy Policy, please contact us at jasfruitsandvegetables@gmail.com or call us at +91 91767 20068.</p>
 
       </div>
     </div>

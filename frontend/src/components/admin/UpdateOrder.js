@@ -12,6 +12,7 @@ import {
     porterClearData,
     porterClearResponse,
     porterCancelClearError,
+    clearpackedUpdated,
 } from '../../slices/porterSlice';
 import Stepper from "../Layouts/Stepper";
 import Invoice from "../Layouts/Invoice";
@@ -22,13 +23,14 @@ import { useReactToPrint } from 'react-to-print';
 import ReactDOM from 'react-dom';
 import JasInvoice from "../Layouts/JasInvoice";
 import MetaData from "../Layouts/MetaData";
+import LoaderButton from "../Layouts/LoaderButton";
 
 const UpdateOrder = ({ isActive, setIsActive }) => {
     const location = useLocation();
-    sessionStorage.setItem('redirectPath', location.pathname);
+    // sessionStorage.setItem('redirectPath', location.pathname);
     const { loading, isOrderUpdated, error, orderDetail, porterOrderDetail, orderRemoveResponse, orderRemoveError } = useSelector(state => state.orderState);
     const { products } = useSelector((state) => state.productsState);
-    const { porterOrderData, porterOrderResponse, porterCancelResponse, porterCancelError, portererror, packedOrderData, getpackedOrderData } = useSelector((state) => state.porterState);
+    const { porterOrderData, porterOrderResponse, porterCancelResponse, porterCancelError, portererror, packedOrderData, getpackedOrderData, loading: packedloading, packedOrderError } = useSelector((state) => state.porterState);
     const { user = {}, orderItems = [], shippingInfo = {}, totalPrice = 0, statusResponse = {} } = orderDetail;
     const [orderStatus, setOrderStatus] = useState("Processing");
     const [dropStatus, setDropStatus] = useState("");
@@ -45,6 +47,9 @@ const UpdateOrder = ({ isActive, setIsActive }) => {
     const dispatch = useDispatch();
     console.log("orderDetail", orderDetail)
     const invoiceRef = useRef();
+    const [weightvalue,setweightvalue] =useState(false);
+    const [weighttoast,setWeightToast]=useState(false);
+    const [correctWeight,setcorrectWeight]=useState(false)
 
     const [showModal, setShowModal] = useState(false); // State to manage modal visibility
     const [totalDispatchedAmount, setTotalDispatchedAmount] = useState(0); // To store total dispatched amount
@@ -215,50 +220,358 @@ const UpdateOrder = ({ isActive, setIsActive }) => {
 
     const changeWeight = (e, index) => {
         const value = e.target.value;
+        const measurement = orderItems[index].measurement;
         if (value === '' || !isNaN(value)) {
             const numericValue = parseFloat(value);
             if (numericValue < 0) {
                 // If the entered value is negative, reset to the original weight and show an error
                 // toast.error("Weight cannot be negative. Reverting to original weight.");
-                toast.dismiss();
-                setTimeout(() => {
-                    toast.error('Weight cannot be negative. Reverting to original weight.', {
-                        position: 'bottom-center',
-                        type: 'error',
-                        autoClose: 700,
-                        transition: Slide,
-                        hideProgressBar: true,
-                        className: 'small-toast',
-                    });
-                }, 300);
-                const newWeights = [...editableWeights];
-                newWeights[index] = originalWeights[index]; // Reset to original weight
-                setEditableWeights(newWeights);
+                setweightvalue(true);
+                if(!weightvalue){
+                    toast.dismiss();
+                    setTimeout(() => {
+                        toast.error('Weight cannot be negative. Reverting to original weight.', {
+                            position: 'bottom-center',
+                            type: 'error',
+                            autoClose: 700,
+                            transition: Slide,
+                            hideProgressBar: true,
+                            className: 'small-toast',
+                        });
+                        setweightvalue(false);
+                    }, 300);
+                }
+               
+                // const newWeights = [...editableWeights];
+                // newWeights[index] = originalWeights[index]; // Reset to original weight
+                // setEditableWeights(newWeights);
                 return;
             }
 
             if (numericValue > orderItems[index].productWeight) {
                 // toast.error("Entered Kg is greater than requested Kg. Reverting to original weight.");
-                toast.dismiss();
-                setTimeout(() => {
-                    toast.error('Entered Kg is greater than requested Kg. Reverting to original weight.', {
-                        position: 'bottom-center',
-                        type: 'error',
-                        autoClose: 700,
-                        transition: Slide,
-                        hideProgressBar: true,
-                        className: 'small-toast',
-                    });
-                }, 300);
+                setweightvalue(true);
+                if(!weightvalue){
+                    toast.dismiss();
+                    setTimeout(() => {
+                        toast.error('Entered Kg is greater than requested Kg. Reverting to original weight.', {
+                            position: 'bottom-center',
+                            type: 'error',
+                            autoClose: 700,
+                            transition: Slide,
+                            hideProgressBar: true,
+                            className: 'small-toast',
+                        });
+                        setweightvalue(false)
+                    }, 300);
+                }
+               
+                return;
             }
 
-            const weight = Math.min(numericValue, orderItems[index].productWeight); // Ensure weight does not exceed initially ordered weight
+            const weight = measurement && measurement === 'Kg' ? Math.min(parseFloat(numericValue).toFixed(2), orderItems[index].productWeight.toFixed(2)) : Math.floor(numericValue, orderItems[index].productWeight) ; // Ensure weight does not exceed initially ordered weight
             const newWeights = [...editableWeights];
             newWeights[index] = value === '' ? 0 : weight; // Allow empty value temporarily for editing
             setEditableWeights(newWeights);
         }
 
     };
+    // const changeWeight = (e, index) => {
+    //     const value = e.target.value;
+    //     const measurement = orderItems[index].measurement;
+    
+    //     // Check if the value is empty or a valid number
+    //     if (value === '' || !isNaN(value)) {
+    //         const numericValue = parseFloat(value);
+    
+    //         // Check for negative values
+    //         if (numericValue < 0) {
+    //             toast.dismiss();
+    //             setTimeout(() => {
+    //                 toast.error('Weight cannot be negative. Reverting to original weight.', {
+    //                     position: 'bottom-center',
+    //                     type: 'error',
+    //                     autoClose: 700,
+    //                     transition: Slide,
+    //                     hideProgressBar: true,
+    //                     className: 'small-toast',
+    //                 });
+    //             }, 300);
+    //             const newWeights = [...editableWeights];
+    //             newWeights[index] = originalWeights[index]; // Reset to original weight
+    //             setEditableWeights(newWeights);
+    //             return;
+    //         }
+    
+    //         // Check for exceeding weight based on measurement
+    //         let isValidWeight = true;
+    //         if (measurement === 'kg') {
+    //             if (value.includes('.') && (value.split('.')[1].length > 2)) {
+                    
+    //                 isValidWeight = false; // More than two decimal places
+                    
+    //             }
+    //             if (numericValue > orderItems[index].productWeight) {
+    //             //     toast.dismiss();
+    //             // setTimeout(() => {
+    //             //     toast.error('Weight cannot be negative. Reverting to original weight.', {
+    //             //         position: 'bottom-center',
+    //             //         type: 'error',
+    //             //         autoClose: 700,
+    //             //         transition: Slide,
+    //             //         hideProgressBar: true,
+    //             //         className: 'small-toast',
+    //             //     });
+    //             // }, 300);
+    //                 isValidWeight = false; // Exceeding initial order weight
+    //             }
+    //         } else if (measurement === 'Piece' || measurement === 'Box') {
+    //             if (value.includes('.') || numericValue % 1 !== 0) {
+    //                 isValidWeight = false; // Decimal values not allowed
+    //             }
+    //         }
+    
+    //         // Handle invalid weight input
+    //         if (!isValidWeight) {
+    //             toast.dismiss();
+    //             setTimeout(() => {
+    //                 toast.error('Invalid weight entered. Reverting to original weight.', {
+    //                     position: 'bottom-center',
+    //                     type: 'error',
+    //                     autoClose: 700,
+    //                     transition: Slide,
+    //                     hideProgressBar: true,
+    //                     className: 'small-toast',
+    //                 });
+    //             }, 300);
+    //             const newWeights = [...editableWeights];
+    //             newWeights[index] = originalWeights[index]; // Reset to original weight
+    //             setEditableWeights(newWeights);
+    //             return;
+    //         }
+    
+    //         // Set the valid weight
+    //         const weight = measurement === 'kg' ? Math.min(numericValue, orderItems[index].productWeight) : Math.min(numericValue, Math.floor(orderItems[index].productWeight));
+    //         const newWeights = [...editableWeights];
+    //         newWeights[index] = value === '' ? 0 : weight; // Allow empty value temporarily for editing
+    //         setEditableWeights(newWeights);
+    //     }
+    // };
+    
+
+    // const changeWeight = (e, index) => {
+    //     let value = e.target.value;
+    //     const measurementType = orderItems[index].measurement; // Get the measurement type (kg, piece, box)
+    //     console.log("measurementType",measurementType)
+
+    //     // Ensure value is a number or empty
+    //     if (value === '' || !isNaN(value)) {
+    //         let numericValue = parseFloat(value);
+
+    //         // Prevent negative values
+    //         if (numericValue < 0) {
+    //             toast.dismiss();
+    //             setTimeout(() => {
+    //                 toast.error('Weight cannot be negative. Reverting to original weight.', {
+    //                     position: 'bottom-center',
+    //                     type: 'error',
+    //                     autoClose: 700,
+    //                     transition: Slide,
+    //                     hideProgressBar: true,
+    //                     className: 'small-toast',
+    //                 });
+    //             }, 300);
+    //             // const newWeights = [...editableWeights];
+    //             // newWeights[index] = originalWeights[index]; // Reset to original weight
+    //             // setEditableWeights(newWeights);
+    //             return;
+    //         }
+
+    //         // Ensure numericValue does not exceed the originally ordered product weight
+    //         if (numericValue > orderItems[index].productWeight) {
+    //             toast.dismiss();
+    //             setTimeout(() => {
+    //                 toast.error('Entered Kg is greater than requested Kg. Reverting to original weight.', {
+    //                     position: 'bottom-center',
+    //                     type: 'error',
+    //                     autoClose: 700,
+    //                     transition: Slide,
+    //                     hideProgressBar: true,
+    //                     className: 'small-toast',
+    //                 });
+    //             }, 300);
+    //         }
+
+    //         // Handle decimal places based on measurement type
+    //         if (measurementType === 'kg') {
+    //             // Allow up to two decimal places for kilograms
+    //             numericValue = parseFloat(numericValue.toFixed(2));
+    //         } else {
+    //             // Force whole numbers for other measurement types
+    //             numericValue = Math.floor(numericValue);
+    //         }
+
+    //         // Ensure weight does not exceed initially ordered weight
+    //         const weight = Math.min(numericValue, orderItems[index].productWeight);
+
+    //         const newWeights = [...editableWeights];
+    //         newWeights[index] = value === '' ? 0 : weight; // Allow empty value temporarily for editing
+    //         setEditableWeights(newWeights);
+    //     }
+    // };
+   
+
+    // const changeWeight = (e, index) => {
+    //     let value = e.target.value.trim();  // Trim to avoid spaces
+    //     const measurementType = orderItems[index].measurement; // Get the measurement type (kg, piece, box)
+        
+    //     // Ensure value is either empty or a valid number
+    //     if (value === '' || (!isNaN(value) && Number(value) >= 0)) {
+    //         let numericValue = parseFloat(value);
+    
+    //         // Prevent negative values
+    //         if (numericValue < 0) {
+    //             toast.dismiss();
+    //             setTimeout(() => {
+    //                 toast.error('Weight cannot be negative. Reverting to original weight.', {
+    //                     position: 'bottom-center',
+    //                     type: 'error',
+    //                     autoClose: 700,
+    //                     transition: Slide,
+    //                     hideProgressBar: true,
+    //                     className: 'small-toast',
+    //                 });
+    //             }, 300);
+    //             return;
+    //         }
+    
+    //         // Ensure numericValue does not exceed the originally ordered product weight
+    //         if (numericValue > orderItems[index].productWeight) {
+    //             toast.dismiss();
+    //             setTimeout(() => {
+    //                 toast.error('Entered Kg is greater than requested Kg. Reverting to original weight.', {
+    //                     position: 'bottom-center',
+    //                     type: 'error',
+    //                     autoClose: 700,
+    //                     transition: Slide,
+    //                     hideProgressBar: true,
+    //                     className: 'small-toast',
+    //                 });
+    //             }, 300);
+    //         }
+    
+    //         // Handle decimal places based on measurement type
+    //         if (measurementType === 'kg') {
+    //             // Allow up to two decimal places for kilograms
+    //             numericValue = parseFloat(numericValue.toFixed(2));
+    //         } else {
+    //             // Force whole numbers for other measurement types (piece, box)
+    //             numericValue = Math.floor(numericValue);
+    //         }
+    
+    //         // Ensure weight does not exceed the originally ordered product weight
+    //         const weight = Math.min(numericValue, orderItems[index].productWeight);
+    
+    //         const newWeights = [...editableWeights];
+    //         newWeights[index] = value === '' ? 0 : weight; // Allow empty value temporarily for editing
+    //         setEditableWeights(newWeights);
+    //     }
+    // };
+    // const changeWeight = (productId, value, productCategory, productMeasurement) => {
+    //     // const weightValue = parseFloat(value);
+    //     let validValue;
+    //     if (productCategory === 'Keerai'|| productMeasurement === 'Box') {
+    //         validValue = value.match(/^\d*$/) ? value : weight[productId]; // Only whole numbers allowed
+    //     } else {
+    //         // For non-"Keerai", allow up to two decimal places
+    //         validValue = value.match(/^\d*\.?\d{0,2}$/) ? value : weight[productId];
+    //     }
+
+    //     // Allow empty value for resetting
+    //     if (value === '') {
+    //         setWeight(prevWeights => ({ ...prevWeights, [productId]: '' }));
+    //         return;
+    //     }
+
+    //     const weightValue = parseFloat(validValue);
+
+    //     if (weightValue < 0) {
+    //         return;
+    //     }
+
+    //     // if (isNaN(weightValue) || value === '') {
+    //     //     setWeight(prevWeights => ({ ...prevWeights, [productId]: '' }));
+    //     //     return;
+    //     // }
+
+    //     // Handling Keerai (bundle) weight
+    //     if (!weightvalue) {
+    //         if (productCategory === 'Keerai') {
+    //             if (weightValue > 10) {
+    //                 setweightvalue(true);
+    //                 if (!weightvalue) {
+    //                     toast.dismiss();
+    //                     setTimeout(() => {
+    //                         toast.error('Bundle count cannot exceed 10', {
+    //                             position: 'bottom-center',
+    //                             type: 'error',
+    //                             autoClose: 700,
+    //                             transition: Slide,
+    //                             hideProgressBar: true,
+    //                             className: 'small-toast',
+    //                         });
+    //                         setweightvalue(false);
+    //                     }, 300);
+    //                     setWeight(prevWeights => ({ ...prevWeights, [productId]: '' }));
+    //                     return;
+    //                 }
+    //             }
+    //         } 
+    //         else if ( productMeasurement === 'Box') {
+    //             if (weightValue > 10) {
+    //                 setweightvalue(true);
+    //                 if (!weightvalue) {
+    //                     toast.dismiss();
+    //                     setTimeout(() => {
+    //                         toast.error('Box count cannot exceed 10', {
+    //                             position: 'bottom-center',
+    //                             type: 'error',
+    //                             autoClose: 700,
+    //                             transition: Slide,
+    //                             hideProgressBar: true,
+    //                             className: 'small-toast',
+    //                         });
+    //                         setweightvalue(false);
+    //                     }, 300);
+    //                     setWeight(prevWeights => ({ ...prevWeights, [productId]: '' }));
+    //                     return;
+    //                 }
+    //             }
+    //         }
+    //         else if (weightValue > 5) {
+    //             // Handling non-Keerai weight limit (Kg)
+    //             setweightvalue(true);
+    //             if (!weightvalue) {
+    //                 toast.dismiss();
+    //                 setTimeout(() => {
+    //                     toast.error('Weight cannot exceed 5Kg', {
+    //                         position: 'bottom-center',
+    //                         type: 'error',
+    //                         autoClose: 700,
+    //                         transition: Slide,
+    //                         hideProgressBar: true,
+    //                         className: 'small-toast',
+    //                     });
+    //                     setweightvalue(false);
+    //                 }, 300);
+    //                 setWeight(prevWeights => ({ ...prevWeights, [productId]: '' }));
+    //                 return;
+    //             }
+    //         }
+    //         setWeight(prevWeights => ({ ...prevWeights, [productId]: weightValue }));
+    //     }
+
+    // };
 
 
 
@@ -313,6 +626,7 @@ const UpdateOrder = ({ isActive, setIsActive }) => {
 
         const dispatchedTable = orderItems.map((item, index) => {
             const orderedWeight = parseFloat(item.productWeight);
+            const measurement = item.measurement;
             const dispatchedWeight = parseFloat(updatedItems[index].productWeight);
             const refundableWeight = parseFloat((orderedWeight - dispatchedWeight).toFixed(2)); // Keeping two decimal places
             const pricePerKg = parseFloat((item.price).toFixed(2)); // Keeping two decimal places
@@ -327,6 +641,7 @@ const UpdateOrder = ({ isActive, setIsActive }) => {
                 image: item.image,
                 name: item.name,
                 orderedWeight,
+                measurement,
                 pricePerKg,
                 dispatchedWeight,
                 refundableWeight,
@@ -442,13 +757,13 @@ const UpdateOrder = ({ isActive, setIsActive }) => {
         // }
         setRefreshData(true)
 
-    }, [dispatch, id, porterOrderDetail, packedOrderData]);
+    }, [dispatch, id, porterOrderDetail]);
 
-    useEffect(() => {
+    // useEffect(() => {
 
-    })
+    // })
     useEffect(() => {
-        if (isOrderUpdated) {
+        if (packedOrderData) {
             // toast('Order Updated Successfully!', {
             //     type: 'success',
             //     position: "bottom-center",
@@ -463,17 +778,36 @@ const UpdateOrder = ({ isActive, setIsActive }) => {
                     transition: Slide,
                     hideProgressBar: true,
                     className: 'small-toast',
-                    onOpen: () => dispatch(clearOrderUpdated())
+                    onClose: () => dispatch(clearpackedUpdated())
                 });
                 setTimeout(() => {
                     dispatch(adminOrders());
-               }, 700);
-               
+                    dispatch(orderDetailAction(id));
+                    dispatch(getporterOrder({ order_id: id }));
+                    dispatch(getPackedOrder({ order_id: id }));
+                }, 700);
+
             }, 300);
-            setShowModal(true);
-           
+            setShowModal(false);
+
         }
-    }, [isOrderUpdated])
+        if (packedOrderError) {
+            toast.dismiss();
+            setTimeout(() => {
+                toast.error(packedOrderError, {
+                    position: 'bottom-center',
+                    type: 'error',
+                    autoClose: 700,
+                    transition: Slide,
+                    hideProgressBar: true,
+                    className: 'small-toast',
+                    onClose: () => dispatch(clearpackedUpdated())
+                });
+
+            }, 300);
+            setShowModal(false);
+        }
+    }, [packedOrderData, packedOrderError])
 
     useEffect(() => {
         if (error) {
@@ -696,9 +1030,9 @@ const UpdateOrder = ({ isActive, setIsActive }) => {
                                                             <>
                                                                 <th>Image</th>
                                                                 <th>Name</th>
-                                                                <th>Ordered Weight</th>
+                                                                <th>Ordered Quantity</th>
                                                                 <th>Price per kg</th>
-                                                                <th>Dispatched Weight</th>
+                                                                <th>Dispatched Quantity</th>
                                                                 <th>Refundable Weight</th>
                                                                 <th>Refundable Amount</th>
                                                             </>
@@ -708,8 +1042,8 @@ const UpdateOrder = ({ isActive, setIsActive }) => {
                                                                 <th>Image</th>
                                                                 <th>Name</th>
                                                                 <th>Price per kg</th>
-                                                                <th>Ordered Weight</th>
-                                                                <th>Dispatch Weight</th>
+                                                                <th>Ordered Quantity</th>
+                                                                <th>Dispatch Quantity</th>
                                                                 <th>Total Price</th>
                                                                 {/* <th>Status</th> */}
                                                             </>
@@ -724,10 +1058,10 @@ const UpdateOrder = ({ isActive, setIsActive }) => {
                                                                     <img src={item.image} alt={item.name} className="updateTableproduct-image" />
                                                                 </td>
                                                                 <td>{item.name}</td>
-                                                                <td>{item.orderedWeight} kg</td>
+                                                                <td>{item.orderedWeight} {item.measurement}</td>
                                                                 <td>Rs. {item.pricePerKg}</td>
-                                                                <td>{item.dispatchedWeight ? item.dispatchedWeight : 0} kg</td>
-                                                                <td>{item.refundableWeight ? item.refundableWeight : 0} kg</td>
+                                                                <td>{item.dispatchedWeight ? item.dispatchedWeight : 0} {item.measurement}</td>
+                                                                <td>{item.refundableWeight ? item.refundableWeight : 0} {item.measurement}</td>
                                                                 <td>Rs. {item.refundableWeight ? item.refundableWeight * item.pricePerKg : 0}</td>
 
                                                             </tr>
@@ -752,20 +1086,31 @@ const UpdateOrder = ({ isActive, setIsActive }) => {
                                                                     </td>
                                                                     <td>{item.name}</td>
                                                                     <td>Rs. {item.price}</td>
-                                                                    <td>{item.productWeight} kg</td>
+                                                                    <td>{item.productWeight} {item.measurement}</td>
                                                                     {editableWeights && (
                                                                         <>
                                                                             <td style={{ maxWidth: '70px' }}>
-                                                                                <input
+                                                                                <NumberInput
                                                                                     type="number"
                                                                                     className="no-arrow-input form-control updateTableInput"
                                                                                     value={editableWeights[index] === 0 ? '' : editableWeights[index]}
+                                                                                    step="0.01"
                                                                                     onChange={(e) => changeWeight(e, index)}
                                                                                     placeholder={editableWeights[index] === 0 ? 0 : ''}
                                                                                     onBlur={() => handleBlur(index)}
                                                                                     disabled={!selectedItems[index]}
                                                                                     required
                                                                                 />
+                                                                                {/* <input
+                                                                                    type="text"  // Keep it as text to handle decimals correctly
+                                                                                    className="no-arrow-input form-control updateTableInput"
+                                                                                    value={editableWeights[index] === 0 ? '' : editableWeights[index]}
+                                                                                    onChange={(e) => changeWeight(e, index)}
+                                                                                    placeholder={editableWeights[index] === 0 ? '' : 0}
+                                                                                    onBlur={() => handleBlur(index)}
+                                                                                    disabled={!selectedItems[index]}
+                                                                                    required
+                                                                                /> */}
                                                                             </td>
                                                                             <td>Rs. {(editableWeights[index] * item.price).toFixed(2)}</td>
                                                                         </>
@@ -783,7 +1128,7 @@ const UpdateOrder = ({ isActive, setIsActive }) => {
                                     <hr />
                                     <div>
                                         {/* <button className='btn btn-primary' onClick={submitHandler} disabled={dropStatus === "Dispatched"}>Dispatch</button> */}
-                                        <button className='btn btn-primary' onClick={(e) => handlePack(e)} disabled={dropStatus === "Processing" ? false : true}>Packed</button>
+                                        <button className='btn btn-primary' onClick={(e) => handlePack(e)} disabled={dropStatus === "Processing" ? false : true} style={{ cursor: (dropStatus === "Processing") ? 'pointer' : 'not-allowed' }}>{dropStatus === "Processing" ? 'Pack' : dropStatus === "Cancelled" ? 'Already Cancelled' : dropStatus === "Dispatched" ? 'Already Dispatched' : dropStatus === "Packed" ? 'Already Packed' : dropStatus}</button>
 
                                     </div>
 
@@ -824,7 +1169,7 @@ const UpdateOrder = ({ isActive, setIsActive }) => {
                         <div className="modal-content">
                             <div className="modal-header">
                                 <h5 className="modal-title">Confirm Action</h5>
-                                <button type="button" className="close" onClick={() => setShowModal(false)}>
+                                <button type="button" className="close" disabled={packedloading} onClick={() => setShowModal(false)}>
                                     <span aria-hidden="true">&times;</span>
                                 </button>
                             </div>
@@ -837,12 +1182,23 @@ const UpdateOrder = ({ isActive, setIsActive }) => {
                             </div>
                             <div className="modal-footer">
                                 {totalDispatchedAmount > 0 ? (
-                                    <button type="button" className="btn btn-primary" onClick={submitHandlerPacked}>
-                                        Confirm Pack
+                                    <button type="button" disabled={packedloading} className="btn btn-primary" onClick={submitHandlerPacked}>
+
+                                        {packedloading ? <LoaderButton fullPage={false} size={20} /> : (
+                                            <span>Confirm Pack</span>
+                                        )
+
+                                        }
                                     </button>
                                 ) : (
-                                    <button type="button" className="btn btn-danger" onClick={submitHandlerPacked}>
-                                        Cancel Order
+                                    <button type="button" disabled={packedloading} className="btn btn-danger" onClick={submitHandlerPacked}>
+
+
+                                        {packedloading ? <LoaderButton fullPage={false} size={20} /> : (
+                                            <span>Cancel Order</span>
+                                        )
+
+                                        }
                                     </button>
                                 )}
                                 {/* <button type="button" className="btn btn-secondary" onClick={() => setShowModal(false)}>

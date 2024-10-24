@@ -223,7 +223,7 @@ const Shipping = () => {
         : {};
     const { isAuthenticated, user } = useSelector(state => state.authState);
     const location = useLocation();
-    sessionStorage.setItem('redirectPath', location.pathname);
+    // sessionStorage.setItem('redirectPath', location.pathname);
     // const { loactionResponse } = useSelector(state => state.orderState);
     const [address, setAddress] = useState(shippingInfo.address);
     const [area, setArea] = useState(shippingInfo.area);

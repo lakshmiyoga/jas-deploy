@@ -64,6 +64,7 @@ export default function ProtectedRoute({ children, isAdmin }) {
     // }, [isloggedout,dispatch,isAuthenticated]);
     useEffect(() => {
         if (isloggedout && !isAuthenticated && !user && isAdmin) {
+            navigate('/')
             sessionStorage.clear();
             // if(products){
             //     dispatch(clearProducts());
@@ -75,7 +76,7 @@ export default function ProtectedRoute({ children, isAdmin }) {
                 toast.success(loggedoutmessage, {
                     position: 'bottom-center',
                     type: 'success',
-                    autoClose: 700,
+                    autoClose: 100,
                     transition: Slide,
                     hideProgressBar: true,
                     className: 'small-toast',
@@ -97,7 +98,7 @@ export default function ProtectedRoute({ children, isAdmin }) {
                 
                 // Attempt to close the current tab (it may not work if this tab wasn't opened programmatically
     
-            }, 300);
+            }, 10);
         }
     }, [isloggedout, dispatch, isAuthenticated, user, loggedoutmessage]);
     

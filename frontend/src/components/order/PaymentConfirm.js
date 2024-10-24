@@ -7,16 +7,21 @@ import { orderCompleted } from "../../slices/cartSlice";
 import { useDispatch } from 'react-redux';
 import axios from 'axios';
 import MetaData from '../Layouts/MetaData';
+import { userOrders as userOrdersAction } from '../../actions/orderActions';
 
 
 const PaymentConfirm = () => {
 
   const { id } = useParams();
   const location = useLocation();
-  sessionStorage.setItem('redirectPath', location.pathname);
+  // sessionStorage.setItem('redirectPath', location.pathname);
   const [paymentStatus, setPaymentStatus] = useState('LOADING');
   const [paymentDetails, setPaymentDetails] = useState({});
   const dispatch = useDispatch();
+
+  useEffect(()=>{
+    dispatch(userOrdersAction());
+  },[])
 
 
   useEffect(() => {

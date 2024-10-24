@@ -9,7 +9,7 @@ import { useLocation } from 'react-router-dom';
 const SummaryUser = ({isActive,setIsActive}) => {
     const dispatch = useDispatch();
     const location = useLocation();
-    sessionStorage.setItem('redirectPath', location.pathname);
+    // sessionStorage.setItem('redirectPath', location.pathname);
     const { loading, userSummary, error } = useSelector((state) => state.orderState);
 
     // Initialize the date with the current date

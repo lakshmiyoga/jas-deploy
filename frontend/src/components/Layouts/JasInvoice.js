@@ -56,7 +56,7 @@ const JasInvoice = React.forwardRef(({ invoice }, ref) => {
                         <p>Chennai - Koyembedu</p>
                         <p>{invoice.orderDetail.shippingInfo.city}-{invoice.orderDetail.shippingInfo.area}</p>
                         <p>Advance</p>
-                        <p>9840814398,9176720068</p>
+                        <p>9176883506</p>
                     </div>
                 </div>
             </div>

@@ -8,7 +8,7 @@ const Refund = () => {
     const [amount, setAmount] = useState('');
     const [errorMessage, setErrorMessage] = useState('');
     const location = useLocation();
-    sessionStorage.setItem('redirectPath', location.pathname);
+    // sessionStorage.setItem('redirectPath', location.pathname);
 
     const handleRefund = async () => {
         try {

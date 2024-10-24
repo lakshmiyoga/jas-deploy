@@ -102,7 +102,7 @@ import { analysisOrders } from '../../actions/analysisActions';
 
 const Analysis = ({ isActive, setIsActive }) => {
     const location = useLocation();
-    sessionStorage.setItem('redirectPath', location.pathname);
+    // sessionStorage.setItem('redirectPath', location.pathname);
     const { loading = true, error, refundedAmount, dispatchedAmount, usersCount, totalEnquiries, totalOrders, totalAmount } = useSelector(state => state.analysisState);
     const [startDate, setStartDate] = useState('');
     const [endDate, setEndDate] = useState('');

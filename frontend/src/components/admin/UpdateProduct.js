@@ -202,6 +202,7 @@ const UpdateProduct = ({ isActive, setIsActive }) => {
         buyingPrice: "",
         price: "",
         category: "",
+        measurement:"",
         percentage: "",
         stocks: "",
         images: [],
@@ -229,6 +230,7 @@ const UpdateProduct = ({ isActive, setIsActive }) => {
                 buyingPrice: product.buyingPrice,
                 price: product.price,
                 category: product.category,
+                measurement:product.measurement,
                 percentage: product.percentage,
                 stocks: product.stocks,
                 imagesPreview: product.images.map(image => image.image)
@@ -328,6 +330,7 @@ const UpdateProduct = ({ isActive, setIsActive }) => {
         formDataToSend.append('buyingPrice', formData.buyingPrice);
         formDataToSend.append('price', formData.price);
         formDataToSend.append('category', formData.category);
+        formDataToSend.append('measurement', formData.measurement);
         formDataToSend.append('percentage', formData.percentage);
         formDataToSend.append('stocks', formData.stocks);
         formData.images.forEach(image => formDataToSend.append('images', image));
@@ -545,6 +548,23 @@ const UpdateProduct = ({ isActive, setIsActive }) => {
                                             <option value="Keerai">Keerai</option>
                                         </select>
                                     </div>
+                                    <div className="form-group">
+                                    <label htmlFor="measurement">Measurement  <span style={{ color: 'red' }}>*</span></label>
+                                    <select
+                                        type="text"
+                                        id="measurement"
+                                        name="measurement"
+                                        className="form-control"
+                                        onChange={handleChange}
+                                        value={formData.measurement}
+                                        required
+                                    >
+                                        <option value="">Select</option>
+                                        <option value="Kg">Kg</option>
+                                        <option value="Piece">Piece</option>
+                                        <option value="Box">Box</option>
+                                    </select>
+                                </div>
 
                                     <div className="form-group">
                                         <label htmlFor="stocks"> Stocks <span style={{ color: 'red' }}>*</span></label>
@@ -569,7 +589,7 @@ const UpdateProduct = ({ isActive, setIsActive }) => {
                                             <input
                                                 type='file'
                                                 name='product_images'
-                                                accept='.jpg, .jpeg, .png' // Accepts only jpg, jpeg, and png files
+                                                accept='.jpg, .jpeg, .png, .webp' // Accepts only jpg, jpeg, and png files
                                                 className='custom-file-input'
                                                 id='images'
                                                 multiple

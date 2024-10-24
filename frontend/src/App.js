@@ -13,6 +13,7 @@ import Register from './components/user/Register';
 import { useEffect, useMemo, useState } from 'react';
 import store from './store';
 import { loadUser } from './actions/userActions';
+import { userOrders as userOrdersAction } from './actions/orderActions';
 import Dashboard from './components/admin/Dashboard';
 import ProtectedRoute from './components/route/ProtectedRoute';
 import ProductList from './components/admin/ProductList';
@@ -66,6 +67,8 @@ import AdminOrderDetail from './components/admin/AdminOrderDetail';
 import Analysis from './components/admin/Analysis';
 import Unauthorized from './components/Layouts/Unauthorized';
 import PageNotFound from './components/Layouts/PageNotFound';
+import { orderDetailClear } from './slices/orderSlice';
+import { porterClearData, porterClearResponse } from './slices/porterSlice';
 
 function App() {
     const location = useLocation();
@@ -87,6 +90,7 @@ function App() {
 
     const { isAuthenticated, loading, user } = useSelector(state => state.authState);
     const { products, loading: productLoading } = useSelector((state) => state.productsState);
+    const { userOrders, error } = useSelector(state => state.orderState)
     const [openSide, setOpenSide] = useState(false);
     const [isActive, setIsActive] = useState(false);
     const dispatch = useDispatch();
@@ -104,9 +108,23 @@ function App() {
     }, [])
 
     useEffect(()=>{
+        if(user){
+            dispatch(userOrdersAction()); 
+        }
+
+    },[user])
+
+    useEffect(() => {
+        dispatch(orderDetailClear());
+        dispatch(porterClearData());
+        dispatch(porterClearResponse());
+    }, [])
+
+    useEffect(()=>{
           if(user && user.role === 'admin'){
                   dispatch(getAdminProducts());
           }
+
     },[user])
 
     // const validRoutes = [

@@ -5,7 +5,7 @@ import { useLocation } from 'react-router-dom';
 
 const PrivacyPolicy = () => {
   const location = useLocation();
-  sessionStorage.setItem('redirectPath', location.pathname);
+  // sessionStorage.setItem('redirectPath', location.pathname);
   return (
     <div>
       {/* <MetaData title={'Privacy Policy'} /> */}
@@ -47,7 +47,7 @@ const PrivacyPolicy = () => {
       </div> */}
       <div className="refund-policy-container">
   <h3>Privacy Policy</h3>
-  <p>Effective Date: [22-10-2024]</p>
+  <p>Effective Date: [Under Trial]</p>
 
   <h5>Introduction</h5>
   <p>This Privacy Policy outlines how we collect, use, disclose, and protect your personal information when you use our online platform for purchasing fruits and vegetables.</p>
@@ -63,7 +63,6 @@ const PrivacyPolicy = () => {
   <ul>
     <li>To process and fulfill your orders.</li>
     <li>To communicate with you regarding your account and orders.</li>
-    <li>To improve our website and services based on user feedback and usage patterns.</li>
     <li>To send promotional communications, if you have opted in.</li>
   </ul>
 
@@ -94,7 +93,7 @@ const PrivacyPolicy = () => {
   <p>We may update this policy from time to time. Changes will be posted on our website, and your continued use constitutes acceptance of the new terms.</p>
 
   <h5>Contact Us</h5>
-  <p>If you have any questions or concerns about this Privacy Policy, please contact us at Jasfruitsandvegetables@gmail.com.</p>
+  <p>If you have any questions or concerns about this Privacy Policy, please contact us at jasfruitsandvegetables@gmail.com or call us at +91 91767 20068.</p>
 </div>
 
     </div>

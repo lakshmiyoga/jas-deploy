@@ -89,8 +89,8 @@ const Fruits = () => {
                                 </Card>
                             </Link>
                         </div> */}
-                        <div style={{ display: 'flex', flexDirection: 'row', position: 'relative', width: '100%', justifyContent: 'center', alignItems: 'center',marginTop:'20px' }}>
-                        <div className="card card-vegetbles col-sm-2 col-md-2 col-lg-2 my-2 landingpage-card-vegetables">
+                        <div style={{ display: 'flex', flexDirection: 'row', position: 'relative', width: '100%', justifyContent: 'center', alignItems: 'center', marginTop: '20px' }}>
+                        <div className="card card-vegetbles  col-sm-2 col-md-2 col-lg-2 my-2 landingpage-card-vegetables">
                                 <Link to="/vegetables" state={{ category: 'Vegetables' }} style={{ textDecoration: 'none' }}>
                                 <div className="square-card">
                                         <div className="card-content">

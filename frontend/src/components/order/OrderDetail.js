@@ -29,7 +29,9 @@ export default function OrderDetail() {
     const location = useLocation();
     const navigate = useNavigate();
     const [refreshData, setRefreshData] = useState(false)
-    sessionStorage.setItem('redirectPath', location.pathname);
+    // sessionStorage.setItem('redirectPath', location.pathname);
+
+    console.log("orderDetail", orderDetail);
 
 
     useEffect(() => {
@@ -85,7 +87,7 @@ export default function OrderDetail() {
         setTrackurl(false);
     }
 
-    const subtotal =  getpackedOrderData && getpackedOrderData.dispatchedTable.reduce((acc, item) => {
+    const subtotal = getpackedOrderData && getpackedOrderData.dispatchedTable.reduce((acc, item) => {
         return acc + item.pricePerKg * item.dispatchedWeight;
     }, 0);
 
@@ -158,13 +160,13 @@ export default function OrderDetail() {
                                         {getpackedOrderData && getpackedOrderData.totalRefundableAmount > 0 && (
                                             <div style={{ display: 'flex', alignItems: 'center', margin: '10px' }}>
                                                 <p><b>Refund Status:</b></p>
-                                                <p className={getpackedOrderData.refundStatus && getpackedOrderData.refundStatus.includes('SUCCESS') ? 'greenColor' : 'redColor'} style={{ marginLeft: '10px' }}><b>{getpackedOrderData.refundStatus}</b></p>
+                                                <p className={orderDetail && orderDetail.statusResponse && orderDetail.statusResponse.refunds && orderDetail.statusResponse.refunds[0].status === 'SUCCESS' ? 'greenColor' : 'redColor'} style={{ marginLeft: '10px' }}><b>{orderDetail && orderDetail.statusResponse && orderDetail.statusResponse.refunds ? orderDetail.statusResponse.refunds[0].status : 'Processing'}</b></p>
                                             </div>
                                         )}
-                                        {getpackedOrderData && getpackedOrderData.statusResponse && getpackedOrderData.statusResponse.amount_refunded && getpackedOrderData.statusResponse.amount_refunded > 0 ? (
+                                        {orderDetail && orderDetail.statusResponse && orderDetail.statusResponse.amount_refunded && orderDetail.statusResponse.amount_refunded > 0 && orderDetail.statusResponse.refunds && orderDetail.statusResponse.refunds[0].status === 'SUCCESS' ? (
                                             <div style={{ display: 'flex', alignItems: 'center', margin: '10px' }}>
                                                 <p><b>Amount Refunded:</b></p>
-                                                <p style={{ marginLeft: '10px' }}>{getpackedOrderData.statusResponse && getpackedOrderData.statusResponse.amount_refunded} </p>
+                                                <p style={{ marginLeft: '10px' }}>{orderDetail.statusResponse && orderDetail.statusResponse.amount_refunded} </p>
                                             </div>
                                         ) :
                                             <>
@@ -203,10 +205,10 @@ export default function OrderDetail() {
                                                                 <th>S.No</th>
                                                                 <th>Image</th>
                                                                 <th>Name</th>
-                                                                <th>Ordered Weight</th>
+                                                                <th>Ordered Quantity</th>
                                                                 <th>Price per kg</th>
-                                                                <th>Dispatched Weight</th>
-                                                                <th>Refundable Weight</th>
+                                                                <th>Dispatched Quantity</th>
+                                                                <th>Refundable Quantity</th>
                                                                 <th>Amount</th>
                                                             </>
                                                         ) : (
@@ -214,8 +216,8 @@ export default function OrderDetail() {
                                                                 <th>S.No</th>
                                                                 <th>Image</th>
                                                                 <th>Name</th>
-                                                                <th>Price per kg</th>
-                                                                <th>Ordered Weight</th>
+                                                                <th>Price</th>
+                                                                <th>Quantity</th>
                                                                 {/* <th>Dispatch Weight</th> */}
                                                                 <th>Total Price</th>
                                                                 {/* <th>Status</th> */}
@@ -232,10 +234,10 @@ export default function OrderDetail() {
                                                                     <img src={item.image} alt={item.name} className="updateTableproduct-image" />
                                                                 </td>
                                                                 <td>{item.name}</td>
-                                                                <td>{item.orderedWeight} kg</td>
+                                                                <td>{item.orderedWeight} {item.measurement}</td>
                                                                 <td>Rs. {item.pricePerKg}</td>
-                                                                <td>{item.dispatchedWeight} kg</td>
-                                                                <td>{item.refundableWeight} kg</td>
+                                                                <td>{item.dispatchedWeight} {item.measurement}</td>
+                                                                <td>{item.refundableWeight} {item.measurement}</td>
                                                                 <td>Rs. {parseFloat(item.pricePerKg * item.dispatchedWeight).toFixed(2)}</td>
                                                             </tr>
                                                         ))
@@ -252,7 +254,7 @@ export default function OrderDetail() {
                                                                     </td>
                                                                     <td>{item.name}</td>
                                                                     <td>Rs. {(item.price).toFixed(2)}</td>
-                                                                    <td>{item.productWeight} kg</td>
+                                                                    <td>{item.productWeight} {item.measurement}</td>
                                                                     <td>Rs.{(item.productWeight * item.price).toFixed(2)}</td>
 
                                                                     {/* <td>{product.stocks ? <p>{product.stocks}</p> : <p>Out of Stock</p>}</td> */}
@@ -288,9 +290,18 @@ export default function OrderDetail() {
                                                                 <td colSpan="7" style={{ textAlign: 'right' }}>
                                                                     <strong>Dispatched Amount</strong>
                                                                 </td>
-                                                                <td>
-                                                                    Rs. {parseFloat(subtotal + orderDetail.shippingPrice).toFixed(2)}
-                                                                </td>
+                                                                {
+                                                                    getpackedOrderData && getpackedOrderData.totalDispatchedAmount > 0 ?
+                                                                        <td>
+                                                                            Rs. {parseFloat(subtotal + orderDetail.shippingPrice).toFixed(2)}
+                                                                        </td>
+                                                                        :
+                                                                        <td>
+                                                                            Rs. {parseFloat(subtotal).toFixed(2)}
+                                                                        </td>
+
+                                                                }
+
                                                             </tr>
                                                             {/* <tr>
                                                             <td colSpan="7" style={{ textAlign: 'right' }}>

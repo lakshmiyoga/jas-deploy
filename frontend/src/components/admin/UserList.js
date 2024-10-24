@@ -12,7 +12,7 @@ import MetaData from "../Layouts/MetaData";
 
 export default function UserList({isActive,setIsActive}) {
     const location = useLocation();
-    sessionStorage.setItem('redirectPath', location.pathname);
+    // sessionStorage.setItem('redirectPath', location.pathname);
     const { users , loading = true, error, isUserDeleted } = useSelector(state => state.userState);
     const dispatch = useDispatch();
     const [showModal, setShowModal] = useState(false);

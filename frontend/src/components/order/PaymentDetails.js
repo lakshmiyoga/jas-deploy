@@ -8,7 +8,7 @@ import PaymentConfirm from './PaymentConfirm';
 export default function PaymentDetails () {
     const { orderDetail, loading } = useSelector(state => state.orderState)
     const location = useLocation();
-    sessionStorage.setItem('redirectPath', location.pathname);
+    // sessionStorage.setItem('redirectPath', location.pathname);
     const { shippingInfo={}, user={}, orderStatus="Processing", orderItems=[], totalPrice=0, paymentInfo={} } = orderDetail;
     const isPaid = paymentInfo && paymentInfo.status === "succeeded" ? true: false;
     const dispatch = useDispatch();

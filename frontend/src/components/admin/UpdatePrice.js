@@ -16,7 +16,7 @@ const UpdatePrice = ({ isActive, setIsActive }) => {
     const [downloadloading, setdownloadloading] = useState(false);
     const location = useLocation();
     const dispatch = useDispatch();
-    sessionStorage.setItem('redirectPath', location.pathname);
+    // sessionStorage.setItem('redirectPath', location.pathname);
 
     // const handleFileChange = (e) => {
     //     setFile(e.target.files[0]);
@@ -26,7 +26,7 @@ const UpdatePrice = ({ isActive, setIsActive }) => {
         const selectedFile = e.target.files[0];
         const maxSize = 10 * 1024 * 1024; // 10 MB in bytes
 
-        if (selectedFile.size > maxSize) {
+        if (selectedFile && selectedFile.size && selectedFile.size > maxSize) {
             toast.error('The file size exceeds the 10MB limit.');
             setFile(null); // Reset the file state
             return
@@ -203,7 +203,7 @@ const UpdatePrice = ({ isActive, setIsActive }) => {
                                     <div className="card-body">
                                         <h5 className="card-title ml-3">Import Product Details Info (*File size should be within 10mb)</h5>
                                         <div className="mb-3 d-flex flex-column align-items-center ml-3">
-                                            <input type="file" onChange={handleFileChange} className="form-control mb-2" />
+                                            <input type="file" onChange={handleFileChange} accept=".xls,.xlsx,application/vnd.ms-excel,application/vnd.openxmlformats-officedocument.spreadsheetml.sheet" className="form-control mb-2" />
                                             <button className="btn btn-success" onClick={handleUpload} disabled={loading}>
                                                 {loading ? <LoaderButton fullPage={false} size={20} /> : (
                                                     <span>  Upload Price</span>

@@ -208,7 +208,7 @@ import { porterClearData, porterClearResponse } from '../../slices/porterSlice';
 
 const OrderList = ({ isActive, setIsActive }) => {
     const location = useLocation();
-    sessionStorage.setItem('redirectPath', location.pathname);
+    // sessionStorage.setItem('redirectPath', location.pathname);
     const { adminOrders: orders, loading = true, error, isOrderDeleted } = useSelector(state => state.orderState);
     const [date, setDate] = useState(new Date().toISOString().split('T')[0]);
     const [iserror, setIserror] = useState(false);

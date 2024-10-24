@@ -96,7 +96,7 @@ const Cart = () => {
                                             <th>S.No</th>
                                             <th>Name</th>
                                             <th>Price</th>
-                                            <th>Weight/Piece</th>
+                                            <th>Quantity</th>
                                             <th>Total</th>
                                             <th>Actions</th>
                                         </tr>
@@ -109,7 +109,7 @@ const Cart = () => {
                                                 <td>{index + 1}</td>
                                                 <td>{capitalizeFirstLetter(item.name)} </td>
                                                 <td>RS.{(item.price).toFixed(2)}</td>
-                                                <td>{item.productWeight}</td>
+                                                <td>{item.productWeight} ({item.measurement})</td>
                                                 <td>Rs.{(item.price * item.productWeight).toFixed(2)}</td>
                                                 <td>
                                                     <i

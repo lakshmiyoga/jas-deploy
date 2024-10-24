@@ -14,7 +14,7 @@ import { porterClearData, porterClearResponse } from '../../slices/porterSlice';
 
 const PaymentList = ({isActive,setIsActive}) => {
     const location = useLocation();
-    sessionStorage.setItem('redirectPath', location.pathname);
+    // sessionStorage.setItem('redirectPath', location.pathname);
     const { adminOrders: orders, loading = true, error, isOrderDeleted }  = useSelector(state => state.orderState);
     const dispatch = useDispatch();
     useEffect(() => {

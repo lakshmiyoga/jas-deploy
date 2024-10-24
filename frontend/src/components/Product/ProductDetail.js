@@ -11,7 +11,7 @@ const ProductDetail = () => {
 
     const dispatch = useDispatch();
     const location = useLocation();
-    sessionStorage.setItem('redirectPath', location.pathname);
+    // sessionStorage.setItem('redirectPath', location.pathname);
     const {id} = useParams();
     // console.log(id)
     const { product, loading} = useSelector((state) => state.productState)

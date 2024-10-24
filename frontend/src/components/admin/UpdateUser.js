@@ -14,7 +14,7 @@ export default function UpdateUser({ isActive, setIsActive }) {
     const [email, setEmail] = useState("");
     const [role, setRole] = useState("");
     const location = useLocation();
-    sessionStorage.setItem('redirectPath', location.pathname);
+    // sessionStorage.setItem('redirectPath', location.pathname);
 
     const { id: userId } = useParams();
 

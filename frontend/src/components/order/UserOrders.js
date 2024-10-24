@@ -22,7 +22,7 @@ export default function UserOrders() {
     console.log("userOrders", userOrders);
     const navigate = useNavigate();
     const location = useLocation();
-    sessionStorage.setItem('redirectPath', location.pathname);
+    // sessionStorage.setItem('redirectPath', location.pathname);
     useEffect(() => {
         dispatch(orderDetailClear());
         dispatch(porterClearData());

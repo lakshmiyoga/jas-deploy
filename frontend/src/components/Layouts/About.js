@@ -5,7 +5,7 @@ import { useLocation } from 'react-router-dom';
 
 const About = () => {
   const location = useLocation();
-  sessionStorage.setItem('redirectPath', location.pathname);
+  // sessionStorage.setItem('redirectPath', location.pathname);
   return (
     <div>
       {/* <MetaData title={'About Us'} /> */}

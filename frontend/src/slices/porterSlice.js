@@ -113,6 +113,14 @@ const orderSlice = createSlice({
                 packedOrderError: action.payload
             }
         },
+        clearpackedUpdated(state, action) {
+            return {
+                ...state,
+                loading: false,
+                packedOrderData:null,
+                packedOrderError: null
+            }
+        },
         getpackedOrderRequest(state, action) {
             return {
                 ...state,
@@ -241,7 +249,8 @@ export const {
     clearRefundError,
     updatepackedOrderRequest, 
     updatepackedOrderSuccess, 
-    updatepackedOrderFail
+    updatepackedOrderFail,
+    clearpackedUpdated
  } = actions;
 
 export default reducer;

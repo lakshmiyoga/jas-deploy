@@ -54,7 +54,7 @@ const Header = ({ openSide, setOpenSide }) => {
      dispatch(logout);
      sessionStorage.clear();
     // sessionStorage.removeItem('redirectPath');
-    // navigate('/');   
+    navigate('/');   
     setRefresh(true);
     // return
     // sessionStorage.removeItem('redirectPath');
@@ -76,7 +76,7 @@ const Header = ({ openSide, setOpenSide }) => {
         toast.success(loggedoutmessage, {
           position: 'bottom-center',
           type: 'success',
-          autoClose: 700,
+          autoClose: 100,
           transition: Slide,
           hideProgressBar: true,
           className: 'small-toast',
@@ -106,7 +106,7 @@ const Header = ({ openSide, setOpenSide }) => {
 
             // Close the current tab
             // window.close();
-      }, 100);
+      }, 10);
       // Clear session storage
       // setTimeout(() => {  
       // sessionStorage.clear(); 

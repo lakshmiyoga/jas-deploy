@@ -5,7 +5,7 @@ import { useLocation } from 'react-router-dom';
 
 const RefundPolicy = () => {
   const location = useLocation();
-  sessionStorage.setItem('redirectPath', location.pathname);
+  // sessionStorage.setItem('redirectPath', location.pathname);
   return (
 
     <div>
@@ -55,7 +55,7 @@ const RefundPolicy = () => {
       </div> */}
       <div className="refund-policy-container">
   <h3>Refund Policy</h3>
-  <p>Effective Date: [22-10-2024]</p>
+  <p>Effective Date: [Under Trial]</p>
 
   <h5>Introduction</h5>
   <p>This Refund Policy outlines the conditions under which we accept returns and process refunds for fruits and vegetables purchased through our online platform.</p>
@@ -84,10 +84,10 @@ const RefundPolicy = () => {
   </ul>
 
   <h5>Order Cancellations</h5>
-  <p>You may cancel your order within 1 hour of placing it. After this time, the order may be processed, and cancellation may not be possible.</p>
+  <p>Order cancellations are only available in the event of natural disasters, or during specific national holidays such as Diwali, Kanum Pongal, or May 5. After placing an order, cancellations may not be possible outside of these exceptions.</p>
 
   <h5>Contact Information</h5>
-  <p>To initiate a refund or cancellation, please contact our customer service team at [your contact information].</p>
+  <p>To initiate a refund or cancellation, please contact our customer service team at jasfruitsandvegetables@gmail.com or call us at +91 91767 20068.</p>
 
   <h5>Changes to This Policy</h5>
   <p>We reserve the right to modify this refund policy at any time. Changes will be posted on our website, and your continued use constitutes acceptance of the new terms.</p>

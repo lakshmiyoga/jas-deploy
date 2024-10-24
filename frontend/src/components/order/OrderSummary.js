@@ -10,7 +10,7 @@ const OrderSummary = ({ isActive, setIsActive }) => {
     const dispatch = useDispatch();
     const { loading, orderSummary, error } = useSelector((state) => state.orderState);
     const location = useLocation();
-    sessionStorage.setItem('redirectPath', location.pathname);
+    // sessionStorage.setItem('redirectPath', location.pathname);
 
     // Initialize the date with the current date
     const currentDate = new Date().toISOString().split('T')[0];

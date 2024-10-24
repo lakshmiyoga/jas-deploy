@@ -4,7 +4,7 @@ import { useDispatch, useSelector } from 'react-redux';
 import { useLocation, useNavigate, useParams } from "react-router-dom";
 import { orderDetail as orderDetailAction, updateOrder, porterOrder, RemoveOrderResponse, adminOrders } from "../../actions/orderActions";
 import { CancelOrderResponse, createPorterOrderResponse, getPackedOrder, getporterOrder, initRefund, packedOrder, updatedPackedOrder } from "../../actions/porterActions";
-import { Slide,toast } from "react-toastify";
+import { Slide, toast } from "react-toastify";
 import { clearOrderUpdated, clearError, adminOrderRemoveClearError, orderDetailClear } from "../../slices/orderSlice";
 import { clearRefundError } from "../../slices/porterSlice";
 import { Link } from "react-router-dom";
@@ -23,7 +23,7 @@ import LoaderButton from "../Layouts/LoaderButton";
 
 const RefundOrder = ({ isActive, setIsActive }) => {
     const location = useLocation();
-    sessionStorage.setItem('redirectPath', location.pathname);
+    // sessionStorage.setItem('redirectPath', location.pathname);
     const { loading, isOrderUpdated, error, orderDetail, porterOrderDetail, orderRemoveResponse, orderRemoveError } = useSelector(state => state.orderState);
     const { products } = useSelector((state) => state.productsState);
     const { porterOrderData, porterOrderResponse, porterCancelResponse, porterCancelError, portererror, getpackedOrderData, refundData, refundError } = useSelector((state) => state.porterState);
@@ -40,7 +40,7 @@ const RefundOrder = ({ isActive, setIsActive }) => {
     const navigate = useNavigate();
     const dispatch = useDispatch();
     const [refundloading, setRefundLoading] = useState(false)
-    console.log("getpackedOrderData", getpackedOrderData)
+    console.log("orderDetail", orderDetail)
 
 
     useEffect(() => {
@@ -301,43 +301,44 @@ const RefundOrder = ({ isActive, setIsActive }) => {
         // setRefundLoading(true)
         // // console.log("RefundableAmount",RefundableAmount)
         // dispatch(initRefund({ order_id: id, RefundableAmount }))
-          // Extract relevant data from getpackedOrderData
-    const totalDispatchedAmount = Number(getpackedOrderData && getpackedOrderData.totalDispatchedAmount);
-    const totalRefundableAmount = Number(getpackedOrderData && getpackedOrderData.totalRefundableAmount);
-    const shippingCharge = Number(getpackedOrderData && getpackedOrderData.orderDetail.shippingPrice);
+        // Extract relevant data from getpackedOrderData
+        const totalDispatchedAmount = Number(getpackedOrderData && getpackedOrderData.totalDispatchedAmount);
+        const totalRefundableAmount = Number(getpackedOrderData && getpackedOrderData.totalRefundableAmount);
+        const shippingCharge = Number(orderDetail.shippingPrice);
 
-    let RefundableAmount;
+        let RefundableAmount;
 
-    // Check if totalDispatchedAmount is greater than 0
-    if (totalDispatchedAmount > 0) {
-        // Use totalRefundableAmount if dispatched amount is greater than 0
-        RefundableAmount = totalRefundableAmount;
-    } else {
-        // Add shipping charge to totalRefundableAmount if no dispatched amount
-        RefundableAmount = totalRefundableAmount + shippingCharge;
-    }
+        // Check if totalDispatchedAmount is greater than 0
+        if (totalDispatchedAmount > 0) {
+            // Use totalRefundableAmount if dispatched amount is greater than 0
+            RefundableAmount = totalRefundableAmount;
+        } else {
+            // Add shipping charge to totalRefundableAmount if no dispatched amount
+            RefundableAmount = totalRefundableAmount + shippingCharge;
+        }
 
-    setRefundLoading(true); // Set loading state
-    if(RefundableAmount>0){
-        dispatch(initRefund({ order_id: id, RefundableAmount }));
-    }
-    else{
-        toast.dismiss();
-        setTimeout(() => {
-            toast.error('Cannot refund because of invalid refund amount!', {
-                position: 'bottom-center',
-                type: 'error',
-                autoClose: 700,
-                transition: Slide,
-                hideProgressBar: true,
-                className: 'small-toast',
-                // onOpen: () => dispatch(clearRefundError())
-            });
-        }, 300);
-    }
+        setRefundLoading(true); // Set loading state
+        if (RefundableAmount > 0) {
+            dispatch(initRefund({ order_id: id, RefundableAmount }));
+        }
+        else {
+            toast.dismiss();
+            setTimeout(() => {
+                toast.error('Cannot refund because of invalid refund amount!', {
+                    position: 'bottom-center',
+                    type: 'error',
+                    autoClose: 700,
+                    transition: Slide,
+                    hideProgressBar: true,
+                    className: 'small-toast',
+                    // onOpen: () => dispatch(clearRefundError())
+                });
+            }, 300);
+            setRefundLoading(false);
+        }
 
-    // Dispatch the refund with the calculated RefundableAmount
-    
+        // Dispatch the refund with the calculated RefundableAmount
+
     }
 
     useEffect(() => {
@@ -358,13 +359,13 @@ const RefundOrder = ({ isActive, setIsActive }) => {
                     className: 'small-toast',
                     onOpen: () => dispatch(clearRefundError())
                 });
-                setTimeout(() => {
+                // setTimeout(() => {
                     dispatch(updatedPackedOrder({}));
-                    dispatch(adminOrders()); 
-               }, 700);
+                    dispatch(adminOrders());
+                // }, 700);
             }, 300);
             setRefundLoading(false);
-           
+
             return;
 
         }
@@ -440,10 +441,10 @@ const RefundOrder = ({ isActive, setIsActive }) => {
     return (
         <div>
             {/* <MetaData title={`Refund Order`} /> */}
-            <MetaData 
-  title="Refund Order" 
-  description="Process individual order refunds. Manage refunds based on order details and customer requests, ensuring a smooth refund process." 
-/>
+            <MetaData
+                title="Refund Order"
+                description="Process individual order refunds. Manage refunds based on order details and customer requests, ensuring a smooth refund process."
+            />
 
 
             <div className="row loader-parent">
@@ -493,7 +494,13 @@ const RefundOrder = ({ isActive, setIsActive }) => {
                                                 <p><b>Payment Status:</b></p>
                                                 <p className={orderDetail && orderDetail.paymentStatus && orderDetail.paymentStatus === 'CHARGED' ? 'greenColor' : 'redColor'} style={{ marginLeft: '10px' }}><b>{orderDetail ? orderDetail.paymentStatus : 'Pending'}</b></p>
                                             </div>
-                                            <div style={{ display: 'flex', alignItems: 'center', marginRight: '50px' }}>
+                                            {getpackedOrderData && getpackedOrderData.totalRefundableAmount > 0 && (
+                                            <div style={{ display: 'flex', alignItems: 'center', margin: '10px' }}>
+                                                <p><b>Refund Status:</b></p>
+                                                <p className={orderDetail && orderDetail.statusResponse && orderDetail.statusResponse.refunds && orderDetail.statusResponse.refunds[0].status === 'SUCCESS' ? 'greenColor' : 'redColor'} style={{ marginLeft: '10px' }}><b>{orderDetail && orderDetail.statusResponse && orderDetail.statusResponse.refunds ? orderDetail.statusResponse.refunds[0].status : 'Processing'}</b></p>
+                                            </div>
+                                        )}
+                                            {/* <div style={{ display: 'flex', alignItems: 'center', marginRight: '50px' }}>
                                                 {
                                                     orderDetail && orderDetail.statusResponse && orderDetail.statusResponse.refunds && (
                                                         <>
@@ -502,7 +509,9 @@ const RefundOrder = ({ isActive, setIsActive }) => {
                                                         </>
                                                     )
                                                 }
-                                            </div>
+                                            </div> */}
+
+
 
                                         </div>
 
@@ -664,8 +673,8 @@ const RefundOrder = ({ isActive, setIsActive }) => {
                                                                             <th>Image</th>
                                                                             <th>Name</th>
                                                                             <th>Price per kg</th>
-                                                                            <th>Ordered Weight</th>
-                                                                            <th>Refund Weight</th>
+                                                                            <th>Ordered Quantity</th>
+                                                                            <th>Refund Quantity</th>
                                                                             <th>Refundable Amount</th>
                                                                         </>
                                                                     )}
@@ -682,8 +691,8 @@ const RefundOrder = ({ isActive, setIsActive }) => {
                                                                                 </td>
                                                                                 <td>{item.name}</td>
                                                                                 <td>Rs. {parseFloat(item.pricePerKg).toFixed(2)}</td>
-                                                                                <td>{item.orderedWeight} kg</td>
-                                                                                <td>{item.refundableWeight} kg</td>
+                                                                                <td>{item.orderedWeight} {item.measurement}</td>
+                                                                                <td>{item.refundableWeight} {item.measurement}</td>
                                                                                 <td>Rs. {parseFloat(item.pricePerKg * item.refundableWeight).toFixed(2)}</td>
                                                                             </tr>
                                                                         ))
@@ -695,26 +704,47 @@ const RefundOrder = ({ isActive, setIsActive }) => {
                                                                     </td>
                                                                     <td className="amount">
                                                                         <strong>
-                                                                            Rs. {getpackedOrderData && getpackedOrderData.dispatchedTable &&
+                                                                            {/* Rs. {getpackedOrderData && getpackedOrderData.dispatchedTable &&
                                                                                 getpackedOrderData.dispatchedTable
                                                                                     .filter(item => item.refundableWeight > 0)
                                                                                     .reduce((total, item) => total + (item.pricePerKg * item.refundableWeight), 0)
                                                                                     .toFixed(2)
-                                                                            }
+                                                                            } */}
+                                                                            Rs. {getpackedOrderData && getpackedOrderData.totalDispatchedAmount > 0
+                                                                                ? getpackedOrderData.totalRefundableAmount
+                                                                                : getpackedOrderData &&
+                                                                                (Number(getpackedOrderData && getpackedOrderData.orderDetail.shippingPrice) +
+                                                                                Number(getpackedOrderData && getpackedOrderData.totalRefundableAmount))}
                                                                         </strong>
                                                                     </td>
                                                                 </tr>
-                                                                <tr>
+                                                                {
+                                                                    orderDetail && orderDetail.statusResponse && orderDetail.statusResponse.amount_refunded && orderDetail.statusResponse.amount_refunded > 0 && orderDetail.statusResponse.refunds && orderDetail.statusResponse.refunds[0].status === 'SUCCESS'  ? ( <tr>
                                                                     <td colSpan="5" style={{ textAlign: 'right' }}>
                                                                         <strong>Amount Refunded</strong>
                                                                     </td>
                                                                     <td className="amount">
                                                                         <strong>
-                                                                            Rs. {getpackedOrderData && getpackedOrderData.statusResponse && getpackedOrderData.statusResponse.amount_refunded ? getpackedOrderData.statusResponse.amount_refunded : 0
+                                                                            Rs. {orderDetail && orderDetail.statusResponse  && orderDetail.statusResponse.amount_refunded ? orderDetail.statusResponse.amount_refunded : 0
                                                                             }
                                                                         </strong>
                                                                     </td>
-                                                                </tr>
+                                                                </tr> 
+                                                                    ) : (
+                                                                        <tr>
+                                                                        <td colSpan="5" style={{ textAlign: 'right' }}>
+                                                                            <strong>Amount Refunded</strong>
+                                                                        </td>
+                                                                        <td className="amount">
+                                                                            <strong>
+                                                                                Rs.{0}
+                                                                            </strong>
+                                                                        </td>
+                                                                    </tr>
+                                                                    )
+
+                                                                }
+                                                               
                                                                 {/* <tr>
                                                                 <td colSpan="5" style={{ textAlign: 'right' }}><strong>TotalRefundableAmount</strong></td>
                                                                 <td className="amount"><strong>Rs. {getpackedOrderData && getpackedOrderData.totalRefundableAmount && getpackedOrderData.totalRefundableAmount}</strong></td>
@@ -737,11 +767,13 @@ const RefundOrder = ({ isActive, setIsActive }) => {
                                         <div>
                                             {
                                                 orderDetail && orderDetail.statusResponse && orderDetail.statusResponse.refunds ? (
-                                                    <button className='btn btn-primary' onClick={submitRefundHandler} disabled={true}>Already initiated</button>
+                                                    <button className='btn btn-primary' onClick={submitRefundHandler} style={{ cursor:  'not-allowed'  }} disabled={true}>Already initiated</button>
                                                 ) : (
-                                                    <button className='btn btn-primary' onClick={submitRefundHandler} disabled={dropStatus === "Refund" || refundloading}>
+                                                    <button className='btn btn-primary' onClick={submitRefundHandler}
+                                                     style={{ cursor: (dropStatus === "Refund" || refundloading ) ? 'not-allowed' : 'pointer' }}
+                                                      disabled={dropStatus === "Refund" || refundloading}>
                                                         {refundloading ? <LoaderButton fullPage={false} size={20} /> : (
-                                                            <span>  Refund</span>
+                                                            <span> Refund</span>
                                                         )
 
                                                         }

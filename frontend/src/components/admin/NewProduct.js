@@ -12,7 +12,7 @@ import LoaderButton from '../Layouts/LoaderButton';
 
 const NewProduct = ({ isActive, setIsActive }) => {
     const location = useLocation();
-    sessionStorage.setItem('redirectPath', location.pathname);
+    // sessionStorage.setItem('redirectPath', location.pathname);
     const [englishName, setEnglishName] = useState("");
     const [tamilName, setTamilName] = useState("");
     const [buyingPrice, setBuyingPrice] = useState("");
@@ -335,7 +335,7 @@ const NewProduct = ({ isActive, setIsActive }) => {
                                             type='file'
                                             name='product_images'
                                             className='custom-file-input'
-                                            accept='.jpg, .jpeg, .png' // Accepts only jpg, jpeg, and png files
+                                            accept='.jpg, .jpeg, .png, .webp' // Accepts only jpg, jpeg, and png files
                                             id='customFile'
                                             multiple
                                             onChange={onImagesChange}

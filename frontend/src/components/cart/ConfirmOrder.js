@@ -20,7 +20,7 @@ import LoaderButton from '../Layouts/LoaderButton';
 const ConfirmOrder = () => {
     const dispatch = useDispatch();
     const location = useLocation();
-    sessionStorage.setItem('redirectPath', location.pathname);
+    // sessionStorage.setItem('redirectPath', location.pathname);
     // const { loading: orderLoading, orderDetail, error } = useSelector(state => state.orderState);
     const { shippingInfo, items: cartItems } = useSelector(state => state.cartState);
     const { user } = useSelector(state => state.authState);
@@ -49,15 +49,15 @@ const ConfirmOrder = () => {
     //     store.dispatch(loadUser());
     // },[])
 
-    // const shippingCharge = shippingAmount / 100;
-    const shippingCharge = 1.00;
+    const shippingCharge = shippingAmount / 100;
+    // const shippingCharge = 1.00;
     console.log("shippingInfo", shippingInfo)
     const subtotal = cartItems.reduce((acc, item) => acc + item.price * item.productWeight, 0).toFixed(2);
     const total = (parseFloat(subtotal) + shippingCharge).toFixed(2);
 
     const [pickupDetails, setPickupDetails] = useState({
         lat: 13.0671844,
-        lng: 80.1798047
+        lng: 80.1775087
     });
 
     const [dropDetails, setDropDetails] = useState({
@@ -159,30 +159,30 @@ const ConfirmOrder = () => {
     useEffect(() => {
         if (!shippingInfo) {
             toast.dismiss();
-                setTimeout(() => {
-                    toast.error('Shipping information is missing. Please complete these steps to proceed!', {
-                        position: 'bottom-center',
-                        type: 'error',
-                        autoClose: 700,
-                        transition: Slide,
-                        hideProgressBar: true,
-                        className: 'small-toast',
-                    });
-                }, 300);
+            setTimeout(() => {
+                toast.error('Shipping information is missing. Please complete these steps to proceed!', {
+                    position: 'bottom-center',
+                    type: 'error',
+                    autoClose: 700,
+                    transition: Slide,
+                    hideProgressBar: true,
+                    className: 'small-toast',
+                });
+            }, 300);
             navigate('/shipping');
         }
-        if ( !cartItems.length) {
+        if (!cartItems.length) {
             toast.dismiss();
-                setTimeout(() => {
-                    toast.error('Cart is empty. Please add at least one item to proceed! ', {
-                        position: 'bottom-center',
-                        type: 'error',
-                        autoClose: 700,
-                        transition: Slide,
-                        hideProgressBar: true,
-                        className: 'small-toast',
-                    });
-                }, 300);
+            setTimeout(() => {
+                toast.error('Cart is empty. Please add at least one item to proceed! ', {
+                    position: 'bottom-center',
+                    type: 'error',
+                    autoClose: 700,
+                    transition: Slide,
+                    hideProgressBar: true,
+                    className: 'small-toast',
+                });
+            }, 300);
             navigate('/cart');
         }
     }, [shippingInfo, cartItems, navigate]);
@@ -378,7 +378,9 @@ const ConfirmOrder = () => {
                 <div className="products_heading">Confirm Order</div>
                 <StepsCheckOut shipping confirmOrder />
                 <div className="container confirm-order-container">
-                    {!shippingAmount ? <Loader /> : (
+                    {!shippingAmount ? <div style={{ marginTop: '4rem' }}>
+                        <Loader />
+                    </div> : (
                         // {loading || !shippingAmount ? <Loader /> : (
                         <div className="row justify-content-center">
                             <div className="col-10 col-md-10 col-lg-8 mt-5 order-confirm" id='order_summary'>

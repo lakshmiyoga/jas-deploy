@@ -15,7 +15,7 @@ import MetaData from '../Layouts/MetaData';
 
 const EnquiryRequest = ({isActive,setIsActive}) => {
   const location = useLocation();
-  sessionStorage.setItem('redirectPath', location.pathname);
+  // sessionStorage.setItem('redirectPath', location.pathname);
     // const { products = [], loading = true, error } = useSelector(state => state.productsState);
     // const { isProductDeleted, error: productError } = useSelector(state => state.productState);
     const { isEnquiryDeleted, error,loading = true, enquiry } = useSelector(state => state.enquiryState);
