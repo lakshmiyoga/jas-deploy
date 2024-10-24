@@ -272,115 +272,192 @@ const getCancelResponse = catchAsyncError(async (req, res, next) => {
 
 })
 
-const postPackedOrder = catchAsyncError(async (req, res, next) => {
-    //    console.log(req.body)
-    const { order_id, user_id, user, dispatchedTable, totalDispatchedAmount, totalRefundableAmount, updatedItems, orderDetail,orderDate } = req.body;
-    // console.log(order_id,user_id,user,dispatchedTable)
+// const postPackedOrder = catchAsyncError(async (req, res, next) => {
+//     //    console.log(req.body)
+//     const { order_id, user_id, user, dispatchedTable, totalDispatchedAmount, totalRefundableAmount, updatedItems, orderDetail,orderDate } = req.body;
+//     // console.log(order_id,user_id,user,dispatchedTable)
 
-    const order = await Dispatch.findOne({ order_id });
-    // console.log(order)
-    if (order) {
-        return next(new ErrorHandler(` Dispatch Order already exist with this id: ${order_id}`, 404))
+//     const order = await Dispatch.findOne({ order_id });
+//     // console.log(order)
+//     if (order) {
+//         return next(new ErrorHandler(` Dispatch Order already exist with this id: ${order_id}`, 404))
+//     }
+
+//     // const generateInvoiceNumber = async () => {
+//     //     try {
+//             // Fetch the last order
+//             const lastOrder = await Dispatch.findOne().sort({ _id: -1 }).exec();
+    
+//             let newInvoiceNumber;
+//             const prefix = "JAS";
+//             const year = new Date().getFullYear();
+//             const fiscalYear = `${year % 100}-${(year + 1) % 100}`;
+    
+//             if (lastOrder && lastOrder.invoiceNumber) {
+//                 // Extract the number from the last invoice number
+//                 const lastInvoiceNumber = lastOrder.invoiceNumber.split('/')[1];
+//                 const nextInvoiceNumber = parseInt(lastInvoiceNumber, 10) + 1;
+    
+//                 newInvoiceNumber = `${prefix}/${nextInvoiceNumber}/${fiscalYear}`;
+//             } else {
+//                 // No last order found, start with invoice number 1
+//                 newInvoiceNumber = `${prefix}/1/${fiscalYear}`;
+//             }
+    
+//     //         return newInvoiceNumber;
+//     //     } catch (error) {
+//     //         console.error('Error generating invoice number:', error);
+//     //         throw error;
+//     //     }
+//     // };
+
+//     try {
+//         const packedOrder = new Dispatch({
+//             order_id: order_id,
+//             invoiceNumber: newInvoiceNumber,
+//             user_id: user_id,
+//             user: user,
+//             orderDetail: orderDetail,
+//             updatedItems: updatedItems,
+//             dispatchedTable: dispatchedTable,
+//             orderDate:orderDate,
+//             totalDispatchedAmount: totalDispatchedAmount,
+//             totalRefundableAmount: totalRefundableAmount,
+
+//         });
+
+//         await packedOrder.save();
+
+//         if (packedOrder) {
+//             const order = await Payment.findOne({ order_id });
+//             // console.log("order",order)
+//             if (!order) {
+//                 return next(new ErrorHandler(`Order not found with this id: ${order_id}`, 404))
+//             }
+
+//         //     const packedResponseStatus = await Payment.findOneAndUpdate(
+//         //         { order_id },
+//         //         { orderStatus: 'Packed' },
+//         //         { new: true }
+//         //     );
+
+//         //     // console.log("packedOrder", packedOrder)
+//         //    return res.status(200).json({
+//         //         success: true,
+//         //         packedOrderData: packedOrder
+//         //     })
+
+//         if(totalDispatchedAmount>0){
+//             await Payment.findOneAndUpdate(
+//                 { order_id },
+//                 { orderStatus: 'Packed' },
+//                 { new: true }
+//             );
+
+//             return res.status(200).json({
+//                 success: true,
+//                 packedOrderData: packedOrder
+//             })
+
+//           }
+//           else{
+//              await Payment.findOneAndUpdate(
+//                 { order_id },
+//                 { orderStatus: 'Cancelled',cancleReason:'Out of Stock' },
+//                 { new: true }
+//             );
+
+//             return res.status(200).json({
+//                 success: true,
+//                 packedOrderData: packedOrder
+//             })
+//           }
+//         }
+
+//     } catch (error) {
+//         // console.log(error)
+//         return next(new ErrorHandler(error.response.data.message, error.response.status))
+//     }
+
+
+// })
+
+const postPackedOrder = catchAsyncError(async (req, res, next) => {
+    const { order_id, user_id, user, dispatchedTable, totalDispatchedAmount, totalRefundableAmount, updatedItems, orderDetail, orderDate } = req.body;
+
+    // Check if dispatch order already exists
+    const existingOrder = await Dispatch.findOne({ order_id });
+    if (existingOrder) {
+        return next(new ErrorHandler(`Dispatch Order already exists with this id: ${order_id}`, 404));
     }
 
-    // const generateInvoiceNumber = async () => {
-    //     try {
-            // Fetch the last order
-            const lastOrder = await Dispatch.findOne().sort({ _id: -1 }).exec();
-    
-            let newInvoiceNumber;
-            const prefix = "JAS";
-            const year = new Date().getFullYear();
-            const fiscalYear = `${year % 100}-${(year + 1) % 100}`;
-    
-            if (lastOrder && lastOrder.invoiceNumber) {
-                // Extract the number from the last invoice number
-                const lastInvoiceNumber = lastOrder.invoiceNumber.split('/')[1];
-                const nextInvoiceNumber = parseInt(lastInvoiceNumber, 10) + 1;
-    
-                newInvoiceNumber = `${prefix}/${nextInvoiceNumber}/${fiscalYear}`;
-            } else {
-                // No last order found, start with invoice number 1
-                newInvoiceNumber = `${prefix}/1/${fiscalYear}`;
-            }
-    
-    //         return newInvoiceNumber;
-    //     } catch (error) {
-    //         console.error('Error generating invoice number:', error);
-    //         throw error;
-    //     }
-    // };
+    // Generate new invoice number
+    const lastOrder = await Dispatch.findOne().sort({ _id: -1 }).exec();
+    let newInvoiceNumber;
+    const prefix = "JAS";
+    const year = new Date().getFullYear();
+    const fiscalYear = `${year % 100}-${(year + 1) % 100}`;
+
+    if (lastOrder && lastOrder.invoiceNumber) {
+        const lastInvoiceNumber = lastOrder.invoiceNumber.split('/')[1];
+        const nextInvoiceNumber = parseInt(lastInvoiceNumber, 10) + 1;
+        newInvoiceNumber = `${prefix}/${nextInvoiceNumber}/${fiscalYear}`;
+    } else {
+        newInvoiceNumber = `${prefix}/1/${fiscalYear}`;
+    }
 
     try {
+        // Create new dispatch order
         const packedOrder = new Dispatch({
-            order_id: order_id,
+            order_id,
             invoiceNumber: newInvoiceNumber,
-            user_id: user_id,
-            user: user,
-            orderDetail: orderDetail,
-            updatedItems: updatedItems,
-            dispatchedTable: dispatchedTable,
-            orderDate:orderDate,
-            totalDispatchedAmount: totalDispatchedAmount,
-            totalRefundableAmount: totalRefundableAmount,
-
+            user_id,
+            user,
+            orderDetail,
+            updatedItems,
+            dispatchedTable,
+            orderDate,
+            totalDispatchedAmount,
+            totalRefundableAmount,
         });
 
         await packedOrder.save();
 
         if (packedOrder) {
-            const order = await Payment.findOne({ order_id });
-            // console.log("order",order)
-            if (!order) {
-                return next(new ErrorHandler(`Order not found with this id: ${order_id}`, 404))
+            const paymentOrder = await Payment.findOne({ order_id });
+            if (!paymentOrder) {
+                return next(new ErrorHandler(`Order not found with this id: ${order_id}`, 404));
             }
 
-        //     const packedResponseStatus = await Payment.findOneAndUpdate(
-        //         { order_id },
-        //         { orderStatus: 'Packed' },
-        //         { new: true }
-        //     );
-
-        //     // console.log("packedOrder", packedOrder)
-        //    return res.status(200).json({
-        //         success: true,
-        //         packedOrderData: packedOrder
-        //     })
-
-        if(totalDispatchedAmount>0){
-            await Payment.findOneAndUpdate(
-                { order_id },
-                { orderStatus: 'Packed' },
-                { new: true }
-            );
-
-            return res.status(200).json({
-                success: true,
-                packedOrderData: packedOrder
-            })
-
-          }
-          else{
-             await Payment.findOneAndUpdate(
-                { order_id },
-                { orderStatus: 'Cancelled',cancleReason:'Out of Stock' },
-                { new: true }
-            );
-
-            return res.status(200).json({
-                success: true,
-                packedOrderData: packedOrder
-            })
-          }
+            // Update order status based on the dispatched amount
+            if (totalDispatchedAmount > 0) {
+                await Payment.findOneAndUpdate(
+                    { order_id },
+                    { orderStatus: 'Packed' },
+                    { new: true }
+                );
+                return res.status(200).json({
+                    success: true,
+                    packedOrderData: packedOrder
+                });
+            } else {
+                await Payment.findOneAndUpdate(
+                    { order_id },
+                    { orderStatus: 'Cancelled', cancelReason: 'Out of Stock' },
+                    { new: true }
+                );
+                return res.status(200).json({
+                    success: true,
+                    packedOrderData: packedOrder
+                });
+            }
         }
-
     } catch (error) {
-        // console.log(error)
-        return next(new ErrorHandler(error.response.data.message, error.response.status))
+        console.error(error);
+        return next(new ErrorHandler(error.message || 'Server Error', 500));
     }
+});
 
-
-})
 
 const getPackedOrder = catchAsyncError(async (req, res, next) => {
     console.log("req.body", req.body);

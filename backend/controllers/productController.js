@@ -230,7 +230,7 @@ const updateProducts = async (req, res, next) => {
             message: "Product not found"
         });
     }
-
+  try{
     product = await Product.findByIdAndUpdate(req.params.id, req.body, {
         new: true,
         runValidators: true
@@ -241,6 +241,11 @@ const updateProducts = async (req, res, next) => {
         success: true,
         product
     })
+  }
+  catch (error) {
+   return res.status(500).json({ message: 'Error Updating item' });
+}
+    
 }
 
 //delete the item
@@ -274,9 +279,9 @@ const deleteProducts = async (req, res, next) => {
 
     try {
         const deletedItem = await Product.findByIdAndDelete(id);
-        res.status(200).json({ msg: 'Item deleted successfully' });
+        return res.status(200).json({ msg: 'Item deleted successfully' });
     } catch (error) {
-        res.status(500).json({ message: 'Error deleting item' });
+        return res.status(500).json({ message: 'Error deleting item' });
     }
 }
 

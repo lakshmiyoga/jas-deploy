@@ -69,6 +69,10 @@ const paymentSchema = mongoose.Schema({
             type: Number,
             required: true
         },
+        measurement:{
+            type: String,
+            required: true
+        },
         product: {
             type: mongoose.Schema.Types.ObjectId,
             required: true,

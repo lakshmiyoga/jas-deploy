@@ -21,7 +21,7 @@ const allproductSchema = new mongoose.Schema({
     }, 
     percentage:{
         type:Number,
-        default:40
+        default:0
     },
     images:[
         {
@@ -41,17 +41,17 @@ const allproductSchema = new mongoose.Schema({
     },
     measurement:{
         type:String,
-        required:true,
+        // required:true,
         enum: {
             values:['Kg','Piece','Box']
         },
-        default:'Kg',
+        // default:'Kg',
         
     },
     stocks:{
         type:String,
-        required:true,
-        default:'Stock',
+        // required:true,
+        // default:'Stock',
     },
     user:{
         type:mongoose.Schema.Types.ObjectId

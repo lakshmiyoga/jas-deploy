@@ -167,6 +167,91 @@ const ExcelJS = require('exceljs');
 
 //     await workbook.xlsx.write(res).then(() => res.end()); // Ensure stream is closed
 // };
+
+
+
+
+// const uploadPrice = catchAsyncError( async (req, res) => {
+//     try {
+//         if (!req.file)
+//             return res.status(400).json({ message: 'No file uploaded' });
+
+//         const csvData = await csvtojson().fromString(req.file.buffer.toString());
+
+//         for (const itemData of csvData) {
+//             const { _id,buyingPrice, price,stocks,name } = itemData;
+//             await Item.updateOne({ englishName:name }, { $set: {buyingPrice,price,stocks } });
+//         }
+
+//         return res.status(200).json({ message: 'Prices updated successfully' });
+//     } catch (error) {
+//         console.error('Error uploading file:', error);
+//         return res.status(500).json({ message: 'Internal server error' });
+//     }
+// });
+
+// const uploadPrice = async (req, res) => {
+//     try {
+//         if (!req.file) {
+//             return res.status(400).json({ message: 'No file uploaded' });
+//         }
+
+//         const workbook = new ExcelJS.Workbook();
+//         await workbook.xlsx.load(req.file.buffer); // Load the uploaded Excel file buffer
+
+//         const worksheet = workbook.getWorksheet('Prices');
+//         if (!worksheet) {
+//             return res.status(400).json({ message: 'Worksheet "Prices" not found in the file' });
+//         }
+
+//         let category = null;
+//         let items = [];
+
+//         worksheet.eachRow((row, rowNumber) => {
+//             // Skip empty rows or rows with merged cells (headers or spaces)
+//             if (rowNumber < 3 || row.getCell(1).value === null || row.getCell(1).value === '') {
+//                 return; // Ignore blank rows, headers, or any irrelevant data
+//             }
+
+//             const firstCell = row.getCell(1).value;
+//             if (typeof firstCell === 'string' && (firstCell === 'Vegetables' || firstCell === 'Fruits' || firstCell === 'Keerai')) {
+//                 // New category detected
+//                 category = firstCell;
+//             } else {
+//                 // Process item rows
+//                 const item = {
+//                     category: category,
+//                     name: row.getCell(3).value, // English name is in the 3rd column
+//                     buyingPrice: row.getCell(4).value, // Buying Price is in the 4th column
+//                     price: row.getCell(5).value, // Price is in the 5th column
+//                     stocks: row.getCell(6).value, // Stocks is in the 6th column
+//                 };
+//                 items.push(item);
+//             }
+//         });
+
+//         // Update items in the database
+//         for (const itemData of items) {
+//             const { name, buyingPrice, price, stocks, category } = itemData;
+//             await Item.updateOne(
+//                 { englishName: name, category: category },
+//                 { $set: { buyingPrice, price, stocks } }
+//             );
+//         }
+
+//         return res.status(200).json({ message: 'Prices updated successfully' });
+//     } catch (error) {
+//         console.error('Error uploading file:', error);
+//         return res.status(500).json({ message: 'Internal server error' });
+//     }
+// };
+
+
+
+
+
+
+
 const downloadPrice = async (req, res) => {
     let items = await Item.find({}, { _id: 1, englishName: 1, category: 1, buyingPrice: 1, percentage: 1, stocks: 1 });
 
@@ -248,91 +333,6 @@ const downloadPrice = async (req, res) => {
 
     await workbook.xlsx.write(res).then(() => res.end()); // Ensure stream is closed
 };
-
-
-
-
-
-
-
-
-
-
-// const uploadPrice = catchAsyncError( async (req, res) => {
-//     try {
-//         if (!req.file)
-//             return res.status(400).json({ message: 'No file uploaded' });
-
-//         const csvData = await csvtojson().fromString(req.file.buffer.toString());
-
-//         for (const itemData of csvData) {
-//             const { _id,buyingPrice, price,stocks,name } = itemData;
-//             await Item.updateOne({ englishName:name }, { $set: {buyingPrice,price,stocks } });
-//         }
-
-//         return res.status(200).json({ message: 'Prices updated successfully' });
-//     } catch (error) {
-//         console.error('Error uploading file:', error);
-//         return res.status(500).json({ message: 'Internal server error' });
-//     }
-// });
-
-// const uploadPrice = async (req, res) => {
-//     try {
-//         if (!req.file) {
-//             return res.status(400).json({ message: 'No file uploaded' });
-//         }
-
-//         const workbook = new ExcelJS.Workbook();
-//         await workbook.xlsx.load(req.file.buffer); // Load the uploaded Excel file buffer
-
-//         const worksheet = workbook.getWorksheet('Prices');
-//         if (!worksheet) {
-//             return res.status(400).json({ message: 'Worksheet "Prices" not found in the file' });
-//         }
-
-//         let category = null;
-//         let items = [];
-
-//         worksheet.eachRow((row, rowNumber) => {
-//             // Skip empty rows or rows with merged cells (headers or spaces)
-//             if (rowNumber < 3 || row.getCell(1).value === null || row.getCell(1).value === '') {
-//                 return; // Ignore blank rows, headers, or any irrelevant data
-//             }
-
-//             const firstCell = row.getCell(1).value;
-//             if (typeof firstCell === 'string' && (firstCell === 'Vegetables' || firstCell === 'Fruits' || firstCell === 'Keerai')) {
-//                 // New category detected
-//                 category = firstCell;
-//             } else {
-//                 // Process item rows
-//                 const item = {
-//                     category: category,
-//                     name: row.getCell(3).value, // English name is in the 3rd column
-//                     buyingPrice: row.getCell(4).value, // Buying Price is in the 4th column
-//                     price: row.getCell(5).value, // Price is in the 5th column
-//                     stocks: row.getCell(6).value, // Stocks is in the 6th column
-//                 };
-//                 items.push(item);
-//             }
-//         });
-
-//         // Update items in the database
-//         for (const itemData of items) {
-//             const { name, buyingPrice, price, stocks, category } = itemData;
-//             await Item.updateOne(
-//                 { englishName: name, category: category },
-//                 { $set: { buyingPrice, price, stocks } }
-//             );
-//         }
-
-//         return res.status(200).json({ message: 'Prices updated successfully' });
-//     } catch (error) {
-//         console.error('Error uploading file:', error);
-//         return res.status(500).json({ message: 'Internal server error' });
-//     }
-// };
-
 const uploadPrice = async (req, res) => {
     try {
         if (!req.file) {
@@ -400,5 +400,6 @@ const uploadPrice = async (req, res) => {
         return res.status(500).json({ message: 'Internal server error' });
     }
 };
+
 
 module.exports = {downloadPrice, uploadPrice };

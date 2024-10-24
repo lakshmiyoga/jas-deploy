@@ -168,6 +168,7 @@ const payment = catchAsyncError(async (req, res, next) => {
 				totalPrice: amount,
 				paymentStatus: 'initiated',
 				orderDate: orderDate, // Add the calculated orderDate
+				// orderDateDelivery:orderDateDelivery,
 				orderDescription: orderDescription // Add the calculated orderDescription
 			});
 
