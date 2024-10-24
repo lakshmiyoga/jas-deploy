@@ -1,7 +1,0 @@
-{
-    "MERCHANT_ID": "36794",
-    "PRIVATE_KEY_PATH": "/home/ec2-user/livekeys/privateKey.pem",
-    "PUBLIC_KEY_PATH": "/home/ec2-user/livekeys/publicKey.pem",
-    "KEY_UUID": "key_e4b492a3d3fc47c5a1fbc69c78f43abe",
-    "PAYMENT_PAGE_CLIENT_ID": "36794"
-}
