@@ -25,10 +25,21 @@ const UpdatePrice = ({ isActive, setIsActive }) => {
 
     const handleFileChange = (e) => {
         const selectedFile = e.target.files[0];
-        const maxSize = 10 * 1024 * 1024; // 10 MB in bytes
+        const maxSize = 5 * 1024 * 1024; // 10 MB in bytes
 
         if (selectedFile && selectedFile.size && selectedFile.size > maxSize) {
-            toast.error('The file size exceeds the 10MB limit.');
+            // toast.error('The file size exceeds the 5MB limit.');
+            toast.dismiss();
+                setTimeout(() => {
+                toast.error('The file size exceeds the 5MB limit.', {
+                  position: 'bottom-center',
+                  type: 'error',
+                  autoClose: 700,
+                  transition: Slide,
+                  hideProgressBar: true,
+                  className: 'small-toast',
+                });
+              }, 300);
             setFile(null); // Reset the file state
             return
         } else {
@@ -234,95 +245,228 @@ const UpdatePrice = ({ isActive, setIsActive }) => {
     //     }
     // };
     
+    // const handleUpload = async () => {
+    //     try {
+    //         setloading(true);
+    //         const formData = new FormData();
+    
+    //         if (!file) {
+    //             toast.dismiss();
+    //             setTimeout(() => {
+    //                 toast.error('Please Select the File.', {
+    //                     position: 'bottom-center',
+    //                     type: 'error',
+    //                     autoClose: 700,
+    //                     transition: Slide,
+    //                     hideProgressBar: true,
+    //                     className: 'small-toast',
+    //                 });
+    //             }, 300);
+    //             setloading(false);
+    //             return;
+    //         }
+    
+    //         formData.append('Prices', file);
+    //         const data = await axios.post('/api/v1/upload/price', formData, {
+    //             headers: {
+    //                 'Content-Type': 'multipart/form-data'
+    //             }
+    //         });
+
+    //         console.log("upload frontend price respone", data)
+    
+    //         // if (response && response.status === 200) {
+    //         //     const data = response.data;
+    //         //     setloading(false);
+    //         //     setItems([]); // Clear items
+    //         //     setFile(null); // Clear file
+    
+    //         //     // Display success message
+    //         //     toast.dismiss();
+    //         //     setTimeout(() => {
+    //         //         toast.success('Prices updated successfully', {
+    //         //             position: 'bottom-center',
+    //         //             type: 'success',
+    //         //             autoClose: 700,
+    //         //             transition: Slide,
+    //         //             hideProgressBar: true,
+    //         //             className: 'small-toast',
+    //         //             onClose: () => {
+    //         //                 dispatch(getAdminProducts());
+    //         //             },
+    //         //         });
+    //         //     }, 300);
+    
+    //         //     // Display warnings if any
+    //         //     if (data.warnings && data.warnings.length > 0) {
+    //         //         data.warnings.forEach((warning) => {
+    //         //             toast.warn(warning, {
+    //         //                 position: 'bottom-center',
+    //         //                 type: 'warning',
+    //         //                 autoClose: 700,
+    //         //                 transition: Slide,
+    //         //                 hideProgressBar: true,
+    //         //                 className: 'small-toast',
+    //         //             });
+    //         //         });
+    //         //     }
+    //         // } 
+    //         if (data && data.status === 200) {
+    //             setloading(false); 
+    //             setItems([]);                 // Clear items
+    //             setFile(null);                // Clear file
+    //             // toast.success('Prices updated successfully', {
+    //             //     onClose: () => {
+    //             //         dispatch(getAdminProducts()); // Dispatch after toast is closed
+    //             //     },
+    //             //     autoClose: 3000, // Optional: Define how long the toast will stay open
+    //             // });
+
+    //             toast.dismiss();
+    //             setTimeout(() => {
+    //             toast.success(data.data.message, {
+    //               position: 'bottom-center',
+    //               type: 'success',
+    //               autoClose: 700,
+    //               transition: Slide,
+    //               hideProgressBar: true,
+    //               className: 'small-toast',
+    //               onClose: () => {
+    //                         dispatch(getAdminProducts()); // Dispatch after toast is closed
+    //                     },
+    //             });
+    //           }, 300);
+
+    //           if(data.data.warnings && data.data.warnings){
+    //             data.data.warnings.forEach((element) => {
+    //                 toast.warning(element);
+    //             });
+    //           }
+              
+    //         }
+    //         else {
+    //             toast.dismiss();
+    //             setTimeout(() => {
+    //                 toast.error('Error uploading file. Please try again.', {
+    //                     position: 'bottom-center',
+    //                     type: 'error',
+    //                     autoClose: 700,
+    //                     transition: Slide,
+    //                     hideProgressBar: true,
+    //                     className: 'small-toast',
+    //                 });
+    //             }, 300);
+    //         }
+    //     } catch (error) {
+    //         setloading(false);
+    //         console.log("error upload", error)
+    //         toast.dismiss();
+    //         setTimeout(() => {
+    //             toast.error(error.response?.data?.message || 'Error uploading file', {
+    //                 position: 'bottom-center',
+    //                 type: 'error',
+    //                 autoClose: 700,
+    //                 transition: Slide,
+    //                 hideProgressBar: true,
+    //                 className: 'small-toast',
+    //             });
+    //         }, 300);
+    //     }
+    // };
+
     const handleUpload = async () => {
         try {
             setloading(true);
             const formData = new FormData();
-    
             if (!file) {
+                // toast.error('Please Select the File.');
                 toast.dismiss();
                 setTimeout(() => {
-                    toast.error('Please Select the File.', {
-                        position: 'bottom-center',
-                        type: 'error',
-                        autoClose: 700,
-                        transition: Slide,
-                        hideProgressBar: true,
-                        className: 'small-toast',
-                    });
-                }, 300);
+                toast.error('Please Select the File.', {
+                  position: 'bottom-center',
+                  type: 'error',
+                  autoClose: 700,
+                  transition: Slide,
+                  hideProgressBar: true,
+                  className: 'small-toast',
+                });
+              }, 300);
                 setloading(false);
                 return;
             }
-    
             formData.append('Prices', file);
-            const response = await axios.post('/api/v1/upload/price', formData, {
+            const data = await axios.post('/api/v1/upload/price', formData, {
                 headers: {
                     'Content-Type': 'multipart/form-data'
                 }
             });
-    
-            if (response && response.status === 200) {
-                const data = response.data;
-                setloading(false);
-                setItems([]); // Clear items
-                setFile(null); // Clear file
-    
-                // Display success message
+            console.log("Prices updated", data)
+
+
+            if (data && data.status === 200) {
+                setloading(false); 
+                setItems([]);                 // Clear items
+                setFile(null);                // Clear file
+                // toast.success('Prices updated successfully', {
+                //     onClose: () => {
+                //         dispatch(getAdminProducts()); // Dispatch after toast is closed
+                //     },
+                //     autoClose: 3000, // Optional: Define how long the toast will stay open
+                // });
+
                 toast.dismiss();
                 setTimeout(() => {
-                    toast.success('Prices updated successfully', {
-                        position: 'bottom-center',
-                        type: 'success',
-                        autoClose: 700,
-                        transition: Slide,
-                        hideProgressBar: true,
-                        className: 'small-toast',
-                        onClose: () => {
-                            dispatch(getAdminProducts());
+                toast.success(data.data.message, {
+                  position: 'bottom-center',
+                  type: 'success',
+                  autoClose: 700,
+                  transition: Slide,
+                  hideProgressBar: true,
+                  className: 'small-toast',
+                  onClose: () => {
+                            dispatch(getAdminProducts()); // Dispatch after toast is closed
                         },
-                    });
-                }, 300);
-    
-                // Display warnings if any
-                if (data.warnings && data.warnings.length > 0) {
-                    data.warnings.forEach((warning) => {
-                        toast.warn(warning, {
-                            position: 'bottom-center',
-                            type: 'warning',
-                            autoClose: 700,
-                            transition: Slide,
-                            hideProgressBar: true,
-                            className: 'small-toast',
-                        });
-                    });
-                }
-            } else {
+                });
+              }, 300);
+
+              if(data.data.warnings && data.data.warnings){
+                data.data.warnings.forEach((element) => {
+                    toast.warning(element);
+                });
+              }
+              
+            }
+            else {
+                // toast.error('Error uploading file. Please try again.');
                 toast.dismiss();
                 setTimeout(() => {
-                    toast.error(' else condition Error uploading file. Please try again.', {
-                        position: 'bottom-center',
-                        type: 'error',
-                        autoClose: 700,
-                        transition: Slide,
-                        hideProgressBar: true,
-                        className: 'small-toast',
-                    });
-                }, 300);
+                toast.error('Error uploading file. Please try again.', {
+                  position: 'bottom-center',
+                  type: 'error',
+                  autoClose: 700,
+                  transition: Slide,
+                  hideProgressBar: true,
+                  className: 'small-toast',
+                });
+              }, 300);
             }
+
+
         } catch (error) {
             setloading(false);
+            console.log("uploaderror",error)
+            // toast.error('Error uploading file. Please try again.');
             toast.dismiss();
-            setTimeout(() => {
-                toast.error(error.response?.data?.message, {
-                    position: 'bottom-center',
-                    type: 'error',
-                    autoClose: 700,
-                    transition: Slide,
-                    hideProgressBar: true,
-                    className: 'small-toast',
+                setTimeout(() => {
+                toast.error('Error uploading file.', {
+                  position: 'bottom-center',
+                  type: 'error',
+                  autoClose: 700,
+                  transition: Slide,
+                  hideProgressBar: true,
+                  className: 'small-toast',
                 });
-            }, 300);
+              }, 300);
         }
     };
     
@@ -406,7 +550,7 @@ const UpdatePrice = ({ isActive, setIsActive }) => {
                             <div className="col-12 col-md-6 mb-4 ">
                                 <div className="card update_price h-100" >
                                     <div className="card-body">
-                                        <h5 className="card-title ml-3">Import Product Details Info (*File size should be within 10mb)</h5>
+                                        <h5 className="card-title ml-3">Import Product Details Info (*File size should be within 5mb)</h5>
                                         <div className="mb-3 d-flex flex-column align-items-center ml-3">
                                             <input type="file" onChange={handleFileChange} accept=".xls,.xlsx,application/vnd.ms-excel,application/vnd.openxmlformats-officedocument.spreadsheetml.sheet" className="form-control mb-2" />
                                             <button className="btn btn-success" onClick={handleUpload} disabled={loading}>
