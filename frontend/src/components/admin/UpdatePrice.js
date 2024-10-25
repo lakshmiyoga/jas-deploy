@@ -300,7 +300,7 @@ const UpdatePrice = ({ isActive, setIsActive }) => {
             } else {
                 toast.dismiss();
                 setTimeout(() => {
-                    toast.error('Error uploading file. Please try again.', {
+                    toast.error(' else condition Error uploading file. Please try again.', {
                         position: 'bottom-center',
                         type: 'error',
                         autoClose: 700,
@@ -314,7 +314,7 @@ const UpdatePrice = ({ isActive, setIsActive }) => {
             setloading(false);
             toast.dismiss();
             setTimeout(() => {
-                toast.error(error.response?.data?.message || 'Error uploading file. Please try again.', {
+                toast.error(error.response?.data?.message, {
                     position: 'bottom-center',
                     type: 'error',
                     autoClose: 700,
