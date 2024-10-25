@@ -20,16 +20,19 @@ const About = () => {
 
         <div className='about_text'>
           {/* <h3>JAS FRUITS AND VEGETABLES</h3> */}
-          <p>I am Balasanthanam G., and I have over 10 years of experience in the service industry, specializing in the supply of high-quality fruits and vegetables. Throughout my journey, I have built strong relationships with more than 50 restaurant chains and 30 supermarkets, ensuring they receive fresh and reliable produce. Our commitment to quality, competitive pricing, and exceptional service has earned us a reputation for excellence. A2B (Adyar Ananda Bhavan) is one of our key clients, and we take pride in maintaining the high standards they expect.
-            At our core, we are dedicated to meeting the evolving needs of our clients, consistently delivering the best produce, and fostering long-term partnerships based on trust and reliability.
-            <br /><br />
-            <h3>Introducing Jas Fruits and Vegetables</h3>
-            We are excited to expand into the online retail space, focusing on delivering fresh fruits and vegetables directly to customers at the best prices. At Jas Fruits and Vegetables, our mission is to provide high-quality produce with the convenience of direct delivery, ensuring both affordability and freshness.
+          <p>I’m Balasanthanam G., with over 18 years of expertise in the service industry, specializing in providing top-quality fruits and vegetables. Over the years, I’ve cultivated strong partnerships with more than 50 restaurant chains and 30 supermarkets, ensuring they consistently receive fresh, premium produce. Our dedication to quality, competitive pricing, and exceptional service has earned us a reputation for excellence.</p>
 
-            Our motto, “Best Price and Best Saving,” reflects our commitment to offering competitive prices while helping our customers save without compromising on quality. We are dedicated to making healthy, fresh food accessible and affordable for everyone.
-            <br /><br />
-            {/* RVP Sourcing is a wholesale trader established in 2014. We are wholesale trading in Vegetables and Fruits. */}
-          </p>
+          <p> One of our standout clients, A2B (Adyar Ananda Bhavan), trusts us to meet their high standards, and we take great pride in delivering on that promise every day.</p>
+
+          <p> At the heart of our business is a commitment to understanding and meeting the ever-changing needs of our clients. We focus on providing the best produce, fostering lasting partnerships built on trust, and ensuring our customers can always rely on us.</p>
+          <br /><br />
+          <h3>Introducing Jas Fruits and Vegetables</h3>
+          <p>We are thrilled to announce our expansion into the online retail space, bringing the freshest fruits and vegetables straight to your doorstep at unbeatable prices. At JAS Fruits and Vegetables, we are committed to provide top-quality produce with the ease and convenience of direct delivery, ensuring that freshness and affordability go hand in hand.</p>
+
+          <p>Our motto, “Best Price, Best Savings,” embodies our promise to offer competitive pricing without ever compromising on quality. We believe everyone deserves access to fresh, healthy food, and we’re here to make that a reality—affordable, accessible, and delivered to you.</p>
+          <br /><br />
+          {/* RVP Sourcing is a wholesale trader established in 2014. We are wholesale trading in Vegetables and Fruits. */}
+
         </div>
         <div className='about_image'>
           <img src="./images/all.jpg" alt="Fruits and Vegetables" />

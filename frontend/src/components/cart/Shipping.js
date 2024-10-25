@@ -340,7 +340,7 @@ const Shipping = () => {
                     async position => {
                         const { latitude, longitude, accuracy } = position.coords;
 
-                        // if (accuracy <= 50) {
+                        if (accuracy <= 50) {
                         setLatitude(parseFloat(latitude.toFixed(6)));
                         setLongitude(parseFloat(longitude.toFixed(6)));
                         // setDummyLat(parseFloat(latitude.toFixed(6)));
@@ -364,13 +364,13 @@ const Shipping = () => {
                                 className: 'small-toast',
                             });
                         }, 300);
-                        // }
-                        // else {
-                        //     toast.error(`Could not get your precious location.`, {
-                        //         position: "bottom-center",
-                        //     });
-                        //     setIsButtonDisabled(false);
-                        // }
+                        }
+                        else {
+                            toast.error(`Could not get your precious location.`, {
+                                position: "bottom-center",
+                            });
+                            setIsButtonDisabled(false);
+                        }
 
                     },
                     error => {
