@@ -7,10 +7,14 @@ const path = require('path')
 const dotenv = require('dotenv');
 dotenv.config({ path: path.join(__dirname, "config/config.env") });
 
-app.use(express.json());
+// app.use(express.json());
 app.use(cookieParser());
-app.use(express.urlencoded({ extended: true }));
+// app.use(express.urlencoded({ extended: true }));
+app.use(express.json({ limit: '5mb' })); // Adjust size limit as needed
+app.use(express.urlencoded({ limit: '5mb', extended: true }));
 app.use("/uploads", express.static(path.join(__dirname, "uploads")))
+
+
 
 // let BASE_URL = process.env.FRONTEND_URL;
 // if (process.env.NODE_ENV === "production") {

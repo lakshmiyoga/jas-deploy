@@ -406,8 +406,160 @@ const downloadPrice = async (req, res) => {
 // };
 
 
+// const uploadPrice = async (req, res) => {
+//     try {
+
+//         console.time("File Upload Processing Time"); // Start timing
+
+//         if (!req.file) {
+//             return res.status(400).json({ message: 'No file uploaded' });
+//         }
+
+//         const workbook = new ExcelJS.Workbook();
+//         await workbook.xlsx.load(req.file.buffer);
+
+//         const worksheet = workbook.getWorksheet('Prices');
+//         if (!worksheet) {
+//             return res.status(400).json({ message: 'Worksheet "Prices" not found in the file' });
+//         }
+
+//         let category = null;
+//         let items = [];
+//         let warnings = []; // Array to store warning messages
+
+//         worksheet.eachRow((row, rowNumber) => {
+//             if (rowNumber < 3 || row.getCell(1).value === null || row.getCell(1).value === '') {
+//                 return;
+//             }
+
+//             const firstCell = row.getCell(1).value;
+//             if (typeof firstCell === 'string' && (firstCell === 'Vegetables' || firstCell === 'Fruits' || firstCell === 'Keerai')) {
+//                 category = firstCell;
+//             } else {
+//                 const item = {
+//                     category: category,
+//                     name: row.getCell(3).value,
+//                     buyingPrice: parseFloat(row.getCell(4).value) || 0,
+//                     percentage: parseFloat(row.getCell(5).value) || 0,
+//                     stocks: row.getCell(6).value,
+//                 };
+
+//                 item.price = parseFloat((item.buyingPrice + (item.buyingPrice * item.percentage / 100)).toFixed(2));
+//                 items.push(item);
+//             }
+//         });
+
+//         // Log the number of items processed
+//         console.log(`Processed ${items.length} items.`);
+
+//         for (const itemData of items) {
+//             const { name, buyingPrice, price, stocks, category, percentage } = itemData;
+
+//             const existingItem = await Item.findOne({ englishName: name, category: category });
+//             if (!existingItem) {
+//                 warnings.push(`Product "${name}" in category "${category}" not found. Skipping.`);
+//                 continue; // Skip this item and move to the next
+//             }
+
+//             await Item.updateOne(
+//                 { englishName: name, category: category },
+//                 { $set: { buyingPrice, price, percentage, stocks } }
+//             );
+//         }
+//         console.timeEnd("File Upload Processing Time"); // End timing
+
+//         return res.status(200).json({ 
+//             message: 'Prices updated successfully', 
+//             warnings: warnings.length > 0 ? warnings : undefined // Include warnings if any
+//         });
+//         // console.log("file upload response",uploadResponse.data.message)
+//         // console.log("file upload response status code",uploadResponse.statusCode)
+//         // return;
+//     } catch (error) {
+//         console.error('Error uploading file:', error);
+//         return res.status(500).json({ message: 'Error Uploading File. Please try again!' });
+//     }
+// };
+
+// const uploadPrice = async (req, res) => {
+//     try {
+//         console.time("File Upload Processing Time"); // Start timing
+
+//         if (!req.file) {
+//             return res.status(400).json({ message: 'No file uploaded' });
+//         }
+
+//         const workbook = new ExcelJS.Workbook();
+//         await workbook.xlsx.load(req.file.buffer);
+
+//         const worksheet = workbook.getWorksheet('Prices');
+//         if (!worksheet) {
+//             return res.status(400).json({ message: 'Worksheet "Prices" not found in the file' });
+//         }
+
+//         let category = null;
+//         let items = [];
+//         let warnings = [];
+
+//         worksheet.eachRow((row, rowNumber) => {
+//             if (rowNumber < 3 || row.getCell(1).value === null || row.getCell(1).value === '') {
+//                 return;
+//             }
+
+//             const firstCell = row.getCell(1).value;
+//             if (typeof firstCell === 'string' && ['Vegetables', 'Fruits', 'Keerai'].includes(firstCell)) {
+//                 category = firstCell;
+//             } else {
+//                 const item = {
+//                     category: category,
+//                     name: row.getCell(3).value,
+//                     buyingPrice: parseFloat(row.getCell(4).value) || 0,
+//                     percentage: parseFloat(row.getCell(5).value) || 0,
+//                     stocks: row.getCell(6).value,
+//                 };
+
+//                 item.price = parseFloat((item.buyingPrice + (item.buyingPrice * item.percentage / 100)).toFixed(2));
+//                 items.push(item);
+//             }
+//         });
+
+//         console.log(`Processed ${items.length} items.`);
+
+//         const bulkOperations = items.map((itemData) => {
+//             const { name, buyingPrice, price, stocks, category, percentage } = itemData;
+
+//             return {
+//                 updateOne: {
+//                     filter: { englishName: name, category: category },
+//                     update: { $set: { buyingPrice, price, percentage, stocks } },
+//                     upsert: false, // update only if the item exists
+//                 },
+//             };
+//         });
+
+//         // Execute bulk operations
+//         const result = await Item.bulkWrite(bulkOperations);
+
+//         console.log("Bulk write result:", result);
+//         console.timeEnd("File Upload Processing Time"); // End timing
+
+//         return res.status(200).json({ 
+//             message: 'Prices updated successfully', 
+//             warnings: warnings.length > 0 ? warnings : undefined,
+//             processed: items.length,
+//             matched: result.matchedCount,
+//             modified: result.modifiedCount,
+//         });
+//     } catch (error) {
+//         console.error('Error uploading file:', error);
+//         return res.status(500).json({ message: 'Error Uploading File. Please try again!' });
+//     }
+// };
+
 const uploadPrice = async (req, res) => {
     try {
+        console.time("File Upload Processing Time");
+
         if (!req.file) {
             return res.status(400).json({ message: 'No file uploaded' });
         }
@@ -422,7 +574,7 @@ const uploadPrice = async (req, res) => {
 
         let category = null;
         let items = [];
-        let warnings = []; // Array to store warning messages
+        let warnings = [];
 
         worksheet.eachRow((row, rowNumber) => {
             if (rowNumber < 3 || row.getCell(1).value === null || row.getCell(1).value === '') {
@@ -430,7 +582,7 @@ const uploadPrice = async (req, res) => {
             }
 
             const firstCell = row.getCell(1).value;
-            if (typeof firstCell === 'string' && (firstCell === 'Vegetables' || firstCell === 'Fruits' || firstCell === 'Keerai')) {
+            if (typeof firstCell === 'string' && ['Vegetables', 'Fruits', 'Keerai'].includes(firstCell)) {
                 category = firstCell;
             } else {
                 const item = {
@@ -446,24 +598,57 @@ const uploadPrice = async (req, res) => {
             }
         });
 
-        for (const itemData of items) {
-            const { name, buyingPrice, price, stocks, category, percentage } = itemData;
+        console.log(`Processed ${items.length} items.`);
 
-            const existingItem = await Item.findOne({ englishName: name, category: category });
-            if (!existingItem) {
-                warnings.push(`Product "${name}" in category "${category}" not found. Skipping.`);
-                continue; // Skip this item and move to the next
+        // Create a set of unique category-name pairs for database lookup
+        const nameCategoryPairs = items.map(item => ({
+            englishName: item.name,
+            category: item.category
+        }));
+
+        // Fetch all matching items in one query
+        const existingItems = await Item.find({ $or: nameCategoryPairs });
+        const existingItemMap = new Map();
+
+        // Populate the map with existing items for quick lookup
+        existingItems.forEach(item => {
+            existingItemMap.set(`${item.englishName}-${item.category}`, item)
+        });
+
+        const bulkOperations = [];
+        items.forEach(itemData => {
+            const { name, buyingPrice, price, stocks, category, percentage } = itemData;
+            const itemKey = `${name}-${category}`;
+
+            if (!existingItemMap.has(itemKey)) {
+                warnings.push(`Product '${name}' in category '${category}' not found in the database.`);
+                return; // Skip this item
             }
 
-            await Item.updateOne(
-                { englishName: name, category: category },
-                { $set: { buyingPrice, price, percentage, stocks } }
-            );
+            bulkOperations.push({
+                updateOne: {
+                    filter: { englishName: name, category: category },
+                    update: { $set: { buyingPrice, price, percentage, stocks } },
+                    upsert: false,
+                },
+            });
+        });
+
+        // Execute bulk operations if there are any
+        let result = { matchedCount: 0, modifiedCount: 0 };
+        if (bulkOperations.length > 0) {
+            result = await Item.bulkWrite(bulkOperations);
         }
+
+        console.log("Bulk write result:", result);
+        console.timeEnd("File Upload Processing Time");
 
         return res.status(200).json({ 
             message: 'Prices updated successfully', 
-            warnings: warnings.length > 0 ? warnings : undefined // Include warnings if any
+            warnings: warnings.length > 0 ? warnings : undefined,
+            processed: items.length,
+            matched: result.matchedCount,
+            modified: result.modifiedCount,
         });
     } catch (error) {
         console.error('Error uploading file:', error);

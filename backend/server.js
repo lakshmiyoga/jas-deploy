@@ -12,6 +12,9 @@ const server = app.listen(process.env.PORT, () => {
     console.log(`Server running in port ${process.env.PORT} in ${process.env.NODE_ENV}`);
 })
 
+
+server.setTimeout(100000);
+
 // process.on('unhandledRejection',(err)=>{
 //     console.log(`Error:${err.message}`);
 //     console.log('Shutting down the server due to unhandled rejection error');

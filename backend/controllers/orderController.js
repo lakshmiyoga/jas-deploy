@@ -134,7 +134,7 @@ const getSingleOrder = catchAsyncError(async (req, res, next) => {
 const getQuote = catchAsyncError(async (req, res, next) => {
     //    console.log(req.params)
     const { pickup_details, drop_details, customer } = req.body;
-    // const apiEndpoint = 'https://pfe-apigw-uat.porter.in/v1/get_quote';
+    // const apiEndpoint = '/v1/get_quote';
     const apiEndpoint = 'https://pfe-apigw.porter.in/v1/get_quote';
     // const apiKey = 'fdbe7c47-25ce-4b15-90c7-ccce2027841d';
     //    console.log(req.body)
