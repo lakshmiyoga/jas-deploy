@@ -333,6 +333,79 @@ const downloadPrice = async (req, res) => {
 
     await workbook.xlsx.write(res).then(() => res.end()); // Ensure stream is closed
 };
+
+
+// const uploadPrice = async (req, res) => {
+//     try {
+//         if (!req.file) {
+//             return res.status(400).json({ message: 'No file uploaded' });
+//         }
+
+//         const workbook = new ExcelJS.Workbook();
+//         await workbook.xlsx.load(req.file.buffer); // Load the uploaded Excel file buffer
+
+//         const worksheet = workbook.getWorksheet('Prices');
+//         if (!worksheet) {
+//             return res.status(400).json({ message: 'Worksheet "Prices" not found in the file' });
+//         }
+
+//         let category = null;
+//         let items = [];
+        
+
+//         worksheet.eachRow((row, rowNumber) => {
+//             // Skip empty rows or rows with merged cells (headers or spaces)
+//             if (rowNumber < 3 || row.getCell(1).value === null || row.getCell(1).value === '') {
+//                 return; // Ignore blank rows, headers, or any irrelevant data
+//             }
+
+//             const firstCell = row.getCell(1).value;
+//             if (typeof firstCell === 'string' && (firstCell === 'Vegetables' || firstCell === 'Fruits' || firstCell === 'Keerai')) {
+//                 // New category detected
+//                 category = firstCell;
+//             } else {
+//                 // Process item rows
+//                 const item = {
+//                     category: category,
+//                     name: row.getCell(3).value, // English name is in the 3rd column
+//                     buyingPrice: parseFloat(row.getCell(4).value) || 0, // Parse and default to 0
+//                     percentage: parseFloat(row.getCell(5).value) || 0,
+//                     stocks: row.getCell(6).value, // Stocks is in the 6th column
+//                 };
+
+//                 // Calculate the new price using the percentage
+//                 item.price = parseFloat((item.buyingPrice + (item.buyingPrice * item.percentage / 100)).toFixed(2));
+
+//                 items.push(item);
+//             }
+//         });
+
+//         // Check if each item exists before updating
+//         for (const itemData of items) {
+//             const { name, buyingPrice, price, stocks, category,percentage } = itemData;
+
+//             // Check if the product exists in the database
+//             const existingItem = await Item.findOne({ englishName: name, category: category });
+//             if (!existingItem) {
+//                  res.status(404).json({ message: `Product "${name}" not found in the category "${category}".` });
+//                  continue;
+//             }
+
+//             // Update the item if it exists
+//             await Item.updateOne(
+//                 { englishName: name, category: category },
+//                 { $set: { buyingPrice, price,percentage, stocks } }
+//             );
+//         }
+
+//         return res.status(200).json({ message: 'Prices updated successfully' });
+//     } catch (error) {
+//         console.error('Error uploading file:', error);
+//         return res.status(500).json({ message: 'Error Uploading File.Please try again!!' });
+//     }
+// };
+
+
 const uploadPrice = async (req, res) => {
     try {
         if (!req.file) {
@@ -340,7 +413,7 @@ const uploadPrice = async (req, res) => {
         }
 
         const workbook = new ExcelJS.Workbook();
-        await workbook.xlsx.load(req.file.buffer); // Load the uploaded Excel file buffer
+        await workbook.xlsx.load(req.file.buffer);
 
         const worksheet = workbook.getWorksheet('Prices');
         if (!worksheet) {
@@ -349,57 +422,55 @@ const uploadPrice = async (req, res) => {
 
         let category = null;
         let items = [];
+        let warnings = []; // Array to store warning messages
 
         worksheet.eachRow((row, rowNumber) => {
-            // Skip empty rows or rows with merged cells (headers or spaces)
             if (rowNumber < 3 || row.getCell(1).value === null || row.getCell(1).value === '') {
-                return; // Ignore blank rows, headers, or any irrelevant data
+                return;
             }
 
             const firstCell = row.getCell(1).value;
             if (typeof firstCell === 'string' && (firstCell === 'Vegetables' || firstCell === 'Fruits' || firstCell === 'Keerai')) {
-                // New category detected
                 category = firstCell;
             } else {
-                // Process item rows
                 const item = {
                     category: category,
-                    name: row.getCell(3).value, // English name is in the 3rd column
-                    buyingPrice: row.getCell(4).value, // Buying Price is in the 4th column
-                    percentage: row.getCell(5).value, // Percentage is in the 5th column
-                    stocks: row.getCell(6).value, // Stocks is in the 6th column
+                    name: row.getCell(3).value,
+                    buyingPrice: parseFloat(row.getCell(4).value) || 0,
+                    percentage: parseFloat(row.getCell(5).value) || 0,
+                    stocks: row.getCell(6).value,
                 };
 
-                // Calculate the new price using the percentage
                 item.price = parseFloat((item.buyingPrice + (item.buyingPrice * item.percentage / 100)).toFixed(2));
-
                 items.push(item);
             }
         });
 
-        // Check if each item exists before updating
         for (const itemData of items) {
-            const { name, buyingPrice, price, stocks, category,percentage } = itemData;
+            const { name, buyingPrice, price, stocks, category, percentage } = itemData;
 
-            // Check if the product exists in the database
             const existingItem = await Item.findOne({ englishName: name, category: category });
             if (!existingItem) {
-                return res.status(404).json({ message: `Product "${name}" not found in the category "${category}".` });
+                warnings.push(`Product "${name}" in category "${category}" not found. Skipping.`);
+                continue; // Skip this item and move to the next
             }
 
-            // Update the item if it exists
             await Item.updateOne(
                 { englishName: name, category: category },
-                { $set: { buyingPrice, price,percentage, stocks } }
+                { $set: { buyingPrice, price, percentage, stocks } }
             );
         }
 
-        return res.status(200).json({ message: 'Prices updated successfully' });
+        return res.status(200).json({ 
+            message: 'Prices updated successfully', 
+            warnings: warnings.length > 0 ? warnings : undefined // Include warnings if any
+        });
     } catch (error) {
         console.error('Error uploading file:', error);
-        return res.status(500).json({ message: 'Internal server error' });
+        return res.status(500).json({ message: 'Error Uploading File. Please try again!' });
     }
 };
+
 
 
 module.exports = {downloadPrice, uploadPrice };

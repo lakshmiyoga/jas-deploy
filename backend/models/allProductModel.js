@@ -50,7 +50,7 @@ const allproductSchema = new mongoose.Schema({
     },
     stocks:{
         type:String,
-        // required:true,
+        required:true,
         // default:'Stock',
     },
     user:{

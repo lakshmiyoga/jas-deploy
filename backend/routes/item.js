@@ -8,6 +8,6 @@ const upload = multer();
 
 router.get('/download/price',downloadPrice);
 
-router.post('/upload/price', upload.single('csvFile'), uploadPrice);
+router.post('/upload/price', upload.single('Prices'), uploadPrice);
 
 module.exports = router;

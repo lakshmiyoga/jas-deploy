@@ -1410,17 +1410,17 @@ function isRetryableError(error) {
     return error.raw && error.raw.includes('504');
 }
 
-// nodeCron.schedule('* * * * *', () => {
-//     console.log('Checking payment status...');
-//     checkPaymentStatus();
-//     // checkRefundStatus();
-// });
+nodeCron.schedule('* * * * *', () => {
+    console.log('Checking payment status...');
+    checkPaymentStatus();
+    // checkRefundStatus();
+});
 
 
-// nodeCron.schedule('0 0 */12 * * *', () => {
-//     console.log('Checking Refund status...');
-//     checkRefundStatus();
-// });
+nodeCron.schedule('0 0 */12 * * *', () => {
+    console.log('Checking Refund status...');
+    checkRefundStatus();
+});
 
 
 module.exports = { newOrder, getSingleOrder, getQuote, porterOrder, myOrders, orders, updateOrder, deleteOrder, getOrderSummaryByDate, getUserSummaryByDate, getRemoveResponse };
