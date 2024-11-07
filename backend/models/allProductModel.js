@@ -43,11 +43,12 @@ const allproductSchema = new mongoose.Schema({
         type:String,
         // required:true,
         enum: {
-            values:['Kg','Piece','Box']
+            values:['Kg','Piece','Box','Grams']
         },
         // default:'Kg',
         
     },
+    range: { type: String },
     stocks:{
         type:String,
         required:true,

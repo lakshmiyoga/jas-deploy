@@ -2,42 +2,26 @@ const mongoose = require('mongoose');
 
 const paymentSchema = mongoose.Schema({
     shippingInfo: {
-        address: {
-            type: String,
-            required: true
-        },
-        area: {
-            type: String,
-            required: true
-        },
-        landmark: {
-            type: String,
-            // required: true
-        },
-        country: {
-            type: String,
-            required: true
-        },
-        city: {
-            type: String,
-            required: true
-        },
-        phoneNo: {
-            type: String,
-            required: true
-        },
-        postalCode: {
-            type: String,
-            required: true
-        },
-        latitude:{
-            type: String,
-            required: true
-        },
-        longitude:{
-            type: String,
-            required: true, 
+      name: { type: String, required: true }, // Receiver's name
+      address: { type: String, required: true },
+      area: { type: String, required: true },
+      landmark: { type: String },
+      country: { type: String, required: true },
+      city: { type: String, required: true },
+      state: { type: String, required: true },
+      phoneNo: {
+        type: String,
+        required: true,
+        validate: {
+          validator: (v) => /^\d{10,15}$/.test(v),
+          message: 'Please enter a valid phone number'
         }
+      },
+      postalCode: { type: String, required: true },
+      latitude: { type: String, required: true },
+      longitude: { type: String, required: true },
+      formattedAddress: { type: String, required: true },
+      defaultAddress: { type: Boolean, default: false } // Default address field
     },
     user: {
         type: Object,
@@ -73,6 +57,7 @@ const paymentSchema = mongoose.Schema({
             type: String,
             required: true
         },
+        range: { type: String },
         product: {
             type: mongoose.Schema.Types.ObjectId,
             required: true,

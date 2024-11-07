@@ -27,7 +27,7 @@ const paymentPageClientId = config.PAYMENT_PAGE_CLIENT_ID; // used in orderSessi
 
 const juspay = new Juspay({
     merchantId: config.MERCHANT_ID,
-    baseUrl: PRODUCTION_BASE_URL, // Using sandbox base URL for testing
+    baseUrl: SANDBOX_BASE_URL, // Using sandbox base URL for testing
     jweAuth: {
         keyId: config.KEY_UUID,
         publicKey,
@@ -168,8 +168,8 @@ const porterOrder = catchAsyncError(async (req, res, next) => {
     //    console.log(req.params)
     const { order_id, request_id, user, user_id, porterData, updatedItems, detailedTable, totalRefundableAmount } = req.body;
     // console.log("req.body", req.body)
-    // const apiEndpoint = 'https://pfe-apigw-uat.porter.in/v1/orders/create';
-    const apiEndpoint = 'https://pfe-apigw.porter.in/v1/orders/create';
+    const apiEndpoint = 'https://pfe-apigw-uat.porter.in/v1/orders/create';
+    // const apiEndpoint = 'https://pfe-apigw.porter.in/v1/orders/create';
 
     const porterOrderExist = await PorterModel.findOne({ order_id });
 
@@ -212,8 +212,8 @@ const porterOrder = catchAsyncError(async (req, res, next) => {
                         if (porterResponse) {
                             if (porterResponse && porterResponse.porterOrder && porterResponse.porterOrder.order_id) {
                                 try {
-                                    // const apiEndpoint1 = `https://pfe-apigw-uat.porter.in/v1/orders/${porterResponse.porterOrder.order_id}`
-                                    const apiEndpoint1 = `https://pfe-apigw.porter.in/v1/orders/${porterResponse.porterOrder.order_id}`
+                                    const apiEndpoint1 = `https://pfe-apigw-uat.porter.in/v1/orders/${porterResponse.porterOrder.order_id}`
+                                    // const apiEndpoint1 = `https://pfe-apigw.porter.in/v1/orders/${porterResponse.porterOrder.order_id}`
                                     // apiEndpoint = `https://pfe-apigw-uat.porter.in/v1/orders/{order_id:CRN93814651}`
                                     const response = await axios.get(apiEndpoint1, {
                                         headers: {
@@ -293,7 +293,7 @@ const porterOrder = catchAsyncError(async (req, res, next) => {
             }
         } catch (error) {
             // console.log(error)
-            return next(new ErrorHandler(error.response.data.message, error.response.status));
+            return next(new ErrorHandler(error.response.data.message?error.response.data.message:error.message, error.response.status));
         }
 
     }
@@ -315,6 +315,67 @@ const porterOrder = catchAsyncError(async (req, res, next) => {
 
 
 })
+// const porterOrder = catchAsyncError(async (req, res, next) => {
+//     const { order_id, request_id, user, user_id, porterData, updatedItems, detailedTable, totalRefundableAmount } = req.body;
+//     const apiEndpoint = 'https://pfe-apigw-uat.porter.in/v1/orders/create';
+
+//     const porterOrderExist = await PorterModel.findOne({ order_id });
+
+//     if (porterOrderExist) {
+//         return next(new ErrorHandler(`Order already exists with this id: ${porterOrderExist.porterOrder.order_id}`, 400));
+//     }
+
+//     const createPorterOrder = async () => {
+//         try {
+//             const createResponse = await axios.post(apiEndpoint, porterData, {
+//                 headers: {
+//                     'X-API-KEY': process.env.PORTER_API_KEY,
+//                     'Content-Type': 'application/json'
+//                 }
+//             });
+
+//             const porterOrderData = createResponse.data;
+
+//             const newPorterOrder = new PorterModel({
+//                 order_id,
+//                 request_id,
+//                 user,
+//                 user_id,
+//                 porterData,
+//                 porterOrder: {},
+//                 porterResponse: {},
+//                 updatedItems,
+//                 detailedTable,
+//                 totalRefundableAmount,
+//                 tracking_url: porterOrderData.tracking_url
+//             });
+
+//             await newPorterOrder.save();
+
+//             const apiEndpoint1 = `https://pfe-apigw-uat.porter.in/v1/orders/${porterOrderData.order_id}`;
+//             const fetchResponse = await axios.get(apiEndpoint1, {
+//                 headers: {
+//                     'X-API-KEY': process.env.PORTER_API_KEY,
+//                     'Content-Type': 'application/json'
+//                 }
+//             });
+
+//             const porterResponseData = fetchResponse.data;
+//             await PorterModel.findOneAndUpdate(
+//                 { order_id },
+//                 { $set: { porterResponse: porterResponseData } },
+//                 { new: true }
+//             );
+
+//             return res.status(200).json({ porterOrder: porterOrderData });
+//         } catch (error) {
+//             return next(new ErrorHandler(error.message || 'Porter Order creation failed', error.response?.status || 500));
+//         }
+//     };
+
+//     createPorterOrder();
+// });
+
 
 //Get Loggedin User Orders 
 
@@ -583,6 +644,73 @@ const deleteOrder = catchAsyncError(async (req, res, next) => {
 
 // get ordersummary
 
+// const getOrderSummaryByDate = catchAsyncError(async (req, res) => {
+//     try {
+//         const { date } = req.query;
+//         console.log("ordersummarydate", date);
+
+//         // Assuming date is in YYYY-MM-DD format
+//         // const startDate = new Date(date);
+//         // const endDate = new Date(date);
+//         // endDate.setDate(endDate.getDate() + 1);
+//         // console.log("startDate", startDate)
+//         // console.log("endDate", endDate)
+//         const formattedDate = new Date(date).toISOString().split('T')[0];
+
+//         // Fetch orders within the date range, explicitly selecting fields
+//         // const orders = await Order.find({
+//         //     createdAt: { $gte: startDate, $lt: endDate },
+//         //     paymentStatus: 'CHARGED',
+//         // }).select('orderItems shippingInfo user user_id itemsPrice taxPrice shippingPrice totalPrice order_id paymentStatus orderStatus createdAt').exec();
+//         // const orders = await Payment.find({
+//         //     createdAt: { $gte: startDate, $lt: endDate },
+//         //     paymentStatus: 'CHARGED',
+//         // })
+//         const orders = await Payment.find({
+//             paymentStatus: 'CHARGED',
+//             $expr: {
+//                 $eq: [
+//                     { $dateToString: { format: "%Y-%m-%d", date: "$orderDate" } },
+//                     formattedDate
+//                 ]
+//             }
+//         }).select('orderItems shippingInfo user user_id itemsPrice taxPrice shippingPrice totalPrice order_id paymentStatus orderStatus createdAt').exec();
+//         console.log("Fetched orders:", orders);
+
+//         const orderSummary = [];
+
+//         orders.forEach(order => {
+//             order.orderItems.forEach(item => {
+//                 // Log the item to check if productWeight is present
+//                 console.log("Processing item:", item);
+
+//                 const productWeight = item.productWeight;
+//                 if (productWeight === undefined) {
+//                     console.warn(`productWeight is undefined for item: ${item.name}`);
+//                 }
+
+//                 const existingItem = orderSummary.find(summary => summary.productName === item.name);
+//                 if (existingItem) {
+//                     existingItem.totalWeight += productWeight;
+//                     existingItem.totalPrice += productWeight * item.price;
+//                 } else {
+//                     orderSummary.push({
+//                         productName: item.name,
+//                         totalWeight: productWeight,
+//                         totalPrice: productWeight * item.price,
+//                     });
+//                 }
+//             });
+//         });
+
+//         console.log("Order summary:", JSON.stringify(orderSummary, null, 2));
+//         res.status(200).json({ orderSummary });
+//     } catch (error) {
+//         console.error("Error fetching order summary:", error);
+//         res.status(500).json({ message: 'Server Error' });
+//     }
+// });
+
 const getOrderSummaryByDate = catchAsyncError(async (req, res) => {
     try {
         const { date } = req.query;
@@ -635,15 +763,35 @@ const getOrderSummaryByDate = catchAsyncError(async (req, res) => {
                 } else {
                     orderSummary.push({
                         productName: item.name,
-                        totalWeight: productWeight,
+                        // totalWeight: `${productWeight} ${
+                        //     item
+                        //         ? item.measurement === 'Kg'
+                        //             ? "Kg"
+                        //             : item.measurement === 'Box'
+                        //                 ? "Box"
+                        //                 : (item.measurement === 'Grams' || item.measurement === 'Piece')
+                        //                     ? "Piece"
+                        //                     : "measurement"
+                        //         : "measurement"
+                        // } `,
+                        totalWeight: productWeight,  // Start with numeric weight
+                        measurement: item.measurement && item.measurement=='Grams'? 'Piece' :item.measurement,
                         totalPrice: productWeight * item.price,
                     });
                 }
             });
         });
 
-        console.log("Order summary:", JSON.stringify(orderSummary, null, 2));
-        res.status(200).json({ orderSummary });
+        // Format totalWeight with its measurement unit for response
+        const formattedOrderSummary = orderSummary.map(summary => ({
+            productName: summary.productName,
+            totalWeight: `${summary.totalWeight} ${summary.measurement}`,
+            totalPrice: summary.totalPrice
+        }));
+
+
+        console.log("Order summary:", JSON.stringify(formattedOrderSummary, null, 2));
+        res.status(200).json({ orderSummary: formattedOrderSummary });
     } catch (error) {
         console.error("Error fetching order summary:", error);
         res.status(500).json({ message: 'Server Error' });
@@ -652,6 +800,40 @@ const getOrderSummaryByDate = catchAsyncError(async (req, res) => {
 
 
 // Function to send email
+// const sendEmaildata = async (orderSummary) => {
+//     let transporter = nodemailer.createTransport({
+//         service: 'gmail',
+//         auth: {
+//             user: process.env.SEND_MAIL, // Your Gmail email address
+//             pass: process.env.MAIL_PASS // replace with your email password or app-specific password
+//         },
+//     });
+
+//     let summaryHtml = '<h1>Order Summary for Today</h1><table border="1"><tr><th>Product Name</th><th>Total Weight (kg)</th><th>Total Price (Rs.)</th></tr>';
+
+//     orderSummary.forEach(({ productName, totalWeight, totalPrice }) => {
+//         summaryHtml += `<tr><td>${productName}</td><td>${totalWeight}</td><td>${totalPrice}</td></tr>`;
+//     });
+
+//     let totalWeight = 0;
+//     let totalPrice = 0;
+//     orderSummary.forEach(({ totalWeight: weight, totalPrice: price }) => {
+//         totalWeight += parseFloat(weight) || 0;
+//         totalPrice += parseFloat(price) || 0;
+//     });
+
+//     summaryHtml += `<tr><td><strong>Total</strong></td><td><strong>${totalWeight.toFixed(2)}</strong></td><td><strong>Rs. ${totalPrice.toFixed(2)}</strong></td></tr>`;
+//     summaryHtml += '</table>';
+
+//     let info = await transporter.sendMail({
+//         from: process.env.SEND_MAIL,
+//         to: 'jasfruitsandvegetables@gmail.com',
+//         subject: 'Order Summary for Today ',
+//         html: summaryHtml,
+//     });
+
+//     console.log('Message sent: %s', info.messageId);
+// };
 const sendEmaildata = async (orderSummary) => {
     let transporter = nodemailer.createTransport({
         service: 'gmail',
@@ -661,21 +843,68 @@ const sendEmaildata = async (orderSummary) => {
         },
     });
 
-    let summaryHtml = '<h1>Order Summary for Today</h1><table border="1"><tr><th>Product Name</th><th>Total Weight (kg)</th><th>Total Price (Rs.)</th></tr>';
+
+    // let summaryHtml = '<h1>Order Summary for Today</h1><table border="1"><tr><th>Product Name</th><th>Total Weight (kg)</th><th>Total Price (Rs.)</th></tr>';
+
+    // orderSummary.forEach(({ productName, totalWeight, totalPrice }) => {
+    //     summaryHtml += <tr><td>${productName}</td><td>${totalWeight}</td><td>${totalPrice}</td></tr>;
+    // });
+
+    // let totalWeight = 0;
+    // let totalPrice = 0;
+    // orderSummary.forEach(({ totalWeight: weight, totalPrice: price }) => {
+    //     totalWeight += parseFloat(weight) || 0;
+    //     totalPrice += parseFloat(price) || 0;
+    // });
+
+    // summaryHtml += <tr><td><strong>Total</strong></td><td><strong>${totalWeight.toFixed(2)}</strong></td><td><strong>Rs. ${totalPrice.toFixed(2)}</strong></td></tr>;
+    // summaryHtml += '</table>';
+
+    let summaryHtml = '<h1>Order Summary for Today</h1>';
+
+    // Grouping by unit type
+    const units = ["Kg", "Piece", "Box", "Grams"];
+    const groupedOrderSummary = {
+        Kg: [],
+        Piece: [],
+        Box: [],
+        Grams: [],
+    };
+    const totalByMeasurement = {
+        Kg: 0,
+        Piece: 0,
+        Box: 0,
+        Grams: 0,
+    };
 
     orderSummary.forEach(({ productName, totalWeight, totalPrice }) => {
-        summaryHtml += `<tr><td>${productName}</td><td>${totalWeight}</td><td>${totalPrice}</td></tr>`;
+        if (totalWeight) {
+            const [weightValue, unit] = totalWeight.trim().split(/\s+/);
+            const weight = parseFloat(weightValue) || 0;
+
+            if (units.includes(unit)) {
+                groupedOrderSummary[unit].push({ productName, totalWeight, totalPrice });
+                totalByMeasurement[unit] += weight;
+            }
+        }
     });
 
-    let totalWeight = 0;
-    let totalPrice = 0;
-    orderSummary.forEach(({ totalWeight: weight, totalPrice: price }) => {
-        totalWeight += parseFloat(weight) || 0;
-        totalPrice += parseFloat(price) || 0;
+    // Generating HTML for each unit type
+    units.forEach(unit => {
+        if (groupedOrderSummary[unit].length > 0) {
+            summaryHtml += `<table border="1" style="margin-top: 20px; border-collapse: collapse; width:100%" ><thead><tr><th colspan="3" style="text-align: center; font-weight: bold;">Quantity in ${unit}</th></tr>`;
+            summaryHtml += `<tr><th>S.NO</th><th>Product Name</th><th>Total Weight</th></tr></thead><tbody>`;
+
+            groupedOrderSummary[unit].forEach(({ productName, totalWeight }, index) => {
+                summaryHtml += `<tr><td>${index + 1}</td><td>${productName}</td><td>${totalWeight}</td></tr>`;
+            });
+
+            summaryHtml += `<tr><td colspan="2" style="text-align: right;"><strong>Total ${unit}</strong></td><td><strong>${totalByMeasurement[unit].toFixed(2)} ${unit}</strong></td></tr>`;
+            summaryHtml += '</tbody></table>';
+        }
     });
 
-    summaryHtml += `<tr><td><strong>Total</strong></td><td><strong>${totalWeight.toFixed(2)}</strong></td><td><strong>Rs. ${totalPrice.toFixed(2)}</strong></td></tr>`;
-    summaryHtml += '</table>';
+
 
     let info = await transporter.sendMail({
         from: process.env.SEND_MAIL,
@@ -686,7 +915,6 @@ const sendEmaildata = async (orderSummary) => {
 
     console.log('Message sent: %s', info.messageId);
 };
-
 // Schedule task to run at 10 PM every day
 
 // nodeCron.schedule('28 15 * * *', async () => {
@@ -765,6 +993,71 @@ nodeCron.schedule('0 21 * * *', async () => {
 
 
 // Get user summary
+// const getUserSummaryByDate = catchAsyncError(async (req, res) => {
+//     try {
+//         const { date } = req.query;
+//         // console.log("usersummarydate", date);
+
+//         // Assuming date is in YYYY-MM-DD format
+//         // const startDate = new Date(date);
+//         // const endDate = new Date(date);
+//         // endDate.setDate(endDate.getDate() + 1);
+//         // console.log("startDate", startDate)
+//         // console.log("endDate", endDate)
+//         const formattedDate = new Date(date).toISOString().split('T')[0];
+//         // Fetch orders within the date range
+//         // const orders = await Payment.find({
+//         //     createdAt: { $gte: startDate, $lt: endDate },
+//         //     paymentStatus: 'CHARGED',
+//         // });
+//         const orders = await Payment.find({
+//             paymentStatus: 'CHARGED',
+//             $expr: {
+//                 $eq: [
+//                     { $dateToString: { format: "%Y-%m-%d", date: "$orderDate" } },
+//                     formattedDate
+//                 ]
+//             }
+//         }).select('orderItems shippingInfo user user_id itemsPrice taxPrice shippingPrice totalPrice order_id paymentStatus orderStatus createdAt').exec();
+//         console.log("Fetched orders:", orders);
+
+//         const userSummary = [];
+
+//         orders.forEach(order => {
+//             const totalWeight = order.orderItems.reduce((sum, item) => sum + item.productWeight, 0);
+//             const totalPrice = order.orderItems.reduce((sum, item) => sum + (item.productWeight * item.price), 0);
+//             const products = order.orderItems.map(item => ({
+//                 name: item.name,
+//                 weight: item.productWeight,
+//                 price: parseFloat(item.price * item.productWeight).toFixed(2)
+//             }));
+
+//             userSummary.push({
+//                 user: {
+//                     name: order.user?.name || 'N/A',
+//                     email: order.user?.email || 'N/A',
+//                 },
+//                 shippingInfo: {
+//                     phoneNo: order.shippingInfo?.phoneNo || 'N/A',
+//                     address: order.shippingInfo?.address || 'N/A',
+//                     city: order.shippingInfo?.city || 'N/A',
+//                     country: order.shippingInfo?.country || 'N/A',
+//                     postalCode: order.shippingInfo?.postalCode || 'N/A',
+//                 },
+//                 products,
+//                 totalAmount: totalPrice,
+//                 totalWeight
+//             });
+
+//         });
+
+//         console.log("user summary:", JSON.stringify(userSummary, null, 2));
+//         res.status(200).json({ userSummary });
+//     } catch (error) {
+//         console.error("Error fetching user summary:", error);
+//         res.status(500).json({ message: 'Server Error' });
+//     }
+// });
 const getUserSummaryByDate = catchAsyncError(async (req, res) => {
     try {
         const { date } = req.query;
@@ -800,7 +1093,8 @@ const getUserSummaryByDate = catchAsyncError(async (req, res) => {
             const totalPrice = order.orderItems.reduce((sum, item) => sum + (item.productWeight * item.price), 0);
             const products = order.orderItems.map(item => ({
                 name: item.name,
-                weight: item.productWeight,
+                // weight: item.productWeight,
+                weight: `${item.productWeight} ${item.measurement && item.measurement=='Grams'? 'Piece' :item.measurement}`,
                 price: parseFloat(item.price * item.productWeight).toFixed(2)
             }));
 
@@ -818,7 +1112,11 @@ const getUserSummaryByDate = catchAsyncError(async (req, res) => {
                 },
                 products,
                 totalAmount: totalPrice,
-                totalWeight
+                // totalWeight
+                totalWeight: `${totalWeight} ${order.orderItems.length > 0
+                    ? order.orderItems[0].measurement
+                    : 'measurement'
+                    }`
             });
 
         });
@@ -1283,8 +1581,8 @@ async function checkPaymentStatus() {
         await Promise.all(orders.map(async (order) => {
             try {
                 if (order && order.porterOrder) {
-                    // const apiEndpoint = `https://pfe-apigw-uat.porter.in/v1/orders/${order.porterOrder.order_id}`;
-                    const apiEndpoint = `https://pfe-apigw.porter.in/v1/orders/${order.porterOrder.order_id}`;
+                    const apiEndpoint = `https://pfe-apigw-uat.porter.in/v1/orders/${order.porterOrder.order_id}`;
+                    // const apiEndpoint = `https://pfe-apigw.porter.in/v1/orders/${order.porterOrder.order_id}`;
                     let response;
                     for (let attempt = 0; attempt < 3; attempt++) { // Retry up to 3 times
                         try {
@@ -1410,17 +1708,17 @@ function isRetryableError(error) {
     return error.raw && error.raw.includes('504');
 }
 
-nodeCron.schedule('* * * * *', () => {
-    console.log('Checking payment status...');
-    checkPaymentStatus();
-    // checkRefundStatus();
-});
+// nodeCron.schedule('* * * * *', () => {
+//     console.log('Checking payment status...');
+//     checkPaymentStatus();
+//     // checkRefundStatus();
+// });
 
 
-nodeCron.schedule('0 0 */12 * * *', () => {
-    console.log('Checking Refund status...');
-    checkRefundStatus();
-});
+// nodeCron.schedule('0 0 */12 * * *', () => {
+//     console.log('Checking Refund status...');
+//     checkRefundStatus();
+// });
 
 
 module.exports = { newOrder, getSingleOrder, getQuote, porterOrder, myOrders, orders, updateOrder, deleteOrder, getOrderSummaryByDate, getUserSummaryByDate, getRemoveResponse };

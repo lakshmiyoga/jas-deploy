@@ -13,6 +13,14 @@ app.use(cookieParser());
 app.use(express.json({ limit: '5mb' })); // Adjust size limit as needed
 app.use(express.urlencoded({ limit: '5mb', extended: true }));
 app.use("/uploads", express.static(path.join(__dirname, "uploads")))
+// Cache-Control Middleware to prevent caching
+app.use((req, res, next) => {
+    res.set('Cache-Control', 'no-store, no-cache, must-revalidate, private');
+    res.set('Pragma', 'no-cache');
+    res.set('Expires', '0');
+    next();
+  });
+  
 
 
 
@@ -116,7 +124,8 @@ const payment = require("./routes/payment");
 const itemsRouter = require('./routes/item');
 const enquiry = require("./routes/enquiry");
 const analysis = require("./routes/analysis");
-const otp = require("./routes/otpRoutes")
+const otp = require("./routes/otpRoutes");
+const address = require("./routes/address");
 
 app.use('/api/v1', products);
 app.use('/api/v1', user);
@@ -127,6 +136,8 @@ app.use('/api/v1', enquiry);
 app.use('/api/v1', porter);
 app.use('/api/v1', analysis);
 app.use('/api/v1', otp);
+app.use('/api/v1', address);
+
 
 if (process.env.NODE_ENV === "production") {
     app.use(express.static(path.join(__dirname, '../frontend/build')));

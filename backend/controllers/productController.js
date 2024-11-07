@@ -44,6 +44,7 @@ const createProducts = catchAsyncError(async (req, res, next) => {
         price: req.body.price,
         category: req.body.category,
         measurement: req.body.measurement,
+        range:req.body.rangeForGrams,
         percentage:req.body.percentage,
         stocks:req.body.stocks,
         images: req.body.images,

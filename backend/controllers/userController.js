@@ -185,6 +185,9 @@ const userLogin = catchAsyncError(async (req, res, next) => {
 //     })
 // }
 const logoutUser = (req, res, next) => {
+  res.setHeader('Cache-Control', 'no-store, no-cache, must-revalidate, private');
+  res.setHeader('Pragma', 'no-cache'); // For backward compatibility with HTTP/1.0
+  res.setHeader('Expires', '0'); // Expire immediately
   res.cookie('token', '', {
     expires: new Date(0), // Set expiry to a past date to immediately clear the cookie
     httpOnly: true,
@@ -193,8 +196,9 @@ const logoutUser = (req, res, next) => {
 
   res.status(200).json({
     success: true,
-    message: "User successfully logged out"
+    message: "Logged out successfully"
   });
+
 };
 
 //Requesting Password Reset
