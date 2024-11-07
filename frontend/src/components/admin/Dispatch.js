@@ -45,6 +45,7 @@ const Dispatch = ({ isActive, setIsActive }) => {
     const dispatch = useDispatch();
     const [showModal, setShowModal] = useState(false);
     console.log("porterOrderData", porterOrderData)
+    console.log("getpackedOrderData", getpackedOrderData)
 
 
     const handlePrint = useReactToPrint({
@@ -486,6 +487,14 @@ const Dispatch = ({ isActive, setIsActive }) => {
         setShowModal(false);
     }
 
+    const capitalizeFirstLetter = (str) => {
+        return str
+            .toLowerCase()
+            .split(' ')
+            .map(word => word.charAt(0).toUpperCase() + word.slice(1))
+            .join(' ');
+    };
+
     return (
         <div>
             {/* <MetaData title={Dispatch} /> */}
@@ -525,7 +534,7 @@ const Dispatch = ({ isActive, setIsActive }) => {
 
 
                                     <h4 className="mb-4">Shipping Info</h4>
-                                    <div><b>Name:</b> {user.name}</div>
+                                    <div><b>Name:</b> {shippingInfo.name}</div>
                                     <div><b>Phone:</b> +91 {shippingInfo.phoneNo}</div>
                                     <div>
                                         <b>Address:</b>
@@ -666,7 +675,7 @@ const Dispatch = ({ isActive, setIsActive }) => {
                                                             <>
                                                                 <th>Image</th>
                                                                 <th>Name</th>
-                                                                <th>Price per kg</th>
+                                                                <th>Price</th>
                                                                 <th>Ordered Quantity</th>
                                                                 <th>Dispatched Quantity</th>
                                                                 <th>Total Amount</th>
@@ -676,16 +685,20 @@ const Dispatch = ({ isActive, setIsActive }) => {
                                                     </tr>
                                                 </thead>
                                                 <tbody>
+                                                    
                                                     {getpackedOrderData && getpackedOrderData.dispatchedTable && (
                                                         getpackedOrderData.dispatchedTable.map((item, index) => (
                                                             <tr key={index}>
                                                                 <td>
                                                                     <img src={item.image} alt={item.name} className="updateTableproduct-image" />
                                                                 </td>
-                                                                <td>{item.name}</td>
+                                                                {/* <td>{item.name}</td> */}
+                                                                <td>{item && item.measurement === 'Grams' ? `${capitalizeFirstLetter(item.name)} (${item.range})` : `${capitalizeFirstLetter(item.name)}`} </td>
                                                                 <td>Rs. {parseFloat(item.pricePerKg).toFixed(2)}</td>
-                                                                <td>{item.orderedWeight} {item.measurement}</td>
-                                                                <td>{item.dispatchedWeight} {item.measurement}</td>
+                                                                {/* <td>{item.orderedWeight} {item.measurement}</td>
+                                                                <td>{item.dispatchedWeight} {item.measurement}</td> */}
+                                                                <td>{item.orderedWeight}  {item.measurement && item.measurement=='Grams'? 'Piece' :item.measurement}</td>
+                                                                <td>{item.dispatchedWeight}  {item.measurement && item.measurement=='Grams'? 'Piece' :item.measurement}</td>
                                                                 <td>Rs. {parseFloat(item.pricePerKg * item.dispatchedWeight).toFixed(2)}</td>
                                                                 {/* <td>Rs. {item.refundableAmount}</td> */}
                                                             </tr>
@@ -739,7 +752,7 @@ const Dispatch = ({ isActive, setIsActive }) => {
                                                     </div>
                                                     <div className="modal-body">
 
-                                                        {getpackedOrderData && getpackedOrderData.dispatchedTable && (
+                                                        {/* {getpackedOrderData && getpackedOrderData.dispatchedTable && (
                                                             <div style={{ maxHeight: '200px', overflowY: 'auto' }}>
                                                                 <ul style={{ listStyleType: 'circle', paddingLeft: '20px' }}>
                                                                     {getpackedOrderData.dispatchedTable
@@ -747,6 +760,19 @@ const Dispatch = ({ isActive, setIsActive }) => {
                                                                         .map((item, index) => (
                                                                             <li key={index} style={{ paddingBottom: '10px' }}>
                                                                                 <strong>{item.name}</strong> - {item.dispatchedWeight} {item.measurement}
+                                                                            </li>
+                                                                        ))}
+                                                                </ul>
+                                                            </div>
+                                                        )} */}
+                                                        {getpackedOrderData && getpackedOrderData.dispatchedTable && (
+                                                            <div style={{ maxHeight: '200px', overflowY: 'auto' }}>
+                                                                <ul style={{ listStyleType: 'circle', paddingLeft: '20px' }}>
+                                                                    {getpackedOrderData.dispatchedTable
+                                                                        .filter(item => item.pricePerKg * item.dispatchedWeight > 0) // Filter items with total amount > 0
+                                                                        .map((item, index) => (
+                                                                            <li key={index} style={{ paddingBottom: '10px' }}>
+                                                                                <strong>{item.name}</strong> - {item.dispatchedWeight} {item.measurement && item.measurement=='Grams'? 'Piece' :item.measurement}
                                                                             </li>
                                                                         ))}
                                                                 </ul>

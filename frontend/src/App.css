@@ -2880,6 +2880,7 @@ body.no-scroll {
 
   .cart-detail-container {
     max-width: 80vw;
+    
   }
 
   .ordersummary-detail-container {
@@ -3907,4 +3908,225 @@ top: '55px',
   .cart_text {
       font-size: 16px;
   }
+}
+
+ /* default address  */
+ 
+
+ .default-address {
+  padding: 20px;
+  display: flex;
+  flex-direction: column;
+  position: fixed;
+  top: 90px;
+  width: 100%;
+  z-index: 990;
+  font-size: 12px;
+  background-color:#e9ecef;
+
+}
+
+@media (max-width: 576px) {
+  .default-address {
+    padding: 20px;
+    display: flex;
+    flex-direction: column;
+    position: fixed;
+    top: 70px;
+    width: 100%;
+    z-index: 990;
+    font-size: 8px;
+    background-color:#e9ecef;
+  
+  }
+}
+
+@media (min-width: 577px) and (max-width: 992px) {
+  .default-address {
+    padding: 20px;
+    display: flex;
+    flex-direction: column;
+    position: fixed;
+    top: 70px;
+    width: 100%;
+    z-index: 990;
+    font-size: 10px;
+    background-color:#e9ecef;
+  
+  }
+}
+
+@media (max-width: 322.9px) {
+  .default-address {
+    padding: 20px;
+    display: flex;
+    flex-direction: column;
+    position: fixed;
+    top: 50px;
+    width: 100%;
+    z-index: 990;
+    font-size: 8px;
+    background-color:#e9ecef;
+  }
+}
+
+/* address component css */
+.address-container {
+  padding: 20px;
+  max-width: 600px;
+  margin: 0 auto;
+}
+
+.address-heading {
+  font-size: 1.8rem;
+  color: #333;
+  margin-bottom: 20px;
+  text-align: center;
+}
+
+.address-wrapper {
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  gap: 15px;
+}
+
+.address-card {
+  background-color: #fff;
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+  padding: 15px;
+  border-radius: 8px;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+
+.address-info {
+  flex: 1;
+  font-size: 1rem;
+  color: #555;
+  position: relative;
+}
+
+.default-badge {
+  display: inline-flex;
+  align-items: center;
+  font-size: 0.8rem;
+  color: #007BFF;
+  margin-left: 10px;
+  background-color: #e3f2fd;
+  padding: 2px 8px;
+  border-radius: 12px;
+  font-weight: 500;
+}
+
+.default-badge .MuiSvgIcon-root {
+  margin-right: 4px;
+}
+
+.address-actions {
+  display: flex;
+  gap: 10px;
+  align-items: center;
+}
+
+.action-icon {
+  font-size: 1.2rem;
+  cursor: pointer;
+  transition: color 0.2s;
+}
+
+.edit-icon:hover {
+  color: #4CAF50; /* Green for edit */
+}
+
+.delete-icon:hover {
+  color: #E74C3C; /* Red for delete */
+}
+
+.set-default {
+  font-size: 0.8rem;
+  color: #007BFF;
+  border: 1px solid #007BFF;
+  background: none;
+  padding: 4px 8px;
+  border-radius: 4px;
+  cursor: pointer;
+  transition: all 0.3s;
+}
+
+.set-default:hover {
+  background-color: #007BFF;
+  color: #fff;
+}
+
+.add-address {
+  margin-top: 15px;
+  width: 30%;
+  padding: 10px;
+  border: none;
+  border-radius: 2px;
+  border: #000 1px solid;
+  cursor: pointer;
+  font-size: 1rem;
+  transition: background-color 0.3s;
+}
+
+.add-address:hover {
+  background-color: #0056b3;
+  color: white;
+}
+
+/* Responsive */
+@media (max-width: 768px) {
+  .address-card {
+      flex-direction: column;
+      align-items: flex-start;
+  }
+  .address-actions {
+      margin-top: 10px;
+  }
+  .add-address {
+    margin-top: 15px;
+    width: 50%;
+    padding: 10px;
+    border: none;
+    border-radius: 2px;
+    border: #000 1px solid;
+    cursor: pointer;
+    font-size: 1rem;
+    transition: background-color 0.3s;
+  }
+}
+
+.back-button {
+  display: inline-flex; /* Keeps it inline */
+  align-items: center;
+  cursor: pointer;
+  color: #333;
+  font-size: 16px;
+  font-weight: 500;
+  text-decoration: none;
+  transition: color 0.2s;
+}
+
+.back-button:hover {
+  color: #007bff; /* Change to a link color on hover */
+}
+
+.back-button svg {
+  margin-right: 4px; /* Smaller spacing for a more compact look */
+  font-size: 18px;
+}
+
+/* General styling for error message */
+/* Minimal styling for left-aligned error message */
+.error-message {
+  color: #e63946;
+  font-size: 13px;
+  font-weight: 500;
+  margin-top: 3px;
+  text-align: left;
+  display: block;
 }

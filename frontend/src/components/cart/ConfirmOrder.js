@@ -1,6 +1,6 @@
 import React, { Fragment, useEffect, useState } from 'react';
 import MetaData from '../Layouts/MetaData';
-import { validateShipping } from './Shipping';
+// import { validateShipping } from './Shipping';
 import { Link, useNavigate } from 'react-router-dom';
 import StepsCheckOut from './StepsCheckOut';
 import axios from 'axios';
@@ -20,156 +20,154 @@ import LoaderButton from '../Layouts/LoaderButton';
 const ConfirmOrder = () => {
     const dispatch = useDispatch();
     const location = useLocation();
+    const {
+        shippingCharge = 0,
+        defaultAddress = null,
+        subtotal = 0,
+        total = 0,
+        items = [] } = location.state || {};
     // sessionStorage.setItem('redirectPath', location.pathname);
     // const { loading: orderLoading, orderDetail, error } = useSelector(state => state.orderState);
-    const { shippingInfo, items: cartItems } = useSelector(state => state.cartState);
+    // const {items: cartItems } = useSelector(state => state.cartState);
+    const [cartItems, setItems] = useState(() => {
+        return JSON.parse(localStorage.getItem("cartItems")) || [];
+    });
     const { user } = useSelector(state => state.authState);
     console.log("user", user)
     const navigate = useNavigate();
     const [loading, setLoading] = useState(false);
-    const [dummyUser, setDummyUser] = useState(false);
-    const [shippingAmount, setShippingAmount] = useState(null);
+    // const [dummyUser, setDummyUser] = useState(false);
+    // const [shippingAmount, setShippingAmount] = useState(null);
     const queryParams = new URLSearchParams(location.search);
     const message = queryParams.get('message');
     const [showModal, setShowModal] = useState(false);
     const [orderDescription, setOrderDescription] = useState('');
-    useEffect(() => {
-        if (!user) {
-            store.dispatch(loadUser());
-            store.dispatch(getProducts());
-        }
-
-        if (user) {
-            setDummyUser(true);
-            // console.log("hello")
-        }
-    }, [user]);
 
     // useEffect(()=>{
     //     store.dispatch(loadUser());
     // },[])
 
-    const shippingCharge = shippingAmount / 100;
+    // const shippingCharge = shippingAmount / 100;
     // const shippingCharge = 1.00;
-    console.log("shippingInfo", shippingInfo)
-    const subtotal = cartItems.reduce((acc, item) => acc + item.price * item.productWeight, 0).toFixed(2);
-    const total = (parseFloat(subtotal) + shippingCharge).toFixed(2);
+    // console.log("shippingInfo", shippingInfo)
+    // const subtotal = cartItems.reduce((acc, item) => acc + item.price * item.productWeight, 0).toFixed(2);
+    // const total = (parseFloat(subtotal) + shippingCharge).toFixed(2);
 
-    const [pickupDetails, setPickupDetails] = useState({
-        lat: 13.0671844,
-        lng: 80.1775087
-    });
+    // const [pickupDetails, setPickupDetails] = useState({
+    //     lat: 13.0671844,
+    //     lng: 80.1775087
+    // });
 
-    const [dropDetails, setDropDetails] = useState({
-        lat: shippingInfo && shippingInfo.latitude && shippingInfo.latitude,
-        lng: shippingInfo && shippingInfo.longitude && shippingInfo.longitude
-        // lat: 12.947146336879577,
-        // lng: 77.62102993895199
-    });
+    // const [dropDetails, setDropDetails] = useState({
+    //     lat: shippingInfo && shippingInfo.latitude && shippingInfo.latitude,
+    //     lng: shippingInfo && shippingInfo.longitude && shippingInfo.longitude
+    //     // lat: 12.947146336879577,
+    //     // lng: 77.62102993895199
+    // });
 
-    const [customerDetails, setCustomerDetails] = useState({
-        name: user && user.name && user.name,
-        countryCode: '+91',
-        phoneNumber: shippingInfo.phoneNo
-    });
+    // const [customerDetails, setCustomerDetails] = useState({
+    //     name: user && user.name && user.name,
+    //     countryCode: '+91',
+    //     phoneNumber: shippingInfo.phoneNo
+    // });
     // console.log(latitude,longitude)
+    // useEffect(() => {
+    //     setCustomerDetails({
+    //         name: user && user.name && user.name,
+    //         countryCode: '+91',
+    //         phoneNumber: shippingInfo.phoneNo
+    //     })
+    // }, [user])
+
+    // useEffect(() => {
+    //     const fetchdata = async () => {
+
+    //         const requestData = {
+    //             pickup_details: pickupDetails,
+    //             drop_details: dropDetails,
+    //             customer: {
+    //                 name: customerDetails.name,
+    //                 mobile: {
+    //                     country_code: customerDetails.countryCode,
+    //                     number: customerDetails.phoneNumber
+    //                 }
+    //             }
+    //         };
+    //         // console.log(requestData)
+    //         try {
+    //             const response = await axios.post('/api/v1/get-quote', requestData);
+    //             // console.log("getQuote Response", response.data)
+    //             // if (response && response.data && response.data.vehicles[3] && response.data.vehicles[3].fare) {
+    //             //     setShippingAmount(response.data.vehicles[3].fare.minor_amount);
+    //             //     setDummyUser(false);
+    //             // }
+    //             const twoWheelerVehicle = response.data.vehicles.find(vehicle =>
+    //                 vehicle.type && vehicle.type.includes("2 Wheeler")
+    //             );
+
+    //             if (twoWheelerVehicle && twoWheelerVehicle.fare) {
+    //                 // Set the shipping amount for "2 Wheeler"
+    //                 setShippingAmount(twoWheelerVehicle.fare.minor_amount);
+    //                 setDummyUser(false);
+    //             }
+    //             else {
+
+    //                 // toast.error(`No 2 Wheeler found in the vehicle list.`, {
+    //                 //     position: "bottom-center",
+    //                 // });
+    //                 toast.dismiss();
+    //                 setTimeout(() => {
+    //                     toast.error('No 2 Wheeler found in the vehicle list', {
+    //                         position: 'bottom-center',
+    //                         type: 'error',
+    //                         autoClose: 700,
+    //                         transition: Slide,
+    //                         hideProgressBar: true,
+    //                         className: 'small-toast',
+    //                     });
+    //                 }, 300);
+    //                 navigate("/shipping")
+    //             }
+
+    //             //    toast.error('Response:', response.data);
+    //             // Handle response as needed
+    //         } catch (error) {
+    //             // console.log(error)
+    //             navigate("/shipping")
+    //             // toast.error(error.response.data.message);
+    //             toast.dismiss();
+    //             setTimeout(() => {
+    //                 toast.error(error.response.data.message, {
+    //                     position: 'bottom-center',
+    //                     type: 'error',
+    //                     autoClose: 700,
+    //                     transition: Slide,
+    //                     hideProgressBar: true,
+    //                     className: 'small-toast',
+    //                 });
+    //             }, 300);
+    //             // Handle error as needed
+    //         }
+    //     }
+    //     if (dummyUser) {
+    //         fetchdata()
+    //     }
+
+    // }, [dummyUser])
     useEffect(() => {
-        setCustomerDetails({
-            name: user && user.name && user.name,
-            countryCode: '+91',
-            phoneNumber: shippingInfo.phoneNo
-        })
-    }, [user])
-
-    useEffect(() => {
-        const fetchdata = async () => {
-
-            const requestData = {
-                pickup_details: pickupDetails,
-                drop_details: dropDetails,
-                customer: {
-                    name: customerDetails.name,
-                    mobile: {
-                        country_code: customerDetails.countryCode,
-                        number: customerDetails.phoneNumber
-                    }
-                }
-            };
-            // console.log(requestData)
-            try {
-                const response = await axios.post('/api/v1/get-quote', requestData);
-                // console.log("getQuote Response", response.data)
-                // if (response && response.data && response.data.vehicles[3] && response.data.vehicles[3].fare) {
-                //     setShippingAmount(response.data.vehicles[3].fare.minor_amount);
-                //     setDummyUser(false);
-                // }
-                const twoWheelerVehicle = response.data.vehicles.find(vehicle =>
-                    vehicle.type && vehicle.type.includes("2 Wheeler")
-                );
-
-                if (twoWheelerVehicle && twoWheelerVehicle.fare) {
-                    // Set the shipping amount for "2 Wheeler"
-                    setShippingAmount(twoWheelerVehicle.fare.minor_amount);
-                    setDummyUser(false);
-                }
-                else {
-
-                    // toast.error(`No 2 Wheeler found in the vehicle list.`, {
-                    //     position: "bottom-center",
-                    // });
-                    toast.dismiss();
-                    setTimeout(() => {
-                        toast.error('No 2 Wheeler found in the vehicle list', {
-                            position: 'bottom-center',
-                            type: 'error',
-                            autoClose: 700,
-                            transition: Slide,
-                            hideProgressBar: true,
-                            className: 'small-toast',
-                        });
-                    }, 300);
-                    navigate("/shipping")
-                }
-
-                //    toast.error('Response:', response.data);
-                // Handle response as needed
-            } catch (error) {
-                // console.log(error)
-                navigate("/shipping")
-                // toast.error(error.response.data.message);
-                toast.dismiss();
-                setTimeout(() => {
-                    toast.error(error.response.data.message, {
-                        position: 'bottom-center',
-                        type: 'error',
-                        autoClose: 700,
-                        transition: Slide,
-                        hideProgressBar: true,
-                        className: 'small-toast',
-                    });
-                }, 300);
-                // Handle error as needed
-            }
-        }
-        if (dummyUser) {
-            fetchdata()
-        }
-
-    }, [dummyUser])
-    useEffect(() => {
-        if (!shippingInfo) {
-            toast.dismiss();
-            setTimeout(() => {
-                toast.error('Shipping information is missing. Please complete these steps to proceed!', {
-                    position: 'bottom-center',
-                    type: 'error',
-                    autoClose: 700,
-                    transition: Slide,
-                    hideProgressBar: true,
-                    className: 'small-toast',
-                });
-            }, 300);
-            navigate('/shipping');
+        if (!defaultAddress && !shippingCharge) {
+            // toast.dismiss();
+            // setTimeout(() => {
+            //     toast.error('Shipping information is missing. Please complete these steps to proceed!', {
+            //         position: 'bottom-center',
+            //         type: 'error',
+            //         autoClose: 700,
+            //         transition: Slide,
+            //         hideProgressBar: true,
+            //         className: 'small-toast',
+            //     });
+            // }, 300);
+            navigate('/cart');
         }
         if (!cartItems.length) {
             toast.dismiss();
@@ -185,7 +183,7 @@ const ConfirmOrder = () => {
             }, 300);
             navigate('/cart');
         }
-    }, [shippingInfo, cartItems, navigate]);
+    }, [defaultAddress, shippingCharge, cartItems, navigate]);
 
     const initPayment = async (data) => {
         if (data && data.payment_links && data.payment_links.web) {
@@ -231,7 +229,7 @@ const ConfirmOrder = () => {
         const plainText = CryptoJS.AES.encrypt(randomKey, encryptionKey).toString();
 
         const reqdata = {
-            shippingInfo,
+            shippingInfo: defaultAddress && defaultAddress,
             user,
             user_id: user._id,
             cartItems,
@@ -255,7 +253,7 @@ const ConfirmOrder = () => {
                     user_id: user._id,
                     user: user,
                     cartItems,
-                    shippingInfo,
+                    shippingInfo: defaultAddress && defaultAddress,
                     itemsPrice: parseFloat(subtotal),
                     taxPrice: 0.0,
                     shippingPrice: parseFloat(shippingCharge),
@@ -343,9 +341,9 @@ const ConfirmOrder = () => {
     }
 
     useEffect(() => {
-        if (shippingInfo) {
-            validateShipping(shippingInfo, navigate);
-        }
+        // if (shippingInfo) {
+        //     validateShipping(shippingInfo, navigate);
+        // }
         // if (error) {
         //     toast.error(error);
         // }
@@ -363,7 +361,15 @@ const ConfirmOrder = () => {
                 });
             }, 300);
         }
-    }, [shippingInfo, navigate, message]);
+    }, [navigate, message]);
+
+    const capitalizeFirstLetter = (str) => {
+        return str
+            .toLowerCase()
+            .split(' ')
+            .map(word => word.charAt(0).toUpperCase() + word.slice(1))
+            .join(' ');
+    };
 
     return (
         <Fragment>
@@ -378,107 +384,115 @@ const ConfirmOrder = () => {
                 <div className="products_heading">Confirm Order</div>
                 <StepsCheckOut shipping confirmOrder />
                 <div className="container confirm-order-container">
-                    {!shippingAmount ? <div style={{ marginTop: '4rem' }}>
+                    {/* {!shippingAmount ? <div style={{ marginTop: '4rem' }}>
                         <Loader />
-                    </div> : (
-                        // {loading || !shippingAmount ? <Loader /> : (
-                        <div className="row justify-content-center">
-                            <div className="col-10 col-md-10 col-lg-8 mt-5 order-confirm" id='order_summary'>
-                                <h4 className="mb-3">Shipping Info</h4>
-                                <div><b>Name:</b> {user && user.name}</div>
-                                <div><b>Phone:</b> {shippingInfo.phoneNo}</div>
-                                {/* <p className="mb-4"><b>Address:</b> {`${shippingInfo.address},${shippingInfo.landmark},${shippingInfo.area}, ${shippingInfo.city}- ${shippingInfo.postalCode}`}</p> */}
-                                <div className="mb-4">
-                                    <b>Address:</b>
-                                    {shippingInfo.address && `${shippingInfo.address},`}
-                                    {shippingInfo.area && `${shippingInfo.area},`}
-                                    {shippingInfo.landmark && `${shippingInfo.landmark},`}
-                                    {shippingInfo.city && `${shippingInfo.city}`}
-                                    {shippingInfo.postalCode && `-${shippingInfo.postalCode}`}
-                                </div>
-                                <hr />
-                                <h4 className="mt-4">Your Cart Items:</h4>
-                                <hr />
-                                {cartItems.map(item => (
-                                    <Fragment key={item.product}>
-                                        <div className="cart-item my-1">
-                                            <div className="row">
-                                                <div className="col-4 col-lg-2">
-                                                    <img src={item.image} alt={item.name} height="45" width="65" />
-                                                </div>
-                                                <div className="col-4 col-lg-4">
+                    </div> : ( */}
+                    <div className="row justify-content-center">
+                        <div className="col-10 col-md-10 col-lg-8 mt-5 order-confirm" id='order_summary'>
+                            <h4 className="mb-3">Shipping Info</h4>
+                            <div><b>Name:</b> {defaultAddress && defaultAddress.name}</div>
+                            <div><b>Phone:</b> {defaultAddress && defaultAddress.phoneNo}</div>
+                            {/* <p className="mb-4"><b>Address:</b> {`${shippingInfo.address},${shippingInfo.landmark},${shippingInfo.area}, ${shippingInfo.city}- ${shippingInfo.postalCode}`}</p> */}
+                            {
+                                defaultAddress && (
+                                    <div className="mb-4">
+                                        <b>Address:</b>
+                                        {defaultAddress.address && `${defaultAddress.address},`}
+                                        {defaultAddress.area && `${defaultAddress.area},`}
+                                        {defaultAddress.landmark && `${defaultAddress.landmark},`}
+                                        {defaultAddress.city && `${defaultAddress.city}`}
+                                        {defaultAddress.postalCode && `-${defaultAddress.postalCode}`}
+                                    </div>
+                                )
+                            }
+
+                            <hr />
+                            <h4 className="mt-4">Your Cart Items:</h4>
+                            <hr />
+                            {cartItems && cartItems.map(item => (
+                                <Fragment key={item.product}>
+                                    <div className="cart-item my-1">
+                                        <div className="row">
+                                            <div className="col-4 col-lg-2">
+                                                <img src={item.image} alt={item.name} height="45" width="65" />
+                                            </div>
+                                            {/* <div className="col-4 col-lg-4">
                                                     <Link to={`/product/${item.product}`}>{item.name}</Link>
-                                                </div>
-                                                <div className="col-4 col-lg-5">
-                                                    <div>{item.productWeight} x Rs.{item.price} = <b>Rs.{(item.productWeight * item.price).toFixed(2)}</b></div>
-                                                </div>
+                                                </div> */}
+                                            <div className="col-4 col-lg-4">
+                                                {/* <Link to={/product/${item.product}}>{item.name}</Link> */}
+                                                {item && item.measurement === 'Grams' ? `${capitalizeFirstLetter(item.name)} (${item.range})` : `${capitalizeFirstLetter(item.name)}`}
+                                            </div>
+                                            <div className="col-4 col-lg-5">
+                                                <div>{item.productWeight} x Rs.{item.price} = <b>Rs.{(item.productWeight * item.price).toFixed(2)}</b></div>
                                             </div>
                                         </div>
-                                        <hr />
-                                    </Fragment>
-                                ))}
-                            </div>
-                            <div className="col-10 col-md-10  col-lg-3 my-4">
-                                <div id="order_summary">
-                                    <h4>Order Summary</h4>
+                                    </div>
                                     <hr />
-                                    <p>Subtotal: <span className="order-summary-values">Rs.{subtotal}</span></p>
-                                    <p>Shipping: <span className="order-summary-values">Rs.{shippingCharge && shippingCharge.toFixed(2)}</span></p>
-                                    <hr />
-                                    <p>Total: <span className="order-summary-values">Rs.{total}</span></p>
-                                    <hr />
-                                    {shippingCharge ? (
-                                        <button id="checkout_btn" className="btn btn-primary btn-block" onClick={handelopenModal} disabled={loading}>
-                                            {/* {loading ? <LoaderButton fullPage={false} size={20} /> : (
-                                                                <span>  Proceed to Payment</span>
-                                                            )
+                                </Fragment>
+                            ))}
+                        </div>
+                        <div className="col-10 col-md-10  col-lg-3 my-4">
+                            <div id="order_summary">
+                                <h4>Order Summary</h4>
+                                <hr />
+                                <p>Subtotal: <span className="order-summary-values">Rs.{subtotal}</span></p>
+                                <p>Shipping: <span className="order-summary-values">Rs.{shippingCharge && shippingCharge.toFixed(2)}</span></p>
+                                <hr />
+                                <p>Total: <span className="order-summary-values">Rs.{total}</span></p>
+                                <hr />
+                                {shippingCharge ? (
+                                    <button id="checkout_btn" className="btn btn-primary btn-block" onClick={handelopenModal} disabled={loading}>
+                                        {loading ? <LoaderButton fullPage={false} size={20} /> : (
+                                            <span>  Proceed to Payment</span>
+                                        )
 
-                                                            } */}
-                                            Proceed to Payment
-                                        </button>
-                                    ) : (
-                                        <button id="checkout_btn" className="btn btn-block" disabled>
-                                            Proceed to Payment
-                                        </button>
-                                    )}
-                                    {showModal && (
-                                        <div className="modal" tabIndex="-1" role="dialog" style={modalStyle}>
-                                            <div className="modal-dialog" role="document">
-                                                <div className="modal-content">
-                                                    <div className="modal-header">
-                                                        <h5 className="modal-title">Confirm Order</h5>
-                                                        {
-                                                            !loading ? (
-                                                                <button type="button" className="close" onClick={handleCancelModal} disabled={loading}>
-                                                                    <span aria-hidden="true">&times;</span>
-                                                                </button>
-                                                            ) : <></>
+                                        }
+                                        {/* Proceed to Payment */}
+                                    </button>
+                                ) : (
+                                    <button id="checkout_btn" className="btn btn-block" disabled>
+                                        Proceed to Payment
+                                    </button>
+                                )}
+                                {showModal && (
+                                    <div className="modal" tabIndex="-1" role="dialog" style={modalStyle}>
+                                        <div className="modal-dialog" role="document">
+                                            <div className="modal-content">
+                                                <div className="modal-header">
+                                                    <h5 className="modal-title">Confirm Order</h5>
+                                                    {
+                                                        !loading ? (
+                                                            <button type="button" className="close" onClick={handleCancelModal} disabled={loading}>
+                                                                <span aria-hidden="true">&times;</span>
+                                                            </button>
+                                                        ) : <></>
+                                                    }
+
+                                                </div>
+                                                <div className="modal-body">
+                                                    <p>{orderDescription && orderDescription}</p>
+                                                </div>
+                                                <div className="modal-footer">
+                                                    <button type="button" className="btn btn-secondary" onClick={handleCancelModal} disabled={loading}>Cancel</button>
+                                                    <button type="button" className="btn btn-success" onClick={processPayment} disabled={loading}>
+                                                        {loading ? <LoaderButton fullPage={false} size={20} /> : (
+                                                            <span>  Continue</span>
+                                                        )
+
                                                         }
 
-                                                    </div>
-                                                    <div className="modal-body">
-                                                        <p>{orderDescription && orderDescription}</p>
-                                                    </div>
-                                                    <div className="modal-footer">
-                                                        <button type="button" className="btn btn-secondary" onClick={handleCancelModal} disabled={loading}>Cancel</button>
-                                                        <button type="button" className="btn btn-success" onClick={processPayment} disabled={loading}>
-                                                            {loading ? <LoaderButton fullPage={false} size={20} /> : (
-                                                                <span>  Continue</span>
-                                                            )
-
-                                                            }
-
-                                                        </button>
-                                                    </div>
+                                                    </button>
                                                 </div>
                                             </div>
                                         </div>
-                                    )}
+                                    </div>
+                                )}
 
-                                </div>
                             </div>
                         </div>
-                    )}
+                    </div>
+                    {/* )} */}
                 </div>
             </Fragment>
             {/* ) : (

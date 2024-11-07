@@ -54,7 +54,7 @@ const Header = ({ openSide, setOpenSide }) => {
      dispatch(logout);
      sessionStorage.clear();
     // sessionStorage.removeItem('redirectPath');
-    navigate('/');   
+    // navigate('/');   
     setRefresh(true);
     // return
     // sessionStorage.removeItem('redirectPath');
@@ -81,17 +81,20 @@ const Header = ({ openSide, setOpenSide }) => {
           hideProgressBar: true,
           className: 'small-toast',
           // onOpen: () => { window.location.replace('/'); },
-          onClose: () => {  window.close();window.open('/', '_blank');},
+          // onClose: () => {  window.close();window.open('/', '_blank');},
+          onClose: () => {   dispatch(clearlogout());   
+            dispatch(clearUser());},
+
         });
            
        
-        dispatch(clearlogout());
-      //   setTimeout(() => {
-      //     // window.close();
-      //     // window.open('/', '_blank');
-      //     window.location.replace('/'); // Fallback to replace current page
-      //     // window.open('/', '_blank');
-      // }, 200);
+        // dispatch(clearlogout());
+        setTimeout(() => {
+          // window.close();
+          // window.open('/', '_blank');
+          window.location.replace('/'); // Fallback to replace current page
+          // window.open('/', '_blank');
+      }, 200);
        
       //   sessionStorage.clear(); 
       // // Redirect without leaving a history entry

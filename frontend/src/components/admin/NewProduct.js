@@ -24,6 +24,7 @@ const NewProduct = ({ isActive, setIsActive }) => {
     const [imagesPreview, setImagesPreview] = useState([]);
     const [imagesCleared, setImagesCleared] = useState(false);
     const [measurement, setMeasurement] = useState("");
+    const [rangeForGrams, setRangeForGrams] = useState(""); // New state for range
 
 
     const { newloading, isProductCreated, error } = useSelector(state => state.productState)
@@ -110,6 +111,9 @@ const NewProduct = ({ isActive, setIsActive }) => {
         formData.append('percentage', percentage);
         formData.append('category', category);
         formData.append('measurement', measurement);
+        if (measurement === "Grams") {
+            formData.append('rangeForGrams', rangeForGrams)
+        }; // Append range if provided
         formData.append('stocks', stocks);
         images.forEach(image => {
             formData.append('images', image)
@@ -294,6 +298,7 @@ const NewProduct = ({ isActive, setIsActive }) => {
                   value=""
                 />
               </div> */}
+                               
                                 <div className="form-group">
                                     <label for="measurement_field">Measurement  <span style={{ color: 'red' }}>*</span></label>
                                     <select
@@ -308,8 +313,23 @@ const NewProduct = ({ isActive, setIsActive }) => {
                                         <option value="Kg">Kg</option>
                                         <option value="Piece">Piece</option>
                                         <option value="Box">Box</option>
+                                        <option value="Grams">Grams</option>
                                     </select>
                                 </div>
+                                {/* Range input for grams */}
+                                {measurement === "Grams" && (
+                                    <div className="form-group">
+                                        <label htmlFor="range_field">Range for Grams(per piece) <span style={{ color: 'red' }}>*</span></label>
+                                        <input
+                                            type="text"
+                                            id="range_field"
+                                            className="form-control"
+                                            onChange={e => setRangeForGrams(e.target.value)}
+                                            value={rangeForGrams}
+                                            placeholder="Enter range in grams"
+                                        />
+                                    </div>
+                                )}
                                 <div className="form-group">
                                     <label for="stock_field">Stocks  <span style={{ color: 'red' }}>*</span></label>
                                     <select

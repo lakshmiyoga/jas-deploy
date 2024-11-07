@@ -431,7 +431,7 @@ const Register = () => {
 
 
   const submitHandler = (e) => {
-    e.preventDefault();
+    if (e) e.preventDefault();
     dispatch(otpErrorClear());
     dispatch(otpClear());
     if (userData.password !== userData.confirmPassword) {

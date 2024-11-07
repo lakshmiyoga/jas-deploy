@@ -1,81 +1,51 @@
 
 import React, { useEffect, useState, Fragment, useCallback, useRef } from 'react';
 import { useDispatch, useSelector } from "react-redux";
-import { useLocation, useNavigate } from "react-router-dom";
+import { useLocation, useNavigate, useParams } from "react-router-dom";
 import { saveShippingInfo } from "../../slices/cartSlice";
 import StepsCheckOut from './StepsCheckOut';
 import { Slide, toast } from 'react-toastify';
-import axios from 'axios';
 import ArrowBackIcon from '@mui/icons-material/ArrowBack';
+import axios from 'axios';
 import NumberInput from '../Layouts/NumberInput';
 import MetaData from '../Layouts/MetaData';
 import { GoogleMap, LoadScript, Marker, Autocomplete } from '@react-google-maps/api';
 import 'leaflet/dist/leaflet.css';
 import { debounce } from 'lodash';
 import MyLocationIcon from '@mui/icons-material/MyLocation';
-import { getUserAddresses, postAddress } from '../../actions/addressAction';
+import { getUserAddresses, postAddress, updateAddress } from '../../actions/addressAction';
 import LoaderButton from '../Layouts/LoaderButton';
 import { loadUser } from '../../actions/userActions';
 import store from '../../store';
-import { clearPostAddress } from '../../slices/AddressSlice';
+import { clearPostAddress, clearupdateAddress } from '../../slices/AddressSlice';
 
-
-// export const validateShipping = (shippingInfo, navigate) => {
-//     if (
-//         !shippingInfo.address ||
-//         !shippingInfo.area ||
-//         !shippingInfo.city ||
-//         !shippingInfo.state ||
-//         !shippingInfo.country ||
-//         !shippingInfo.phoneNo ||
-//         !shippingInfo.postalCode
-//     ) {
-//         toast.dismiss();
-//         setTimeout(() => {
-//             toast.error('Please fill the shipping Information', {
-//                 position: 'bottom-center',
-//                 type: 'error',
-//                 autoClose: 700,
-//                 transition: Slide,
-//                 hideProgressBar: true,
-//                 className: 'small-toast',
-//             });
-//         }, 300);
-//         navigate('/shipping');
-//     }
-// }
 
 const libraries = ["places"];
 
-const Shipping = () => {
-    // const { shippingInfo = {} } = useSelector(state => state.cartState);
-    // const shippingInfo = localStorage.getItem('shippingInfo')
-    //     ? JSON.parse(localStorage.getItem('shippingInfo'))
-    //     : {};
+const UpdateAddress = () => {
+
+    const { id: addressId } = useParams();
     const { isAuthenticated, user } = useSelector(state => state.authState);
-    const { postdata, posterror, postloading } = useSelector(state => state.addressState);
+    const { updatedata,updateerror,updateloading } = useSelector(state => state.addressState);
     const location = useLocation();
-    // sessionStorage.setItem('redirectPath', location.pathname);
-    // const { loactionResponse } = useSelector(state => state.orderState);
-    const [address, setAddress] = useState('');
-    const [area, setArea] = useState('');
-    const [landmark, setLandmark] = useState('');
-    const [city, setCity] = useState('');
+    const shippingdata = location.state?.shippingdata || null;
+    const [address, setAddress] = useState(shippingdata && shippingdata.address);
+    const [area, setArea] = useState(shippingdata && shippingdata.area);
+    const [landmark, setLandmark] = useState(shippingdata && shippingdata.landmark);
+    const [city, setCity] = useState(shippingdata && shippingdata.city);
     // const [city, setCity] = useState("Chennai");
-    const [phoneNo, setPhoneNo] = useState('');
-    const [postalCode, setPostalCode] = useState('');
-    const [country, setCountry] = useState('');
+    const [phoneNo, setPhoneNo] = useState(shippingdata && shippingdata.phoneNo);
+    const [postalCode, setPostalCode] = useState(shippingdata && shippingdata.postalCode);
+    const [country, setCountry] = useState(shippingdata && shippingdata.country);
     const [hasExceeded, setHasExceeded] = useState(false);
     // const [country, setCountry] = useState("India")
-    const [name, setName] = useState('');
-    const [state, setState] = useState('');
+    const [name, setName] = useState(shippingdata && shippingdata.name);
+    const [state, setState] = useState(shippingdata && shippingdata.state);
     const [mapSearched, setMapsearched] = useState(false);
     const [allowed, setAllowed] = useState(true);
-    const [defaultAddress, setDefaultAddress] = useState(false);
-    // const [latitude, setLatitude] = useState('12.947146336879577');
-    // const [longitude, setLongitude] = useState('77.62102993895199');
-    const [latitude, setLatitude] = useState(null);
-    const [longitude, setLongitude] = useState(null);
+    const [defaultAddress, setDefaultAddress] = useState(shippingdata && shippingdata.defaultAddress);
+    const [latitude, setLatitude] = useState(shippingdata && shippingdata.latitude);
+    const [longitude, setLongitude] = useState(shippingdata && shippingdata.longitude);
     const [dummyLat, setDummyLat] = useState(null);
     const [dummyLng, setDummyLng] = useState(null);
     const [showModal, setShowModal] = useState(false);
@@ -83,93 +53,77 @@ const Shipping = () => {
     const [hasExceededPostalCode, setHasExceededPostalCode] = useState(false);
     const [showMapModal, setShowMapModal] = useState(false);
     const [cancelbutton, setCancelbutton] = useState(false);
-    // const [position, setPosition] = useState({ lat: 12.984820441742858, lng: 80.23556581985943 });
     const navigate = useNavigate();
     const dispatch = useDispatch();
-    const [isChanged, setIsChanged] = useState(false);
     const [isMap, setIsMap] = useState(false);
     const mapRef = useRef(null);
+    const [isChanged,setIsChanged]=useState(false);
     const apiKey = process.env.REACT_APP_GOOGLEMAP_API_KEY;
-    const { items: cartItems } = useSelector(state => state.cartState);
 
-    console.log("latitude longitude", latitude, longitude);
-
+    console.log("lat and lon", latitude, longitude);
+    console.log("shipping data",shippingdata );
     const handleDefaultCheckboxChange = () => {
         setDefaultAddress(!defaultAddress);
     };
 
-    // console.log("shippingInfo", shippingInfo);
-    // useEffect(() => {
-    //     if (!cartItems.length) {
-    //         toast.dismiss();
-    //         setTimeout(() => {
-    //             toast.error('Cart is empty. Please add at least one item to proceed! ', {
-    //                 position: 'bottom-center',
-    //                 type: 'error',
-    //                 autoClose: 700,
-    //                 transition: Slide,
-    //                 hideProgressBar: true,
-    //                 className: 'small-toast',
-    //             });
-    //         }, 300);
-    //         navigate('/cart');
-    //     }
-    // }, [cartItems, navigate]);
+
+    useEffect(()=>{
+           if(!shippingdata){
+            navigate('/address') 
+           }
+    },[])
 
     useEffect(() => {
-        if (postdata) {
+        if (updatedata) {
             toast.dismiss();
             setTimeout(() => {
-                toast.success(postdata.message, {
+                toast.success(updatedata.message, {
                     position: 'bottom-center',
                     type: 'success',
                     autoClose: 400,
                     transition: Slide,
                     hideProgressBar: true,
                     className: 'small-toast',
-                    // onOpen: () => {},
-                    onOpen: () => {
-                        dispatch(clearPostAddress()); dispatch(getUserAddresses({ userId: user && user._id }));
-                        setAddress('');
-                        setArea('');
-                        setLandmark('');
-                        setMapsearched(false);
-                        setDummyLat(null);
-                        setDummyLng(null);
-                        setIsMap(false);
-                        setShowModal(false);
-                        setShowMapModal(false);
-                        setArea('');
-                        setLandmark('');
-                        setCity('');
-                        setState('');
-                        setPostalCode('');
-                        setCountry('');
-                        setMapsearched(false);
-                        setLatitude(null);
-                        setLongitude(null);
-                        navigate('/cart')
+                    // onOpen: () => { },
+                    onOpen: () => { dispatch(clearupdateAddress()); navigate('/address'); dispatch(getUserAddresses({userId:user && user._id}));  
+                    setAddress('');
+                    setArea('');
+                    setLandmark('');
+                    setMapsearched(false);
+                    setDummyLat(null);
+                    setDummyLng(null);
+                    setIsMap(false);
+                    setShowModal(false);
+                    setShowMapModal(false);
+                    setArea('');
+                    setLandmark('');
+                    setCity('');
+                    setState('');
+                    setPostalCode('');
+                    setCountry('');
+                    setMapsearched(false);
+                    setLatitude(null);
+                    setLongitude(null); 
                     }
                 });
             }, 10);
-
         }
-        if (posterror) {
+        if(updateerror){
             toast.dismiss();
             setTimeout(() => {
-                toast.error(posterror, {
+                toast.error(updateerror, {
                     position: 'bottom-center',
                     type: 'error',
                     autoClose: 700,
                     transition: Slide,
                     hideProgressBar: true,
                     className: 'small-toast',
-                    onOpen: () => { dispatch(clearPostAddress()); },
+                    onOpen: () => { dispatch(clearupdateAddress()); },
                 });
             }, 10);
 
         }
-    }, [postdata, posterror])
+    }, [updatedata,updateerror])
 
     const fetchAddress = async (latitude, longitude) => {
         try {
@@ -200,12 +154,6 @@ const Shipping = () => {
                     if (component.types.includes('street_number')) {
                         streetNumber = component.long_name; // Street number
                     }
-                    // else if (component.types.includes('sublocality_level_3')){
-                    //     locality =  component.long_name;
-                    // }
-                    // else if (component.types.includes('premise')) {
-                    //     premise = component.long_name; // Notable place or building
-                    // }
                     else if (component.types.includes('route')) {
                         route = component.long_name !== 'Unnamed Road' ? component.long_name : ''; // Street name
                     } else if (component.types.includes('sublocality_level_1') || component.types.includes('neighborhood')) {
@@ -238,7 +186,6 @@ const Shipping = () => {
                 setMapsearched(false);
                 setDummyLat(null);
                 setDummyLng(null);
-                setIsChanged(false);
             }
         } catch (error) {
             toast.dismiss();
@@ -256,10 +203,10 @@ const Shipping = () => {
     };
 
     useEffect(() => {
-        if (latitude && longitude && !mapSearched && isChanged) {
+        if (latitude && longitude && !mapSearched && isChanged && !dummyLat && !dummyLng) {
             fetchAddress(latitude, longitude);
         }
-    }, [latitude, longitude, mapSearched]);
+    }, [latitude, longitude, mapSearched,isChanged]);
 
 
     const handleCurrentLocation = async () => {
@@ -280,9 +227,9 @@ const Shipping = () => {
                         setLatitude(parseFloat(latitude.toFixed(6)));
                         setLongitude(parseFloat(longitude.toFixed(6)));
                         setAllowed(true);
-                        setIsChanged(true);
                         setShowModal(false);
                         setIsButtonDisabled(false);
+                        setIsChanged(true);
                         toast.dismiss();
                         setTimeout(() => {
                             toast.success(`Location accuracy is ${Math.round(accuracy)} meters.`, {
@@ -326,7 +273,7 @@ const Shipping = () => {
                             });
                         }, 300);
                         setIsButtonDisabled(false);
-                        setCancelbutton(true);
+                        setCancelbutton(false);
                     },
                     { enableHighAccuracy: true }
                 );
@@ -349,11 +296,10 @@ const Shipping = () => {
                 navigator.geolocation.getCurrentPosition(
                     async position => {
                         const { latitude, longitude, accuracy } = position.coords;
-
-                        setIsChanged(true);
                         setDummyLat(parseFloat(latitude.toFixed(6)));
                         setDummyLng(parseFloat(longitude.toFixed(6)));
                         setAllowed(true);
+                        setIsChanged(true);
                         setShowModal(false);
                         setIsButtonDisabled(false);
 
@@ -384,7 +330,7 @@ const Shipping = () => {
                             });
                         }, 300);
                         setIsButtonDisabled(false);
-                        setCancelbutton(true);
+                        setCancelbutton(false);
                     },
                     { enableHighAccuracy: true }
                 );
@@ -395,104 +341,42 @@ const Shipping = () => {
     };
 
     useEffect(() => {
-        // Check the location permission status on component mount
         if (navigator.permissions) {
             navigator.permissions.query({ name: 'geolocation' }).then(permissionStatus => {
                 if (permissionStatus.state === 'granted') {
-                    // if (shippingInfo.latitude && shippingInfo.longitude) {
-                    //     return
-                    // }
-                    // else {
-                    setShowModal(true);
-                    setCancelbutton(true);
-                    setAddress('');
-                    setArea('');
-                    setLandmark('');
-                    setMapsearched(false);
-                    setDummyLat(null);
-                    setDummyLng(null);
-                    setIsMap(false);
-                    // setShowModal(false);
-                    setIsChanged(false);
-                    setShowMapModal(false);
-                    setArea('');
-                    setLandmark('');
-                    setCity('');
-                    setState('');
-                    setPostalCode('');
-                    setCountry('');
-                    setMapsearched(false);
-                    setLatitude(null);
-                    setLongitude(null);
-                    // }
-
-
+                     if (shippingdata && shippingdata.latitude && shippingdata && shippingdata.longitude) {
+                        // return
+                        setShowModal(false);
+                        setCancelbutton(false);
+                    }
+                    else{
+                        setShowModal(false);
+                        setCancelbutton(false);
+                        // setAddress('');
+                        // setArea('');
+                        // setLandmark('');
+                    }
+                    
                 } else if (permissionStatus.state === 'prompt') {
-                    setAddress('');
-                    setArea('');
-                    setLandmark('');
-                    setMapsearched(false);
-                    setDummyLat(null);
-                    setDummyLng(null);
-                    setIsMap(false);
-                    setIsChanged(false);
-                    // setShowModal(false);
-                    setShowMapModal(false);
-                    setArea('');
-                    setLandmark('');
-                    setCity('');
-                    setState('');
-                    setPostalCode('');
-                    setCountry('');
-                    setMapsearched(false);
-                    setLatitude(null);
-                    setLongitude(null);
-                    setShowModal(true);
-                    setCancelbutton(true);
+                    // setAddress('');
+                    // setArea('');
+                    // setLandmark('');
+
+                    setShowModal(false);
+                    setCancelbutton(false);
                 } else if (permissionStatus.state === 'denied') {
-                    setAddress('');
-                    setArea('');
-                    setLandmark('');
-                    setMapsearched(false);
-                    setDummyLat(null);
-                    setDummyLng(null);
-                    setIsChanged(false);
-                    setIsMap(false);
-                    // setShowModal(false);
-                    setShowMapModal(false);
-                    setArea('');
-                    setLandmark('');
-                    setCity('');
-                    setState('');
-                    setPostalCode('');
-                    setCountry('');
-                    setMapsearched(false);
-                    setLatitude(null);
-                    setLongitude(null);
-                    setShowModal(true);
-                    setCancelbutton(true);
+                    // setAddress('');
+                    // setArea('');
+                    // setLandmark('');
+
+                    setShowModal(false);
+                    setCancelbutton(false);
                 }
             });
         } else {
-            setAddress('');
-            setArea('');
-            setLandmark('');
-            setMapsearched(false);
-            setDummyLat(null);
-            setDummyLng(null);
-            setIsChanged(false);
-            setIsMap(false);
-            // setShowModal(false);
-            setShowMapModal(false);
-            setArea('');
-            setLandmark('');
-            setCity('');
-            setState('');
-            setPostalCode('');
-            setCountry('');
-            setMapsearched(false);
-            setLatitude(null);
-            setLongitude(null);
+            // setAddress('');
+            // setArea('');
+            // setLandmark('');
 
             setShowModal(true);
         }
@@ -501,8 +385,9 @@ const Shipping = () => {
     const handelChangeLocation = (e) => {
 
         setIsButtonDisabled(false);
-        setCancelbutton(false)
+        setCancelbutton(false);
         setIsChanged(false);
+
         setShowModal(true);
     }
 
@@ -511,19 +396,19 @@ const Shipping = () => {
         // setAddress('');
         // setArea('');
         // setLandmark('');
+        setIsChanged(false);
         setMapsearched(false);
         setDummyLat(null);
         setDummyLng(null);
         handlegeoLocation();
         setIsMap(true);
-        setIsChanged(false);
     };
 
     const [searchValue, setSearchValue] = useState('');  // For search input
     const [autocomplete, setAutocomplete] = useState(null); // To handle autocomplete
     console.log("autocomplete", autocomplete)
 
-    // Load autocomplete and set to the state
+   
     const onLoad = (autoC) => {
         // e.preventDefault();
         console.log("autoc", autoC)
@@ -532,7 +417,6 @@ const Shipping = () => {
 
     const onPlaceChanged = () => {
         // e.preventDefault();
-        // setMapsearched(true);
         if (autocomplete !== null) {
             const place = autocomplete.getPlace();
             console.log("place", place)
@@ -542,8 +426,8 @@ const Shipping = () => {
                 const addressComponents = place && place.address_components;
 
                 let streetNumber = '';
+                let name =place.name?place.name:'';
                 let premise = '';
-                let name = place.name ? place.name : '';
                 let route = '';
                 let area = '';
                 let area1 = '';
@@ -552,17 +436,13 @@ const Shipping = () => {
                 let state = '';
                 let country = '';
                 let postalCode = '';
+                
+                
 
                 addressComponents && addressComponents.forEach(component => {
                     if (component.types.includes('street_number')) {
                         streetNumber = component.long_name; // Street number
                     }
-                    // else if (component.types.includes('sublocality_level_3')){
-                    //     locality =  component.long_name;
-                    // }
-                    // else if (component.types.includes('premise')) {
-                    //     premise = component.long_name; // Notable place or building
-                    // }
                     else if (component.types.includes('route')) {
                         route = component.long_name !== 'Unnamed Road' ? component.long_name : ''; // Street name
                     } else if (component.types.includes('sublocality_level_1') || component.types.includes('neighborhood')) {
@@ -582,14 +462,13 @@ const Shipping = () => {
                         postalCode = component.long_name;
                     }
                 });
-                // console.log(landmark,premise)
-                // Combine relevant components for full address
+              
                 const fullAddress = [route, area].filter(Boolean).join(', ').trim();
-                const fullarea = [streetNumber, name].filter(Boolean).join(', ').trim();
+                const fullarea =[streetNumber, name].filter(Boolean).join(', ').trim();
+
 
                 // Set the states
-
-                setAddress(fullarea)
+                setAddress(fullarea);
                 setArea(fullAddress);
                 setLandmark(landmark);
                 setCity(city);
@@ -599,18 +478,12 @@ const Shipping = () => {
                 // setMapsearched(false);
                 setDummyLat(null);
                 setDummyLng(null);
-                setIsChanged(false);
             }
-
-
-            // Check if the place has geometry (i.e., if it has location data)
             if (place.geometry && place.geometry.location) {
                 const location = place.geometry.location;
                 setDummyLat(location.lat());
                 setDummyLng(location.lng());
-                // setAddress(place.formatted_address);  
             } else {
-                // console.log("Selected place does not have a geometry or location");
                 toast.dismiss();
                 setTimeout(() => {
                     toast.error('Selected place does not have a geometry or location', {
@@ -624,7 +497,6 @@ const Shipping = () => {
                 }, 300);
             }
         } else {
-            // console.log("Autocomplete is not loaded yet!");
             toast.dismiss();
             setTimeout(() => {
                 toast.error('Autocomplete is not loaded yet!', {
@@ -700,33 +572,10 @@ const Shipping = () => {
     const handleCancelDelete = () => {
         setShowModal(false);
         setMapsearched(false);
-        // navigate('/cart');
     };
 
 
-    // const submitHandler = (e) => {
-    //     e.preventDefault();
-
-    //     dispatch(saveShippingInfo({ address, area, landmark, city, phoneNo, postalCode, country, state, latitude, longitude }));
-    //     if (isAuthenticated && latitude && longitude) {
-    //         navigate('/order/confirm');
-    //         setMapsearched(false);
-    //     } else {
-
-    //         toast.dismiss();
-    //         setTimeout(() => {
-    //             toast.error('Please allow the location to proceed.', {
-    //                 position: 'bottom-center',
-    //                 type: 'error',
-    //                 autoClose: 700,
-    //                 transition: Slide,
-    //                 hideProgressBar: true,
-    //                 className: 'small-toast',
-    //             });
-    //             setMapsearched(false);
-    //         }, 300);
-    //     }
-    // };
+    
 
     const submitHandler = (e) => {
         e.preventDefault();
@@ -747,10 +596,8 @@ const Shipping = () => {
             formattedAddress,
             defaultAddress,
         };
-
-        // Save this addressData in the user's address array (use appropriate API call)
-        dispatch(postAddress({ userId: user && user._id, addressData }));
-
+        dispatch(updateAddress({ userId: user && user._id, addressId: addressId && addressId, addressData }));
+       
     }
 
     const updatePosition = (lat, lng) => {
@@ -794,24 +641,23 @@ const Shipping = () => {
         <Fragment >
 
             <MetaData
-                title="Shipping Information"
+                title="Update Address"
                 description="Provide or confirm your shipping details to ensure timely and accurate delivery of your order. Choose your preferred shipping method before proceeding."
             />
             <div className="back-button" onClick={() => navigate('/address')}>
                 <ArrowBackIcon fontSize="small" />
                 <span>Back</span>
             </div>
+
             {!showMapModal && (
                 <>
-                    <div className="products_heading">Shipping</div>
+                    <div className="products_heading">Update Address</div>
                     <StepsCheckOut shipping />
                     <div className="row wrapper">
                         <div className="col-10 col-lg-6">
                             <form onSubmit={submitHandler} className="shadow-lg mt-0">
                                 <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between' }} className="mb-4">
                                     <div className="shipping-head">Shipping Info</div>
-
-                                    {/* <button type="button" style={{height:'30px',fontSize:'12px'}} onClick={handelChangeLocation} >Change Location</button> */}
                                     <div
                                         className="location-text"
                                         onClick={handelChangeLocation}
@@ -834,7 +680,6 @@ const Shipping = () => {
                                 <div className="form-group">
                                     <label htmlFor="phone_field">Phone No (+91) <span style={{ color: 'red' }}>*</span></label>
                                     <NumberInput
-
                                         id="phone_field"
                                         className="no-arrow-input form-control"
                                         value={phoneNo}
@@ -871,12 +716,13 @@ const Shipping = () => {
                                         type="text"
                                         id="landmark_field"
                                         className="form-control"
-                                        // placeholder='eg: near Apollo Hospital'
                                         value={landmark}
                                         onChange={(e) => setLandmark(e.target.value)}
 
                                     />
                                 </div>
+
+
 
                                 <div className="form-group">
                                     <label htmlFor="postal_code_field">Postal Code <span style={{ color: 'red' }}>*</span></label>
@@ -931,7 +777,6 @@ const Shipping = () => {
                                 {!allowed && !latitude && !longitude && (
                                     <div className="alert alert-danger" role="alert">
                                         Location access is required to proceed. Please Allow Location for this Site and Refresh the Page to Continue {' '}
-
                                     </div>
                                 )}
 
@@ -950,10 +795,10 @@ const Shipping = () => {
                                     id="shipping_btn"
                                     type="submit"
                                     className="btn btn-block py-3"
-                                    disabled={postloading}
+                                    disabled={updateloading}
                                 >
-                                    {postloading ? <LoaderButton fullPage={false} size={20} /> : (
-                                        <span>ADD ADDRESS</span>
+                                    {updateloading ? <LoaderButton fullPage={false} size={20} /> : (
+                                        <span>UPDATE ADDRESS</span>
                                     )
 
                                     }
@@ -970,13 +815,9 @@ const Shipping = () => {
                     <div className="modal-dialog" role="document">
                         <div className="modal-content">
                             <div className="modal-header">
-                                <h5 className="modal-title">
-                                    Location Access
-                                </h5>
+                                <h5 className="modal-title">Location Access</h5>
                                 {
-                                    isButtonDisabled || cancelbutton ? <button type="button" className="close" onClick={() => navigate('/address')} >
-                                        <span aria-hidden="true">&times;</span>
-                                    </button> : (
+                                    isButtonDisabled || cancelbutton ? <></> : (
                                         <button type="button" className="close" onClick={handleCancelDelete} disabled={isButtonDisabled || cancelbutton}>
                                             <span aria-hidden="true">&times;</span>
                                         </button>
@@ -1013,7 +854,7 @@ const Shipping = () => {
                                 onLoad={(map) => (mapRef.current = map)}
                                 onClick={(e) => updatePosition(e.latLng.lat(), e.latLng.lng())}
                             >
-                                {/* <div style={{ position: 'relative', width: '100%', height: 'auto', display: 'flex', justifyContent: 'center' }}> */}
+                               
                                 <Autocomplete onLoad={onLoad} onPlaceChanged={onPlaceChanged} style={{ position: 'relative', zIndex: 9999999 }}>
                                     <input
                                         type="text"
@@ -1024,8 +865,7 @@ const Shipping = () => {
 
                                     />
                                 </Autocomplete>
-                                {/* </div> */}
-
+                              
                                 <Marker
                                     position={{ lat: dummyLat, lng: dummyLng }}
                                     draggable={true}
@@ -1089,5 +929,5 @@ const searchBarStyle = {
 };
 
 
-export default Shipping;
+export default UpdateAddress;
 

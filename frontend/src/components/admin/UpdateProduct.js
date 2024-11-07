@@ -203,6 +203,7 @@ const UpdateProduct = ({ isActive, setIsActive }) => {
         price: "",
         category: "",
         measurement:"",
+        range:"",
         percentage: "",
         stocks: "",
         images: [],
@@ -231,6 +232,7 @@ const UpdateProduct = ({ isActive, setIsActive }) => {
                 price: product.price,
                 category: product.category,
                 measurement:product.measurement,
+                range: product.measurement === "Grams" ? product.range : undefined,
                 percentage: product.percentage,
                 stocks: product.stocks,
                 imagesPreview: product.images.map(image => image.image)
@@ -331,6 +333,9 @@ const UpdateProduct = ({ isActive, setIsActive }) => {
         formDataToSend.append('price', formData.price);
         formDataToSend.append('category', formData.category);
         formDataToSend.append('measurement', formData.measurement);
+        if (formData.measurement === "Grams") {
+            formDataToSend.append('range', formData.range)
+        };
         formDataToSend.append('percentage', formData.percentage);
         formDataToSend.append('stocks', formData.stocks);
         formData.images.forEach(image => formDataToSend.append('images', image));
@@ -563,8 +568,24 @@ const UpdateProduct = ({ isActive, setIsActive }) => {
                                         <option value="Kg">Kg</option>
                                         <option value="Piece">Piece</option>
                                         <option value="Box">Box</option>
+                                        <option value="Grams">Grams</option>
                                     </select>
                                 </div>
+                                {formData.measurement === "Grams" && (
+                                    <div className="form-group">
+                                        <label htmlFor="range">Range for Grams</label>
+                                        <input
+                                            type="text"
+                                            id="range"
+                                            name="range"
+                                            className="form-control"
+                                            value={formData.range}
+                                            onChange={handleChange}
+                                            placeholder="Enter range in grams"
+                                            required
+                                        />
+                                    </div>
+                                )}
 
                                     <div className="form-group">
                                         <label htmlFor="stocks"> Stocks <span style={{ color: 'red' }}>*</span></label>

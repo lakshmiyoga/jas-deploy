@@ -437,7 +437,15 @@ const RefundOrder = ({ isActive, setIsActive }) => {
             dispatch(getporterOrder({ order_id: id }))
             setRefreshData(false)
         }
-    }, [refreshData, porterOrderResponse])
+    }, [refreshData, porterOrderResponse]);
+
+    const capitalizeFirstLetter = (str) => {
+        return str
+            .toLowerCase()
+            .split(' ')
+            .map(word => word.charAt(0).toUpperCase() + word.slice(1))
+            .join(' ');
+    };
     return (
         <div>
             {/* <MetaData title={`Refund Order`} /> */}
@@ -468,7 +476,7 @@ const RefundOrder = ({ isActive, setIsActive }) => {
                                         <h1 className="my-5">Order # {orderDetail.order_id}</h1>
 
                                         <h4 className="mb-4">Shipping Info</h4>
-                                        <div><b>Name:</b> {user.name}</div>
+                                        <div><b>Name:</b> {shippingInfo.name}</div>
                                         <div><b>Phone:</b> {shippingInfo.phoneNo}</div>
                                         <div>
                                             <b>Address:</b>
@@ -672,7 +680,7 @@ const RefundOrder = ({ isActive, setIsActive }) => {
                                                                         <>
                                                                             <th>Image</th>
                                                                             <th>Name</th>
-                                                                            <th>Price per kg</th>
+                                                                            <th>Price</th>
                                                                             <th>Ordered Quantity</th>
                                                                             <th>Refund Quantity</th>
                                                                             <th>Refundable Amount</th>
@@ -689,10 +697,10 @@ const RefundOrder = ({ isActive, setIsActive }) => {
                                                                                 <td>
                                                                                     <img src={item.image} alt={item.name} className="updateTableproduct-image" />
                                                                                 </td>
-                                                                                <td>{item.name}</td>
+                                                                                <td>{item && item.measurement === 'Grams' ? `${capitalizeFirstLetter(item.name)} (${item.range})` : `${capitalizeFirstLetter(item.name)}`} </td>
                                                                                 <td>Rs. {parseFloat(item.pricePerKg).toFixed(2)}</td>
-                                                                                <td>{item.orderedWeight} {item.measurement}</td>
-                                                                                <td>{item.refundableWeight} {item.measurement}</td>
+                                                                                <td>{item.orderedWeight} {item.measurement && item.measurement=='Grams'? 'Piece' :item.measurement}</td>
+                                                                                <td>{item.refundableWeight} {item.measurement && item.measurement=='Grams'? 'Piece' :item.measurement}</td>
                                                                                 <td>Rs. {parseFloat(item.pricePerKg * item.refundableWeight).toFixed(2)}</td>
                                                                             </tr>
                                                                         ))

@@ -53,13 +53,24 @@ const ProductList = ({ isActive, setIsActive }) => {
             ],
             rows: []
         }
-        let allproducts =  products && [...products].sort((a, b) => a.englishName.localeCompare(b.englishName))
+        let allproducts = products && [...products].sort((a, b) => a.englishName.localeCompare(b.englishName))
         allproducts && allproducts.forEach((product, index) => {
             data.rows.push({
                 s_no: index + 1,
-                name: `${product.englishName} / ${product.tamilName}`,
-                price: product.category === "Keerai" ? `Rs.${product.buyingPrice}  per(${product.measurement})` : `Rs.${product.buyingPrice}  per(${product.measurement})`,
-                sellprice: product.category === "Keerai" ? `Rs.${product.price}  per(${product.measurement})` : `Rs.${product.price}  per(${product.measurement})`,
+                // name: ${product.englishName} / ${product.tamilName},
+                name: product
+                ? product.measurement === 'Grams'
+                    ? `${(product.englishName)}/${(product.tamilName)} (${product.range})`
+                    : `${(product.englishName)}/${(product.tamilName)}`
+                : '',
+            
+                price: product.category === "Keerai"
+                    ? `Rs.${product.buyingPrice} per(${product.measurement && product.measurement=='Grams'? 'Piece' :product.measurement})`
+                    : `Rs.${product.buyingPrice} per(${product.measurement && product.measurement=='Grams'? 'Piece' :product.measurement})`,
+
+                sellprice: product.category === "Keerai"
+                 ? `Rs.${product.price} per(${product.measurement && product.measurement=='Grams'? 'Piece' :product.measurement})`
+                    : `Rs.${product.price} per(${product.measurement && product.measurement=='Grams'? 'Piece' :product.measurement})`,
                 actions: (
                     <Fragment>
                         <Link to={`/admin/product/${product._id}`} className="btn btn-primary py-1 px-2 ml-2">
@@ -146,7 +157,7 @@ const ProductList = ({ isActive, setIsActive }) => {
 
     return (
         <div>
-            {/* <MetaData title={`Product List`} /> */}
+            {/* <MetaData title={Product List} /> */}
             <MetaData
                 title="Product List"
                 description="Manage your product inventory. View, update, or remove products from your catalog to keep your store fresh and relevant."

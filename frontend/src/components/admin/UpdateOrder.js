@@ -230,7 +230,7 @@ const UpdateOrder = ({ isActive, setIsActive }) => {
                 if(!weightvalue){
                     toast.dismiss();
                     setTimeout(() => {
-                        toast.error('Weight cannot be negative. Reverting to original weight.', {
+                        toast.error('Quantity cannot be negative. Reverting to original Quantity.', {
                             position: 'bottom-center',
                             type: 'error',
                             autoClose: 700,
@@ -254,7 +254,7 @@ const UpdateOrder = ({ isActive, setIsActive }) => {
                 if(!weightvalue){
                     toast.dismiss();
                     setTimeout(() => {
-                        toast.error('Entered Kg is greater than requested Kg. Reverting to original weight.', {
+                        toast.error('Entered Quantity is greater than requested Quantity. Reverting to original Quantity.', {
                             position: 'bottom-center',
                             type: 'error',
                             autoClose: 700,
@@ -627,6 +627,7 @@ const UpdateOrder = ({ isActive, setIsActive }) => {
         const dispatchedTable = orderItems.map((item, index) => {
             const orderedWeight = parseFloat(item.productWeight);
             const measurement = item.measurement;
+            const range =item.range && item.range;
             const dispatchedWeight = parseFloat(updatedItems[index].productWeight);
             const refundableWeight = parseFloat((orderedWeight - dispatchedWeight).toFixed(2)); // Keeping two decimal places
             const pricePerKg = parseFloat((item.price).toFixed(2)); // Keeping two decimal places
@@ -642,6 +643,7 @@ const UpdateOrder = ({ isActive, setIsActive }) => {
                 name: item.name,
                 orderedWeight,
                 measurement,
+                range:range?range:null,
                 pricePerKg,
                 dispatchedWeight,
                 refundableWeight,
@@ -847,6 +849,14 @@ const UpdateOrder = ({ isActive, setIsActive }) => {
         }
     }, [refreshData, porterOrderResponse])
 
+    const capitalizeFirstLetter = (str) => {
+        return str
+            .toLowerCase()
+            .split(' ')
+            .map(word => word.charAt(0).toUpperCase() + word.slice(1))
+            .join(' ');
+    };
+
     // useEffect(() => {
     //     const handlePorterOrder = async () => {
     //         if (porterOrderResponse || refreshData) {
@@ -891,7 +901,7 @@ const UpdateOrder = ({ isActive, setIsActive }) => {
                                     <h1 className="my-5">Order # {orderDetail.order_id}</h1>
 
                                     <h4 className="mb-4">Shipping Info</h4>
-                                    <div><b>Name:</b> {user.name}</div>
+                                    <div><b>Name:</b> {shippingInfo.name}</div>
                                     <div><b>Phone:</b> {shippingInfo.phoneNo}</div>
                                     <div>
                                         <b>Address:</b>
@@ -1057,11 +1067,11 @@ const UpdateOrder = ({ isActive, setIsActive }) => {
                                                                 <td>
                                                                     <img src={item.image} alt={item.name} className="updateTableproduct-image" />
                                                                 </td>
-                                                                <td>{item.name}</td>
-                                                                <td>{item.orderedWeight} {item.measurement}</td>
+                                                                <td>{item && item.measurement === 'Grams' ? `${capitalizeFirstLetter(item.name)} (${item.range})` : `${capitalizeFirstLetter(item.name)}`}</td>
+                                                                <td>{item.orderedWeight} {item.measurement && item.measurement=='Grams'? 'Piece' :item.measurement}</td>
                                                                 <td>Rs. {item.pricePerKg}</td>
-                                                                <td>{item.dispatchedWeight ? item.dispatchedWeight : 0} {item.measurement}</td>
-                                                                <td>{item.refundableWeight ? item.refundableWeight : 0} {item.measurement}</td>
+                                                                <td>{item.dispatchedWeight ? item.dispatchedWeight : 0} {item.measurement && item.measurement=='Grams'? 'Piece' :item.measurement}</td>
+                                                                <td>{item.refundableWeight ? item.refundableWeight : 0} {item.measurement && item.measurement=='Grams'? 'Piece' :item.measurement}</td>
                                                                 <td>Rs. {item.refundableWeight ? item.refundableWeight * item.pricePerKg : 0}</td>
 
                                                             </tr>
@@ -1084,9 +1094,9 @@ const UpdateOrder = ({ isActive, setIsActive }) => {
                                                                     <td>
                                                                         <img src={item.image} alt={item.name} className="updateTableproduct-image" />
                                                                     </td>
-                                                                    <td>{item.name}</td>
+                                                                    <td>{item && item.measurement === 'Grams' ? `${capitalizeFirstLetter(item.name)} (${item.range})` : `${capitalizeFirstLetter(item.name)}`}</td>
                                                                     <td>Rs. {item.price}</td>
-                                                                    <td>{item.productWeight} {item.measurement}</td>
+                                                                    <td>{item.productWeight} {item.measurement && item.measurement=='Grams'? 'Piece' :item.measurement}</td>
                                                                     {editableWeights && (
                                                                         <>
                                                                             <td style={{ maxWidth: '70px' }}>

@@ -61,7 +61,7 @@ const SummaryUser = ({isActive,setIsActive}) => {
                                         <th className="phone">Phone No</th>
                                         <th className="address">Address</th>
                                         <th className="products">Products</th>
-                                        <th className="weight">Total Weight</th>
+                                        {/* <th className="weight">Total Weight</th> */}
                                         <th className="amount">Total Amount</th>
                                     </tr>
                                 </thead>
@@ -85,7 +85,7 @@ const SummaryUser = ({isActive,setIsActive}) => {
                                                 {order.products.map((product, idx) => (
                                                     <>
                                                      <span key={idx} className="product-item">
-                                                        {product.name} - {product.weight} kg - Rs. {product.price}
+                                                        {product.name} - {product.weight}  - Rs. {product.price}
                                                        
                                                     </span>
                                                     <br/>
@@ -94,13 +94,13 @@ const SummaryUser = ({isActive,setIsActive}) => {
                                                    
                                                 ))}
                                             </td>
-                                            <td className="weight">{(order.totalWeight || 0).toFixed(2)} kg</td>
+                                            {/* <td className="weight">{(order.totalWeight || 0).toFixed(2)} kg</td> */}
                                             <td className="amount">Rs.{(order.totalAmount || 0).toFixed(2)}</td>
                                         </tr>
                                     ))}
                                     <tr>
                                         <td colSpan="6" style={{ textAlign: 'right' }}><strong>Total</strong></td>
-                                        <td className="weight"><strong>{totalWeight.toFixed(2)} kg</strong></td>
+                                        {/* <td className="weight"><strong>{totalWeight.toFixed(2)} kg</strong></td> */}
                                         <td className="amount"><strong>Rs. {totalAmount.toFixed(2)}</strong></td>
                                     </tr>
                                 </tbody>

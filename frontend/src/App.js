@@ -4,7 +4,7 @@ import Header from './components/Layouts/Header';
 import Home from './components/Home';
 import { BrowserRouter as Router, Route, Routes, useLocation, useNavigate, Navigate, matchPath } from "react-router-dom";
 import { HelmetProvider } from "react-helmet-async";
-import { ToastContainer } from "react-toastify";
+import { ToastContainer, toast } from "react-toastify";
 import 'react-toastify/dist/ReactToastify.css';
 import ProductDetail from './components/Product/ProductDetail';
 import ProductSearch from './components/Product/ProductSearch';
@@ -69,6 +69,10 @@ import Unauthorized from './components/Layouts/Unauthorized';
 import PageNotFound from './components/Layouts/PageNotFound';
 import { orderDetailClear } from './slices/orderSlice';
 import { porterClearData, porterClearResponse } from './slices/porterSlice';
+import Address from './components/cart/Address';
+import { getUserAddresses } from './actions/addressAction';
+import { cleargetAddress } from './slices/AddressSlice';
+import UpdateAddress from './components/cart/UpdateAddress';
 
 function App() {
     const location = useLocation();
@@ -90,6 +94,7 @@ function App() {
 
     const { isAuthenticated, loading, user } = useSelector(state => state.authState);
     const { products, loading: productLoading } = useSelector((state) => state.productsState);
+    const { getdata,geterror } = useSelector(state => state.addressState);
     const { userOrders, error } = useSelector(state => state.orderState)
     const [openSide, setOpenSide] = useState(false);
     const [isActive, setIsActive] = useState(false);
@@ -176,6 +181,18 @@ function App() {
             store.dispatch(getProducts());
         }
     }, [isAuthenticated, products, userLoaded]);
+
+    useEffect(()=>{
+        dispatch(cleargetAddress());
+    },[])
+
+    useEffect(() => {
+        if (isAuthenticated && user && !getdata) {
+            dispatch(getUserAddresses({userId:user && user._id})); // Fetch user addresses when the component mounts
+        }
+    }, [isAuthenticated, dispatch]);
+
+
 
 
     // let isAdminRoute = true;
@@ -266,6 +283,39 @@ function App() {
         };
     }, []);
 
+    useEffect(() => {
+        // Detect if page is loaded from BFCache
+        window.addEventListener('pageshow', (event) => {
+          if (event.persisted) {
+            window.location.reload(); // Reload if coming from BFCache
+          }
+        });
+    
+        // Cleanup the event listener on component unmount
+        return () => {
+          window.removeEventListener('pageshow', () => {});
+        };
+      }, []);
+
+      // In App.js or main layout
+// useEffect(() => {
+//     const verifySession = async () => {
+//       try {
+//         const response = await fetch('/api/verify-session', { credentials: 'include' });
+//         if (!response.ok) {
+//           // Handle invalid session (e.g., redirect to login)
+//         }
+//       } catch (error) {
+//         toast.error("Session verification failed", error);
+//         // Redirect to login
+//       }
+//     };
+  
+//     verifySession();
+//   }, []);
+  
+
+
     return (
         <div className={`${openSide ? "App-blure" : isActive ? "App-blure" : "App"}`}>
             <HelmetProvider>
@@ -306,11 +356,13 @@ function App() {
                                         <Route path="/keerai" element={<Keerai />} />
                                         <Route path="/about" element={<About />} />
                                         <Route path="/enquiry" element={<Enquiry />} />
+                                        <Route path="/address" element={<Address />} />
                                         <Route path="/termsAndConditions" element={<TermsAndConditions />} />
                                         <Route path="/privacyPolicy" element={<PrivacyPolicy />} />
                                         <Route path="/refundPolicy" element={<RefundPolicy />} />
                                         <Route path="/search/:keyword" element={<ProductSearch />} />
                                         <Route path="/product/:id" element={<ProductDetail />} />
+                                        <Route path="/address/update/:id" element={<UpdateAddress />} />
                                         <Route path="/cart" element={<Cart />} />
                                         <Route path="/password/forgot" element={<ForgotPassword email={email} setEmail={setEmail} />} />
                                            <Route path="/password/reset/:token" element={<ResetPassword />} />

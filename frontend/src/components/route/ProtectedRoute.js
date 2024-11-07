@@ -5,7 +5,7 @@ import { loadUser } from '../../actions/userActions';
 import store from '../../store';
 import { useEffect } from 'react';
 import { Slide, toast } from 'react-toastify';
-import { clearlogout } from '../../slices/authSlice';
+import { clearUser, clearlogout } from '../../slices/authSlice';
 import { clearProducts } from '../../slices/productsSlice';
 
 export default function ProtectedRoute({ children, isAdmin }) {
@@ -64,7 +64,7 @@ export default function ProtectedRoute({ children, isAdmin }) {
     // }, [isloggedout,dispatch,isAuthenticated]);
     useEffect(() => {
         if (isloggedout && !isAuthenticated && !user && isAdmin) {
-            navigate('/')
+            // navigate('/')
             sessionStorage.clear();
             // if(products){
             //     dispatch(clearProducts());
@@ -76,19 +76,22 @@ export default function ProtectedRoute({ children, isAdmin }) {
                 toast.success(loggedoutmessage, {
                     position: 'bottom-center',
                     type: 'success',
-                    autoClose: 100,
+                    autoClose: 300,
                     transition: Slide,
                     hideProgressBar: true,
                     className: 'small-toast',
-                    onClose: () => { window.close();window.open('/', '_blank');},
+                    // onClose: () => { window.close();window.open('/', '_blank');},
+                    onClose: () => {   dispatch(clearlogout());   
+                        dispatch(clearUser());},
+            
                 });
-                dispatch(clearlogout());
-                // setTimeout(() => {
-                //     // window.close();
-                //     // window.open('/', '_blank');
-                //     window.open('/', '_blank');
-                //     window.location.replace('/'); // Fallback to replace current page
-                // }, 200);
+                // dispatch(clearlogout());
+                setTimeout(() => {
+                    // window.close();
+                    // window.open('/', '_blank');
+                    // window.open('/', '_blank');
+                    window.location.replace('/'); // Fallback to replace current page
+                }, 200);
                 // Clear session storage and dispatch necessary actions
                
                 
