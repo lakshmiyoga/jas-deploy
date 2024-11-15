@@ -34,21 +34,30 @@ const allproductSchema = new mongoose.Schema({
     category:{
         type:String,
         required:true,
-        enum: {
-            values:['Vegetables','Fruits','Keerai']
-        }
+        // enum: {
+        //     values:['Vegetables','Fruits','Keerai']
+        // }
         
     },
     measurement:{
         type:String,
+        required:true,
         // required:true,
-        enum: {
-            values:['Kg','Piece','Box','Grams']
-        },
+        // enum: {
+        //     values:['Kg','Piece','Box','Grams']
+        // },
         // default:'Kg',
         
     },
-    range: { type: String },
+    range: { 
+        type: String,
+        default:''
+    },
+    maximumQuantity:{
+        type:Number,
+        default:5.0,
+        required:true,
+    },
     stocks:{
         type:String,
         required:true,

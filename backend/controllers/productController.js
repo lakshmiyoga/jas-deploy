@@ -44,6 +44,7 @@ const createProducts = catchAsyncError(async (req, res, next) => {
         price: req.body.price,
         category: req.body.category,
         measurement: req.body.measurement,
+        maximumQuantity: req.body.maximumQuantity,
         range:req.body.rangeForGrams,
         percentage:req.body.percentage,
         stocks:req.body.stocks,
@@ -213,7 +214,7 @@ const updateProducts = async (req, res, next) => {
         await Promise.all(deletePromises);
     } else {
         // If images not cleared, keep the existing images
-        images = product.images;
+        images = product && product.images;
     }
 
     // Upload new images to S3 (if any)
@@ -244,6 +245,7 @@ const updateProducts = async (req, res, next) => {
     })
   }
   catch (error) {
+    console.log("error",error)
    return res.status(500).json({ message: 'Error Updating item' });
 }
     

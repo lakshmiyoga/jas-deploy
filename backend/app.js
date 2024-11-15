@@ -126,6 +126,9 @@ const enquiry = require("./routes/enquiry");
 const analysis = require("./routes/analysis");
 const otp = require("./routes/otpRoutes");
 const address = require("./routes/address");
+const categories = require("./routes/categoryRoutes");
+const measurement = require("./routes/measurement");
+const loginOtp = require("./routes/loginOtp")
 
 app.use('/api/v1', products);
 app.use('/api/v1', user);
@@ -137,6 +140,9 @@ app.use('/api/v1', porter);
 app.use('/api/v1', analysis);
 app.use('/api/v1', otp);
 app.use('/api/v1', address);
+app.use('/api/v1', categories);
+app.use('/api/v1', measurement);
+app.use('/api/v1', loginOtp);
 
 
 if (process.env.NODE_ENV === "production") {

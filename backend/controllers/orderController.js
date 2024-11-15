@@ -147,7 +147,7 @@ const getQuote = catchAsyncError(async (req, res, next) => {
         //   console.log("requestData",requestData);
 
         const response = await axios.post(apiEndpoint, requestData, {
-            headers: {
+            headers: { 
                 'X-API-KEY': process.env.PORTER_API_KEY,
                 'Content-Type': 'application/json'
             }

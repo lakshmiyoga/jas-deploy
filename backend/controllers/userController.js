@@ -345,8 +345,8 @@ const getUserProfile = catchAsyncError(async (req, res, next) => {
 const updateUserProfile = catchAsyncError(async (req, res, next) => {
   let newUserData = {
     name: req.body.name,
-    email: req.body.email,
-    mobile: req.body.mobile,
+    // email: req.body.email,
+    // mobile: req.body.mobile,
   };
 
   let avatar;
