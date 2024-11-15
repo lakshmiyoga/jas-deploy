@@ -1,3 +1,214 @@
+// import { Fragment, useEffect, useState } from "react";
+// import { Button } from "react-bootstrap";
+// import { useDispatch, useSelector } from "react-redux";
+// import { Link, useLocation } from "react-router-dom";
+// import { deleteUser, getUsers } from "../../actions/userActions";
+// import { clearError, clearUserDeleted } from "../../slices/userSlice";
+// import Loader from '../Layouts/Loader';
+// import { MDBDataTable } from 'mdbreact';
+// import { Slide,toast } from 'react-toastify';
+// import Sidebar from "./Sidebar";
+// import MetaData from "../Layouts/MetaData";
+
+// export default function UserList({isActive,setIsActive}) {
+//     const location = useLocation();
+//     // sessionStorage.setItem('redirectPath', location.pathname);
+//     const { users , loading = true, error, isUserDeleted } = useSelector(state => state.userState);
+//     const dispatch = useDispatch();
+//     const [showModal, setShowModal] = useState(false);
+//     const [userToDelete, setUserToDelete] = useState(null);
+
+    
+
+//     const setUsers = () => {
+//         const data = {
+//             columns: [
+//                 {
+//                     label: 'S.No',
+//                     field: 's_no',
+//                     sort: 'disabled'
+//                 },
+//                 {
+//                     label: 'Name',
+//                     field: 'name',
+//                     sort: 'disabled'
+//                 },
+//                 {
+//                     label: 'Email',
+//                     field: 'email',
+//                     sort: 'disabled'
+//                 },
+//                 {
+//                     label: 'Role',
+//                     field: 'role',
+//                     sort: 'disabled'
+//                 },
+//                 {
+//                     label: 'Actions',
+//                     field: 'actions',
+//                     sort: 'disabled'
+//                 }
+//             ],
+//             rows: []
+//         };
+
+//         // Sort users by creation date (newest first)
+//         const sortedUsers = users && [...users].sort((a, b) => new Date(b.createdAt) - new Date(a.createdAt));
+
+//         sortedUsers && sortedUsers.forEach((user, index) => {
+//             data.rows.push({
+//                 s_no: index + 1,
+//                 name: user.name,
+//                 email: user.email,
+//                 role: user.role,
+//                 actions: (
+//                     <Fragment>
+//                         <Link to={`/admin/user/${user._id}`} className="btn btn-primary py-1 px-2 ml-2">
+//                             <i className="fa fa-pencil"></i>
+//                         </Link>
+//                         <Button onClick={() => handleDeleteClick(user._id)} className="btn btn-danger py-1 px-2 ml-2">
+//                             <i className="fa fa-trash"></i>
+//                         </Button>
+//                     </Fragment>
+//                 )
+//             });
+//         });
+
+//         return data;
+//     };
+
+//     const handleDeleteClick = (id) => {
+//         setUserToDelete(id);
+//         setShowModal(true);
+//     };
+
+//     const handleConfirmDelete = () => {
+//         dispatch(deleteUser({ id: userToDelete }));
+//         setShowModal(false);
+//     };
+
+//     const handleCancelDelete = () => {
+//         setShowModal(false);
+//     };
+
+//     useEffect(() => {
+//         if (error) {
+//             // toast(error, {
+//             //     position: "bottom-center",
+//             //     type: 'error',
+//             //     onOpen: () => { dispatch(clearError()) }
+//             // });
+//             toast.dismiss();
+//             setTimeout(() => {
+//                 toast.error(error, {
+//                     position: 'bottom-center',
+//                     type: 'error',
+//                     autoClose: 700,
+//                     transition: Slide,
+//                     hideProgressBar: true,
+//                     className: 'small-toast',
+//                     onOpen: () => { dispatch(clearError()) }
+//                 });
+//             }, 300);
+//             return;
+//         }
+//         if (isUserDeleted) {
+//             // toast('User Deleted Successfully!', {
+//             //     type: 'success',
+//             //     position: "bottom-center",
+//             //     onOpen: () => dispatch(clearUserDeleted())
+//             // });
+//             toast.dismiss();
+//             setTimeout(() => {
+//                 toast.success('User Deleted Successfully!', {
+//                     position: 'bottom-center',
+//                     type: 'success',
+//                     autoClose: 700,
+//                     transition: Slide,
+//                     hideProgressBar: true,
+//                     className: 'small-toast',
+//                     onOpen: () => dispatch(clearUserDeleted())
+//                 });
+//             }, 300);
+//             dispatch(getUsers());
+//             return;
+//         }
+
+//         // dispatch(getUsers());
+//     }, [dispatch, error, isUserDeleted]);
+
+//     useEffect(()=>{
+//         if(!users){
+//             dispatch(getUsers());
+//         }
+       
+//     },[])
+
+//     return (
+//         <div>
+//             <MetaData 
+//   title="User List" 
+//   description="View and manage a complete list of registered users. Handle user roles, profile updates, and account management tasks." 
+// />
+
+     
+//         <div className="row loader-parent">
+//             {/* <MetaData title={`User List`} /> */}
+//             <div className="col-12 col-md-2">
+//             <div style={{display:'flex',flexDirection:'row',position:'fixed',top:'0px',zIndex:99999,backgroundColor:'#fff',minWidth:'100%'}}>
+//                 <Sidebar isActive={isActive} setIsActive={setIsActive}/>
+//                 </div>
+//             </div>
+//             <div className="col-12 col-md-10 smalldevice-space loader-parent">
+//                 <h1 className="mb-4 admin-dashboard-x">User List</h1>
+              
+//                 <Fragment>
+//                     {loading ?(
+//                                 <div className="container loader-loading-center">
+//                                     <Loader />
+//                                 </div>
+
+//                             )   :
+//                       <div className='mdb-table' style={{display:'flex',justifyContent:'center', alignItems:'center'}}>
+//                         <MDBDataTable
+//                             data={setUsers()}
+//                             bordered
+//                             noBottomColumns
+//                             hover
+//                             className="px-3 product-table"
+//                         />
+//                         </div>
+//                     }
+//                 </Fragment>
+                
+//             </div>
+
+//             {showModal && (
+//                 <div className="modal" tabIndex="-1" role="dialog">
+//                     <div className="modal-dialog" role="document">
+//                         <div className="modal-content">
+//                             <div className="modal-header">
+//                                 <h5 className="modal-title">Confirm Delete</h5>
+//                                 <button type="button" className="close" onClick={handleCancelDelete}>
+//                                     <span aria-hidden="true">&times;</span>
+//                                 </button>
+//                             </div>
+//                             <div className="modal-body">
+//                                 <p>Are you sure you want to delete this user?</p>
+//                             </div>
+//                             <div className="modal-footer">
+//                                 <button type="button" className="btn btn-danger" onClick={handleConfirmDelete}>OK</button>
+//                                 <button type="button" className="btn btn-secondary" onClick={handleCancelDelete}>Cancel</button>
+//                             </div>
+//                         </div>
+//                     </div>
+//                 </div>
+//             )}
+//         </div>
+//         </div>
+//     );
+// }
+
 import { Fragment, useEffect, useState } from "react";
 import { Button } from "react-bootstrap";
 import { useDispatch, useSelector } from "react-redux";
@@ -6,19 +217,19 @@ import { deleteUser, getUsers } from "../../actions/userActions";
 import { clearError, clearUserDeleted } from "../../slices/userSlice";
 import Loader from '../Layouts/Loader';
 import { MDBDataTable } from 'mdbreact';
-import { Slide,toast } from 'react-toastify';
+import { Slide, toast } from 'react-toastify';
 import Sidebar from "./Sidebar";
 import MetaData from "../Layouts/MetaData";
 
-export default function UserList({isActive,setIsActive}) {
+export default function UserList({ isActive, setIsActive }) {
     const location = useLocation();
     // sessionStorage.setItem('redirectPath', location.pathname);
-    const { users , loading = true, error, isUserDeleted } = useSelector(state => state.userState);
+    const { users, loading = true, error, isUserDeleted } = useSelector(state => state.userState);
     const dispatch = useDispatch();
     const [showModal, setShowModal] = useState(false);
     const [userToDelete, setUserToDelete] = useState(null);
 
-    
+
 
     const setUsers = () => {
         const data = {
@@ -34,7 +245,7 @@ export default function UserList({isActive,setIsActive}) {
                     sort: 'disabled'
                 },
                 {
-                    label: 'Email',
+                    label: 'Email/Phone No',
                     field: 'email',
                     sort: 'disabled'
                 },
@@ -58,8 +269,18 @@ export default function UserList({isActive,setIsActive}) {
         sortedUsers && sortedUsers.forEach((user, index) => {
             data.rows.push({
                 s_no: index + 1,
-                name: user.name,
-                email: user.email,
+                name: user && user.name ? user.name : '-',
+                email: user
+                    ? (user.email
+                        ? (user.mobile
+                            ? `${user.email}/${user.mobile}`
+                            : user.email)
+                        : (user.mobile
+                            ? user.mobile
+                            : ""))
+                    : "",
+
+
                 role: user.role,
                 actions: (
                     <Fragment>
@@ -137,74 +358,74 @@ export default function UserList({isActive,setIsActive}) {
         // dispatch(getUsers());
     }, [dispatch, error, isUserDeleted]);
 
-    useEffect(()=>{
-        if(!users){
+    useEffect(() => {
+        if (!users) {
             dispatch(getUsers());
         }
-       
-    },[])
+
+    }, [])
 
     return (
         <div>
-            <MetaData 
-  title="User List" 
-  description="View and manage a complete list of registered users. Handle user roles, profile updates, and account management tasks." 
-/>
+            <MetaData
+                title="User List"
+                description="View and manage a complete list of registered users. Handle user roles, profile updates, and account management tasks."
+            />
 
-     
-        <div className="row loader-parent">
-            {/* <MetaData title={`User List`} /> */}
-            <div className="col-12 col-md-2">
-            <div style={{display:'flex',flexDirection:'row',position:'fixed',top:'0px',zIndex:99999,backgroundColor:'#fff',minWidth:'100%'}}>
-                <Sidebar isActive={isActive} setIsActive={setIsActive}/>
+
+            <div className="row loader-parent">
+                {/* <MetaData title={User List} /> */}
+                <div className="col-12 col-md-2">
+                    <div style={{ display: 'flex', flexDirection: 'row', position: 'fixed', top: '0px', zIndex: 99999, backgroundColor: '#fff', minWidth: '100%' }}>
+                        <Sidebar isActive={isActive} setIsActive={setIsActive} />
+                    </div>
                 </div>
-            </div>
-            <div className="col-12 col-md-10 smalldevice-space loader-parent">
-                <h1 className="mb-4 admin-dashboard-x">User List</h1>
-              
-                <Fragment>
-                    {loading ?(
-                                <div className="container loader-loading-center">
-                                    <Loader />
+                <div className="col-12 col-md-10 smalldevice-space loader-parent">
+                    <h1 className="mb-4 admin-dashboard-x">User List</h1>
+
+                    <Fragment>
+                        {loading ? (
+                            <div className="container loader-loading-center">
+                                <Loader />
+                            </div>
+
+                        ) :
+                            <div className='mdb-table' style={{ display: 'flex', justifyContent: 'center', alignItems: 'center' }}>
+                                <MDBDataTable
+                                    data={setUsers()}
+                                    bordered
+                                    noBottomColumns
+                                    hover
+                                    className="px-3 product-table"
+                                />
+                            </div>
+                        }
+                    </Fragment>
+
+                </div>
+
+                {showModal && (
+                    <div className="modal" tabIndex="-1" role="dialog">
+                        <div className="modal-dialog" role="document">
+                            <div className="modal-content">
+                                <div className="modal-header">
+                                    <h5 className="modal-title">Confirm Delete</h5>
+                                    <button type="button" className="close" onClick={handleCancelDelete}>
+                                        <span aria-hidden="true">&times;</span>
+                                    </button>
                                 </div>
-
-                            )   :
-                      <div className='mdb-table' style={{display:'flex',justifyContent:'center', alignItems:'center'}}>
-                        <MDBDataTable
-                            data={setUsers()}
-                            bordered
-                            noBottomColumns
-                            hover
-                            className="px-3 product-table"
-                        />
-                        </div>
-                    }
-                </Fragment>
-                
-            </div>
-
-            {showModal && (
-                <div className="modal" tabIndex="-1" role="dialog">
-                    <div className="modal-dialog" role="document">
-                        <div className="modal-content">
-                            <div className="modal-header">
-                                <h5 className="modal-title">Confirm Delete</h5>
-                                <button type="button" className="close" onClick={handleCancelDelete}>
-                                    <span aria-hidden="true">&times;</span>
-                                </button>
-                            </div>
-                            <div className="modal-body">
-                                <p>Are you sure you want to delete this user?</p>
-                            </div>
-                            <div className="modal-footer">
-                                <button type="button" className="btn btn-danger" onClick={handleConfirmDelete}>OK</button>
-                                <button type="button" className="btn btn-secondary" onClick={handleCancelDelete}>Cancel</button>
+                                <div className="modal-body">
+                                    <p>Are you sure you want to delete this user?</p>
+                                </div>
+                                <div className="modal-footer">
+                                    <button type="button" className="btn btn-danger" onClick={handleConfirmDelete}>OK</button>
+                                    <button type="button" className="btn btn-secondary" onClick={handleCancelDelete}>Cancel</button>
+                                </div>
                             </div>
                         </div>
                     </div>
-                </div>
-            )}
-        </div>
+                )}
+            </div>
         </div>
     );
 }

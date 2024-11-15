@@ -1067,11 +1067,11 @@ const UpdateOrder = ({ isActive, setIsActive }) => {
                                                                 <td>
                                                                     <img src={item.image} alt={item.name} className="updateTableproduct-image" />
                                                                 </td>
-                                                                <td>{item && item.measurement === 'Grams' ? `${capitalizeFirstLetter(item.name)} (${item.range})` : `${capitalizeFirstLetter(item.name)}`}</td>
-                                                                <td>{item.orderedWeight} {item.measurement && item.measurement=='Grams'? 'Piece' :item.measurement}</td>
+                                                                <td>{item && item.range ? `${capitalizeFirstLetter(item.name)} (${item.range})` : `${capitalizeFirstLetter(item.name)}`}</td>
+                                                                <td>{item.orderedWeight} {item.measurement}</td>
                                                                 <td>Rs. {item.pricePerKg}</td>
-                                                                <td>{item.dispatchedWeight ? item.dispatchedWeight : 0} {item.measurement && item.measurement=='Grams'? 'Piece' :item.measurement}</td>
-                                                                <td>{item.refundableWeight ? item.refundableWeight : 0} {item.measurement && item.measurement=='Grams'? 'Piece' :item.measurement}</td>
+                                                                <td>{item.dispatchedWeight ? item.dispatchedWeight : 0} {item.measurement}</td>
+                                                                <td>{item.refundableWeight ? item.refundableWeight : 0} {item.measurement}</td>
                                                                 <td>Rs. {item.refundableWeight ? item.refundableWeight * item.pricePerKg : 0}</td>
 
                                                             </tr>
@@ -1094,9 +1094,9 @@ const UpdateOrder = ({ isActive, setIsActive }) => {
                                                                     <td>
                                                                         <img src={item.image} alt={item.name} className="updateTableproduct-image" />
                                                                     </td>
-                                                                    <td>{item && item.measurement === 'Grams' ? `${capitalizeFirstLetter(item.name)} (${item.range})` : `${capitalizeFirstLetter(item.name)}`}</td>
+                                                                    <td>{item && item.range ? `${capitalizeFirstLetter(item.name)} (${item.range})` : `${capitalizeFirstLetter(item.name)}`}</td>
                                                                     <td>Rs. {item.price}</td>
-                                                                    <td>{item.productWeight} {item.measurement && item.measurement=='Grams'? 'Piece' :item.measurement}</td>
+                                                                    <td>{item.productWeight} {item.measurement}</td>
                                                                     {editableWeights && (
                                                                         <>
                                                                             <td style={{ maxWidth: '70px' }}>

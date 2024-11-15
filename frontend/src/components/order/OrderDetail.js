@@ -624,11 +624,11 @@ export default function OrderDetail() {
                                                                 <td>
                                                                     <img src={item.image} alt={item.name} className="updateTableproduct-image" />
                                                                 </td>
-                                                                <td>{item && item.measurement === 'Grams' ? `${capitalizeFirstLetter(item.name)} (${item.range})` : `${capitalizeFirstLetter(item.name)}`}</td>
-                                                                <td>{item.orderedWeight} {item.measurement && item.measurement=='Grams'? 'Piece' :item.measurement}</td>
+                                                                <td>{item && item.range ? `${capitalizeFirstLetter(item.name)} (${item.range})` : `${capitalizeFirstLetter(item.name)}`}</td>
+                                                                <td>{item.orderedWeight} {item.measurement}</td>
                                                                 <td>Rs. {item.pricePerKg}</td>
-                                                                <td>{item.dispatchedWeight}{item.measurement && item.measurement=='Grams'? 'Piece' :item.measurement}</td>
-                                                                <td>{item.refundableWeight} {item.measurement && item.measurement=='Grams'? 'Piece' :item.measurement}</td>
+                                                                <td>{item.dispatchedWeight}{item.measurement}</td>
+                                                                <td>{item.refundableWeight} {item.measurement}</td>
                                                                 <td>Rs. {parseFloat(item.pricePerKg * item.dispatchedWeight).toFixed(2)}</td>
                                                             </tr>
                                                         ))
@@ -643,9 +643,9 @@ export default function OrderDetail() {
                                                                     <td>
                                                                         <img src={item.image} alt={item.name} className="updateTableproduct-image" />
                                                                     </td>
-                                                                    <td>{item && item.measurement === 'Grams' ? `${capitalizeFirstLetter(item.name)} (${item.range})` : `${capitalizeFirstLetter(item.name)}`}</td>
+                                                                    <td>{item && item.range? `${capitalizeFirstLetter(item.name)} (${item.range})` : `${capitalizeFirstLetter(item.name)}`}</td>
                                                                     <td>Rs. {(item.price).toFixed(2)}</td>
-                                                                    <td>{item.productWeight} {item.measurement && item.measurement=='Grams'? 'Piece' :item.measurement}</td>
+                                                                    <td>{item.productWeight} {item.measurement}</td>
                                                                     <td>Rs.{(item.productWeight * item.price).toFixed(2)}</td>
 
                                                                     {/* <td>{product.stocks ? <p>{product.stocks}</p> : <p>Out of Stock</p>}</td> */}

@@ -8,10 +8,11 @@ import { Slide, toast } from 'react-toastify';
 import { clearUser, clearlogout } from '../../slices/authSlice';
 import { clearProducts } from '../../slices/productsSlice';
 
-export default function ProtectedRoute({ children, isAdmin }) {
+export default function ProtectedRoute({ children, isAdmin,isSubAdmin }) {
     // const { isAuthenticated, loading, user } = useSelector(state => state.authState);
     const { user, isAuthenticated,loggedoutmessage,isloggedout,loading } = useSelector(state => state.authState);
     const { products  } = useSelector( state => state.productsState);
+    console.log("isSubAdmin",isSubAdmin)
   
     const location = useLocation();
     const navigate = useNavigate();
@@ -63,7 +64,7 @@ export default function ProtectedRoute({ children, isAdmin }) {
     //     }
     // }, [isloggedout,dispatch,isAuthenticated]);
     useEffect(() => {
-        if (isloggedout && !isAuthenticated && !user && isAdmin) {
+        if (isloggedout && !isAuthenticated && !user && isAdmin && isSubAdmin) {
             // navigate('/')
             sessionStorage.clear();
             // if(products){
@@ -115,12 +116,12 @@ export default function ProtectedRoute({ children, isAdmin }) {
     //     return <Navigate to="/login" />;
     // }
 
-    if(isAdmin && !isAuthenticated || isAdmin && !user ){
+    if((isAdmin || isSubAdmin)  && !isAuthenticated || (isAdmin || isSubAdmin) && !user ){
         return <Navigate to="/unauthorized" replace />;
     }
 
 
-    if (isAdmin && isAuthenticated) {
+    if (isAdmin && user && user.role === 'admin' && isAuthenticated) {
         if (user && user.role === 'admin') {
             // const redirectPath = sessionStorage.getItem('redirectPath') || '/';
             // navigate(redirectPath);
@@ -148,9 +149,9 @@ export default function ProtectedRoute({ children, isAdmin }) {
         // }
     }
 
-    else if ( !isAdmin && isAuthenticated) {
-
-        if (user && user.role === 'user' || user && user.role === 'admin' ) {
+    else if (isSubAdmin && user && user.role === 'subadmin' && isAuthenticated) {
+        
+        if (user && user.role === 'subadmin') {
             // const redirectPath = sessionStorage.getItem('redirectPath') || '/';
             // navigate(redirectPath);
             // sessionStorage.removeItem('redirectPath');
@@ -161,7 +162,37 @@ export default function ProtectedRoute({ children, isAdmin }) {
             // return <Navigate to="/admin/dashboard" />
 
         } 
-        else if (user && user.role !== 'user' || 'admin'){
+        else if (user && user.role !== 'subadmin'){
+            return <Navigate to="/unauthorized" replace />;
+        }
+        else{
+             return <Navigate to="/unauthorized" replace />;
+        }
+        // else {
+        //     const redirectPath = sessionStorage.getItem('redirectPath') || '/';
+        // //    return navigate(redirectPath);
+        //     return <Navigate to={redirectPath} replace />;
+        //     // sessionStorage.removeItem('redirectPath');
+        //     // return <Navigate to="/" />;
+            
+        // }
+    }
+
+
+    else if ( !isAdmin && !isSubAdmin && isAuthenticated) {
+
+        if (user && user.role === 'user' || user && user.role === 'admin' || user && user.role === 'subadmin' ) {
+            // const redirectPath = sessionStorage.getItem('redirectPath') || '/';
+            // navigate(redirectPath);
+            // sessionStorage.removeItem('redirectPath');
+            // sessionStorage.removeItem('redirectPath');
+            return children;
+            
+            // sessionStorage.removeItem('redirectPath');
+            // return <Navigate to="/admin/dashboard" />
+
+        } 
+        else if (user && user.role !== 'user' || 'admin' || 'subadmin'){
             return <Navigate to="/unauthorized" replace />;
         }
         else{

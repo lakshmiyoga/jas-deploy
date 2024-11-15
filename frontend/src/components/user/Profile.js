@@ -12,7 +12,7 @@ const Profile = () => {
 
     return (
         <Fragment>
-            {/* <MetaData title={`Profile`} /> */}
+            {/* <MetaData title={Profile} /> */}
             <MetaData
                 title="Profile"
                 description="View and edit your profile information, manage addresses, and update your account preferences for a personalized shopping experience."
@@ -33,13 +33,22 @@ const Profile = () => {
                 </div>
 
                 <div className="col-12  col-md-5" style={{ display: 'flex', flexDirection: 'column', alignItems: 'center', justifyContent: 'center' }} >
-                    <h5>Full Name: {user && user.name}</h5>
+                    <h5>Full Name: {user?.name? user.name :"Not Provided" }</h5>
 
-                    <h5>Mobile Number: {user && user.mobile ? `+91 ${user.mobile} ` : 'Not available'}</h5>
-                    {/* <p>{user.name}</p> */}
+                    {user?.mobile ? (
+                        <div>
+                            <h5>Mobile Number: +91 {user.mobile}</h5>
+                        </div>
+                    ) : null}
 
-                    <h5>Email Address: {user && user.email}</h5>
-                    {/* <p>{user.email}</p> */}
+
+
+                    {user?.email ? (
+                        <div>
+                            <h5>Email: {user.email}</h5>
+                        </div>
+                    ) : null}
+
 
                     <h5>Joined: {String(user && user.createdAt).substring(0, 10)}</h5>
                     {/* <p>{String(user.createdAt).substring(0,10)}</p> */}
@@ -48,8 +57,8 @@ const Profile = () => {
                         My Orders
                     </Link>
 
-                    <Link to='/myProfile/update/password' className="btn btn-primary btn-block mt-3 change_password">
-                        Change Password
+                    <Link to='/shipping' className="btn btn-primary btn-block mt-3 change_password">
+                        Add address
                     </Link>
                 </div>
             </div>

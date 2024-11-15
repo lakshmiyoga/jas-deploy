@@ -5,11 +5,13 @@ import { useDispatch, useSelector } from 'react-redux';
 import { useLocation, useNavigate, useParams } from "react-router-dom";
 import { getAdminProducts, updateProduct } from '../../actions/productsActions';
 import { clearProductUpdated, clearError, clearproduct } from '../../slices/productSlice';
-import { Slide,toast } from 'react-toastify';
+import { Slide, toast } from 'react-toastify';
 import { getProduct } from '../../actions/productAction';
 import MetaData from '../Layouts/MetaData';
 import LoaderButton from '../Layouts/LoaderButton';
 import Loader from '../Layouts/Loader';
+import { getCategories } from '../../actions/categoryAction';
+import { getMeasurements } from '../../actions/measurementActions';
 
 // const UpdateProduct = () => {
 //     const [name, setName] = useState("");
@@ -202,8 +204,9 @@ const UpdateProduct = ({ isActive, setIsActive }) => {
         buyingPrice: "",
         price: "",
         category: "",
-        measurement:"",
-        range:"",
+        measurement: "",
+        range: "",
+        maximumQuantity: "",
         percentage: "",
         stocks: "",
         images: [],
@@ -211,16 +214,28 @@ const UpdateProduct = ({ isActive, setIsActive }) => {
         imagesCleared: false
     });
 
-    // console.log(formData)
+    console.log("formData", formData)
 
     const { id } = useParams();
     const { updateloading, loading, isProductUpdated, error, product } = useSelector((state) => state.productState);
+    const { getcategory } = useSelector(state => state.categoryState)
+    const { getmeasurement } = useSelector(state => state.measurementState)
     const dispatch = useDispatch();
     const navigate = useNavigate();
 
     // console.log(isProductUpdated,error,product)
+    console.log("getcategory", getcategory)
 
+    useEffect(() => {
+        if (!getcategory) {
+            dispatch(getCategories())
 
+        }
+        if (!getmeasurement) {
+            dispatch(getMeasurements())
+        }
+
+    }, [getcategory, getmeasurement])
 
     useEffect(() => {
         if (product && product._id) {
@@ -231,8 +246,9 @@ const UpdateProduct = ({ isActive, setIsActive }) => {
                 buyingPrice: product.buyingPrice,
                 price: product.price,
                 category: product.category,
-                measurement:product.measurement,
-                range: product.measurement === "Grams" ? product.range : undefined,
+                measurement: product.measurement,
+                range: product.range,
+                maximumQuantity: product.maximumQuantity,
                 percentage: product.percentage,
                 stocks: product.stocks,
                 imagesPreview: product.images.map(image => image.image)
@@ -333,15 +349,18 @@ const UpdateProduct = ({ isActive, setIsActive }) => {
         formDataToSend.append('price', formData.price);
         formDataToSend.append('category', formData.category);
         formDataToSend.append('measurement', formData.measurement);
-        if (formData.measurement === "Grams") {
-            formDataToSend.append('range', formData.range)
-        };
+        // if (formData.measurement === "Grams") {
+        //     formDataToSend.append('range', formData.range)
+        // };
+        formDataToSend.append('range', formData.range);
+        formDataToSend.append('maximumQuantity', formData.maximumQuantity);
         formDataToSend.append('percentage', formData.percentage);
         formDataToSend.append('stocks', formData.stocks);
         formData.images.forEach(image => formDataToSend.append('images', image));
         formDataToSend.append('imagesCleared', formData.imagesCleared);
         // console.log(formDataToSend)
         dispatch(updateProduct({ id, formDataToSend }));
+        console.log('formDataToSend', id, formDataToSend);
     };
 
     useEffect(() => {
@@ -447,220 +466,238 @@ const UpdateProduct = ({ isActive, setIsActive }) => {
 
     return (
         <div>
-            <MetaData 
-  title="Update Product" 
-  description="Edit product details, update stock levels, or change product images to keep your catalog accurate and up to date." 
-/>
+            <MetaData
+                title="Update Product"
+                description="Edit product details, update stock levels, or change product images to keep your catalog accurate and up to date."
+            />
 
-       
-        <div className="row loader-parent">
-            {/* <MetaData title={`Update Product`} /> */}
-            <div className="col-12 col-md-2">
-                <div style={{ display: 'flex', flexDirection: 'row', position: 'fixed', top: '0px', zIndex: 99999, backgroundColor: '#fff', minWidth: '100%' }}>
-                    <Sidebar isActive={isActive} setIsActive={setIsActive} />
+
+            <div className="row loader-parent">
+                {/* <MetaData title={`Update Product`} /> */}
+                <div className="col-12 col-md-2">
+                    <div style={{ display: 'flex', flexDirection: 'row', position: 'fixed', top: '0px', zIndex: 99999, backgroundColor: '#fff', minWidth: '100%' }}>
+                        <Sidebar isActive={isActive} setIsActive={setIsActive} />
+                    </div>
                 </div>
-            </div>
-            <div className="col-12 col-md-10 smalldevice-space loader-parent">
-                {
-                    loading ? (
-                        <div className="container loader-loading-center">
-                            <Loader />
-                        </div>
+                <div className="col-12 col-md-10 smalldevice-space loader-parent">
+                    {
+                        loading ? (
+                            <div className="container loader-loading-center">
+                                <Loader />
+                            </div>
 
-                    )  : (
-                        <Fragment>
-                            <div className="wrapper mt-0">
-                                <form onSubmit={handleSubmit} className="shadow-lg" encType='multipart/form-data'>
-                                    <h1 className="mb-4 admin-dashboard-x">Update Product</h1>
+                        ) : (
+                            <Fragment>
+                                <div className="wrapper mt-0">
+                                    <form onSubmit={handleSubmit} className="shadow-lg" encType='multipart/form-data'>
+                                        <h3 className="mb-4 admin-dashboard-x">Update Product</h3>
 
-                                    <div className="form-group">
-                                        <label htmlFor="name">English Name <span style={{ color: 'red' }}>*</span></label>
-                                        <input
-                                            type="text"
-                                            id="englishName"
-                                            name="englishName"
-                                            className="form-control"
-                                            value={formData.englishName}
-                                            onChange={handleChange}
-                                            required
-                                        />
-                                    </div>
-                                    <div className="form-group">
-                                        <label htmlFor="name">Tamil Name <span style={{ color: 'red' }}>*</span></label>
-                                        <input
-                                            type="text"
-                                            id="tamilName"
-                                            name="tamilName"
-                                            className="form-control"
-                                            value={formData.tamilName}
-                                            onChange={handleChange}
-                                            required
-                                        />
-                                    </div>
+                                        <div className="form-group">
+                                            <label htmlFor="name">English Name <span style={{ color: 'red' }}>*</span></label>
+                                            <input
+                                                type="text"
+                                                id="englishName"
+                                                name="englishName"
+                                                className="form-control"
+                                                value={formData.englishName}
+                                                onChange={handleChange}
+                                                required
+                                            />
+                                        </div>
+                                        <div className="form-group">
+                                            <label htmlFor="name">Tamil Name <span style={{ color: 'red' }}>*</span></label>
+                                            <input
+                                                type="text"
+                                                id="tamilName"
+                                                name="tamilName"
+                                                className="form-control"
+                                                value={formData.tamilName}
+                                                onChange={handleChange}
+                                                required
+                                            />
+                                        </div>
 
-                                    <div className="form-group">
-                                        <label htmlFor="buyingPrice">Buying Price in (Rs) <span style={{ color: 'red' }}>*</span></label>
-                                        <input
-                                            type="text"
-                                            id="buyingPrice"
-                                            name="buyingPrice"
-                                            className="form-control"
-                                            value={formData.buyingPrice}
-                                            onChange={handleChange}
-                                            required
-                                        />
-                                    </div>
+                                        <div className="form-group">
+                                            <label htmlFor="buyingPrice">Buying Price in (Rs) <span style={{ color: 'red' }}>*</span></label>
+                                            <input
+                                                type="text"
+                                                id="buyingPrice"
+                                                name="buyingPrice"
+                                                className="form-control"
+                                                value={formData.buyingPrice}
+                                                onChange={handleChange}
+                                                required
+                                            />
+                                        </div>
 
-                                    <div className="form-group">
-                                        <label htmlFor="percentage">Percentage (%) <span style={{ color: 'red' }}>*</span></label>
-                                        <input
-                                            type="text"
-                                            id="percentage"
-                                            name="percentage"
-                                            className="form-control"
-                                            value={formData.percentage}
-                                            onChange={handleChange}
-                                            required
-                                        />
-                                    </div>
+                                        <div className="form-group">
+                                            <label htmlFor="percentage">Percentage (%) <span style={{ color: 'red' }}>*</span></label>
+                                            <input
+                                                type="text"
+                                                id="percentage"
+                                                name="percentage"
+                                                className="form-control"
+                                                value={formData.percentage}
+                                                onChange={handleChange}
+                                                required
+                                            />
+                                        </div>
 
-                                    <div className="form-group">
-                                        <label htmlFor="price"> Selling Price in (Rs)</label>
-                                        <input
-                                            type="text"
-                                            id="price"
-                                            name="price"
-                                            className="form-control"
-                                            value={formData.price}
-                                            // onChange={handleChange}
-                                            disabled
-                                        />
-                                    </div>
+                                        <div className="form-group">
+                                            <label htmlFor="price"> Selling Price in (Rs)</label>
+                                            <input
+                                                type="text"
+                                                id="price"
+                                                name="price"
+                                                className="form-control"
+                                                value={formData.price}
+                                                // onChange={handleChange}
+                                                disabled
+                                            />
+                                        </div>
 
-                                    <div className="form-group">
-                                        <label htmlFor="category">Category <span style={{ color: 'red' }}>*</span></label>
-                                        <select
-                                            id="category"
-                                            name="category"
-                                            className="form-control"
-                                            value={formData.category}
-                                            onChange={handleChange}
-                                            required
-                                        >
-                                            <option value="">Select</option>
+                                        <div className="form-group">
+                                            <label htmlFor="category">Category <span style={{ color: 'red' }}>*</span></label>
+                                            <select
+                                                id="category"
+                                                name="category"
+                                                className="form-control"
+                                                value={formData.category}
+                                                onChange={handleChange}
+                                                required
+                                            >
+                                                {/* <option value="">Select</option>
                                             <option value="Vegetables">Vegetables</option>
                                             <option value="Fruits">Fruits</option>
-                                            <option value="Keerai">Keerai</option>
-                                        </select>
-                                    </div>
-                                    <div className="form-group">
-                                    <label htmlFor="measurement">Measurement  <span style={{ color: 'red' }}>*</span></label>
-                                    <select
-                                        type="text"
-                                        id="measurement"
-                                        name="measurement"
-                                        className="form-control"
-                                        onChange={handleChange}
-                                        value={formData.measurement}
-                                        required
-                                    >
-                                        <option value="">Select</option>
-                                        <option value="Kg">Kg</option>
-                                        <option value="Piece">Piece</option>
-                                        <option value="Box">Box</option>
-                                        <option value="Grams">Grams</option>
-                                    </select>
-                                </div>
-                                {formData.measurement === "Grams" && (
-                                    <div className="form-group">
-                                        <label htmlFor="range">Range for Grams</label>
-                                        <input
-                                            type="text"
-                                            id="range"
-                                            name="range"
-                                            className="form-control"
-                                            value={formData.range}
-                                            onChange={handleChange}
-                                            placeholder="Enter range in grams"
-                                            required
-                                        />
-                                    </div>
-                                )}
+                                            <option value="Keerai">Keerai</option> */}
 
-                                    <div className="form-group">
-                                        <label htmlFor="stocks"> Stocks <span style={{ color: 'red' }}>*</span></label>
-                                        <select
-                                            type="text"
-                                            id="stocks"
-                                            name="stocks"
-                                            className="form-control"
-                                            value={formData.stocks}
-                                            onChange={handleChange}
-                                            required
-                                        >
-                                            <option value="">Select</option>
-                                            <option value="Stock">Stock</option>
-                                            <option value="No Stock">No Stock</option>
-                                        </select>
-                                    </div>
-
-                                    <div className='form-group'>
-                                        <label>Images (*Size should be within 5mb) <span style={{ color: 'red' }}>*</span></label>
-                                        <div className='custom-file'>
-                                            <input
-                                                type='file'
-                                                name='product_images'
-                                                accept='.jpg, .jpeg, .png, .webp' // Accepts only jpg, jpeg, and png files
-                                                className='custom-file-input'
-                                                id='images'
-                                                multiple
-                                                onChange={handleImagesChange}
-                                            // required
-                                            />
-                                            <label className='custom-file-label' htmlFor='images'>
-                                                Choose Images
-                                            </label>
-                                        </div>
-                                        {formData.imagesPreview.length > 0 &&
-                                            <Fragment>
-                                                <span className="mr-2" onClick={clearImagesHandler} style={{ cursor: "pointer" }}>
-                                                    <i className="fa fa-trash"></i>
-                                                </span>
-                                                {formData.imagesPreview.map(image => (
-                                                    <img
-                                                        className="mt-3 mr-2"
-                                                        key={image}
-                                                        src={image}
-                                                        alt=" Preview"
-                                                        width="55"
-                                                        height="52"
-                                                    />
+                                                <option value="">Select</option>
+                                                {getcategory && getcategory.map(categoryItem => (
+                                                    <option key={categoryItem} value={categoryItem.category}>{categoryItem.category}</option>
                                                 ))}
-                                            </Fragment>
-                                        }
-                                    </div>
+                                            </select>
+                                        </div>
+                                        <div className="form-group">
+                                            <label htmlFor="measurement">Measurement  <span style={{ color: 'red' }}>*</span></label>
+                                            <select
+                                                type="text"
+                                                id="measurement"
+                                                name="measurement"
+                                                className="form-control"
+                                                onChange={handleChange}
+                                                value={formData.measurement}
+                                                required
+                                            >
+                                                <option value="">Select</option>
+                                                {getmeasurement?.map(measurementItem => (
+                                                    <option key={measurementItem._id} value={measurementItem.measurement}>{measurementItem.measurement}</option>
+                                                ))}
+                                            </select>
+                                        </div>
+                                        {formData.measurement && (
+                                            <div className="form-group">
+                                                <label htmlFor="range">Range</label>
+                                                <input
+                                                    type="text"
+                                                    id="range"
+                                                    name="range"
+                                                    className="form-control"
+                                                    value={formData.range}
+                                                    onChange={handleChange}
+                                                    placeholder="Enter range"
+
+                                                />
+                                            </div>
+                                        )}
+
+                                        <div className="form-group">
+                                            <label htmlFor="maxQuantity_field">Maximum Quantity <span style={{ color: 'red' }}>*</span></label>
+                                            <input
+                                                type="text"
+                                                id="maxQuantity_field"
+                                                name="maxQuantity_field"
+                                                className="form-control"
+                                                onChange={handleChange}
+                                                value={formData.maximumQuantity}
+                                                placeholder="Enter maximum quantity"
+                                                required
+                                            />
+                                        </div>
+
+                                        <div className="form-group">
+                                            <label htmlFor="stocks"> Stocks <span style={{ color: 'red' }}>*</span></label>
+                                            <select
+                                                type="text"
+                                                id="stocks"
+                                                name="stocks"
+                                                className="form-control"
+                                                value={formData.stocks}
+                                                onChange={handleChange}
+                                                required
+                                            >
+                                                <option value="">Select</option>
+                                                <option value="Stock">Stock</option>
+                                                <option value="No Stock">No Stock</option>
+                                            </select>
+                                        </div>
+
+                                        <div className='form-group'>
+                                            <label>Images (*Size should be within 5mb) <span style={{ color: 'red' }}>*</span></label>
+                                            <div className='custom-file'>
+                                                <input
+                                                    type='file'
+                                                    name='product_images'
+                                                    accept='.jpg, .jpeg, .png, .webp' // Accepts only jpg, jpeg, and png files
+                                                    className='custom-file-input'
+                                                    id='images'
+                                                    multiple
+                                                    onChange={handleImagesChange}
+                                                // required
+                                                />
+                                                <label className='custom-file-label' htmlFor='images'>
+                                                    Choose Images
+                                                </label>
+                                            </div>
+                                            {formData.imagesPreview.length > 0 &&
+                                                <Fragment>
+                                                    <span className="mr-2" onClick={clearImagesHandler} style={{ cursor: "pointer" }}>
+                                                        <i className="fa fa-trash"></i>
+                                                    </span>
+                                                    {formData.imagesPreview.map(image => (
+                                                        <img
+                                                            className="mt-3 mr-2"
+                                                            key={image}
+                                                            src={image}
+                                                            alt=" Preview"
+                                                            width="55"
+                                                            height="52"
+                                                        />
+                                                    ))}
+                                                </Fragment>
+                                            }
+                                        </div>
 
 
-                                    <button
-                                        type="submit"
-                                        className="btn btn-block py-3"
-                                        disabled={updateloading}
-                                    >
-                                        {updateloading ? <LoaderButton fullPage={false} size={20} /> : (
-                                            <span>  UPDATE</span>
-                                        )
+                                        <button
+                                            type="submit"
+                                            className="btn btn-block py-3"
+                                            disabled={updateloading}
+                                        >
+                                            {updateloading ? <LoaderButton fullPage={false} size={20} /> : (
+                                                <span>  UPDATE</span>
+                                            )
 
-                                        }
+                                            }
 
-                                    </button>
-                                </form>
-                            </div>
-                        </Fragment>
-                    )
-                }
+                                        </button>
+                                    </form>
+                                </div>
+                            </Fragment>
+                        )
+                    }
 
+                </div>
             </div>
-        </div>
         </div>
     );
 }

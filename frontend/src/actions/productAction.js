@@ -5,6 +5,7 @@ import { productFail, productRequest, productSuccess } from "../slices/productSl
 
 
 export const getProduct = createAsyncThunk('get/getproduct', async (id,{dispatch}) => {
+      console.log("id",id)
     try {
               dispatch(productRequest());
               const {data} = await axios.get(`/api/v1/product/${id}`);

@@ -1,5 +1,5 @@
-// import { createSlice } from "@reduxjs/toolkit";
 
+// import { createSlice } from "@reduxjs/toolkit";
 
 // const authSlice = createSlice({
 //     name: 'auth',
@@ -8,248 +8,168 @@
 //         isAuthenticated: false,
 //         user: null,
 //         error: null,
+//         isloggedout: false,
+//         loggedoutmessage: null,
+//         profileupdateloading: false,
+//         isUpdated: false,
+//         updatepasswordloading: false,
+//         resetloading: false,
+//         message: null,
 //     },
 //     reducers: {
-//         loginRequest(state, action) {
-//             return {
-//                 ...state,
-//                 loading: true,
-//                 isAuthenticated: false,
-//                 user: null,
-//                 error: null,
-//             }
+//         loginRequest(state) {
+//             state.loading = true;
+//             state.isAuthenticated = false;
+//             state.user = null;
+//             state.error = null;
 //         },
 //         loginSuccess(state, action) {
-//             return {
-//                 loading: false,
-//                 isAuthenticated: action.payload.success ? action.payload.success : false,
-//                 user: action.payload.user
-//             }
+//             state.loading = false;
+//             state.isAuthenticated = action.payload.success ? action.payload.success : false;
+//             state.user = action.payload.user;
 //         },
 //         loginFail(state, action) {
-//             return {
-//                 ...state,
-//                 loading: false,
-//                 isAuthenticated: false,
-//                 user: null,
-//                 error: action.payload,
-//             }
+//             state.loading = false;
+//             state.isAuthenticated = false;
+//             state.user = null;
+//             state.error = action.payload;
 //         },
-//         clearError(state, action) {
-//             return {
-//                 ...state,
-//                 loading: false,
-//                 error: null,
-//                 // user:null
-//             }
+//         clearError(state) {
+//             state.loading = false;
+//             state.error = null;
 //         },
-//         registerRequest(state, action) {
-//             return {
-//                 ...state,
-//                 loading: true
-//             }
+//         registerRequest(state) {
+//             state.loading = true;
 //         },
 //         registerSuccess(state, action) {
-//             return {
-//                 loading: false,
-//                 isAuthenticated: action.payload.success ? action.payload.success : false,
-//                 user: action.payload.user
-//             }
+//             state.loading = false;
+//             state.isAuthenticated = action.payload.success ? action.payload.success : false;
+//             state.user = action.payload.user;
 //         },
 //         registerFail(state, action) {
-//             return {
-//                 ...state,
-//                 loading: false,
-//                 error: action.payload
-//             }
+//             state.loading = false;
+//             state.error = action.payload;
 //         },
-//         loadUserRequest(state, action) {
-//             return {
-//                 ...state,
-//                 isAuthenticated: false,
-//                 loading: true,
-//                 user: null,
-//             }
+//         loadUserRequest(state) {
+//             state.isAuthenticated = false;
+//             state.loading = true;
+//             state.user = null;
 //         },
 //         loadUserSuccess(state, action) {
-//             return {
-//                 // ...state,
-//                 loading: false,
-//                 isAuthenticated: action.payload.success ? action.payload.success : false,
-//                 user: action.payload.user
-//             }
+//             state.loading = false;
+//             state.isAuthenticated = action.payload.success ? action.payload.success : false;
+//             state.user = action.payload.user;
 //         },
-//         loadUserFail(state, action) {
-//             return {
-//                 // ...state,
-//                 loading: false,
-//                 isAuthenticated: false,
-//                 user: null,
-//                 // error:action.payload
-//             }
+//         loadUserFail(state) {
+//             state.loading = false;
+//             state.isAuthenticated = false;
+//             state.user = null;
 //         },
-//         logoutRequest(state, action) {
-//             return {
-//                 // ...state,
-//                 loading: false,
-//                 // isAuthenticated: false,
-//                 // user:null,
-//             }
+//         logoutRequest(state) {
+//             state.loading = false; // If you want to show a loading state
 //         },
 //         logoutSuccess(state, action) {
-//             return {
-//                 // ...state,
-//                 loading: false,
-//                 isAuthenticated: false,
-//                 isloggedout: action.payload.success ? action.payload.success : false,
-//                 loggedoutmessage: action.payload.message,
-//                 user: null,
-//             }
+//             state.loading = true;
+//             state.isAuthenticated = false;
+//             state.isloggedout = action.payload.success ? action.payload.success : false;
+//             state.loggedoutmessage = action.payload.message;
+//             state.user = null;
 //         },
 //         logoutFail(state, action) {
-//             return {
-//                 // ...state,
-//                 error: action.payload,
-//                 // isAuthenticated: false,
-//                 // user:null,
-//             }
+//             state.error = action.payload;
 //         },
 //         clearlogout(state, action) {
-//             return {
-//             loading : false,
-//             isAuthenticated : false,
-//             isloggedout : false,
-//             loggedoutmessage : null,
-//             user : null,
-//             }
+//             state.loading = false;
+//             state.isAuthenticated = false;
+//             state.isloggedout = false;
+//             state.loggedoutmessage = null;
+//             state.user = null;
 //         },
-//         clearUser(state, action) {
-//             return {
-//                 ...state,
-//                 error: null,
-//                 isAuthenticated: false,
-//                 user: null,
-//             }
+//         clearUser(state) {
+//             state.error = null;
+//             state.isAuthenticated = false;
+//             state.user = null;
 //         },
-//         updateProfileRequest(state, action) {
-//             return {
-//                 ...state,
-//                 profileupdateloading: true,
-//                 isUpdated: false
-//             }
+//         updateProfileRequest(state) {
+//             state.profileupdateloading = true;
+//             state.isUpdated = false;
 //         },
 //         updateProfileSuccess(state, action) {
-//             return {
-//                 ...state,
-//                 profileupdateloading: false,
-//                 user: action.payload.user,
-//                 isUpdated: true
-//             }
+//             state.profileupdateloading = false;
+//             state.user = action.payload.user;
+//             state.isUpdated = true;
 //         },
 //         updateProfileFail(state, action) {
-//             return {
-//                 ...state,
-//                 profileupdateloading: false,
-//                 error: action.payload
-//             }
+//             state.profileupdateloading = false;
+//             state.error = action.payload;
 //         },
-//         clearUpdateProfile(state, action) {
-//             return {
-//                 ...state,
-//                 isUpdated: false,
-//                 error: null
-//             }
+//         clearUpdateProfile(state) {
+//             state.isUpdated = false;
+//             state.error = null;
 //         },
-
-//         updatePasswordRequest(state, action) {
-//             return {
-//                 ...state,
-//                 updatepasswordloading: true,
-//                 isUpdated: false
-//             }
+//         updatePasswordRequest(state) {
+//             state.updatepasswordloading = true;
+//             state.isUpdated = false;
 //         },
-//         updatePasswordSuccess(state, action) {
-//             return {
-//                 ...state,
-//                 updatepasswordloading: false,
-//                 isUpdated: true
-//             }
+//         updatePasswordSuccess(state) {
+//             state.updatepasswordloading = false;
+//             state.isUpdated = true;
 //         },
 //         updatePasswordFail(state, action) {
-//             return {
-//                 ...state,
-//                 updatepasswordloading: false,
-//                 error: action.payload
-//             }
+//             state.updatepasswordloading = false;
+//             state.error = action.payload;
 //         },
-//         clearUpdatePassword(state, action) {
-//             return {
-//                 ...state,
-//                 loading: false,
-//                 isUpdated: false,
-//                 error: null
-//             }
+//         clearUpdatePassword(state) {
+//             state.loading = false;
+//             state.isUpdated = false;
+//             state.error = null;
 //         },
-//         forgotPasswordRequest(state, action) {
-//             return {
-//                 ...state,
-//                 loading: true,
-//                 message: null
-//             }
+//         forgotPasswordRequest(state) {
+//             state.loading = true;
+//             state.message = null;
 //         },
 //         forgotPasswordSuccess(state, action) {
-//             return {
-//                 ...state,
-//                 loading: false,
-//                 message: action.payload.message
-//             }
+//             state.loading = false;
+//             state.message = action.payload.message;
 //         },
 //         forgotPasswordFail(state, action) {
-//             return {
-//                 ...state,
-//                 loading: false,
-//                 error: action.payload
-//             }
+//             state.loading = false;
+//             state.error = action.payload;
 //         },
-//         resetPasswordRequest(state, action) {
-//             return {
-//                 ...state,
-//                 resetloading: true,
-//             }
+//         resetPasswordRequest(state) {
+//             state.resetloading = true;
 //         },
 //         resetPasswordSuccess(state, action) {
-//             return {
-//                 ...state,
-//                 resetloading: false,
-//                 isAuthenticated: true,
-//                 user: action.payload.user
-//             }
+//             state.resetloading = false;
+//             state.isAuthenticated = true;
+//             state.user = action.payload.user;
 //         },
 //         resetPasswordFail(state, action) {
-//             return {
-//                 ...state,
-//                 resetloading: false,
-//                 error: action.payload
-//             }
+//             state.resetloading = false;
+//             state.error = action.payload;
 //         },
-//         clearResetPassword(state, actions) {
+//         clearResetPassword(state) {
+//             state.loading = false;
+//             state.isAuthenticated = false;
+//             state.user = null;
+//             state.error = null;
+//         },
+//         reset(state) {
 //             return {
-//                 ...state,
 //                 loading: false,
 //                 isAuthenticated: false,
 //                 user: null,
 //                 error: null,
-//             }
+//                 // Reset other state properties as needed
+//             };
 //         },
-
-
 //     }
-
 // });
 
 // const { actions, reducer } = authSlice;
 
-// export const { loginRequest,
+// export const {
+//     loginRequest,
 //     loginSuccess,
 //     loginFail,
 //     clearError,
@@ -279,10 +199,11 @@
 //     logoutRequest,
 //     clearUser,
 //     clearlogout,
+//     reset,
+
 // } = actions;
 
 // export default reducer;
-
 
 import { createSlice } from "@reduxjs/toolkit";
 
@@ -300,8 +221,60 @@ const authSlice = createSlice({
         updatepasswordloading: false,
         resetloading: false,
         message: null,
+        sendLoading:false,
+        sendError:null,
+        verifyError: null,
+        sendMessage:null,
+        message: null,
+        token: null,
     },
     reducers: {
+        sendOtpRequest(state) {
+            state.sendLoading = true;
+            // state.isAuthenticated = false;
+            state.sendError = null;
+        },
+        sendOtpSuccess(state, action) {
+            state.sendLoading = false;
+            // state.isAuthenticated = action.payload.success ? action.payload.success : false;
+            state.sendMessage = action.payload;
+        },
+        sendOtpFailure(state, action) {
+            state.sendLoading = false;
+            // state.isAuthenticated = false;
+            state.sendError = action.payload;
+        },
+        clearSendOtp(state, action) {
+            state.sendLoading = false;
+            // state.isAuthenticated = false;
+            state.sendMessage = null;
+            state.sendError = null;
+        },
+        verifyOtpRequest(state) {
+            state.verifyLoading = true;
+            state.isAuthenticated = false;
+            state.user = null;
+            state.verifyError = null;
+        },
+        verifyOtpSuccess(state, action) {
+            state.verifyLoading = false;
+            state.isAuthenticated = action.payload.success ? action.payload.success : false;
+            state.user = action.payload.user;
+            // state.token = action.payload.token;
+            state.message = action.payload;
+        },
+        verifyOtpFailure(state, action) {
+            state.verifyLoading = false;
+            state.isAuthenticated = false;
+            state.user = null;
+            state.verifyError = action.payload;
+        },
+        clearVerifyError(state) {
+            state.verifyError = null;
+            state.verifyLoading=false;
+            // state.isAuthenticated = false;
+            // state.user = null;
+        },
         loginRequest(state) {
             state.loading = true;
             state.isAuthenticated = false;
@@ -485,6 +458,14 @@ export const {
     clearUser,
     clearlogout,
     reset,
+    sendOtpRequest,
+    sendOtpSuccess,
+    sendOtpFailure,
+    verifyOtpRequest,
+    verifyOtpSuccess,
+    verifyOtpFailure,
+    clearVerifyError,
+    clearSendOtp,
 
 } = actions;
 

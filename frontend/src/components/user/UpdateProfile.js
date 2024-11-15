@@ -12,8 +12,8 @@ const UpdateProfile = () => {
 
     const { profileupdateloading, error, user, isUpdated } = useSelector(state => state.authState);
     const [name, setName] = useState("");
-    const [email, setEmail] = useState("");
-    const [mobile, setMobile] = useState("");
+    // const [email, setEmail] = useState("");
+    // const [mobile, setMobile] = useState("");
     const [avatar, setAvatar] = useState("");
     const [avatarName, setAvatarName] = useState('');
     const [avatarPreview, setAvatarPreview] = useState("/images/default_avatar.png");
@@ -90,8 +90,8 @@ const UpdateProfile = () => {
         e.preventDefault();
         const formData = new FormData();
         formData.append('name', name);
-        formData.append('email', email);
-        formData.append('mobile', mobile)
+        // formData.append('email', email);
+        // formData.append('mobile', mobile)
         formData.append('avatar', avatar);
         dispatch(updateProfile(formData))
 
@@ -100,8 +100,8 @@ const UpdateProfile = () => {
     useEffect(() => {
         if (user) {
             setName(user.name);
-            setEmail(user.email);
-            setMobile(user.mobile);
+            // setEmail(user.email);
+            // setMobile(user.mobile);
             if (user.avatar && user.avatar!=='default_avatar.png') {
                 setAvatarPreview(user.avatar)
             }
@@ -160,7 +160,7 @@ const UpdateProfile = () => {
 
     return (
         <div>
-            {/* <MetaData title={`Update Profile`} /> */}
+            {/* <MetaData title={Update Profile} /> */}
             <MetaData
                 title="Update Profile"
                 description="Update your personal details, manage your account settings, and ensure your information is always up-to-date for a smooth shopping experience."
@@ -187,7 +187,7 @@ const UpdateProfile = () => {
                             />
                         </div>
 
-                        <div className="form-group">
+                        {/* <div className="form-group">
                             <label htmlFor="email_field">Email</label>
                             <input
                                 type="email"
@@ -198,9 +198,9 @@ const UpdateProfile = () => {
                                 // onChange={(e) => setEmail(e.target.value)}
                                 readOnly
                             />
-                        </div>
+                        </div> */}
 
-                        <div className="form-group">
+                        {/* <div className="form-group">
                             <label htmlFor="phone_field">Phone No (+91) <span style={{ color: 'red' }}>*</span></label>
                             <NumberInput
                                 id="mobile_field"
@@ -209,7 +209,7 @@ const UpdateProfile = () => {
                                 value={mobile}
                                 onChange={(e) => setMobile(e.target.value)}
                             />
-                        </div>
+                        </div> */}
 
                         <div className='form-group'>
                             <label htmlFor='avatar_upload'>Avatar (*Size should be within 1mb)</label>

@@ -22,6 +22,7 @@ const Fruits = () => {
     // const dispatch = useDispatch();
     const { products, loading, error } = useSelector((state) => state.productsState);
     const [keyword, setKeyword] = useState("")
+    console.log("category",category)
 
     // useEffect(() => {
     //     if (error) {

@@ -11,6 +11,9 @@ import porterReducer from "./slices/porterSlice"
 import analysisReducer from "./slices/analysisSlice"
 import otpReducer from "./slices/otpSlice"
 import AddressReducer from "./slices/AddressSlice"
+import CategoryReducer from "./slices/categorySlice"
+import MeasurementReducer from "./slices/measurementSlice"
+import loginOtpReducer from "./slices/loginOtpSlice"
 
 
 const reducer = combineReducers({
@@ -25,7 +28,9 @@ const reducer = combineReducers({
     analysisState:analysisReducer,
     otpState:otpReducer,
     addressState:AddressReducer,
-
+    categoryState:CategoryReducer,
+    measurementState:MeasurementReducer,
+    loginOtpState: loginOtpReducer,
 })
 
 // const store = configureStore({

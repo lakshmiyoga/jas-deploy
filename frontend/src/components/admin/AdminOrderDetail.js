@@ -215,7 +215,7 @@ export default function AdminOrderDetail({ isActive, setIsActive }) {
                                                                 <td>
                                                                     <img src={item.image} alt={item.name} className="updateTableproduct-image" />
                                                                 </td>
-                                                                <td>{item.name}</td>
+                                                                <td>{item.name} {item.range}</td>
                                                                 <td>{item.orderedWeight} {item.measurement}</td>
                                                                 <td>Rs. {item.pricePerKg}</td>
                                                                 <td>{item.dispatchedWeight} {item.measurement}</td>
@@ -234,7 +234,7 @@ export default function AdminOrderDetail({ isActive, setIsActive }) {
                                                                     <td>
                                                                         <img src={item.image} alt={item.name} className="updateTableproduct-image" />
                                                                     </td>
-                                                                    <td>{item.name}</td>
+                                                                    <td>{item.name} {item.range}</td>
                                                                     <td>Rs. {(item.price).toFixed(2)}</td>
                                                                     <td>{item.productWeight} {item.measurement}</td>
                                                                     <td>Rs.{(item.productWeight * item.price).toFixed(2)}</td>

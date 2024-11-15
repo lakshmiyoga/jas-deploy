@@ -421,7 +421,7 @@ const ConfirmOrder = () => {
                                                 </div> */}
                                             <div className="col-4 col-lg-4">
                                                 {/* <Link to={/product/${item.product}}>{item.name}</Link> */}
-                                                {item && item.measurement === 'Grams' ? `${capitalizeFirstLetter(item.name)} (${item.range})` : `${capitalizeFirstLetter(item.name)}`}
+                                                {item && item.range ? `${capitalizeFirstLetter(item.name)} (${item.range})` : `${capitalizeFirstLetter(item.name)}`}
                                             </div>
                                             <div className="col-4 col-lg-5">
                                                 <div>{item.productWeight} x Rs.{item.price} = <b>Rs.{(item.productWeight * item.price).toFixed(2)}</b></div>

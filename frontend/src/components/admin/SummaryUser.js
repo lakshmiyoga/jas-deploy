@@ -10,7 +10,7 @@ const SummaryUser = ({isActive,setIsActive}) => {
     const dispatch = useDispatch();
     const location = useLocation();
     // sessionStorage.setItem('redirectPath', location.pathname);
-    const { loading, userSummary, error } = useSelector((state) => state.orderState);
+    const { loading, userSummary=[], error } = useSelector((state) => state.orderState);
 
     // Initialize the date with the current date
     const currentDate = new Date().toISOString().split('T')[0];
@@ -66,7 +66,7 @@ const SummaryUser = ({isActive,setIsActive}) => {
                                     </tr>
                                 </thead>
                                 <tbody>
-                                    {userSummary.map((order, index) => (
+                                    {userSummary && userSummary.map((order, index) => (
                                         <tr key={index}>
                                             <td className="s-no">{index + 1}</td>
                                             <td className="name">{order.user?.name || 'N/A'}</td>
@@ -82,7 +82,7 @@ const SummaryUser = ({isActive,setIsActive}) => {
                                                 {order.shippingInfo?.postalCode || 'N/A'}
                                             </td>
                                             <td className="products">
-                                                {order.products.map((product, idx) => (
+                                                {order.products?.map((product, idx) => (
                                                     <>
                                                      <span key={idx} className="product-item">
                                                         {product.name} - {product.weight}  - Rs. {product.price}

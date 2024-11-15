@@ -2,27 +2,32 @@ import React, { useEffect, Fragment, useState } from 'react';
 import { Button, Container, Navbar } from "react-bootstrap";
 import { useDispatch, useSelector } from 'react-redux';
 import { Link, useLocation } from "react-router-dom";
-import { deleteProduct, getAdminProducts } from '../../actions/productsActions';
 import Loader from '../Layouts/Loader';
 import { MDBDataTable } from 'mdbreact';
 import { Slide, toast } from 'react-toastify';
 import Sidebar from "../admin/Sidebar";
-import { clearError } from '../../slices/productsSlice';
-import { clearProductDeleted } from "../../slices/productSlice";
 import MetaData from '../Layouts/MetaData';
 import LoaderButton from '../Layouts/LoaderButton';
+import { clearDeleteMeasurement } from '../../slices/measurementSlice';
+import { deleteMeasurement, getMeasurements } from '../../actions/measurementActions';
 
-const ProductList = ({ isActive, setIsActive }) => {
+const MeasurementList = ({ isActive, setIsActive }) => {
     // const location = useLocation();
     // sessionStorage.setItem('redirectPath', location.pathname);
-    const { products, loading, deleteloading, error } = useSelector(state => state.productsState);
-    const { isProductDeleted, error: productError } = useSelector(state => state.productState);
+    // const { products, loading, deleteloading, error } = useSelector(state => state.productsState);
+    const {
+        getmeasurement,
+        deletemeasurementerror,
+        deletemeasurement,
+        getmeasurementloading,
+        deletemeasurementloading
+      } = useSelector(state => state.measurementState);
     const dispatch = useDispatch();
     const [showModal, setShowModal] = useState(false);
     const [productToDelete, setProductToDelete] = useState(null);
-    console.log("products", products)
+    // console.log("products", products)
 
-    const setProducts = () => {
+    const setMeasurement = () => {
         const data = {
             columns: [
                 {
@@ -31,23 +36,8 @@ const ProductList = ({ isActive, setIsActive }) => {
                     sort: 'disabled'
                 },
                 {
-                    label: 'Image',
-                    field: 'image',
-                    sort: 'disabled'
-                },
-                {
-                    label: 'Name',
-                    field: 'name',
-                    sort: 'disabled'
-                },
-                {
-                    label: 'Buying Price',
-                    field: 'price',
-                    sort: 'disabled'
-                },
-                {
-                    label: 'Selling Price',
-                    field: 'sellprice',
+                    label: 'Measurement',
+                    field: 'measurement',
                     sort: 'disabled'
                 },
                 {
@@ -58,34 +48,13 @@ const ProductList = ({ isActive, setIsActive }) => {
             ],
             rows: []
         }
-        let allproducts = products && [...products].sort((a, b) => a.englishName.localeCompare(b.englishName))
-        allproducts && allproducts.forEach((product, index) => {
+        getmeasurement && getmeasurement.forEach((product, index) => {
             data.rows.push({
                 s_no: index + 1,
-                // name: ${product.englishName} / ${product.tamilName},
-                image: (
-                    <img
-                        src={product.images[0].image}
-                        alt={product.name}
-                        style={{ width: '45px', height: '45px', objectFit: 'cover' }}
-                    />
-                ),
-                name: product && product.range
-                    ? `${(product.englishName)}/${(product.tamilName)} (${product.range})`
-                    : `${(product.englishName)}/${(product.tamilName)}`,
-                
-            
-                // price: product.category === "Keerai"
-                //     ? `Rs.${product.buyingPrice} per(${product.measurement && product.measurement=='Grams'? 'Piece' :product.measurement})`
-                //     : `Rs.${product.buyingPrice} per(${product.measurement && product.measurement=='Grams'? 'Piece' :product.measurement})`,
-                price:`Rs.${product.buyingPrice} (per ${product.measurement})`,
-                sellprice:`Rs.${product.price} (per ${product.measurement})`,
-                // sellprice: product.category === "Keerai"
-                //  ? `Rs.${product.price} per(${product.measurement && product.measurement=='Grams'? 'Piece' :product.measurement})`
-                //     : `Rs.${product.price} per(${product.measurement && product.measurement=='Grams'? 'Piece' :product.measurement})`,
+                measurement: product.measurement,
                 actions: (
                     <Fragment>
-                        <Link to={`/admin/product/${product._id}`} className="btn btn-primary py-1 px-2 ml-2">
+                        <Link to={`/admin/update-measurement/${product._id}`} state={{ product }} className="btn btn-primary py-1 px-2 ml-2">
                             <i className="fa fa-pencil"></i>
                         </Link>
                         <Button onClick={() => handleDeleteClick(product._id)} className="btn btn-danger py-1 px-2 ml-2">
@@ -100,7 +69,7 @@ const ProductList = ({ isActive, setIsActive }) => {
     }
 
     useEffect(() => {
-        if (error || productError) {
+        if (deletemeasurementerror) {
             // toast(error || productError, {
             //     position: "bottom-center",
             //     type: 'error',
@@ -108,19 +77,19 @@ const ProductList = ({ isActive, setIsActive }) => {
             // })
             toast.dismiss();
             setTimeout(() => {
-                toast.error(error || productError, {
+                toast.error(deletemeasurementerror, {
                     position: 'bottom-center',
                     type: 'error',
                     autoClose: 700,
                     transition: Slide,
                     hideProgressBar: true,
                     className: 'small-toast',
-                    onOpen: () => { dispatch(clearError()) }
+                    onOpen: () => { dispatch(clearDeleteMeasurement()) }
                 });
             }, 300);
             return
         }
-        if (isProductDeleted) {
+        if (deletemeasurement) {
             // toast('Product Deleted Successfully!', {
             //     type: 'success',
             //     position: "bottom-center",
@@ -128,30 +97,30 @@ const ProductList = ({ isActive, setIsActive }) => {
             // })
             toast.dismiss();
             setTimeout(() => {
-                toast.success('Product Deleted Successfully!', {
+                toast.success('Measurement Deleted Successfully!', {
                     position: 'bottom-center',
                     type: 'success',
                     autoClose: 700,
                     transition: Slide,
                     hideProgressBar: true,
                     className: 'small-toast',
-                    onOpen: () => dispatch(clearProductDeleted())
+                    onOpen: () => dispatch(clearDeleteMeasurement())
                 });
-                setTimeout(() => {
-                    dispatch(getAdminProducts())
-                }, 700);
+                // setTimeout(() => {
+                    dispatch(getMeasurements())
+                // }, 700);
             }, 300);
             // dispatch(getAdminProducts())
             return;
         }
         // dispatch(getAdminProducts())
-    }, [dispatch, error, isProductDeleted, productError])
+    }, [dispatch, deletemeasurementerror, deletemeasurement])
 
     useEffect(() => {
-        if (!products) {
-            dispatch(getAdminProducts())
+        if (!getmeasurement) {
+            dispatch(getMeasurements())
         }
-    }, [products])
+    }, [getmeasurement])
 
     const handleDeleteClick = (id) => {
         setProductToDelete(id);
@@ -159,7 +128,7 @@ const ProductList = ({ isActive, setIsActive }) => {
     };
 
     const handleConfirmDelete = () => {
-        dispatch(deleteProduct({ id: productToDelete }));
+        dispatch(deleteMeasurement({ id:productToDelete }));
         setShowModal(false);
     };
 
@@ -171,8 +140,8 @@ const ProductList = ({ isActive, setIsActive }) => {
         <div>
             {/* <MetaData title={Product List} /> */}
             <MetaData
-                title="Product List"
-                description="Manage your product inventory. View, update, or remove products from your catalog to keep your store fresh and relevant."
+                title="Measurement List"
+                description="Manage your measurement inventory. Create, View, update, or remove measurement from your catalog to keep your store fresh and relevant."
             />
 
 
@@ -183,22 +152,33 @@ const ProductList = ({ isActive, setIsActive }) => {
                     </div>
                 </div>
                 <div className="col-12 col-md-10 smalldevice-space loader-parent">
-                    <h1 className="mb-4 admin-dashboard-x">Product List</h1>
-
+                    <h1 className="mb-4 admin-dashboard-x">Measurement List</h1>
                     <Fragment>
-                        {loading ? (<div className="container loader-loading-center">
+                        {getmeasurementloading ? (<div className="container loader-loading-center">
                             <Loader />
                         </div>) :
-                            <div className='mdb-table ' style={{ display: 'flex', justifyContent: 'center', alignItems: 'center' }}>
-                                <MDBDataTable
+                            (
+                                <>
+                                    <div style={{display:'flex',justifyContent:'space-between',marginTop:'30px',marginBottom:'3px'}}>
+                                        <Link to="/admin/add-measurement">
+                                            <Button variant="success" className="add-category-btn">
+                                                <i className="fa fa-plus"></i> Add Measurement
+                                            </Button>
+                                        </Link>
+                                    </div>
+                                    <div className='mdb-table ' style={{ display: 'flex', flexDirection: 'column', justifyContent: 'center', alignItems: 'center' }}>
+                                        <MDBDataTable
 
-                                    data={setProducts()}
-                                    bordered
-                                    noBottomColumns
-                                    hover
-                                    className="px-3 product-table"
-                                />
-                            </div>
+                                            data={setMeasurement()}
+                                            bordered
+                                            noBottomColumns
+                                            hover
+                                            className="px-3 product-table"
+                                        />
+                                    </div>
+                                </>
+                            )
+
                         }
                     </Fragment>
 
@@ -218,8 +198,8 @@ const ProductList = ({ isActive, setIsActive }) => {
                                     <p>Are you sure you want to delete this product?</p>
                                 </div>
                                 <div className="modal-footer">
-                                    <button type="button" className="btn btn-danger" onClick={handleConfirmDelete} disabled={deleteloading}>
-                                        {deleteloading ? <LoaderButton fullPage={false} size={20} /> : (
+                                    <button type="button" className="btn btn-danger" onClick={handleConfirmDelete} disabled={deletemeasurementloading}>
+                                        {deletemeasurementloading ? <LoaderButton fullPage={false} size={20} /> : (
                                             <span>  OK</span>
                                         )
 
@@ -237,4 +217,4 @@ const ProductList = ({ isActive, setIsActive }) => {
     )
 }
 
-export default ProductList;
+export default MeasurementList;

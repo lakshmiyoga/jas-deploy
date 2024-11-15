@@ -148,7 +148,8 @@ const Shipping = () => {
                         setMapsearched(false);
                         setLatitude(null);
                         setLongitude(null);
-                        navigate('/cart')
+                        // navigate('/cart');
+                        navigate(-1);
                     }
                 });
             }, 10);
@@ -974,7 +975,7 @@ const Shipping = () => {
                                     Location Access
                                 </h5>
                                 {
-                                    isButtonDisabled || cancelbutton ? <button type="button" className="close" onClick={() => navigate('/address')} >
+                                    isButtonDisabled || cancelbutton ? <button type="button" className="close" onClick={() => navigate(-1)} >
                                         <span aria-hidden="true">&times;</span>
                                     </button> : (
                                         <button type="button" className="close" onClick={handleCancelDelete} disabled={isButtonDisabled || cancelbutton}>

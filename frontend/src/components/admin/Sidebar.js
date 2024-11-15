@@ -287,6 +287,12 @@ const Sidebar = ({ isActive, setIsActive }) => {
                             </NavDropdown>
                         </li>
                         <li>
+                            <Link to="/admin/category" onClick={closeSidebar}><i className="fa fa-tags"></i>Category</Link>
+                        </li>
+                        <li>
+                            <Link to="/admin/measurement" onClick={closeSidebar}><i className="fa fa-balance-scale"></i>Measurement</Link>
+                        </li>
+                        <li>
                             <NavDropdown title={<i className='fa fa-shopping-basket'> Orders</i>}>
                                 <NavDropdown.Item onClick={() => { navigate('/admin/orders'); closeSidebar(); }}>
                                     <i className='fa fa-list'> Order List</i>
@@ -312,12 +318,25 @@ const Sidebar = ({ isActive, setIsActive }) => {
                         <li>
                             <Link to="/admin/dispatch" onClick={closeSidebar}><i className="fa fa-truck"></i> Dispatch</Link>
                         </li>
-                        <li>
+                        {/* <li>
                             <Link to="/admin/analysis" onClick={closeSidebar}><i className="fa fa-pie-chart"></i> Analysis</Link>
                         </li>
                         <li>
                             <Link to="/admin/refund" onClick={closeSidebar}><i className="fa fa-reply"></i> Refund</Link>
-                        </li>
+                        </li> */}
+                        {user && user.role === 'admin' && (
+                            <li>
+                                <Link to="/admin/analysis" onClick={closeSidebar}>
+                                    <i className="fa fa-pie-chart"></i> Analysis
+                                </Link>
+                            </li>
+                        )}
+
+                        {user && user.role === 'admin' && (
+                            <li>
+                                <Link to="/admin/refund" onClick={closeSidebar}><i className="fa fa-reply"></i> Refund</Link>
+                            </li>
+                        )}
                         <li>
                             <Link onClick={(e) =>logoutHandler(e)}><i className="fa fa-sign-out"></i> Logout</Link>
                         </li>

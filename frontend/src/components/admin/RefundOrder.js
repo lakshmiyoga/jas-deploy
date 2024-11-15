@@ -697,10 +697,10 @@ const RefundOrder = ({ isActive, setIsActive }) => {
                                                                                 <td>
                                                                                     <img src={item.image} alt={item.name} className="updateTableproduct-image" />
                                                                                 </td>
-                                                                                <td>{item && item.measurement === 'Grams' ? `${capitalizeFirstLetter(item.name)} (${item.range})` : `${capitalizeFirstLetter(item.name)}`} </td>
+                                                                                <td>{item && item.range ? `${capitalizeFirstLetter(item.name)} (${item.range})` : `${capitalizeFirstLetter(item.name)}`} </td>
                                                                                 <td>Rs. {parseFloat(item.pricePerKg).toFixed(2)}</td>
-                                                                                <td>{item.orderedWeight} {item.measurement && item.measurement=='Grams'? 'Piece' :item.measurement}</td>
-                                                                                <td>{item.refundableWeight} {item.measurement && item.measurement=='Grams'? 'Piece' :item.measurement}</td>
+                                                                                <td>{item.orderedWeight} {item.measurement}</td>
+                                                                                <td>{item.refundableWeight} {item.measurement}</td>
                                                                                 <td>Rs. {parseFloat(item.pricePerKg * item.refundableWeight).toFixed(2)}</td>
                                                                             </tr>
                                                                         ))

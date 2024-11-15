@@ -570,7 +570,7 @@ const Cart = () => {
                                                         <td>{index + 1}</td>
                                                         {/* <td>{capitalizeFirstLetter(item.name)} </td> */}
                                                         <td><img src={item.image} alt={item.name} height="45" width="65" /></td>
-                                                        <td>{item && item.measurement === 'Grams' ? `${capitalizeFirstLetter(item.name)} (${item.range})` : `${capitalizeFirstLetter(item.name)}`} </td>
+                                                        <td>{item && item.range ? `${capitalizeFirstLetter(item.name)} (${item.range})` : `${capitalizeFirstLetter(item.name)}`} </td>
                                                         <td>RS.{(item.price).toFixed(2)}</td>
 
                                                         {/* <td>{item.productWeight} ({item.measurement})</td> */}
@@ -596,8 +596,8 @@ const Cart = () => {
                                                         /> */}
                                                                 <NumberInput
                                                                     type="number"
-                                                                    min={item.measurement === 'Piece' || item.measurement === 'Box' ? "1" : "0.25"}
-                                                                    step={item.measurement === 'Piece' || item.measurement === 'Box' ? "1" : "0.01"}
+                                                                    // min={item.measurement === 'Piece' || item.measurement === 'Box' ? "1" : "0.25"}
+                                                                    // step={item.measurement === 'Piece' || item.measurement === 'Box' ? "1" : "0.01"}
                                                                     value={weight[item.product] || item.productWeight}
                                                                     onChange={(e) => handleWeightChange(item.product, e.target.value, item.category, item.measurement,item)}
                                                                     onFocus={(e) => {
@@ -606,7 +606,7 @@ const Cart = () => {
                                                                     onBlur={(e) => {
                                                                         setTimeout(() => e.target.removeAttribute('list'), 100);
                                                                     }}
-                                                                    className="form-select no-arrow-input form-control custom-placeholder"
+                                                                    className="responsive-weightChangeInput no-arrow-input"
                                                                     list={`weight-options-${item.product}`}
                                                                     style={{
                                                                         flex: '1 1 150px',
@@ -619,18 +619,19 @@ const Cart = () => {
                                                                 </span>
                                                             </div>
                                                             <datalist id={`weight-options-${item.product}`}>
-                                                                {item && item.measurement === 'Piece' || item.measurement === 'Grams' || item.measurement === 'Box'
-                                                                    ? [...Array(3).keys()].map(i => (
-                                                                        <option key={i} value={i + 1}>{i + 1}</option>
+                                                                {item && item.measurement === 'Kg'
+                                                                    ? [...Array(3).keys()].map(i => (                                
+                                                                        <option key={i} value={(i + 1) * 0.5}></option>
                                                                     ))
                                                                     : [...Array(3).keys()].map(i => (
-                                                                        <option key={i} value={(i + 1) * 0.5}></option>
+                                                                        <option key={i} value={i + 1}>{i + 1}</option>
                                                                     ))}
                                                             </datalist>
                                                             {weightError[item.product] && (
                                                                 <div className="error-message">{weightError[item.product]}</div>
                                                             )}
                                                         </td>
+                                                        
                                                         <td>Rs.{(item.price * item.productWeight).toFixed(2)}</td>
                                                         <td>
                                                             <i
@@ -645,6 +646,12 @@ const Cart = () => {
 
                                         </table>
                                     </div>
+                                    <div className="row justify-content-end">
+                                            <div className="col-12 col-md-6 col-lg-4 my-4 d-flex justify-content-md-end align-items-center">
+                                                <span style={{ marginRight: '10px' }}><b>Missed Something?</b> </span>
+                                               <Link to ="/"> <button className="btn ms-2" style={{backgroundColor:'#02441E',color:'white'}}>+ Add more items</button> </Link>
+                                            </div>
+                                        </div>
 
                                     <div className="row" style={{ display: 'flex', justifyContent: 'flex-end' }}>
                                         {/* <div className="col-12 col-lg-8 my-4 float-left">
@@ -656,6 +663,7 @@ const Cart = () => {
                                     <p>Free delivery for all orders above Rs.1000</p>
                                 </div>
                             </div> */}
+                            
                                         <div className="col-12 col-lg-4 my-4">
                                             <div id="order_summary">
                                                 <h4 className="cart_text">Cart Totals</h4>

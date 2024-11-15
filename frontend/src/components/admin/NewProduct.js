@@ -8,6 +8,8 @@ import { clearProductCreated, clearError } from '../../slices/productSlice';
 import { Slide, toast } from 'react-toastify';
 import MetaData from '../Layouts/MetaData';
 import LoaderButton from '../Layouts/LoaderButton';
+import { getCategories } from '../../actions/categoryAction';
+import { getMeasurements } from '../../actions/measurementActions';
 
 
 const NewProduct = ({ isActive, setIsActive }) => {
@@ -18,6 +20,7 @@ const NewProduct = ({ isActive, setIsActive }) => {
     const [buyingPrice, setBuyingPrice] = useState("");
     const [price, setPrice] = useState("");
     const [category, setCategory] = useState("");
+    const [maximumQuantity, setMaximumQuantity] = useState("5");
     const [percentage, setPercentage] = useState("40");
     const [stocks, setStocks] = useState("");
     const [images, setImages] = useState([]);
@@ -28,16 +31,30 @@ const NewProduct = ({ isActive, setIsActive }) => {
 
 
     const { newloading, isProductCreated, error } = useSelector(state => state.productState)
+    const { getcategory } = useSelector(state => state.categoryState)
+    const { getmeasurement } = useSelector(state => state.measurementState)
 
-    const categories = [
-        'Vegetables',
-        'Fruits',
-        'Keerai'
-    ]
+    console.log("getmeasurement", getmeasurement)
+
+    // const categories = [
+    //     'Vegetables',
+    //     'Fruits',
+    //     'Keerai'
+    // ]
 
     const navigate = useNavigate();
     const dispatch = useDispatch();
 
+    useEffect(() => {
+        if (!getcategory) {
+            dispatch(getCategories())
+
+        }
+        if (!getmeasurement) {
+            dispatch(getMeasurements())
+        }
+
+    }, [getcategory, getmeasurement])
 
     // const onImagesChange = (e) => {
     //     const files = Array.from(e.target.files);
@@ -110,10 +127,12 @@ const NewProduct = ({ isActive, setIsActive }) => {
         formData.append('price', price);
         formData.append('percentage', percentage);
         formData.append('category', category);
+        formData.append('maximumQuantity', maximumQuantity);
         formData.append('measurement', measurement);
-        if (measurement === "Grams") {
-            formData.append('rangeForGrams', rangeForGrams)
-        }; // Append range if provided
+        // if (measurement === "Grams") {
+        //     formData.append('rangeForGrams', rangeForGrams)
+        // };
+        formData.append('rangeForGrams', rangeForGrams);
         formData.append('stocks', stocks);
         images.forEach(image => {
             formData.append('images', image)
@@ -202,9 +221,9 @@ const NewProduct = ({ isActive, setIsActive }) => {
                 </div>
                 <div className="col-12 col-md-10 smalldevice-space">
                     <Fragment>
-                        <div className="wrapper mt-0">
+                        <div className="wrapper mt-2">
                             <form onSubmit={submitHandler} className="shadow-lg" encType='multipart/form-data'>
-                                <h1 className="mb-4">New Product</h1>
+                                <h3 className="mb-4">New Product</h3>
 
                                 <div className="form-group">
                                     <label htmlFor="englishName_field">English Name  <span style={{ color: 'red' }}>*</span></label>
@@ -274,8 +293,8 @@ const NewProduct = ({ isActive, setIsActive }) => {
                                     <label for="category_field">Category  <span style={{ color: 'red' }}>*</span></label>
                                     <select onChange={e => setCategory(e.target.value)} className="form-control" id="category_field" required>
                                         <option value="">Select</option>
-                                        {categories.map(category => (
-                                            <option key={category} value={category}>{category}</option>
+                                        {getcategory?.map(categoryItem => (
+                                            <option key={categoryItem._id} value={categoryItem.category}>{categoryItem.category}</option>
                                         ))}
                                     </select>
                                 </div>
@@ -298,7 +317,7 @@ const NewProduct = ({ isActive, setIsActive }) => {
                   value=""
                 />
               </div> */}
-                               
+
                                 <div className="form-group">
                                     <label for="measurement_field">Measurement  <span style={{ color: 'red' }}>*</span></label>
                                     <select
@@ -310,26 +329,38 @@ const NewProduct = ({ isActive, setIsActive }) => {
                                         required
                                     >
                                         <option value="">Select</option>
-                                        <option value="Kg">Kg</option>
-                                        <option value="Piece">Piece</option>
-                                        <option value="Box">Box</option>
-                                        <option value="Grams">Grams</option>
+                                        {getmeasurement?.map(measurementItem => (
+                                            <option key={measurementItem._id} value={measurementItem.measurement}>{measurementItem.measurement}</option>
+                                        ))}
                                     </select>
                                 </div>
                                 {/* Range input for grams */}
-                                {measurement === "Grams" && (
+                                {measurement && (
                                     <div className="form-group">
-                                        <label htmlFor="range_field">Range for Grams(per piece) <span style={{ color: 'red' }}>*</span></label>
+                                        <label htmlFor="range_field">Range</label>
                                         <input
                                             type="text"
                                             id="range_field"
                                             className="form-control"
                                             onChange={e => setRangeForGrams(e.target.value)}
                                             value={rangeForGrams}
-                                            placeholder="Enter range in grams"
+                                            placeholder="Enter Range"
                                         />
                                     </div>
                                 )}
+
+                                <div className="form-group">
+                                    <label htmlFor="maxQuantity_field">Maximum Quantity <span style={{ color: 'red' }}>*</span></label>
+                                    <input
+                                        type="text"
+                                        id="maxQuantity_field"
+                                        className="form-control"
+                                        onChange={e => setMaximumQuantity(e.target.value)}
+                                        value={maximumQuantity}
+                                        placeholder="Enter maximum quantity"
+                                        required
+                                    />
+                                </div>
                                 <div className="form-group">
                                     <label for="stock_field">Stocks  <span style={{ color: 'red' }}>*</span></label>
                                     <select
