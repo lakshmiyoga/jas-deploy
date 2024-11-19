@@ -82,6 +82,11 @@ import NewMeasurement from './components/admin/NewMeasurement';
 import UpdateMeasurement from './components/admin/UpdateMeasurement'
 import CarouselLayout from './components/Layouts/CarouselLayout';
 import LoginForm from './components/user/LoginForm';
+import SearchProduct from './components/Product/SearchProduct';
+import Fresh from './components/Fresh';
+import Groceries from './components/Groceries';
+import SidebarButtons from './components/Layouts/sidebarButtons';
+import { getCategories } from './actions/categoryAction';
 
 
 function App() {
@@ -108,15 +113,19 @@ function App() {
     const { userOrders, error } = useSelector(state => state.orderState)
     const [openSide, setOpenSide] = useState(false);
     const [isActive, setIsActive] = useState(false);
+    const { getcategory } = useSelector((state) => state.categoryState);
     const dispatch = useDispatch();
     const [userLoaded, setUserLoaded] = useState(false);
     console.log("isAuthenticated",isAuthenticated,user);
     console.log("userLoaded",userLoaded)
 
     const [showLoginModal, setShowLoginModal] = useState(false);
+    console.log("showLoginModal",showLoginModal)
 
     const handleLoginClick = () => {
+        console.log("before",showLoginModal)
       setShowLoginModal(true);
+      console.log("after",showLoginModal)
     };
   
     const closeLoginModal = () => {
@@ -207,6 +216,13 @@ function App() {
     },[])
 
     useEffect(() => {
+        if (!getcategory) {
+          dispatch(getCategories())
+        }
+    
+      }, [])
+
+    useEffect(() => {
         if (isAuthenticated && user && !getdata) {
             dispatch(getUserAddresses({userId:user && user._id})); // Fetch user addresses when the component mounts
         }
@@ -287,7 +303,7 @@ function App() {
 
     useEffect(() => {
         const handleScroll = () => {
-            const headerElement = document.querySelector('.header');
+            const headerElement = document.querySelector('.main-header');
             if (window.scrollY > 20) {
                 headerElement && headerElement.classList.add('header-shadow');
             } else {
@@ -337,7 +353,8 @@ function App() {
 
 
     return (
-        <div className={`${openSide ? "App-blure" : isActive ? "App-blure" : "App"}`}>
+        <div className={`${openSide ? "App-blure page-container" : isActive ? "App-blure page-container" : "page-container"}`}>
+        {/* <div className='page-container'> */}
             <HelmetProvider>
                 {
                     productLoading || !userLoaded ? (
@@ -348,17 +365,18 @@ function App() {
                     )
 
                         : (
-                            <div style={{ display: 'flex', flexDirection: 'column', position: 'relative' }}>
+                            <div style={{ display: 'flex', flexDirection: 'column', position: 'relative',width:'100%' }}>
                                 {/* <Header /> */}
 
-                                <div className="header">
-                                    {/* {!isAdminRoute && <Header openSide={openSide} setOpenSide={setOpenSide} />} */}
-                                    {!isAdminRoute && <Header openSide={openSide} setOpenSide={setOpenSide} onLoginClick={handleLoginClick} />}
+                                {/* <div className="header"> */}
+                                <div className='main-header'>
+                                    {!isAdminRoute && <Header openSide={openSide} setOpenSide={setOpenSide} onLoginClick={handleLoginClick} setShowLoginModal={setShowLoginModal}/>}
                                     {showLoginModal && <LoginForm showModal={showLoginModal} onClose={closeLoginModal} />}
                                 </div>
                                 
                                 <ScrollToTop />
-                                <div className={isAdminRoute ? "" : openSide ? "content-blure" : isActive ? "content-blure" : "content"}>
+                                {/* <div className={isAdminRoute ? "" : openSide ? "content-blure" : isActive ? "content-blure" : "content"}> */}
+                                <div className='page-content'>
                                     <Routes>
                                         {/* <Route path="/*" element={<Login />} /> */}
                                         <Route path="/login" element={<Login email={email} setEmail={setEmail} />} />
@@ -366,29 +384,29 @@ function App() {
                                         {
                                             user  && (user.role === "admin" || user.role === "subadmin")  ?
                                                 <Route path="/admin/dashboard" element={<ProtectedRoute isAdmin={true} isSubAdmin={true}><Dashboard isActive={isActive} setIsActive={setIsActive}/></ProtectedRoute>} />
-                                                // <Route path="/admin/dashboard" element={<LandingPage />} />
                                                 :
                                                 <Route path="/" element={<LandingPage />} />
                                         }
                                        <Route path="/" element={<LandingPage />} />
                                         
-                                        {/* <Route path="/" element={<LandingPage />} /> */}
-                                        {/* <Route path="/vegetables" element={<Vegetables />} /> */}
-                                        {/* <Route path="/fruits" element={<Fruits />} /> */}
                                         <Route path="/unauthorized" element={<Unauthorized />} />
                                         {/* <Route path="/keerai" element={<Keerai />} /> */}
                                         <Route path="/categories/:category" element={<Categories />} />
                                         <Route path="/carousel" element={<CarouselLayout />} />
                                         <Route path="/about" element={<About />} />
                                         <Route path="/enquiry" element={<Enquiry />} />
+                                        <Route path="/fresh" element={<Fresh />} />
+                                        <Route path="/groceries" element={<Groceries />} />
                                         <Route path="/address" element={<Address />} />
+                                        <Route path="/profile" element={<SidebarButtons />} />
                                         <Route path="/termsAndConditions" element={<TermsAndConditions />} />
                                         <Route path="/privacyPolicy" element={<PrivacyPolicy />} />
                                         <Route path="/refundPolicy" element={<RefundPolicy />} />
                                         <Route path="/search/:keyword" element={<ProductSearch />} />
+                                        <Route path="/product/search" element={<SearchProduct products={products} />} />
                                         <Route path="/product/:id" element={<ProductDetail />} />
                                         <Route path="/address/update/:id" element={<UpdateAddress />} />
-                                        <Route path="/cart" element={<Cart />} />
+                                        <Route path="/cart" element={<Cart openSide={openSide} setOpenSide={setOpenSide} onLoginClick={handleLoginClick} setShowLoginModal={setShowLoginModal}/>} />
                                         <Route path="/password/forgot" element={<ForgotPassword email={email} setEmail={setEmail} />} />
                                            <Route path="/password/reset/:token" element={<ResetPassword />} />
 
@@ -404,7 +422,7 @@ function App() {
                                         <Route path='/order/:id' element={<ProtectedRoute isAdmin={false}><OrderDetail /></ProtectedRoute>} />
                                         <Route path='/payment/:id' element={<ProtectedRoute isAdmin={false}><PaymentDetails /></ProtectedRoute>} />
                                         <Route path="/order/confirm" element={<ProtectedRoute isAdmin={false}><ConfirmOrder /></ProtectedRoute>} />
-                                        <Route path="/payment/confirm/:id" element={<ProtectedRoute isAdmin={false}><PaymentConfirm /></ProtectedRoute>} />
+                                        <Route path="/payment/confirm/:id" element={<PaymentConfirm />} />
                                         {/* {
                                     user && (
                                         <> */}
@@ -437,11 +455,7 @@ function App() {
                                         <Route path='/admin/orderdetail/:id' element={<ProtectedRoute isAdmin={true} isSubAdmin={true}><AdminOrderDetail isActive={isActive} setIsActive={setIsActive} /></ProtectedRoute>} />
                                         <Route path="*" element={<Navigate to="/page-not-found" replace />} />
                                         <Route path="/page-not-found" element={<PageNotFound />} />
-                                        {/* </>
-                                        
-                                    )
-
-                                } */}
+                                      
 
                                     </Routes>
                                     {!isAdminRoute && <Footer className='footer' />}
@@ -449,10 +463,7 @@ function App() {
 
                                 </div>
 
-                                {/* {!isAdminRoute && <Header/>} */}
-
-
-                                {/* <Footer /> */}
+                               
                             </div>
                         )
                 }
@@ -465,9 +476,6 @@ function App() {
 
 function RootApp() {
 
-    // useEffect(() => {
-    //     store.dispatch(loadUser());
-    // }, [])
     return (
         <Router>
             <App />

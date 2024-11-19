@@ -643,7 +643,7 @@ const UpdateOrder = ({ isActive, setIsActive }) => {
                 name: item.name,
                 orderedWeight,
                 measurement,
-                range:range?range:null,
+                range:range?range:'',
                 pricePerKg,
                 dispatchedWeight,
                 refundableWeight,
@@ -903,7 +903,7 @@ const UpdateOrder = ({ isActive, setIsActive }) => {
                                     <h4 className="mb-4">Shipping Info</h4>
                                     <div><b>Name:</b> {shippingInfo.name}</div>
                                     <div><b>Phone:</b> {shippingInfo.phoneNo}</div>
-                                    <div>
+                                    <div className='address-formatted'>
                                         <b>Address:</b>
                                         {shippingInfo.address && `${shippingInfo.address},`}
                                         {shippingInfo.area && `${shippingInfo.area},`}

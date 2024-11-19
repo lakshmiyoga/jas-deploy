@@ -17,7 +17,7 @@ const LoginForm = ({ showModal, onClose }) => {
     const [isReOtpSent, setIsReOtpSent] = useState(false);
     const [reSent, setReSent] = useState(false);
     const [isValidInput, setIsValidInput] = useState(false);
-    const [timer, setTimer] = useState(30);
+    const [timer, setTimer] = useState(60);
     const [showResendLink, setShowResendLink] = useState(false);
     const [selectedInputType, setSelectedInputType] = useState('phone'); // New state for input type
     const otpInputRefs = useRef([]);
@@ -58,7 +58,18 @@ const LoginForm = ({ showModal, onClose }) => {
     // Send OTP
     const handleSendOtp = () => {
         if (!validateInput(input)) {
-            toast.error(inputError);
+            // toast.error(inputError);
+            toast.dismiss();
+            setTimeout(() => {
+                toast.error(inputError, {
+                    position: 'bottom-center',
+                    type: 'success',
+                    autoClose: 700,
+                    transition: Slide,
+                    hideProgressBar: true,
+                    className: 'small-toast',
+                });
+            }, 300);
             return;
         }
 
@@ -68,7 +79,18 @@ const LoginForm = ({ showModal, onClose }) => {
 
     const handleResendOtp = () => {
         if (!validateInput(input)) {
-            toast.error(inputError);
+            // toast.error(inputError);
+            toast.dismiss();
+            setTimeout(() => {
+                toast.error(inputError, {
+                    position: 'bottom-center',
+                    type: 'success',
+                    autoClose: 700,
+                    transition: Slide,
+                    hideProgressBar: true,
+                    className: 'small-toast',
+                });
+            }, 300);
             return;
         }
         dispatch(clearSendOtp());
@@ -161,28 +183,72 @@ const LoginForm = ({ showModal, onClose }) => {
     // Reset OTP fields if OTP verification fails
     useEffect(() => {
         if (verifyError) {
-            toast.error(verifyError);
+            // toast.error(verifyError);
+            toast.dismiss();
+            setTimeout(() => {
+                toast.error(inputError, {
+                    position: 'bottom-center',
+                    type: 'success',
+                    autoClose: 700,
+                    transition: Slide,
+                    hideProgressBar: true,
+                    className: 'small-toast',
+                });
+            }, 300);
             dispatch(clearVerifyError());
             setOtp(Array(6).fill(''));
             otpInputRefs.current[0]?.focus();
         }
         if (sendError) {
-            toast.error(sendError);
+            // toast.error(sendError);
+            toast.dismiss();
+            setTimeout(() => {
+                toast.error(sendError, {
+                    position: 'bottom-center',
+                    type: 'success',
+                    autoClose: 700,
+                    transition: Slide,
+                    hideProgressBar: true,
+                    className: 'small-toast',
+                });
+            }, 300);
             dispatch(clearSendOtp());
         }
         if (sendMessage && !isOtpSent) {
             setIsOtpSent(true);
             setShowResendLink(false);
-            setTimer(30);
-            toast.success(sendMessage);
+            setTimer(60);
+            // toast.success(sendMessage);
+            toast.dismiss();
+            setTimeout(() => {
+                toast.success(sendMessage, {
+                    position: 'bottom-center',
+                    type: 'success',
+                    autoClose: 700,
+                    transition: Slide,
+                    hideProgressBar: true,
+                    className: 'small-toast',
+                });
+            }, 300);
             dispatch(clearSendOtp());
         }
         if (sendMessage && isOtpSent && reSent) {
             setIsReOtpSent(true);
             setShowResendLink(false);
-            setTimer(30);
+            setTimer(60);
             setReSent(false);
-            toast.success(sendMessage);
+            // toast.success(sendMessage);
+            toast.dismiss();
+            setTimeout(() => {
+                toast.success(sendMessage, {
+                    position: 'bottom-center',
+                    type: 'success',
+                    autoClose: 700,
+                    transition: Slide,
+                    hideProgressBar: true,
+                    className: 'small-toast',
+                });
+            }, 300);
             dispatch(clearSendOtp());
         }
     }, [verifyError, sendError, sendMessage, reSent]);
@@ -287,7 +353,7 @@ const LoginForm = ({ showModal, onClose }) => {
         setInputError('');
         setIsReOtpSent(false);
         setReSent(false);
-        setTimer(30);
+        setTimer(60);
         setShowResendLink(false);
 
     }
@@ -297,7 +363,7 @@ const LoginForm = ({ showModal, onClose }) => {
         setInputError('');
         setIsReOtpSent(false);
         setReSent(false);
-        setTimer(30);
+        setTimer(60);
         setShowResendLink(false);
         onClose();
     }

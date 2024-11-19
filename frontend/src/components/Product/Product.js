@@ -549,11 +549,11 @@ const Product = ({ products, category }) => {
                                         //                 : "Select/type weight in Kg"
                                         //         : "Select/type weight in Kg"
                                         // }
-                                        placeholder={`Select/type weight in ${product && product.measurement}`}
+                                        placeholder={`Select/type`}
                                         // step="0.01"
                                         min="0.25"
                                         type="number"
-                                    // min="0"
+                                        // min="0"
                                     />
                                                                         
                                     <datalist id={`weight-options-${product._id}`}>

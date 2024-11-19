@@ -132,7 +132,7 @@ const Address = () => {
                                 <div className="address-info">
                                     <div>{address.name}</div>
                                     <div>+91 {address.phoneNo}</div>
-                                    <p>{address.formattedAddress}</p>
+                                    <div className='address-formatted'>{address.formattedAddress}</div>
                                     {address.defaultAddress && (
                                         <span className="default-badge">
                                             <CheckCircleIcon fontSize="small" />

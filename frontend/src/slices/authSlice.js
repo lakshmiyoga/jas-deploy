@@ -225,7 +225,7 @@ const authSlice = createSlice({
         sendError:null,
         verifyError: null,
         sendMessage:null,
-        message: null,
+        // message: null,
         token: null,
     },
     reducers: {

@@ -173,7 +173,7 @@ const UpdateProfile = () => {
 
                 <div className="col-10 col-lg-5">
                     <form onSubmit={submitHandler} className="shadow-lg mt-0" encType='multipart/form-data'>
-                        <h3 className="mt-2 mb-5">Update Profile</h3>
+                        <h5 className="mt-2 mb-5">Update Profile</h5>
 
                         <div className="form-group">
                             <label htmlFor="email_field">Name</label>

@@ -17,7 +17,7 @@ const Profile = () => {
                 title="Profile"
                 description="View and edit your profile information, manage addresses, and update your account preferences for a personalized shopping experience."
             />
-
+  
 
             <div className="products_heading">Profile</div>
 

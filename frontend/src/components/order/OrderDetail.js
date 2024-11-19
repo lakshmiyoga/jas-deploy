@@ -455,8 +455,15 @@ export default function OrderDetail() {
         }
     }, [refreshData, porterOrderResponse])
 
+    // const handlePrint = useReactToPrint({
+    //     content: () => invoiceRef.current,
+    // });
     const handlePrint = useReactToPrint({
         content: () => invoiceRef.current,
+        documentTitle: `Invoice_${id || 'unknown'}`, // Set the document title.
+        onAfterPrint: () => {
+            console.log("Invoice downloaded successfully.");
+        },
     });
 
     if (!isAuthenticated) {
@@ -519,7 +526,7 @@ export default function OrderDetail() {
                                     <h4 className="mb-4">Shipping Info</h4>
                                     <div><b>Name:</b> {shippingInfo.name}</div>
                                     <div><b>Phone:</b>+91 {shippingInfo.phoneNo}</div>
-                                    <div>
+                                    <div className='address-formatted'>
                                         <b>Address:</b>
                                         {shippingInfo.address && `${shippingInfo.address},`}
                                         {shippingInfo.area && `${shippingInfo.area},`}

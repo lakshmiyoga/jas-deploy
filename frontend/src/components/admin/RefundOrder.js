@@ -478,7 +478,7 @@ const RefundOrder = ({ isActive, setIsActive }) => {
                                         <h4 className="mb-4">Shipping Info</h4>
                                         <div><b>Name:</b> {shippingInfo.name}</div>
                                         <div><b>Phone:</b> {shippingInfo.phoneNo}</div>
-                                        <div>
+                                        <div className='address-formatted'>
                                             <b>Address:</b>
                                             {shippingInfo.address && `${shippingInfo.address},`}
                                             {shippingInfo.area && `${shippingInfo.area},`}
@@ -779,7 +779,8 @@ const RefundOrder = ({ isActive, setIsActive }) => {
                                                 ) : (
                                                     <button className='btn btn-primary' onClick={submitRefundHandler}
                                                      style={{ cursor: (dropStatus === "Refund" || refundloading ) ? 'not-allowed' : 'pointer' }}
-                                                      disabled={dropStatus === "Refund" || refundloading}>
+                                                    //   disabled={dropStatus === "Refund" || refundloading}>
+                                                    disabled={true}>
                                                         {refundloading ? <LoaderButton fullPage={false} size={20} /> : (
                                                             <span> Refund</span>
                                                         )

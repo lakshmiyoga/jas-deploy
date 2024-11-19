@@ -344,7 +344,7 @@ const Sidebar = ({ isActive, setIsActive }) => {
                 </nav>
             </div>
             {windowWidth < 768 && (
-                <Navbar collapseOnSelect expand="sm" className="bg-body-tertiary custom-navbar">
+                <Navbar collapseOnSelect expand="sm" className="bg-body-tertiary custom-navbar" style={{justifyContent: 'unset !important'}}>
                     {!isActive ? (
                         <button id="sidebarCollapse" onClick={toggleSidebar} style={{ zIndex: '99999', border: 'none', position: 'relative', fontSize: '20px' }}>
                             <i className="fa fa-bars"></i>

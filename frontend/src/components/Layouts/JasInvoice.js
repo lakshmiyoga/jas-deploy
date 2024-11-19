@@ -89,7 +89,7 @@ const JasInvoice = React.forwardRef(({ invoice }, ref) => {
                     </tbody>
                     <tfoot>
                         <tr>
-                            <td colSpan="6" style={{ textAlign: 'right' }}>Total</td>
+                            <td colSpan="6" style={{ textAlign: 'right' }}>Total (Inclusive of all taxes)</td>
                             <td >
                                 {invoice.totalDispatchedAmount}
                             </td>

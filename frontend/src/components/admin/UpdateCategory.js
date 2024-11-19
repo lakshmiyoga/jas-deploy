@@ -20,15 +20,16 @@ const UpdateCategory = ({ isActive, setIsActive }) => {
         name: "",
         description: "",
         category: "",
+        type: "",
         images: [],
         imagesPreview: [],
         imagesCleared: false
     });
 
-    console.log("formData",formData)
+    console.log("formData", formData)
 
     const { id } = useParams();
-  
+
     const {
         postloading,
         postcategory,
@@ -49,20 +50,20 @@ const UpdateCategory = ({ isActive, setIsActive }) => {
     const dispatch = useDispatch();
     const navigate = useNavigate();
     const location = useLocation();
-    const {product = null} = location.state || {};
+    const { product = null } = location.state || {};
 
     // console.log(isProductUpdated,error,product)
     // console.log("product",product)
-   
+
     useEffect(() => {
         if (!product) {
             dispatch(getSingleCategory(id))
             dispatch(getCategories());
-            
+
         }
     }, [dispatch, id]);
 
-    console.log("SingleCategory",singleCategory)
+    console.log("SingleCategory", singleCategory)
 
     useEffect(() => {
         if (product && product._id) {
@@ -71,26 +72,29 @@ const UpdateCategory = ({ isActive, setIsActive }) => {
                 name: product.name,
                 description: product.description,
                 category: product.category,
+                type: product.type,
                 imagesPreview: product.images?.map(image => image.image)
             });
         }
-        else if (!product && singleCategory && singleCategory.category &&  singleCategory.category._id ) {
+        else if (!product && singleCategory && singleCategory.category && singleCategory.category._id) {
             setFormData({
                 ...formData,
                 name: singleCategory.category.name,
-                description: singleCategory.category.description || '' , 
+                description: singleCategory.category.description || '',
                 category: singleCategory.category.category,
-                imagesPreview: singleCategory.category.images.map(image => image.image) 
+                type: singleCategory.category.type,
+                imagesPreview: singleCategory.category.images.map(image => image.image)
             });
         }
-        
 
-    }, [product,singleCategory ]);
+
+    }, [product, singleCategory]);
 
     //  console.log("formdata",formData)
 
 
     const handleChange = (e) => {
+        e.preventDefault();
         setFormData({
             ...formData,
             [e.target.name]: e.target.value
@@ -161,14 +165,15 @@ const UpdateCategory = ({ isActive, setIsActive }) => {
         formDataToSend.append('name', formData.name);
         formDataToSend.append('description', formData.description);
         formDataToSend.append('category', formData.category);
+        formDataToSend.append('type', formData.type);
         formData.images.forEach(image => formDataToSend.append('images', image));
         formDataToSend.append('imagesCleared', formData.imagesCleared);
         // console.log(formDataToSend)
         dispatch(updateCategory({ id, formDataToSend }));
-        console.log('formDataToSend',id,formDataToSend);
+        console.log('formDataToSend', id, formDataToSend);
     };
 
-    
+
 
     useEffect(() => {
         dispatch(clearupdateCategory())
@@ -180,7 +185,7 @@ const UpdateCategory = ({ isActive, setIsActive }) => {
         }
     }, [dispatch, id, product]);
 
-    
+
 
 
     useEffect(() => {
@@ -268,7 +273,7 @@ const UpdateCategory = ({ isActive, setIsActive }) => {
                                                 className="form-control"
                                                 value={formData.description}
                                                 onChange={handleChange}
-                                                // required
+                                            // required
                                             />
                                         </div>
 
@@ -283,7 +288,35 @@ const UpdateCategory = ({ isActive, setIsActive }) => {
                                                 required
                                             />
                                         </div>
-                                       
+
+                                        {/* <div className="form-group">
+                                            <label htmlFor="type">Type <span style={{ color: 'red' }}>*</span></label>
+                                            <input
+                                                id="type"
+                                                name="type"
+                                                className="form-control"
+                                                value={formData.type}
+                                                onChange={handleChange}
+                                                required
+                                            />
+                                        </div> */}
+                                        <div className="form-group">
+                                            <label htmlFor="type">Type <span style={{ color: 'red' }}>*</span></label>
+                                            <select
+                                                id="type"
+                                                name="type"
+                                                className="form-control"
+                                                value={formData.type}
+                                                onChange={handleChange}
+                                                required
+                                            >
+                                                <option value="" disabled>Select Type</option>
+                                                <option value="Fresh">Fresh</option>
+                                                <option value="Groceries">Groceries</option>
+                                            </select>
+                                        </div>
+
+
 
                                         <div className='form-group'>
                                             <label>Images (*Size should be within 5mb) <span style={{ color: 'red' }}>*</span></label>

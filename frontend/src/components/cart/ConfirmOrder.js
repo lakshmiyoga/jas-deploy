@@ -395,7 +395,7 @@ const ConfirmOrder = () => {
                             {/* <p className="mb-4"><b>Address:</b> {`${shippingInfo.address},${shippingInfo.landmark},${shippingInfo.area}, ${shippingInfo.city}- ${shippingInfo.postalCode}`}</p> */}
                             {
                                 defaultAddress && (
-                                    <div className="mb-4">
+                                    <div className="mb-4 address-formatted">
                                         <b>Address:</b>
                                         {defaultAddress.address && `${defaultAddress.address},`}
                                         {defaultAddress.area && `${defaultAddress.area},`}

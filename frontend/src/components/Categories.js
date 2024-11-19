@@ -17,7 +17,7 @@ import CarouselLayout from './Layouts/CarouselLayout'
 const Categories = () => {
   const location = useLocation();
 //   sessionStorage.setItem('redirectPath', location.pathname);
-  const { category } = location.state ;
+  const { category } = location.state || {} ;
   // const dispatch = useDispatch();
   const { products, loading, error } = useSelector((state) => state.productsState);
   console.log(products);

@@ -13,10 +13,11 @@ import axios from 'axios';
 import LoaderButton from '../Layouts/LoaderButton';
 import NumberInput from '../Layouts/NumberInput';
 
-const Cart = () => {
-    const [items, setItems] = useState(() => {
-        return JSON.parse(localStorage.getItem("cartItems")) || [];
-    });
+const Cart = ({ openSide, setOpenSide, onLoginClick }) => {
+    // const [items, setItems] = useState(() => {
+    //     return JSON.parse(localStorage.getItem("cartItems")) || [];
+    // });
+    const [items, setItems] = useState([]);
     const [weight, setWeight] = useState({});
     console.log("weight", weight)
     const [weightError, setWeightError] = useState({});
@@ -24,7 +25,7 @@ const Cart = () => {
     const { products } = useSelector((state) => state.productsState);
     const { getdata, geterror } = useSelector(state => state.addressState);
     const [shippingAmount, setShippingAmount] = useState(null);
-    const [weighttoast,setWeightToast]=useState(false);
+    const [weighttoast, setWeightToast] = useState(false);
     const location = useLocation();
     sessionStorage.setItem('redirectPath', location.pathname);
     const [errorText, setErrorText] = useState(null);
@@ -34,6 +35,7 @@ const Cart = () => {
     const dispatch = useDispatch();
     const navigate = useNavigate();
     const [getshipping, setGetshipping] = useState(false);
+    const [updated, setUpdated] = useState(false);
     console.log("user addresss", getdata);
 
     const [showModal, setShowModal] = useState(false);
@@ -73,22 +75,39 @@ const Cart = () => {
         //     setDummyUser(true);
         // }
     }, []);
+
     useEffect(() => {
-        // Compare and update prices
-        const cartItems = JSON.parse(localStorage.getItem('cartItems')) || [];
+        // Function to update cart prices and sync with localStorage
+        const updateCartPrices = async () => {
+            const cartItems = JSON.parse(localStorage.getItem('cartItems')) || [];
 
-        const updatedItems = cartItems.map(cartItem => {
-            const currentItem = products.find(item => item._id === cartItem.product);
-            if (currentItem && currentItem.price !== cartItem.price) {
-                dispatch(updateCartItemPrice({ productId: cartItem.product, newPrice: currentItem.price }));
-                return { ...cartItem, price: currentItem.price };
-            }
-            return cartItem;
-        });
+            const updatedItems = await Promise.all(
+                cartItems.map(async cartItem => {
+                    const currentItem = products.find(item => item._id === cartItem.product);
+                    if (currentItem && currentItem.price !== cartItem.price) {
+                        // Dispatch action to update the price in the state
+                        await dispatch(updateCartItemPrice({ productId: cartItem.product, newPrice: currentItem.price }));
+                        // Return the updated item
+                        return { ...cartItem, price: currentItem.price };
+                    }
+                    return cartItem;
+                })
+            );
 
-        // Update local storage
-        localStorage.setItem('cartItems', JSON.stringify(updatedItems));
-    }, [items, dispatch]);
+            // Update local storage with the new cart items
+            localStorage.setItem('cartItems', JSON.stringify(updatedItems));
+            setUpdated(true);
+        };
+
+        updateCartPrices();
+    }, [products, dispatch]);
+
+    useEffect(() => {
+        if (updated) {
+            setItems(JSON.parse(localStorage.getItem("cartItems")) || [])
+        }
+    }, [updated])
+
 
     const [pickupDetails, setPickupDetails] = useState({
         lat: 13.0671844,
@@ -100,7 +119,7 @@ const Cart = () => {
     const [customerDetails, setCustomerDetails] = useState(null);
 
     useEffect(() => {
-        if(defaultAddress && isAuthenticated){
+        if (defaultAddress && isAuthenticated) {
             setCustomerDetails({
                 name: defaultAddress && defaultAddress.name && defaultAddress.name,
                 countryCode: '+91',
@@ -111,8 +130,8 @@ const Cart = () => {
                 lng: defaultAddress && defaultAddress.longitude && defaultAddress.longitude
             })
         }
-        
-    }, [defaultAddress,isAuthenticated])
+
+    }, [defaultAddress, isAuthenticated])
 
     useEffect(() => {
         const fetchdata = async () => {
@@ -194,7 +213,7 @@ const Cart = () => {
             }
         }
         if (defaultAddress && dropDetails && customerDetails) {
-        fetchdata()
+            fetchdata()
         }
 
     }, [dropDetails])
@@ -244,7 +263,7 @@ const Cart = () => {
             navigate('/shipping');
         }
         else {
-            navigate('/login');
+            onLoginClick();
         }
     }
 
@@ -270,7 +289,7 @@ const Cart = () => {
             }, 300);
             return; // Stop checkout
         }
-        else if(invalidquantity.length >0 && !closeToast){
+        else if (invalidquantity.length > 0 && !closeToast) {
             setErrorText("Weight should Not be Less than 0.25kg.");
             setCloseToast(true);
             toast.dismiss();
@@ -305,13 +324,14 @@ const Cart = () => {
         }
         else if (nextPage) {
             if (isAuthenticated && user && defaultAddress) {
-                navigate('/order/confirm', { state: { shippingCharge, defaultAddress, subtotal, total ,items} });
+                navigate('/order/confirm', { state: { shippingCharge, defaultAddress, subtotal, total, items } });
             }
             else if (isAuthenticated && user && !defaultAddress) {
                 navigate('/address');
             }
             else {
-                navigate('/login');
+                // navigate('/login');
+                onLoginClick();
             }
         }
 
@@ -319,7 +339,7 @@ const Cart = () => {
         // navigate('/shipping');
     };
 
-    const handleWeightChange = (productId, value, productCategory, productMeasurement,item) => {
+    const handleWeightChange = (productId, value, productCategory, productMeasurement, item) => {
         // Allow clearing the input
         if (value === '' || value === null || value === 0) {
             setWeight(prevWeights => ({ ...prevWeights, [productId]: '' }));
@@ -355,11 +375,11 @@ const Cart = () => {
         if (productMeasurement === 'Piece' || productMeasurement === 'Grams') {
             if (weightValue > 10) {
                 setWeight(prevWeights => ({ ...prevWeights, [productId]: '' }));
-                if ( item.productWeight === null || item.productWeight === '' || item.productWeight === 0) {
+                if (item.productWeight === null || item.productWeight === '' || item.productWeight === 0) {
                     setWeightError(prevErrors => ({ ...prevErrors, [productId]: "Required" }));
                 }
                 // toast.error("Piece count cannot exceed 10");
-                if(!weighttoast){
+                if (!weighttoast) {
                     setWeightToast(true);
                     toast.dismiss();
                     setTimeout(() => {
@@ -375,48 +395,48 @@ const Cart = () => {
                         setWeightToast(false);
                     }, 300);
                 }
-                
+
                 return;
             }
         } else if (productMeasurement === 'Box') {
             if (weightValue > 10) {
                 setWeight(prevWeights => ({ ...prevWeights, [productId]: '' }));
-                if ( item.productWeight === null || item.productWeight === '' || item.productWeight === 0) {
+                if (item.productWeight === null || item.productWeight === '' || item.productWeight === 0) {
                     setWeightError(prevErrors => ({ ...prevErrors, [productId]: "Required" }));
                 }
                 // toast.error("Box count cannot exceed 10");
-                if(!weighttoast){
+                if (!weighttoast) {
                     setWeightToast(true);
-                toast.dismiss();
-                setTimeout(() => {
-                    toast.error("Box count cannot exceed 10", {
-                        position: 'bottom-center',
-                        type: 'error',
-                        autoClose: 700,
-                        transition: Slide,
-                        hideProgressBar: true,
-                        className: 'small-toast',
-                    });
-                    setCloseToast(false);
-                    setWeightToast(false);
-                }, 300);
-            }
+                    toast.dismiss();
+                    setTimeout(() => {
+                        toast.error("Box count cannot exceed 10", {
+                            position: 'bottom-center',
+                            type: 'error',
+                            autoClose: 700,
+                            transition: Slide,
+                            hideProgressBar: true,
+                            className: 'small-toast',
+                        });
+                        setCloseToast(false);
+                        setWeightToast(false);
+                    }, 300);
+                }
                 return;
             }
         }
-        if ( item.productWeight < 0.25 ) {
+        if (item.productWeight < 0.25) {
             setWeightError(prevErrors => ({ ...prevErrors, [productId]: "Minimum 0.25" }));
         }
-         else if (weightValue > 5) {
+        else if (weightValue > 5) {
             setWeight(prevWeights => ({ ...prevWeights, [productId]: '' }));
-            if ( item.productWeight === null || item.productWeight === '' || item.productWeight === 0) {
+            if (item.productWeight === null || item.productWeight === '' || item.productWeight === 0) {
                 setWeightError(prevErrors => ({ ...prevErrors, [productId]: "Required" }));
             }
-           
+
             // toast.error("Weight cannot exceed 5Kg");
-            if(!weighttoast){
+            if (!weighttoast) {
                 setWeightToast(true);
-            toast.dismiss();
+                toast.dismiss();
                 setTimeout(() => {
                     toast.error("Weight cannot exceed 5Kg", {
                         position: 'bottom-center',
@@ -493,14 +513,17 @@ const Cart = () => {
 
 
     return (
-        <Fragment>
+        // <Fragment>
+        <div style={{ display: 'flex', position: 'relative', flexDirection: 'column' }}>
+
+
             {/* <MetaData title={"Cart"} /> */}
             <MetaData
                 title="Your Shopping Cart"
                 description="Review the items in your shopping cart. Adjust quantities, remove products, or proceed to checkout for a seamless shopping experience."
             />
-            <div style={{ display: 'flex', position: 'relative', flexDirection: 'column' }}>
-                <div style={{ display: 'flex', flexDirection: 'column', position: 'relative', top: '0px', width: '100%', zIndex: '990', height: '100px', marginBottom: '20px' }}>
+            <div style={{ display: 'flex', position: 'relative', flexDirection: 'column', minWidth: '100%' }}>
+                <div style={{ display: 'flex', flexDirection: 'column', position: 'fixed', width: '100%', zIndex: '990', height: '100px', marginBottom: '20px' }}>
                     {defaultAddress ? (
                         // <div className="row wrapper">
                         // <div className="col-12 col-lg-12 mt-10"  >
@@ -537,19 +560,15 @@ const Cart = () => {
                         </div>
                     )}
                 </div>
-                <div>
-
-                    {items && items.length === 0 ? (
-                        <h2 className="cart_text mt-5" style={{ display: 'flex', alignItems: 'center', justifyContent: 'center', postion: 'relative', height: '20vh' }}>
-                            Your Cart is Empty
-                        </h2>
-                    ) : (
-                        <Fragment>
-                            <div className="products_heading">Cart</div>
-                            <div className="container cart-detail-container mt-5 " >
-                                <div className="" >
+                <Fragment>
+                        <div className="container cart-detail-container mt-3 " >
+                        <div className="products_heading">Cart</div>
+                            {items && items.length === 0 ? (
+                                <h2 className="cart_text mt-5 " style={{ display: 'flex', alignItems: 'center', justifyContent: 'center', postion: 'relative', height: '20vh' }}>
+                                    Your Cart is Empty
+                                </h2>) : (<div className="" >
                                     <h2 className="cart_text mt-5">Your Cart: <b>{items.length}</b></h2>
-                                    <div className="updatetable-responsive">
+                                    <div className="invoice-table-container">
                                         <table className="updatetable updatetable-bordered">
                                             <thead>
                                                 <tr>
@@ -569,13 +588,13 @@ const Cart = () => {
                                                     <tr key={item.product}>
                                                         <td>{index + 1}</td>
                                                         {/* <td>{capitalizeFirstLetter(item.name)} </td> */}
-                                                        <td><img src={item.image} alt={item.name} height="45" width="65" /></td>
+                                                        <td><img src={item.image} alt={item.name} height="45" width="65" className='updateTableproduct-image' /></td>
                                                         <td>{item && item.range ? `${capitalizeFirstLetter(item.name)} (${item.range})` : `${capitalizeFirstLetter(item.name)}`} </td>
                                                         <td>RS.{(item.price).toFixed(2)}</td>
 
                                                         {/* <td>{item.productWeight} ({item.measurement})</td> */}
                                                         <td>
-                                                            <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', width: '100%' }}>
+                                                            <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-around', width: '100%' }} >
                                                                 {/* <NumberInput
                                                             type="number"
                                                             min={item.measurement === 'Piece' || item.measurement === 'Box' ? "1" : "0.25"}
@@ -599,28 +618,28 @@ const Cart = () => {
                                                                     // min={item.measurement === 'Piece' || item.measurement === 'Box' ? "1" : "0.25"}
                                                                     // step={item.measurement === 'Piece' || item.measurement === 'Box' ? "1" : "0.01"}
                                                                     value={weight[item.product] || item.productWeight}
-                                                                    onChange={(e) => handleWeightChange(item.product, e.target.value, item.category, item.measurement,item)}
+                                                                    onChange={(e) => handleWeightChange(item.product, e.target.value, item.category, item.measurement, item)}
                                                                     onFocus={(e) => {
                                                                         e.target.setAttribute('list', `weight-options-${item.product}`);
                                                                     }}
                                                                     onBlur={(e) => {
                                                                         setTimeout(() => e.target.removeAttribute('list'), 100);
                                                                     }}
-                                                                    className="responsive-weightChangeInput no-arrow-input"
+                                                                    className="responsive-weightChangeInput no-arrow-input cart-input"
                                                                     list={`weight-options-${item.product}`}
-                                                                    style={{
-                                                                        flex: '1 1 150px',
-                                                                        minWidth: '80px',
-                                                                        maxWidth: '100px'
-                                                                    }}
+                                                                // style={{
+                                                                //     flex: '1 1 150px',
+                                                                //     minWidth: '20px',
+                                                                //     maxWidth: '100px',
+                                                                // }}
                                                                 />
-                                                                <span style={{ whiteSpace: 'nowrap' }}>
+                                                                <span style={{ whiteSpace: 'nowrap', marginLeft: '2px' }}>
                                                                     {item.measurement && item.measurement == 'Grams' ? 'Piece' : item.measurement}
                                                                 </span>
                                                             </div>
                                                             <datalist id={`weight-options-${item.product}`}>
                                                                 {item && item.measurement === 'Kg'
-                                                                    ? [...Array(3).keys()].map(i => (                                
+                                                                    ? [...Array(3).keys()].map(i => (
                                                                         <option key={i} value={(i + 1) * 0.5}></option>
                                                                     ))
                                                                     : [...Array(3).keys()].map(i => (
@@ -631,7 +650,7 @@ const Cart = () => {
                                                                 <div className="error-message">{weightError[item.product]}</div>
                                                             )}
                                                         </td>
-                                                        
+
                                                         <td>Rs.{(item.price * item.productWeight).toFixed(2)}</td>
                                                         <td>
                                                             <i
@@ -647,11 +666,11 @@ const Cart = () => {
                                         </table>
                                     </div>
                                     <div className="row justify-content-end">
-                                            <div className="col-12 col-md-6 col-lg-4 my-4 d-flex justify-content-md-end align-items-center">
-                                                <span style={{ marginRight: '10px' }}><b>Missed Something?</b> </span>
-                                               <Link to ="/"> <button className="btn ms-2" style={{backgroundColor:'#02441E',color:'white'}}>+ Add more items</button> </Link>
-                                            </div>
+                                        <div className="col-12 col-md-6 col-lg-4 my-4 d-flex justify-content-md-end align-items-center">
+                                            <span style={{ marginRight: '10px' }}><b>Missed Something?</b> </span>
+                                            <Link to="/"> <button className="btn ms-2" style={{ backgroundColor: '#02441E', color: 'white' }}>+ Add more items</button> </Link>
                                         </div>
+                                    </div>
 
                                     <div className="row" style={{ display: 'flex', justifyContent: 'flex-end' }}>
                                         {/* <div className="col-12 col-lg-8 my-4 float-left">
@@ -663,7 +682,7 @@ const Cart = () => {
                                     <p>Free delivery for all orders above Rs.1000</p>
                                 </div>
                             </div> */}
-                            
+
                                         <div className="col-12 col-lg-4 my-4">
                                             <div id="order_summary">
                                                 <h4 className="cart_text">Cart Totals</h4>
@@ -672,7 +691,12 @@ const Cart = () => {
                                                 <p>Subtotal: <span className="order-summary-values">Rs.{subtotal}</span></p>
                                                 <p>Shipping: <span className="order-summary-values">Rs.{shippingCharge && shippingCharge.toFixed(2)}</span></p>
                                                 <hr />
-                                                <p>Total: <span className="order-summary-values">Rs.{total}</span></p>
+                                                <p>
+                                                    Total: <span className="order-summary-values">Rs.{total}</span>
+                                                </p>
+                                                <p style={{ fontSize: '0.8rem', color: '#6c757d', marginTop: '0px' }}>
+                                                    (Inclusive of all taxes)
+                                                </p>
                                                 <hr />
                                                 <button id="checkout_btn" className="btn btn-block" disabled={getshipping} onClick={checkOutHandler}>
                                                     {getshipping ? <LoaderButton fullPage={false} size={20} /> : (
@@ -684,48 +708,41 @@ const Cart = () => {
                                             </div>
                                         </div>
                                     </div>
-                                </div>
-                            </div>
-                            {showModal && (
-                                <div className="modal" tabIndex="-1" role="dialog" style={modalStyle}>
-                                    <div className="modal-dialog" role="document">
-                                        <div className="modal-content">
-                                            <div className="modal-header">
-                                                <h5 className="modal-title">Confirm Delete</h5>
-                                                <button type="button" className="close" onClick={handleCancelDelete}>
-                                                    <span aria-hidden="true">&times;</span>
-                                                </button>
-                                            </div>
-                                            <div className="modal-body">
-                                                <p>Are you sure you want to delete this item?</p>
-                                            </div>
-                                            <div className="modal-footer">
-                                                <button type="button" className="btn btn-danger" onClick={handleConfirmDelete}>OK</button>
-                                                <button type="button" className="btn btn-secondary" onClick={handleCancelDelete}>Cancel</button>
-                                            </div>
+                                </div>)}
+
+                        </div>
+                        {showModal && (
+                            <div className="modal" tabIndex="-1" role="dialog" style={modalStyle}>
+                                <div className="modal-dialog" role="document">
+                                    <div className="modal-content">
+                                        <div className="modal-header">
+                                            <h5 className="modal-title">Confirm Delete</h5>
+                                            <button type="button" className="close" onClick={handleCancelDelete}>
+                                                <span aria-hidden="true">&times;</span>
+                                            </button>
+                                        </div>
+                                        <div className="modal-body">
+                                            <p>Are you sure you want to delete this item?</p>
+                                        </div>
+                                        <div className="modal-footer">
+                                            <button type="button" className="btn btn-danger" onClick={handleConfirmDelete}>OK</button>
+                                            <button type="button" className="btn btn-secondary" onClick={handleCancelDelete}>Cancel</button>
                                         </div>
                                     </div>
                                 </div>
-                            )}
-                        </Fragment>
-                    )}
+                            </div>
+                        )}
+                    </Fragment>
+
+                <div>
+
+
+
+                    
                 </div>
             </div>
 
-
-            {/* {defaultAddress && (
-             
-                    <div className="default-address">
-                        <h5>Default Shipping Address</h5>
-                        <p>{defaultAddress.name}</p>
-                        <p>{defaultAddress.formattedAddress}</p>
-                        <Link to="/manage-address" className="btn btn-link">Manage Address</Link>
-                    </div>
-
-
-            )} */}
-
-        </Fragment>
+        </div>
     );
 };
 

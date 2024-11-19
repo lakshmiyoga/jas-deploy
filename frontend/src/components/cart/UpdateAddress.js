@@ -223,7 +223,7 @@ const UpdateAddress = () => {
                     async position => {
                         const { latitude, longitude, accuracy } = position.coords;
 
-                        // if (accuracy <= 50) {
+                        if (accuracy <= 50) {
                         setLatitude(parseFloat(latitude.toFixed(6)));
                         setLongitude(parseFloat(longitude.toFixed(6)));
                         setAllowed(true);
@@ -241,22 +241,22 @@ const UpdateAddress = () => {
                                 className: 'small-toast',
                             });
                         }, 300);
-                        // }
-                        // else {
-                        //     toast.dismiss();
-                        //     setTimeout(() => {
-                        //         toast.error('Could not get your precious location.', {
-                        //             position: 'bottom-center',
-                        //             type: 'error',
-                        //             autoClose: 700,
-                        //             transition: Slide,
-                        //             hideProgressBar: true,
-                        //             className: 'small-toast',
-                        //         });
-                        //         setIsButtonDisabled(false);
-                        //     }, 300);
+                        }
+                        else {
+                            toast.dismiss();
+                            setTimeout(() => {
+                                toast.error('Could not get your precious location.', {
+                                    position: 'bottom-center',
+                                    type: 'error',
+                                    autoClose: 700,
+                                    transition: Slide,
+                                    hideProgressBar: true,
+                                    className: 'small-toast',
+                                });
+                                setIsButtonDisabled(false);
+                            }, 300);
 
-                        // }
+                        }
 
                     },
                     error => {

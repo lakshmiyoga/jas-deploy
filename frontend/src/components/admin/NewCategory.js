@@ -21,6 +21,7 @@ const NewCategory = ({ isActive, setIsActive }) => {
     const [images, setImages] = useState([]);
     const [imagesPreview, setImagesPreview] = useState([]);
     const [imagesCleared, setImagesCleared] = useState(false);
+    const [type, setType] = useState("");
 
     const {
         postloading,
@@ -111,6 +112,7 @@ const NewCategory = ({ isActive, setIsActive }) => {
         formData.append('name', name);
         formData.append('description', description);
         formData.append('category', category);
+        formData.append('type', type);
         images.forEach(image => {
             formData.append('images', image)
         })
@@ -226,8 +228,35 @@ const NewCategory = ({ isActive, setIsActive }) => {
                                         required
                                     />
                                 </div>
-                               
-                               
+                                {/* <div className="form-group">
+                                    <label for="type">Type<span style={{ color: 'red' }}>*</span></label>
+                                    <input
+                                        type="text"
+                                        id="type"
+                                        className="form-control"
+                                        onChange={e => setType(e.target.value)}
+                                        value={type}
+                                        required
+                                    />
+                                </div> */}
+
+                                <div className="form-group">
+                                    <label htmlFor="type">Type <span style={{ color: 'red' }}>*</span></label>
+                                    <select
+                                        id="type"
+                                        className="form-control"
+                                        onChange={e => setType(e.target.value)}
+                                        value={type}
+                                        required
+                                    >
+                                        <option value="" disabled>Select Type</option>
+                                        <option value="Fresh">Fresh</option>
+                                        <option value="Groceries">Groceries</option>
+                                    </select>
+                                </div>
+
+
+
                                 <div className='form-group'>
                                     <label>Images  (*Size should be within 1mb)  <span style={{ color: 'red' }}>*</span> </label>
 
