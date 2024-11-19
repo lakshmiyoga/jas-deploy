@@ -25,7 +25,7 @@ const generateOtp = catchAsyncError(async (req, res, next) => {
 
     // Generate OTP and expiry time
     const otp = Math.floor(100000 + Math.random() * 900000).toString();
-    const otpExpiry = new Date(Date.now() + 30 * 1000);
+    const otpExpiry = new Date(Date.now() + 60 * 1000);
 
     try {
         let user;

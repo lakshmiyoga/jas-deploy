@@ -27,7 +27,7 @@ const paymentPageClientId = config.PAYMENT_PAGE_CLIENT_ID; // used in orderSessi
 
 const juspay = new Juspay({
     merchantId: config.MERCHANT_ID,
-    baseUrl: SANDBOX_BASE_URL, // Using sandbox base URL for testing
+    baseUrl: PRODUCTION_BASE_URL, // Using sandbox base URL for testing
     jweAuth: {
         keyId: config.KEY_UUID,
         publicKey,
@@ -168,8 +168,8 @@ const porterOrder = catchAsyncError(async (req, res, next) => {
     //    console.log(req.params)
     const { order_id, request_id, user, user_id, porterData, updatedItems, detailedTable, totalRefundableAmount } = req.body;
     // console.log("req.body", req.body)
-    const apiEndpoint = 'https://pfe-apigw-uat.porter.in/v1/orders/create';
-    // const apiEndpoint = 'https://pfe-apigw.porter.in/v1/orders/create';
+    // const apiEndpoint = 'https://pfe-apigw-uat.porter.in/v1/orders/create';
+    const apiEndpoint = 'https://pfe-apigw.porter.in/v1/orders/create';
 
     const porterOrderExist = await PorterModel.findOne({ order_id });
 
@@ -212,9 +212,9 @@ const porterOrder = catchAsyncError(async (req, res, next) => {
                         if (porterResponse) {
                             if (porterResponse && porterResponse.porterOrder && porterResponse.porterOrder.order_id) {
                                 try {
-                                    const apiEndpoint1 = `https://pfe-apigw-uat.porter.in/v1/orders/${porterResponse.porterOrder.order_id}`
-                                    // const apiEndpoint1 = `https://pfe-apigw.porter.in/v1/orders/${porterResponse.porterOrder.order_id}`
-                                    // apiEndpoint = `https://pfe-apigw-uat.porter.in/v1/orders/{order_id:CRN93814651}`
+                                    // const apiEndpoint1 = `https://pfe-apigw-uat.porter.in/v1/orders/${porterResponse.porterOrder.order_id}`
+                                    const apiEndpoint1 = `https://pfe-apigw.porter.in/v1/orders/${porterResponse.porterOrder.order_id}`
+                                    
                                     const response = await axios.get(apiEndpoint1, {
                                         headers: {
                                             'X-API-KEY': process.env.PORTER_API_KEY,
@@ -1581,8 +1581,8 @@ async function checkPaymentStatus() {
         await Promise.all(orders.map(async (order) => {
             try {
                 if (order && order.porterOrder) {
-                    const apiEndpoint = `https://pfe-apigw-uat.porter.in/v1/orders/${order.porterOrder.order_id}`;
-                    // const apiEndpoint = `https://pfe-apigw.porter.in/v1/orders/${order.porterOrder.order_id}`;
+                    // const apiEndpoint = `https://pfe-apigw-uat.porter.in/v1/orders/${order.porterOrder.order_id}`;
+                    const apiEndpoint = `https://pfe-apigw.porter.in/v1/orders/${order.porterOrder.order_id}`;
                     let response;
                     for (let attempt = 0; attempt < 3; attempt++) { // Retry up to 3 times
                         try {
@@ -1715,10 +1715,10 @@ function isRetryableError(error) {
 // });
 
 
-// nodeCron.schedule('0 0 */12 * * *', () => {
-//     console.log('Checking Refund status...');
-//     checkRefundStatus();
-// });
+nodeCron.schedule('0 0 */12 * * *', () => {
+    console.log('Checking Refund status...');
+    checkRefundStatus();
+});
 
 
 module.exports = { newOrder, getSingleOrder, getQuote, porterOrder, myOrders, orders, updateOrder, deleteOrder, getOrderSummaryByDate, getUserSummaryByDate, getRemoveResponse };

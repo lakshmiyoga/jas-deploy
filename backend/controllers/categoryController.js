@@ -23,6 +23,7 @@ const createCategory = catchAsyncError(async (req, res, next) => {
             name: req.body.name,
             description: req.body.description,
             category:req.body.category,
+            type:req.body.type,
             images: images,
         });
     
