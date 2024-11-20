@@ -84,7 +84,7 @@ const LoginForm = ({ showModal, onClose }) => {
             setTimeout(() => {
                 toast.error(inputError, {
                     position: 'bottom-center',
-                    type: 'success',
+                    type: 'error',
                     autoClose: 700,
                     transition: Slide,
                     hideProgressBar: true,
@@ -186,7 +186,7 @@ const LoginForm = ({ showModal, onClose }) => {
             // toast.error(verifyError);
             toast.dismiss();
             setTimeout(() => {
-                toast.error(inputError, {
+                toast.error(verifyError, {
                     position: 'bottom-center',
                     type: 'error',
                     autoClose: 700,
