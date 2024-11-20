@@ -828,7 +828,7 @@ footer {
   text-decoration: none;
   align-items: center;
   color: #000;
-  font-weight: 500;
+  font-weight: 400;
 }
 
 .cart-container {
@@ -4202,7 +4202,8 @@ top: '55px',
 
 .add-address {
   margin-top: 15px;
-  width: 30%;
+  position: relative;
+  width: 200px;
   padding: 10px;
   border: none;
   border-radius: 2px;
@@ -4230,7 +4231,7 @@ top: '55px',
 
   .add-address {
     margin-top: 15px;
-    width: 50%;
+    width: 100px;
     padding: 10px;
     border: none;
     border-radius: 2px;

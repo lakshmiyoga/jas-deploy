@@ -120,7 +120,7 @@ const Address = () => {
                 <ArrowBackIcon fontSize="small" />
                 <span>Back</span>
             </div>
-            <div className="products_heading">Addresses</div>
+            <div className="products_heading">Address</div>
             <div className="address-container">
                 <div className="address-wrapper">
                     {loading ? (
