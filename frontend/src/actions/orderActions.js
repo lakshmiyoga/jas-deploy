@@ -30,6 +30,12 @@ import {
   userSummaryRequest,
   userSummaryFail,
   userSummarySuccess,
+  adminOrderRemoveRequest,
+  adminOrderRemoveSuccess,
+  adminOrderRemoveFail,
+  updateadminOrdersRequest,
+  updateadminOrdersSuccess,
+  updateadminOrdersFail,
 } from '../slices/orderSlice';
 
 
@@ -68,13 +74,14 @@ export const userOrders = createAsyncThunk('order/userOrders', async (_, { dispa
   }
 });
 
+
+
 export const orderDetail = createAsyncThunk('order/orderDetail', async (id, { dispatch }) => {
   try {
     dispatch(orderDetailRequest());
     const { data } = await axios.get(`/api/v1/order/${id}`);
     console.log(data)
-    dispatch(orderDetailSuccess(data));
-   
+    dispatch(orderDetailSuccess(data));  
   } catch (error) {
     dispatch(orderDetailFail(error.response.data.message));
   }
@@ -84,10 +91,21 @@ export const adminOrders = createAsyncThunk('order/adminOrders', async (_, { dis
   try {
     dispatch(adminOrdersRequest());
     const { data } = await axios.get('/api/v1/admin/orders',{ withCredentials: true })
-    console.log(data)
+    // console.log(data)
     dispatch(adminOrdersSuccess(data));
   } catch (error) {
     dispatch(adminOrdersFail(error.response.data.message));
+  }
+});
+
+export const updateadminOrders = createAsyncThunk('order/adminOrders', async (_, { dispatch }) => {
+  try {
+    dispatch(updateadminOrdersRequest());
+    const { data } = await axios.get('/api/v1/admin/orders',{ withCredentials: true })
+    console.log(data)
+    dispatch(updateadminOrdersSuccess(data));
+  } catch (error) {
+    dispatch(updateadminOrdersFail(error.response.data.message));
   }
 });
 
@@ -101,7 +119,7 @@ export const deleteOrder = createAsyncThunk('order/delete', async (id, { dispatc
   }
 });
 
-export const porterOrder = createAsyncThunk('order/porter', async ({ id, reqPorterData }, { dispatch }) => {
+export const porterOrder = createAsyncThunk('order/porter', async ({  reqPorterData }, { dispatch }) => {
   // console.log(id)
   try {
     dispatch(porterOrderRequest());
@@ -148,5 +166,17 @@ export const fetchUserSummary = createAsyncThunk ('usersummary/get', async (date
     dispatch(userSummarySuccess(data.userSummary));
   } catch (error) {
     dispatch(userSummaryFail());
+  }
+});
+
+export const RemoveOrderResponse = createAsyncThunk('/order/cancelResponse', async ({order_id,removalReason}, { dispatch }) => {
+  try {
+      console.log("request_id",order_id,removalReason)
+    dispatch(adminOrderRemoveRequest());
+    const { data } = await axios.post('/api/v1/admin/removeOrder', {order_id, removalReason},{withCredentials: true });
+    console.log("removeresponseData",data)
+    dispatch(adminOrderRemoveSuccess(data));
+  } catch (error) {
+    dispatch(adminOrderRemoveFail(error.response.data.message));
   }
 });

@@ -1,12 +1,14 @@
 import { Fragment, useEffect, useState } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
-import { Link, useParams } from 'react-router-dom';
+import { Link, useLocation, useParams } from 'react-router-dom';
 import  Loader from '../Layouts/MetaData';
 import {orderDetail as orderDetailAction } from '../../actions/orderActions';
 import axios from 'axios';
 import PaymentConfirm from './PaymentConfirm';
 export default function PaymentDetails () {
     const { orderDetail, loading } = useSelector(state => state.orderState)
+    const location = useLocation();
+    // sessionStorage.setItem('redirectPath', location.pathname);
     const { shippingInfo={}, user={}, orderStatus="Processing", orderItems=[], totalPrice=0, paymentInfo={} } = orderDetail;
     const isPaid = paymentInfo && paymentInfo.status === "succeeded" ? true: false;
     const dispatch = useDispatch();

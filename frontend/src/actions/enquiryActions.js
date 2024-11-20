@@ -4,12 +4,17 @@ import { deleteEnquiryFail, deleteEnquiryRequest, deleteEnquirySuccess, getEnqui
 
 
 
-export const postEnquiryDetails = createAsyncThunk('post/postenquiry', async (formData, { dispatch }) => {
+export const postEnquiryDetails = createAsyncThunk('post/postenquiry', async (form, { dispatch }) => {
     // console.log(formData)
     try {
               dispatch(postEnquiryRequest());
-              console.log(formData)
-              const {data} = await axios.post(`/api/v1/enquiry`, formData);
+              // console.log(formData)
+              const config = {
+                headers: {
+                    'Content-type': 'multipart/form-data'
+                }
+            }
+              const {data} = await axios.post(`/api/v1/enquiry`,form,config);
               console.log(data)
               dispatch(postEnquirySuccess(data));
         } catch (error) {

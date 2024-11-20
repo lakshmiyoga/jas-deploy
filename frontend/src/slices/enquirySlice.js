@@ -5,6 +5,7 @@ const enquirySlice = createSlice({
     name:'enquiry',
     initialState:{
         loading:false,
+        enquiry:null,
         isEnquiryDeleted:false
     }, 
     reducers:{
@@ -70,6 +71,13 @@ const enquirySlice = createSlice({
                 isEnquiryDeleted: false
             }
         },
+        clearEnquiry(state, action) {
+            return {
+                loading:false,
+                error: null,
+                enquiry:null,
+            }
+        },
        
     }
 
@@ -77,6 +85,6 @@ const enquirySlice = createSlice({
 
 const {actions, reducer} = enquirySlice;
 
-export const {clearEnquiryDeleted,postEnquiryRequest,postEnquirySuccess,postEnquiryFail, deleteEnquiryRequest,deleteEnquirySuccess, deleteEnquiryFail,getEnquiryRequest,getEnquirySuccess, getEnquiryFail } = actions;
+export const {clearEnquiryDeleted,postEnquiryRequest,postEnquirySuccess,postEnquiryFail, deleteEnquiryRequest,deleteEnquirySuccess, deleteEnquiryFail,getEnquiryRequest,getEnquirySuccess, getEnquiryFail,clearEnquiry } = actions;
 
 export default reducer;

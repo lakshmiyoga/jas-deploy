@@ -6,12 +6,14 @@ const StepsCheckOut = ({shipping, confirmOrder, payment}) => {
     <div className="checkout-progress d-flex justify-content-center mt-5">
     {
             shipping ?
-            <Link to="/shipping">
+            // <Link to="/shipping">
+               <Link >
                 <div className="triangle2-active"></div>
                 <div className="step active-step">Shipping Info</div>
                 <div className="triangle-active"></div>
             </Link>:
-             <Link to="/shipping">
+            //  <Link to="/shipping">
+            <Link >
                 <div className="triangle2-incomplete"></div>
                 <div className="step incomplete">Shipping Info</div>
                 <div className="triangle-incomplete"></div>
@@ -19,12 +21,14 @@ const StepsCheckOut = ({shipping, confirmOrder, payment}) => {
             }
 
             { confirmOrder ?
-            <Link to="/order/confirm">
+            // <Link to="/order/confirm">
+            <Link >
                 <div className="triangle2-active"></div>
                 <div className="step active-step">Confirm Order</div>
                 <div className="triangle-active"></div>
             </Link>:
-             <Link to="/order/confirm">
+            //  <Link to="/order/confirm">
+            <Link >
                 <div className="triangle2-incomplete"></div>
                 <div className="step incomplete">Confirm Order</div>
                 <div className="triangle-incomplete"></div>

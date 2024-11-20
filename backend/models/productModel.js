@@ -11,6 +11,10 @@ const productSchema = new mongoose.Schema({
         required:true,
         
     },
+    buyingPrice:{
+        type:Number,
+        default:0.0
+    }, 
     price:{
         type:Number,
         default:0.0
@@ -27,12 +31,13 @@ const productSchema = new mongoose.Schema({
         type:String,
         required:true,
         enum: {
-            values:['Vegetables','Fruits']
+            values:['Vegetables','Fruits','Keerai']
         }
         
     },
     stocks:{
         type:String,
+        default:'Stock',
     },
     user:{
         type:mongoose.Schema.Types.ObjectId

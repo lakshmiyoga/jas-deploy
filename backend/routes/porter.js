@@ -1,6 +1,6 @@
 const express =require('express');
 const { isAuthenticateUser, authorizeRoles } = require('../middleware/authmiddleware');
-const {getSinglePorterOrder, getPorterResponse,getCancelResponse} = require("../controllers/porterController");
+const {getSinglePorterOrder, getPorterResponse,getCancelResponse, getPackedOrder, postPackedOrder, refundOrder,getAllPackedOrder} = require("../controllers/porterController");
 const router = express.Router();
 
 
@@ -13,9 +13,15 @@ const router = express.Router();
 
 //Admin Routes
 
-router.post('/admin/porter/orders',isAuthenticateUser,authorizeRoles('admin'), getSinglePorterOrder)
-router.post('/admin/porter/createResponse',isAuthenticateUser,authorizeRoles('admin'), getPorterResponse)
+router.post('/admin/porter/orders',isAuthenticateUser, getSinglePorterOrder)
+router.post('/admin/porter/createResponse',isAuthenticateUser, getPorterResponse)
 router.post('/admin/porter/cancelOrder',isAuthenticateUser,authorizeRoles('admin'), getCancelResponse)
+router.post('/admin/packedOrder',isAuthenticateUser,authorizeRoles('admin'), postPackedOrder)
+router.post('/admin/getPackedOrder',isAuthenticateUser, getPackedOrder)
+router.get('/admin/PackedOrder/all',isAuthenticateUser,authorizeRoles('admin'), getAllPackedOrder)
+router.post('/admin/refund',isAuthenticateUser,authorizeRoles('admin'), refundOrder)
+
+
 // router.post('/admin/porter/create/orders',isAuthenticateUser,authorizeRoles('admin'), porterOrder)
 // router.put('/admin/order/:id',isAuthenticateUser,authorizeRoles('admin'), updateOrder)
 // router.delete('/admin/order/:id',isAuthenticateUser,authorizeRoles('admin'), deleteOrder)

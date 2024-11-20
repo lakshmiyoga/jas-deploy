@@ -1,0 +1,3626 @@
+[{
+    "_id": {
+      "$oid": "66f3d3ef917991f9e31d5061"
+    },
+    "englishName": "Amla",
+    "tamilName": "பெரிய நெல்லி",
+    "price": 112,
+    "buyingPrice": 80,
+    "images": [
+      {
+        "image": "https://jas-fruits.s3.ap-south-1.amazonaws.com/Product/1729737074833-amla.jpg",
+        "_id": {
+          "$oid": "6719b173b12ecacfed0f03ec"
+        }
+      }
+    ],
+    "category": "Vegetables",
+    "stocks": "Stock",
+    "percentage": 40,
+    "measurement": "Kg"
+  },
+  {
+    "_id": {
+      "$oid": "66f3d3ef917991f9e31d506c"
+    },
+    "englishName": "BOTTLE GOURD",
+    "tamilName": "சுரைக்காய்",
+    "price": 77,
+    "buyingPrice": 55,
+    "images": [
+      {
+        "image": "https://jas-fruits.s3.ap-south-1.amazonaws.com/Product/1729737751527-bottle_gourd.jpg",
+        "_id": {
+          "$oid": "6719b418b12ecacfed0f2ac4"
+        }
+      }
+    ],
+    "category": "Vegetables",
+    "stocks": "Stock",
+    "percentage": 40,
+    "measurement": "Kg"
+  },
+  {
+    "_id": {
+      "$oid": "66f3d3ef917991f9e31d506a"
+    },
+    "englishName": "BITTER GOURD BIG",
+    "tamilName": "பாகற்காய் பெரியது",
+    "price": 84,
+    "buyingPrice": 60,
+    "images": [
+      {
+        "image": "https://jas-fruits.s3.ap-south-1.amazonaws.com/Product/1729737588331-bitter_gourd_big.jpg",
+        "_id": {
+          "$oid": "6719b374b12ecacfed0f23df"
+        }
+      }
+    ],
+    "category": "Vegetables",
+    "stocks": "Stock",
+    "percentage": 40,
+    "measurement": "Kg"
+  },
+  {
+    "_id": {
+      "$oid": "66f3d3ef917991f9e31d506d"
+    },
+    "englishName": "BRINJAL BHAVANI",
+    "tamilName": "கத்திரிக்காய் பவானி",
+    "price": 70,
+    "buyingPrice": 50,
+    "images": [
+      {
+        "image": "https://jas-fruits.s3.ap-south-1.amazonaws.com/Product/1729737785659-Bhavani%20Brinjal.jpeg",
+        "_id": {
+          "$oid": "6719b43bb12ecacfed0f2c25"
+        }
+      }
+    ],
+    "category": "Vegetables",
+    "stocks": "Stock",
+    "percentage": 40,
+    "measurement": "Kg"
+  },
+  {
+    "_id": {
+      "$oid": "66f3d3ef917991f9e31d5082"
+    },
+    "englishName": "CHOWCHOW",
+    "tamilName": "சௌச்சௌ",
+    "price": 42,
+    "buyingPrice": 30,
+    "images": [
+      {
+        "image": "https://jas-fruits.s3.ap-south-1.amazonaws.com/Product/1729738704043-chochow.jpg",
+        "_id": {
+          "$oid": "6719b7d0b12ecacfed0f491e"
+        }
+      }
+    ],
+    "category": "Vegetables",
+    "stocks": "Stock",
+    "percentage": 40,
+    "measurement": "Kg"
+  },
+  {
+    "_id": {
+      "$oid": "66f3d3ef917991f9e31d5086"
+    },
+    "englishName": "CUCUMBER ORGANIC",
+    "tamilName": "ஆர்கானிக் வெள்ளரி",
+    "price": 70,
+    "buyingPrice": 50,
+    "images": [
+      {
+        "image": "https://jas-fruits.s3.ap-south-1.amazonaws.com/Product/1729738813499-cucumber_organic.jpg",
+        "_id": {
+          "$oid": "6719b83eb12ecacfed0f4ea5"
+        }
+      }
+    ],
+    "category": "Vegetables",
+    "stocks": "Stock",
+    "percentage": 40,
+    "measurement": "Kg"
+  },
+  {
+    "_id": {
+      "$oid": "66f3d3ef917991f9e31d508c"
+    },
+    "englishName": "GARLIC",
+    "tamilName": "பூண்டு",
+    "price": 448,
+    "buyingPrice": 320,
+    "images": [
+      {
+        "image": "https://jas-fruits.s3.ap-south-1.amazonaws.com/Product/1729739172582-garlic.jpg",
+        "_id": {
+          "$oid": "6719b9a5b12ecacfed0f585a"
+        }
+      }
+    ],
+    "category": "Vegetables",
+    "stocks": "Stock",
+    "percentage": 40,
+    "measurement": "Kg"
+  },
+  {
+    "_id": {
+      "$oid": "66f3d3ef917991f9e31d5095"
+    },
+    "englishName": "LAB LAB",
+    "tamilName": "அவரைக்காய்",
+    "price": 105,
+    "buyingPrice": 75,
+    "images": [
+      {
+        "image": "https://jas-fruits.s3.ap-south-1.amazonaws.com/Product/1729739630863-broad_beans.jpg",
+        "_id": {
+          "$oid": "6719bb6fb12ecacfed0f6fed"
+        }
+      }
+    ],
+    "category": "Vegetables",
+    "stocks": "Stock",
+    "percentage": 40,
+    "measurement": "Kg"
+  },
+  {
+    "_id": {
+      "$oid": "66f3d3ef917991f9e31d5099"
+    },
+    "englishName": "MALABAR",
+    "tamilName": "மலபார்",
+    "price": 35,
+    "buyingPrice": 25,
+    "images": [
+      {
+        "image": "https://jas-fruits.s3.ap-south-1.amazonaws.com/Product/1729739776346-malabar.jpg",
+        "_id": {
+          "$oid": "6719bc01b12ecacfed0f76dc"
+        }
+      }
+    ],
+    "category": "Vegetables",
+    "stocks": "Stock",
+    "percentage": 40,
+    "measurement": "Kg"
+  },
+  {
+    "_id": {
+      "$oid": "66f3d3ef917991f9e31d509b"
+    },
+    "englishName": "MANGO GINGER",
+    "tamilName": "மாங்காய் இஞ்சி",
+    "price": 168,
+    "buyingPrice": 120,
+    "images": [
+      {
+        "image": "https://jas-fruits.s3.ap-south-1.amazonaws.com/Product/1729740290019-mango_ginger.jpg",
+        "_id": {
+          "$oid": "6719be02b12ecacfed0f8a48"
+        }
+      }
+    ],
+    "category": "Vegetables",
+    "stocks": "Stock",
+    "percentage": 40,
+    "measurement": "Kg"
+  },
+  {
+    "_id": {
+      "$oid": "66f3d3ef917991f9e31d507b"
+    },
+    "englishName": "CAPSICUM",
+    "tamilName": "குடை மிளகாய்",
+    "price": 103.6,
+    "buyingPrice": 74,
+    "images": [
+      {
+        "image": "https://jas-fruits.s3.ap-south-1.amazonaws.com/Product/1729738136556-Capsicum%20Green.jpg",
+        "_id": {
+          "$oid": "6719b599b12ecacfed0f3cb1"
+        }
+      }
+    ],
+    "category": "Vegetables",
+    "stocks": "Stock",
+    "percentage": 40,
+    "measurement": "Kg"
+  },
+  {
+    "_id": {
+      "$oid": "66f3d3ef917991f9e31d508a"
+    },
+    "englishName": "DOUBLE BEANS",
+    "tamilName": "டபுள் பீன்ஸ்",
+    "price": 112,
+    "buyingPrice": 80,
+    "images": [
+      {
+        "image": "https://jas-fruits.s3.ap-south-1.amazonaws.com/Product/1729739054354-double_beans.jpg",
+        "_id": {
+          "$oid": "6719b92fb12ecacfed0f52ce"
+        }
+      }
+    ],
+    "category": "Vegetables",
+    "stocks": "Stock",
+    "percentage": 40,
+    "measurement": "Kg"
+  },
+  {
+    "_id": {
+      "$oid": "66f3d3ef917991f9e31d508e"
+    },
+    "englishName": "GINGER",
+    "tamilName": "இஞ்சி",
+    "price": 84,
+    "buyingPrice": 60,
+    "images": [
+      {
+        "image": "https://jas-fruits.s3.ap-south-1.amazonaws.com/Product/1729739229111-ginger.jpg",
+        "_id": {
+          "$oid": "6719b9deb12ecacfed0f5b20"
+        }
+      }
+    ],
+    "category": "Vegetables",
+    "stocks": "Stock",
+    "percentage": 40,
+    "measurement": "Kg"
+  },
+  {
+    "_id": {
+      "$oid": "66f3d3ef917991f9e31d5092"
+    },
+    "englishName": "ICE BERG",
+    "tamilName": "ஐஸ் பெர்க்",
+    "price": 126,
+    "buyingPrice": 90,
+    "images": [
+      {
+        "image": "https://jas-fruits.s3.ap-south-1.amazonaws.com/Product/1729739410175-ice_berg.jpg",
+        "_id": {
+          "$oid": "6719ba93b12ecacfed0f679b"
+        }
+      }
+    ],
+    "category": "Vegetables",
+    "stocks": "Stock",
+    "percentage": 40,
+    "measurement": "Kg"
+  },
+  {
+    "_id": {
+      "$oid": "66f3d3ef917991f9e31d506f"
+    },
+    "englishName": "BRINJAL DISCO",
+    "tamilName": "கத்திரிக்காய் டிஸ்கோ",
+    "price": 70,
+    "buyingPrice": 50,
+    "images": [
+      {
+        "image": "https://jas-fruits.s3.ap-south-1.amazonaws.com/Product/1729737840279-brinjal_disco.jpg",
+        "_id": {
+          "$oid": "6719b471b12ecacfed0f2ee7"
+        }
+      }
+    ],
+    "category": "Vegetables",
+    "stocks": "Stock",
+    "percentage": 40,
+    "measurement": "Kg"
+  },
+  {
+    "_id": {
+      "$oid": "66f3d3ef917991f9e31d5069"
+    },
+    "englishName": "BITTER GOURD BABY",
+    "tamilName": "பாகற்காய் சிறியவை",
+    "price": 60,
+    "buyingPrice": 60,
+    "images": [
+      {
+        "image": "https://jas-fruits.s3.ap-south-1.amazonaws.com/Product/1729737614631-bitter_gourd_baby.jpg",
+        "_id": {
+          "$oid": "6719b390b12ecacfed0f2540"
+        }
+      }
+    ],
+    "category": "Vegetables",
+    "stocks": "No Stock",
+    "percentage": 0,
+    "measurement": "Kg"
+  },
+  {
+    "_id": {
+      "$oid": "66f3d3ef917991f9e31d5068"
+    },
+    "englishName": "BEETROOT",
+    "tamilName": "பீட்ரூட்",
+    "price": 84,
+    "buyingPrice": 60,
+    "images": [
+      {
+        "image": "https://jas-fruits.s3.ap-south-1.amazonaws.com/Product/1729737565663-Beet%20root.jpg",
+        "_id": {
+          "$oid": "6719b35eb12ecacfed0f227e"
+        }
+      }
+    ],
+    "category": "Vegetables",
+    "stocks": "Stock",
+    "percentage": 40,
+    "measurement": "Kg"
+  },
+  {
+    "_id": {
+      "$oid": "66f3d3ef917991f9e31d5062"
+    },
+    "englishName": "ASH GOURD",
+    "tamilName": "வெண்பூசணி",
+    "price": 19.6,
+    "buyingPrice": 14,
+    "images": [
+      {
+        "image": "https://jas-fruits.s3.ap-south-1.amazonaws.com/Product/1729737235302-ash_gourd.jpg",
+        "_id": {
+          "$oid": "6719b213b12ecacfed0f0ef4"
+        }
+      }
+    ],
+    "category": "Vegetables",
+    "stocks": "Stock",
+    "percentage": 40,
+    "measurement": "Kg"
+  },
+  {
+    "_id": {
+      "$oid": "66f3d3ef917991f9e31d506b"
+    },
+    "englishName": "BITTER GOURD SMALL",
+    "tamilName": "பாகற்காய் சிறியது",
+    "price": 84,
+    "buyingPrice": 60,
+    "images": [
+      {
+        "image": "https://jas-fruits.s3.ap-south-1.amazonaws.com/Product/1729737633940-bitter_gourd_small.jpg",
+        "_id": {
+          "$oid": "6719b3a3b12ecacfed0f26a1"
+        }
+      }
+    ],
+    "category": "Vegetables",
+    "stocks": "Stock",
+    "percentage": 40,
+    "measurement": "Kg"
+  },
+  {
+    "_id": {
+      "$oid": "66f3d3ef917991f9e31d5078"
+    },
+    "englishName": "CABBAGE GREEN",
+    "tamilName": "பச்சைக் கோசு",
+    "price": 39.2,
+    "buyingPrice": 28,
+    "images": [
+      {
+        "image": "https://jas-fruits.s3.ap-south-1.amazonaws.com/Product/1729738049392-cabbage_green.jpg",
+        "_id": {
+          "$oid": "6719b542b12ecacfed0f388e"
+        }
+      }
+    ],
+    "category": "Vegetables",
+    "stocks": "Stock",
+    "percentage": 40,
+    "measurement": "Kg"
+  },
+  {
+    "_id": {
+      "$oid": "66f3d3ef917991f9e31d507c"
+    },
+    "englishName": "CAPSICUM RED",
+    "tamilName": "சிவப்பு குடை மிளகாய்",
+    "price": 196,
+    "buyingPrice": 140,
+    "images": [
+      {
+        "image": "https://jas-fruits.s3.ap-south-1.amazonaws.com/Product/1729738155988-Capsicum%20%20red.jpg",
+        "_id": {
+          "$oid": "6719b5adb12ecacfed0f3e12"
+        }
+      }
+    ],
+    "category": "Vegetables",
+    "stocks": "Stock",
+    "percentage": 40,
+    "measurement": "Kg"
+  },
+  {
+    "_id": {
+      "$oid": "66f3d3ef917991f9e31d5087"
+    },
+    "englishName": "CUCUMBER YELLOW",
+    "tamilName": "மஞ்சள் வெள்ளரி",
+    "price": 40,
+    "buyingPrice": 40,
+    "images": [
+      {
+        "image": "https://jas-fruits.s3.ap-south-1.amazonaws.com/Product/1729738990031-cucumber_yellow.jpg",
+        "_id": {
+          "$oid": "6719b8efb12ecacfed0f5008"
+        }
+      }
+    ],
+    "category": "Vegetables",
+    "stocks": "No Stock",
+    "percentage": 0,
+    "measurement": "Kg"
+  },
+  {
+    "_id": {
+      "$oid": "66f3d3ef917991f9e31d509c"
+    },
+    "englishName": "MARAVALLI",
+    "tamilName": "மரவள்ளி",
+    "price": 35,
+    "buyingPrice": 25,
+    "images": [
+      {
+        "image": "https://jas-fruits.s3.ap-south-1.amazonaws.com/Product/1729740384947-maravalli.jpg",
+        "_id": {
+          "$oid": "6719be62b12ecacfed0f8d0e"
+        }
+      }
+    ],
+    "category": "Vegetables",
+    "stocks": "Stock",
+    "percentage": 40,
+    "measurement": "Kg"
+  },
+  {
+    "_id": {
+      "$oid": "66f3d3ef917991f9e31d509d"
+    },
+    "englishName": "MOCHAI",
+    "tamilName": "மொச்சை",
+    "price": 84,
+    "buyingPrice": 60,
+    "images": [
+      {
+        "image": "https://jas-fruits.s3.ap-south-1.amazonaws.com/Product/1729740406652-mochai.jpg",
+        "_id": {
+          "$oid": "6719be77b12ecacfed0f8e71"
+        }
+      }
+    ],
+    "category": "Vegetables",
+    "stocks": "Stock",
+    "percentage": 40,
+    "measurement": "Kg"
+  },
+  {
+    "_id": {
+      "$oid": "66f3d3ef917991f9e31d506e"
+    },
+    "englishName": "BRINJAL BIG",
+    "tamilName": "கத்திரிக்காய் பெரியவை",
+    "price": 56,
+    "buyingPrice": 40,
+    "images": [
+      {
+        "image": "https://jas-fruits.s3.ap-south-1.amazonaws.com/Product/1729737822566-brinjal_big.jpg",
+        "_id": {
+          "$oid": "6719b45fb12ecacfed0f2d86"
+        }
+      }
+    ],
+    "category": "Vegetables",
+    "stocks": "Stock",
+    "percentage": 40,
+    "measurement": "Kg"
+  },
+  {
+    "_id": {
+      "$oid": "66f3d3ef917991f9e31d507d"
+    },
+    "englishName": "CAPSICUM YELLOW",
+    "tamilName": "மஞ்சள் குடை மிளகாய்",
+    "price": 196,
+    "buyingPrice": 140,
+    "images": [
+      {
+        "image": "https://jas-fruits.s3.ap-south-1.amazonaws.com/Product/1729738180458-Capsicum%20yellow.jpg",
+        "_id": {
+          "$oid": "6719b5c5b12ecacfed0f3f73"
+        }
+      }
+    ],
+    "category": "Vegetables",
+    "stocks": "Stock",
+    "percentage": 40,
+    "measurement": "Kg"
+  },
+  {
+    "_id": {
+      "$oid": "66f3d3ef917991f9e31d5084"
+    },
+    "englishName": "COCONUT",
+    "tamilName": "தேங்காய்",
+    "price": 71.4,
+    "buyingPrice": 51,
+    "images": [
+      {
+        "image": "https://jas-fruits.s3.ap-south-1.amazonaws.com/Product/1729738747461-coconut.jpg",
+        "_id": {
+          "$oid": "6719b7fcb12ecacfed0f4bde"
+        }
+      }
+    ],
+    "category": "Vegetables",
+    "stocks": "Stock",
+    "percentage": 40,
+    "measurement": "Kg"
+  },
+  {
+    "_id": {
+      "$oid": "66f3d3ef917991f9e31d5085"
+    },
+    "englishName": "CUCUMBER",
+    "tamilName": "வெள்ளரி",
+    "price": 28,
+    "buyingPrice": 20,
+    "images": [
+      {
+        "image": "https://jas-fruits.s3.ap-south-1.amazonaws.com/Product/1729738775099-cucumber.jpg",
+        "_id": {
+          "$oid": "6719b818b12ecacfed0f4d42"
+        }
+      }
+    ],
+    "category": "Vegetables",
+    "stocks": "Stock",
+    "percentage": 40,
+    "measurement": "Kg"
+  },
+  {
+    "_id": {
+      "$oid": "66f3d3ef917991f9e31d508f"
+    },
+    "englishName": "GREEN CHILLY",
+    "tamilName": "பச்சை மிளகாய்",
+    "price": 91,
+    "buyingPrice": 65,
+    "images": [
+      {
+        "image": "https://jas-fruits.s3.ap-south-1.amazonaws.com/Product/1729739312827-green_chilly.jpg",
+        "_id": {
+          "$oid": "6719ba31b12ecacfed0f60ac"
+        }
+      }
+    ],
+    "category": "Vegetables",
+    "stocks": "Stock",
+    "percentage": 40,
+    "measurement": "Kg"
+  },
+  {
+    "_id": {
+      "$oid": "66f3d3ef917991f9e31d5072"
+    },
+    "englishName": "BRINJAL UJALA",
+    "tamilName": "கத்திரிக்காய் உஜாலா",
+    "price": 67.2,
+    "buyingPrice": 48,
+    "images": [
+      {
+        "image": "https://jas-fruits.s3.ap-south-1.amazonaws.com/Product/1729737861605-Brinjal%20Ujala.jpg",
+        "_id": {
+          "$oid": "6719b486b12ecacfed0f3048"
+        }
+      }
+    ],
+    "category": "Vegetables",
+    "stocks": "Stock",
+    "percentage": 40,
+    "measurement": "Kg"
+  },
+  {
+    "_id": {
+      "$oid": "66f3d3ef917991f9e31d5073"
+    },
+    "englishName": "BRINJAL VARI",
+    "tamilName": "வரி கத்திரிக்காய்",
+    "price": 58.8,
+    "buyingPrice": 42,
+    "images": [
+      {
+        "image": "https://jas-fruits.s3.ap-south-1.amazonaws.com/Product/1729737885234-brinjal_vari.jpg",
+        "_id": {
+          "$oid": "6719b49eb12ecacfed0f31a9"
+        }
+      }
+    ],
+    "category": "Vegetables",
+    "stocks": "Stock",
+    "percentage": 40,
+    "measurement": "Kg"
+  },
+  {
+    "_id": {
+      "$oid": "66f3d3ef917991f9e31d5077"
+    },
+    "englishName": "CABBAGE CHINESES",
+    "tamilName": "சீனக்கோசு",
+    "price": 112,
+    "buyingPrice": 80,
+    "images": [
+      {
+        "image": "https://jas-fruits.s3.ap-south-1.amazonaws.com/Product/1729738031004-cabbage_chineses.jpg",
+        "_id": {
+          "$oid": "6719b52fb12ecacfed0f372d"
+        }
+      }
+    ],
+    "category": "Vegetables",
+    "stocks": "Stock",
+    "percentage": 40,
+    "measurement": "Kg"
+  },
+  {
+    "_id": {
+      "$oid": "66f3d3ef917991f9e31d5089"
+    },
+    "englishName": "CARROT DELHI",
+    "tamilName": "தில்லி காரட்",
+    "price": 110,
+    "buyingPrice": 110,
+    "images": [
+      {
+        "image": "https://jas-fruits.s3.ap-south-1.amazonaws.com/Product/1729738454483-carrot_delhi.jpg",
+        "_id": {
+          "$oid": "6719b6d7b12ecacfed0f40d6"
+        }
+      }
+    ],
+    "category": "Vegetables",
+    "stocks": "No Stock",
+    "percentage": 0,
+    "measurement": "Kg"
+  },
+  {
+    "_id": {
+      "$oid": "66f3d3ef917991f9e31d508d"
+    },
+    "englishName": "GARLIC MALAI",
+    "tamilName": "மலை பூண்டு",
+    "price": 462,
+    "buyingPrice": 330,
+    "images": [
+      {
+        "image": "https://jas-fruits.s3.ap-south-1.amazonaws.com/Product/1729739192902-garlic_malai.jpg",
+        "_id": {
+          "$oid": "6719b9bab12ecacfed0f59bd"
+        }
+      }
+    ],
+    "category": "Vegetables",
+    "stocks": "Stock",
+    "percentage": 40,
+    "measurement": "Kg"
+  },
+  {
+    "_id": {
+      "$oid": "66f3d3ef917991f9e31d5094"
+    },
+    "englishName": "KOORKHAN",
+    "tamilName": "கூற்கான்",
+    "price": 65,
+    "buyingPrice": 65,
+    "images": [
+      {
+        "image": "https://jas-fruits.s3.ap-south-1.amazonaws.com/Product/1729739596457-koorkhan.jpg",
+        "_id": {
+          "$oid": "6719bb4db12ecacfed0f6e8a"
+        }
+      }
+    ],
+    "category": "Vegetables",
+    "stocks": "No Stock",
+    "percentage": 0,
+    "measurement": "Kg"
+  },
+  {
+    "_id": {
+      "$oid": "66f3d3ef917991f9e31d50a0"
+    },
+    "englishName": "NOOKAL",
+    "tamilName": "நூக்கல்",
+    "price": 56,
+    "buyingPrice": 40,
+    "images": [
+      {
+        "image": "https://jas-fruits.s3.ap-south-1.amazonaws.com/Product/1729740760867-nookal.jpg",
+        "_id": {
+          "$oid": "6719bfd9b12ecacfed0f9db2"
+        }
+      }
+    ],
+    "category": "Vegetables",
+    "stocks": "Stock",
+    "percentage": 40,
+    "measurement": "Kg"
+  },
+  {
+    "_id": {
+      "$oid": "66f3d3ef917991f9e31d5065"
+    },
+    "englishName": "BABY POTATO",
+    "tamilName": "பேபி உருளைக்கிழங்கு",
+    "price": 46.2,
+    "buyingPrice": 33,
+    "images": [
+      {
+        "image": "https://jas-fruits.s3.ap-south-1.amazonaws.com/Product/1729737403171-baby_potato.jpg",
+        "_id": {
+          "$oid": "6719b2bcb12ecacfed0f1a38"
+        }
+      }
+    ],
+    "category": "Vegetables",
+    "stocks": "Stock",
+    "percentage": 40,
+    "measurement": "Box"
+  },
+  {
+    "_id": {
+      "$oid": "66f3d3ef917991f9e31d5063"
+    },
+    "englishName": "AVARI NATTU",
+    "tamilName": "அவரி நாட்டு",
+    "price": 105,
+    "buyingPrice": 75,
+    "images": [
+      {
+        "image": "https://jas-fruits.s3.ap-south-1.amazonaws.com/Product/1729737309315-avari_nattu.jpg",
+        "_id": {
+          "$oid": "6719b25eb12ecacfed0f1317"
+        }
+      }
+    ],
+    "category": "Vegetables",
+    "stocks": "Stock",
+    "percentage": 40,
+    "measurement": "Kg"
+  },
+  {
+    "_id": {
+      "$oid": "66f3d3ef917991f9e31d5064"
+    },
+    "englishName": "BABY CORN",
+    "tamilName": "பேபி கார்ன்",
+    "price": 35,
+    "buyingPrice": 25,
+    "images": [
+      {
+        "image": "https://jas-fruits.s3.ap-south-1.amazonaws.com/Product/1729737344044-baby_corn.jpeg",
+        "_id": {
+          "$oid": "6719b281b12ecacfed0f1478"
+        }
+      }
+    ],
+    "category": "Vegetables",
+    "stocks": "Stock",
+    "percentage": 40,
+    "measurement": "Box"
+  },
+  {
+    "_id": {
+      "$oid": "66f3d3ef917991f9e31d5067"
+    },
+    "englishName": "BEANS",
+    "tamilName": "பீன்ஸ்",
+    "price": 154,
+    "buyingPrice": 110,
+    "images": [
+      {
+        "image": "https://jas-fruits.s3.ap-south-1.amazonaws.com/Product/1729737513721-Beans.jpg",
+        "_id": {
+          "$oid": "6719b32ab12ecacfed0f1fbc"
+        }
+      }
+    ],
+    "category": "Vegetables",
+    "stocks": "Stock",
+    "percentage": 40,
+    "measurement": "Kg"
+  },
+  {
+    "_id": {
+      "$oid": "66f3d3ef917991f9e31d507a"
+    },
+    "englishName": "CALIFLOWER",
+    "tamilName": "காலிஃபிளவர்",
+    "price": 49,
+    "buyingPrice": 35,
+    "images": [
+      {
+        "image": "https://jas-fruits.s3.ap-south-1.amazonaws.com/Product/1729738098838-Califlower.jpg",
+        "_id": {
+          "$oid": "6719b573b12ecacfed0f3b50"
+        }
+      }
+    ],
+    "category": "Vegetables",
+    "stocks": "Stock",
+    "percentage": 40,
+    "measurement": "Kg"
+  },
+  {
+    "_id": {
+      "$oid": "66f3d3ef917991f9e31d5080"
+    },
+    "englishName": "CHERRY TOMATO",
+    "tamilName": "செர்ரி தக்காளி",
+    "price": 98,
+    "buyingPrice": 70,
+    "images": [
+      {
+        "image": "https://jas-fruits.s3.ap-south-1.amazonaws.com/Product/1729746666296-CherryTomato.webp",
+        "_id": {
+          "$oid": "6719d6ebf3415e3d9f7289a5"
+        }
+      }
+    ],
+    "category": "Vegetables",
+    "stocks": "Stock",
+    "percentage": 40,
+    "measurement": "Kg"
+  },
+  {
+    "_id": {
+      "$oid": "66f3d3ef917991f9e31d5081"
+    },
+    "englishName": "BAJJI CHILLY",
+    "tamilName": "பஜ்ஜி மிளகாய்",
+    "price": 63,
+    "buyingPrice": 45,
+    "images": [
+      {
+        "image": "https://jas-fruits.s3.ap-south-1.amazonaws.com/Product/1729737440769-bajji_chilly.jpg",
+        "_id": {
+          "$oid": "6719b2e1b12ecacfed0f1b99"
+        }
+      }
+    ],
+    "category": "Vegetables",
+    "stocks": "Stock",
+    "percentage": 40,
+    "measurement": "Kg"
+  },
+  {
+    "_id": {
+      "$oid": "66f3d3ef917991f9e31d508b"
+    },
+    "englishName": "DRUMSTICK",
+    "tamilName": "முருங்கைக்காய்",
+    "price": 70,
+    "buyingPrice": 50,
+    "images": [
+      {
+        "image": "https://jas-fruits.s3.ap-south-1.amazonaws.com/Product/1729739107492-Drum%20Strike.jpg",
+        "_id": {
+          "$oid": "6719b965b12ecacfed0f5594"
+        }
+      }
+    ],
+    "category": "Vegetables",
+    "stocks": "Stock",
+    "percentage": 40,
+    "measurement": "Kg"
+  },
+  {
+    "_id": {
+      "$oid": "66f3d3ef917991f9e31d5090"
+    },
+    "englishName": "GREEN PEAS",
+    "tamilName": "பச்சைப்பட்டாணி",
+    "price": 294,
+    "buyingPrice": 210,
+    "images": [
+      {
+        "image": "https://jas-fruits.s3.ap-south-1.amazonaws.com/Product/1729739331546-green_peas.jpg",
+        "_id": {
+          "$oid": "6719ba44b12ecacfed0f620f"
+        }
+      }
+    ],
+    "category": "Vegetables",
+    "stocks": "Stock",
+    "percentage": 40,
+    "measurement": "Kg"
+  },
+  {
+    "_id": {
+      "$oid": "66f3d3ef917991f9e31d5091"
+    },
+    "englishName": "GROUND NUT",
+    "tamilName": "நிலக்கடலை",
+    "price": 112,
+    "buyingPrice": 80,
+    "images": [
+      {
+        "image": "https://jas-fruits.s3.ap-south-1.amazonaws.com/Product/1729739350591-ground_nut.jpg",
+        "_id": {
+          "$oid": "6719ba57b12ecacfed0f6372"
+        }
+      }
+    ],
+    "category": "Vegetables",
+    "stocks": "Stock",
+    "percentage": 40,
+    "measurement": "Kg"
+  },
+  {
+    "_id": {
+      "$oid": "66f3d3ef917991f9e31d5093"
+    },
+    "englishName": "IVY GOURD",
+    "tamilName": "கோவக்காய்",
+    "price": 63,
+    "buyingPrice": 45,
+    "images": [
+      {
+        "image": "https://jas-fruits.s3.ap-south-1.amazonaws.com/Product/1729739431175-Ivy%20Gaurd.jpg",
+        "_id": {
+          "$oid": "6719baa8b12ecacfed0f68fe"
+        }
+      }
+    ],
+    "category": "Vegetables",
+    "stocks": "Stock",
+    "percentage": 40,
+    "measurement": "Kg"
+  },
+  {
+    "_id": {
+      "$oid": "66f3d3ef917991f9e31d5075"
+    },
+    "englishName": "BROCCOLI",
+    "tamilName": "ப்ரோக்கோலி",
+    "price": 126,
+    "buyingPrice": 90,
+    "images": [
+      {
+        "image": "https://jas-fruits.s3.ap-south-1.amazonaws.com/Product/1729737952565-Barcoli.jpg",
+        "_id": {
+          "$oid": "6719b4e1b12ecacfed0f330a"
+        }
+      }
+    ],
+    "category": "Vegetables",
+    "stocks": "Stock",
+    "percentage": 40,
+    "measurement": "Kg"
+  },
+  {
+    "_id": {
+      "$oid": "66f3d3ef917991f9e31d5079"
+    },
+    "englishName": "CABBAGE RED",
+    "tamilName": "சிவப்பு கோசு",
+    "price": 98,
+    "buyingPrice": 70,
+    "images": [
+      {
+        "image": "https://jas-fruits.s3.ap-south-1.amazonaws.com/Product/1729738075493-Red%20cabbage.jpg",
+        "_id": {
+          "$oid": "6719b55cb12ecacfed0f39ef"
+        }
+      }
+    ],
+    "category": "Vegetables",
+    "stocks": "Stock",
+    "percentage": 40,
+    "measurement": "Kg"
+  },
+  {
+    "_id": {
+      "$oid": "66f3d3ef917991f9e31d507f"
+    },
+    "englishName": "CELLERY",
+    "tamilName": "செல்லரி",
+    "price": 224,
+    "buyingPrice": 160,
+    "images": [
+      {
+        "image": "https://jas-fruits.s3.ap-south-1.amazonaws.com/Product/1729738480901-cellery.jpeg",
+        "_id": {
+          "$oid": "6719b6f2b12ecacfed0f4237"
+        }
+      }
+    ],
+    "category": "Vegetables",
+    "stocks": "Stock",
+    "percentage": 40,
+    "measurement": "Kg"
+  },
+  {
+    "_id": {
+      "$oid": "66f3d3ef917991f9e31d5083"
+    },
+    "englishName": "CLUSTER BEANS",
+    "tamilName": "கொத்தவரங்காய்",
+    "price": 56,
+    "buyingPrice": 40,
+    "images": [
+      {
+        "image": "https://jas-fruits.s3.ap-south-1.amazonaws.com/Product/1729738723796-cluster_beans.jpg",
+        "_id": {
+          "$oid": "6719b7e5b12ecacfed0f4a7f"
+        }
+      }
+    ],
+    "category": "Vegetables",
+    "stocks": "Stock",
+    "percentage": 40,
+    "measurement": "Kg"
+  },
+  {
+    "_id": {
+      "$oid": "66f3d3ef917991f9e31d5088"
+    },
+    "englishName": "CURRY LEAVES",
+    "tamilName": "கறிவேப்பிலை",
+    "price": 42,
+    "buyingPrice": 30,
+    "images": [
+      {
+        "image": "https://jas-fruits.s3.ap-south-1.amazonaws.com/Product/1729739019215-Curry%20leaves.jpg",
+        "_id": {
+          "$oid": "6719b90cb12ecacfed0f516b"
+        }
+      }
+    ],
+    "category": "Vegetables",
+    "stocks": "Stock",
+    "percentage": 40,
+    "measurement": "Kg"
+  },
+  {
+    "_id": {
+      "$oid": "66f3d3ef917991f9e31d5096"
+    },
+    "englishName": "LADIESFINGER",
+    "tamilName": "வெண்டைக்காய்",
+    "price": 72.8,
+    "buyingPrice": 52,
+    "images": [
+      {
+        "image": "https://jas-fruits.s3.ap-south-1.amazonaws.com/Product/1729739649756-ladiesfinger.jpg",
+        "_id": {
+          "$oid": "6719bb82b12ecacfed0f7150"
+        }
+      }
+    ],
+    "category": "Vegetables",
+    "stocks": "Stock",
+    "percentage": 40,
+    "measurement": "Kg"
+  },
+  {
+    "_id": {
+      "$oid": "66f3d3ef917991f9e31d5097"
+    },
+    "englishName": "LEMON - KG",
+    "tamilName": "எலுமிச்சை",
+    "price": 126,
+    "buyingPrice": 90,
+    "images": [
+      {
+        "image": "https://jas-fruits.s3.ap-south-1.amazonaws.com/Product/1729739671542-lemon.jpg",
+        "_id": {
+          "$oid": "6719bb98b12ecacfed0f72b3"
+        }
+      }
+    ],
+    "category": "Vegetables",
+    "stocks": "Stock",
+    "percentage": 40,
+    "measurement": "Kg"
+  },
+  {
+    "_id": {
+      "$oid": "66f3d3ef917991f9e31d5076"
+    },
+    "englishName": "BUTTER BEANS",
+    "tamilName": "பட்டர் பீன்ஸ்",
+    "price": 378,
+    "buyingPrice": 270,
+    "images": [
+      {
+        "image": "https://jas-fruits.s3.ap-south-1.amazonaws.com/Product/1729737993097-butter_beans.jpg",
+        "_id": {
+          "$oid": "6719b509b12ecacfed0f346b"
+        }
+      }
+    ],
+    "category": "Vegetables",
+    "stocks": "Stock",
+    "percentage": 40,
+    "measurement": "Kg"
+  },
+  {
+    "_id": {
+      "$oid": "66f3d3ef917991f9e31d507e"
+    },
+    "englishName": "CARROT",
+    "tamilName": "காரட்",
+    "price": 67.2,
+    "buyingPrice": 48,
+    "images": [
+      {
+        "image": "https://jas-fruits.s3.ap-south-1.amazonaws.com/Product/1729746642757-carrot.webp",
+        "_id": {
+          "$oid": "6719d6d3f3415e3d9f728844"
+        }
+      }
+    ],
+    "category": "Vegetables",
+    "stocks": "Stock",
+    "percentage": 40,
+    "measurement": "Kg"
+  },
+  {
+    "_id": {
+      "$oid": "66f3d3ef917991f9e31d5098"
+    },
+    "englishName": "LETTUCE",
+    "tamilName": "லெட்டூஸ்",
+    "price": 112,
+    "buyingPrice": 80,
+    "images": [
+      {
+        "image": "https://jas-fruits.s3.ap-south-1.amazonaws.com/Product/1729739691268-lettuce.jpg",
+        "_id": {
+          "$oid": "6719bbacb12ecacfed0f7416"
+        }
+      }
+    ],
+    "category": "Vegetables",
+    "stocks": "Stock",
+    "percentage": 40,
+    "measurement": "Kg"
+  },
+  {
+    "_id": {
+      "$oid": "66f3d3ef917991f9e31d509a"
+    },
+    "englishName": "MALLI",
+    "tamilName": "மல்லி",
+    "price": 9.8,
+    "buyingPrice": 7,
+    "images": [
+      {
+        "image": "https://jas-fruits.s3.ap-south-1.amazonaws.com/Product/1729739940936-malli.jpg",
+        "_id": {
+          "$oid": "6719bca5b12ecacfed0f7c6a"
+        }
+      }
+    ],
+    "category": "Vegetables",
+    "stocks": "Stock",
+    "percentage": 40,
+    "measurement": "Kg"
+  },
+  {
+    "_id": {
+      "$oid": "66f3d3ef917991f9e31d509e"
+    },
+    "englishName": "MUSHROOM",
+    "tamilName": "காளான்",
+    "price": 51.8,
+    "buyingPrice": 37,
+    "images": [
+      {
+        "image": "https://jas-fruits.s3.ap-south-1.amazonaws.com/Product/1729740568690-mushroom.jpg",
+        "_id": {
+          "$oid": "6719bf1ab12ecacfed0f96c3"
+        }
+      }
+    ],
+    "category": "Vegetables",
+    "stocks": "Stock",
+    "percentage": 40,
+    "measurement": "Box"
+  },
+  {
+    "_id": {
+      "$oid": "66f3d3ef917991f9e31d509f"
+    },
+    "englishName": "NARTHANKAI",
+    "tamilName": "நார்த்தங்காய்",
+    "price": 80,
+    "buyingPrice": 80,
+    "images": [
+      {
+        "image": "https://jas-fruits.s3.ap-south-1.amazonaws.com/Product/1729740699212-narthankai.jpg",
+        "_id": {
+          "$oid": "6719bf9cb12ecacfed0f9aec"
+        }
+      }
+    ],
+    "category": "Vegetables",
+    "stocks": "No Stock",
+    "percentage": 0,
+    "measurement": "Kg"
+  },
+  {
+    "_id": {
+      "$oid": "66f3d3ef917991f9e31d50a4"
+    },
+    "englishName": "PALAAKAAI",
+    "tamilName": "பலாக்காய்",
+    "price": 140,
+    "buyingPrice": 100,
+    "images": [
+      {
+        "image": "https://jas-fruits.s3.ap-south-1.amazonaws.com/Product/1729740866127-pallakai.jpg",
+        "_id": {
+          "$oid": "6719c043b12ecacfed0fa1db"
+        }
+      }
+    ],
+    "category": "Vegetables",
+    "stocks": "Stock",
+    "percentage": 40,
+    "measurement": "Kg"
+  },
+  {
+    "_id": {
+      "$oid": "66f3d3ef917991f9e31d50a8"
+    },
+    "englishName": "POTATO BIG",
+    "tamilName": "பெரிய உருளைக்கிழங்கு",
+    "price": 63,
+    "buyingPrice": 45,
+    "images": [
+      {
+        "image": "https://jas-fruits.s3.ap-south-1.amazonaws.com/Product/1729741267237-potato_big.jpg",
+        "_id": {
+          "$oid": "6719c1d4b12ecacfed0fb96e"
+        }
+      }
+    ],
+    "category": "Vegetables",
+    "stocks": "Stock",
+    "percentage": 40,
+    "measurement": "Kg"
+  },
+  {
+    "_id": {
+      "$oid": "66f3d3ef917991f9e31d50ac"
+    },
+    "englishName": "RADISH - WHITE",
+    "tamilName": "வெள்ளை முள்ளங்கி",
+    "price": 56,
+    "buyingPrice": 40,
+    "images": [
+      {
+        "image": "https://jas-fruits.s3.ap-south-1.amazonaws.com/Product/1729746729329-radish_white.webp",
+        "_id": {
+          "$oid": "6719d72af3415e3d9f728c67"
+        }
+      }
+    ],
+    "category": "Vegetables",
+    "stocks": "Stock",
+    "percentage": 40,
+    "measurement": "Kg"
+  },
+  {
+    "_id": {
+      "$oid": "66f3d3ef917991f9e31d50ae"
+    },
+    "englishName": "RAW MANGO",
+    "tamilName": "மாங்காய்",
+    "price": 67.2,
+    "buyingPrice": 48,
+    "images": [
+      {
+        "image": "https://jas-fruits.s3.ap-south-1.amazonaws.com/Product/1729741745959-raw_mango.jpg",
+        "_id": {
+          "$oid": "6719c3b3b12ecacfed0fc327"
+        }
+      }
+    ],
+    "category": "Vegetables",
+    "stocks": "Stock",
+    "percentage": 40,
+    "measurement": "Kg"
+  },
+  {
+    "_id": {
+      "$oid": "66f3d3ef917991f9e31d50b0"
+    },
+    "englishName": "SEMBU",
+    "tamilName": "சேப்பங்கிழங்கு",
+    "price": 67.2,
+    "buyingPrice": 48,
+    "images": [
+      {
+        "image": "https://jas-fruits.s3.ap-south-1.amazonaws.com/Product/1729741861977-sembu.jpg",
+        "_id": {
+          "$oid": "6719c427b12ecacfed0fc8b3"
+        }
+      }
+    ],
+    "category": "Vegetables",
+    "stocks": "Stock",
+    "percentage": 40,
+    "measurement": "Kg"
+  },
+  {
+    "_id": {
+      "$oid": "66f3d3ef917991f9e31d50b1"
+    },
+    "englishName": "SENAI",
+    "tamilName": "கருணைக் கிழங்கு",
+    "price": 98,
+    "buyingPrice": 70,
+    "images": [
+      {
+        "image": "https://jas-fruits.s3.ap-south-1.amazonaws.com/Product/1729741929827-senai.jpg",
+        "_id": {
+          "$oid": "6719c46ab12ecacfed0fca16"
+        }
+      }
+    ],
+    "category": "Vegetables",
+    "stocks": "Stock",
+    "percentage": 40,
+    "measurement": "Kg"
+  },
+  {
+    "_id": {
+      "$oid": "66f3d3ef917991f9e31d50bb"
+    },
+    "englishName": "TOMATO GREEN",
+    "tamilName": "பச்சை தக்காளி",
+    "price": 80,
+    "buyingPrice": 80,
+    "images": [
+      {
+        "image": "https://jas-fruits.s3.ap-south-1.amazonaws.com/Product/1729742609405-tomato_green.jpg",
+        "_id": {
+          "$oid": "6719c712b12ecacfed0fdd80"
+        }
+      }
+    ],
+    "category": "Vegetables",
+    "stocks": "No Stock",
+    "percentage": 0,
+    "measurement": "Kg"
+  },
+  {
+    "_id": {
+      "$oid": "66f3d3ef917991f9e31d50c9"
+    },
+    "englishName": "PALAK",
+    "tamilName": "பாலக்கீரை",
+    "price": 14,
+    "buyingPrice": 10,
+    "images": [
+      {
+        "image": "https://jas-fruits.s3.ap-south-1.amazonaws.com/Product/1729740888555-palak.jpg",
+        "_id": {
+          "$oid": "6719c059b12ecacfed0fa33e"
+        }
+      }
+    ],
+    "category": "Keerai",
+    "stocks": "Stock",
+    "percentage": 40,
+    "measurement": "Piece"
+  },
+  {
+    "_id": {
+      "$oid": "66f3d3ef917991f9e31d50cd"
+    },
+    "englishName": "PULICHA KEERAI",
+    "tamilName": "புளிச்சக்கீரை",
+    "price": 14,
+    "buyingPrice": 10,
+    "images": [
+      {
+        "image": "https://jas-fruits.s3.ap-south-1.amazonaws.com/Product/1729741365028-pulicha_keerai.jpg",
+        "_id": {
+          "$oid": "6719c236b12ecacfed0fbad3"
+        }
+      }
+    ],
+    "category": "Keerai",
+    "stocks": "Stock",
+    "percentage": 40,
+    "measurement": "Piece"
+  },
+  {
+    "_id": {
+      "$oid": "66f3d3ef917991f9e31d50ce"
+    },
+    "englishName": "SIRU KEERAI",
+    "tamilName": "சிறு கீரை",
+    "price": 21,
+    "buyingPrice": 15,
+    "images": [
+      {
+        "image": "https://jas-fruits.s3.ap-south-1.amazonaws.com/Product/1729741955010-siru_keerai.jpg",
+        "_id": {
+          "$oid": "6719c484b12ecacfed0fcb79"
+        }
+      }
+    ],
+    "category": "Keerai",
+    "stocks": "Stock",
+    "percentage": 40,
+    "measurement": "Piece"
+  },
+  {
+    "_id": {
+      "$oid": "66f3d3ef917991f9e31d50d2"
+    },
+    "englishName": "THOOTHUVALAI KEERAI",
+    "tamilName": "தூதுவளை கீரை",
+    "price": 7,
+    "buyingPrice": 5,
+    "images": [
+      {
+        "image": "https://jas-fruits.s3.ap-south-1.amazonaws.com/Product/1729742384431-thoothuvalai_keerai.jpg",
+        "_id": {
+          "$oid": "6719c631b12ecacfed0fdc1d"
+        }
+      }
+    ],
+    "category": "Keerai",
+    "stocks": "Stock",
+    "percentage": 40,
+    "measurement": "Piece"
+  },
+  {
+    "_id": {
+      "$oid": "66f3d3ef917991f9e31d50a6"
+    },
+    "englishName": "PIDIKARUNAI",
+    "tamilName": "பிடிக்கருணை",
+    "price": 126,
+    "buyingPrice": 90,
+    "images": [
+      {
+        "image": "https://jas-fruits.s3.ap-south-1.amazonaws.com/Product/1729741085473-pidikarunai.jpg",
+        "_id": {
+          "$oid": "6719c11eb12ecacfed0fae56"
+        }
+      }
+    ],
+    "category": "Vegetables",
+    "stocks": "Stock",
+    "percentage": 40,
+    "measurement": "Kg"
+  },
+  {
+    "_id": {
+      "$oid": "66f3d3ef917991f9e31d50a7"
+    },
+    "englishName": "PLANTAIN FLOWER",
+    "tamilName": "வாழைப்பூ",
+    "price": 22.4,
+    "buyingPrice": 16,
+    "images": [
+      {
+        "image": "https://jas-fruits.s3.ap-south-1.amazonaws.com/Product/1729741136466-plantain_flower.jpg",
+        "_id": {
+          "$oid": "6719c151b12ecacfed0fb11c"
+        }
+      }
+    ],
+    "category": "Vegetables",
+    "stocks": "Stock",
+    "percentage": 40,
+    "measurement": "Kg"
+  },
+  {
+    "_id": {
+      "$oid": "66f3d3ef917991f9e31d50a9"
+    },
+    "englishName": "PUDINA",
+    "tamilName": "புதினா",
+    "price": 8.4,
+    "buyingPrice": 6,
+    "images": [
+      {
+        "image": "https://jas-fruits.s3.ap-south-1.amazonaws.com/Product/1729746707372-pudina.webp",
+        "_id": {
+          "$oid": "6719d714f3415e3d9f728b06"
+        }
+      }
+    ],
+    "category": "Vegetables",
+    "stocks": "Stock",
+    "percentage": 40,
+    "measurement": "Kg"
+  },
+  {
+    "_id": {
+      "$oid": "66f3d3ef917991f9e31d50aa"
+    },
+    "englishName": "PUMPKIN",
+    "tamilName": "பரங்கிக்காய்",
+    "price": 21,
+    "buyingPrice": 15,
+    "images": [
+      {
+        "image": "https://jas-fruits.s3.ap-south-1.amazonaws.com/Product/1729743202179-RED%20pumpkin.jpg",
+        "_id": {
+          "$oid": "6719c964b12ecacfed0ff6a2"
+        }
+      }
+    ],
+    "category": "Vegetables",
+    "stocks": "Stock",
+    "percentage": 40,
+    "measurement": "Kg"
+  },
+  {
+    "_id": {
+      "$oid": "66f3d3ef917991f9e31d50ab"
+    },
+    "englishName": "RADISH RED",
+    "tamilName": "சிவப்பு முள்ளங்கி",
+    "price": 98,
+    "buyingPrice": 70,
+    "images": [
+      {
+        "image": "https://jas-fruits.s3.ap-south-1.amazonaws.com/Product/1729741654965-radish_red.jpg",
+        "_id": {
+          "$oid": "6719c357b12ecacfed0fbd9b"
+        }
+      }
+    ],
+    "category": "Vegetables",
+    "stocks": "Stock",
+    "percentage": 40,
+    "measurement": "Kg"
+  },
+  {
+    "_id": {
+      "$oid": "66f3d3ef917991f9e31d50cc"
+    },
+    "englishName": "PONNANGANNI RED",
+    "tamilName": "பொன்னாங்கண்ணி சிவப்பு",
+    "price": 11.2,
+    "buyingPrice": 8,
+    "images": [
+      {
+        "image": "https://jas-fruits.s3.ap-south-1.amazonaws.com/Product/1729741222303-ponnanganni_red.jpg",
+        "_id": {
+          "$oid": "6719c1a7b12ecacfed0fb6a8"
+        }
+      }
+    ],
+    "category": "Keerai",
+    "stocks": "Stock",
+    "percentage": 40,
+    "measurement": "Piece"
+  },
+  {
+    "_id": {
+      "$oid": "66f3d3ef917991f9e31d50d3"
+    },
+    "englishName": "VALLARAI KEERAI",
+    "tamilName": "வல்லாரைக் கீரை",
+    "price": 7,
+    "buyingPrice": 5,
+    "images": [
+      {
+        "image": "https://jas-fruits.s3.ap-south-1.amazonaws.com/Product/1729742737717-vallarai_keerai.jpg",
+        "_id": {
+          "$oid": "6719c792b12ecacfed0fe46f"
+        }
+      }
+    ],
+    "category": "Keerai",
+    "stocks": "Stock",
+    "percentage": 40,
+    "measurement": "Piece"
+  },
+  {
+    "_id": {
+      "$oid": "66f3d3ef917991f9e31d50e0"
+    },
+    "englishName": "BANANA-PEYAN",
+    "tamilName": "வாழைப்பழம்-பெயன்",
+    "price": 110,
+    "buyingPrice": 110,
+    "images": [
+      {
+        "image": "https://jas-fruits.s3.ap-south-1.amazonaws.com/Product/1729737485666-banana_peyan.jpg",
+        "_id": {
+          "$oid": "6719b30eb12ecacfed0f1e5b"
+        }
+      }
+    ],
+    "category": "Fruits",
+    "stocks": "No Stock",
+    "percentage": 0,
+    "measurement": "Kg"
+  },
+  {
+    "_id": {
+      "$oid": "66f3d3ef917991f9e31d50b4"
+    },
+    "englishName": "BEANS SOYA",
+    "tamilName": "சோயா பீன்ஸ்",
+    "price": 336,
+    "buyingPrice": 240,
+    "images": [
+      {
+        "image": "https://jas-fruits.s3.ap-south-1.amazonaws.com/Product/1729737540390-beans_soya.jpg",
+        "_id": {
+          "$oid": "6719b344b12ecacfed0f211d"
+        }
+      }
+    ],
+    "category": "Vegetables",
+    "stocks": "Stock",
+    "percentage": 40,
+    "measurement": "Kg"
+  },
+  {
+    "_id": {
+      "$oid": "66f3d3ef917991f9e31d50bd"
+    },
+    "englishName": "TOMATO NAVEEN",
+    "tamilName": "நவீன் தக்காளி",
+    "price": 63,
+    "buyingPrice": 45,
+    "images": [
+      {
+        "image": "https://jas-fruits.s3.ap-south-1.amazonaws.com/Product/1729742661217-tomato_naveen.jpg",
+        "_id": {
+          "$oid": "6719c746b12ecacfed0fe046"
+        }
+      }
+    ],
+    "category": "Vegetables",
+    "stocks": "Stock",
+    "percentage": 40,
+    "measurement": "Kg"
+  },
+  {
+    "_id": {
+      "$oid": "66f3d3ef917991f9e31d50c2"
+    },
+    "englishName": "ZUCCHINI YELLOW",
+    "tamilName": "மஞ்சள் சுக்கினி",
+    "price": 196,
+    "buyingPrice": 140,
+    "images": [
+      {
+        "image": "https://jas-fruits.s3.ap-south-1.amazonaws.com/Product/1729742888518-zucchini_yellow.jpg",
+        "_id": {
+          "$oid": "6719c829b12ecacfed0fecc1"
+        }
+      }
+    ],
+    "category": "Vegetables",
+    "stocks": "Stock",
+    "percentage": 40,
+    "measurement": "Kg"
+  },
+  {
+    "_id": {
+      "$oid": "66f3d3ef917991f9e31d50d0"
+    },
+    "englishName": "SUKKAN KEERAI",
+    "tamilName": "சுக்கன் கீரை",
+    "price": 14,
+    "buyingPrice": 10,
+    "images": [
+      {
+        "image": "https://jas-fruits.s3.ap-south-1.amazonaws.com/Product/1729742185069-sukkan_keerai.jpg",
+        "_id": {
+          "$oid": "6719c56ab12ecacfed0fd268"
+        }
+      }
+    ],
+    "category": "Keerai",
+    "stocks": "Stock",
+    "percentage": 40,
+    "measurement": "Piece"
+  },
+  {
+    "_id": {
+      "$oid": "66f3d3ef917991f9e31d50d1"
+    },
+    "englishName": "SUNDAKAI",
+    "tamilName": "சுண்டைக்காய்",
+    "price": 140,
+    "buyingPrice": 100,
+    "images": [
+      {
+        "image": "https://jas-fruits.s3.ap-south-1.amazonaws.com/Product/1729742226218-sundakai.jpg",
+        "_id": {
+          "$oid": "6719c593b12ecacfed0fd3cb"
+        }
+      }
+    ],
+    "category": "Vegetables",
+    "stocks": "Stock",
+    "percentage": 40,
+    "measurement": "Kg"
+  },
+  {
+    "_id": {
+      "$oid": "66f3d3ef917991f9e31d50bc"
+    },
+    "englishName": "TOMATO NADU",
+    "tamilName": "நாடு தக்காளி",
+    "price": 38,
+    "buyingPrice": 38,
+    "images": [
+      {
+        "image": "https://jas-fruits.s3.ap-south-1.amazonaws.com/Product/1729742630293-Tomato%20Nadu.jpg",
+        "_id": {
+          "$oid": "6719c727b12ecacfed0fdee3"
+        }
+      }
+    ],
+    "category": "Vegetables",
+    "stocks": "No Stock",
+    "percentage": 0,
+    "measurement": "Kg"
+  },
+  {
+    "_id": {
+      "$oid": "66f3d3ef917991f9e31d50d9"
+    },
+    "englishName": "APPLE - FUJI",
+    "tamilName": "ஆப்பிள் - ஃபுஜி",
+    "price": 483,
+    "buyingPrice": 345,
+    "images": [
+      {
+        "image": "https://jas-fruits.s3.ap-south-1.amazonaws.com/Product/1729737124033-apple_fuji.jpg",
+        "_id": {
+          "$oid": "6719b1a4b12ecacfed0f06ae"
+        }
+      }
+    ],
+    "category": "Fruits",
+    "stocks": "Stock",
+    "percentage": 40,
+    "measurement": "Kg"
+  },
+  {
+    "_id": {
+      "$oid": "66f3d3ef917991f9e31d50a1"
+    },
+    "englishName": "ONION BIG",
+    "tamilName": "பெரிய வெங்காயம்",
+    "price": 75.6,
+    "buyingPrice": 54,
+    "images": [
+      {
+        "image": "https://jas-fruits.s3.ap-south-1.amazonaws.com/Product/1729740781251-Onion%20Big.jpg",
+        "_id": {
+          "$oid": "6719bfeeb12ecacfed0f9f15"
+        }
+      }
+    ],
+    "category": "Vegetables",
+    "stocks": "Stock",
+    "percentage": 40,
+    "measurement": "Kg"
+  },
+  {
+    "_id": {
+      "$oid": "66f3d3ef917991f9e31d50b3"
+    },
+    "englishName": "SNAKE GUARD",
+    "tamilName": "புடலங்காய்",
+    "price": 53.2,
+    "buyingPrice": 38,
+    "images": [
+      {
+        "image": "https://jas-fruits.s3.ap-south-1.amazonaws.com/Product/1729742000426-snake_guard.jpg",
+        "_id": {
+          "$oid": "6719c4b1b12ecacfed0fccdc"
+        }
+      }
+    ],
+    "category": "Vegetables",
+    "stocks": "Stock",
+    "percentage": 40,
+    "measurement": "Kg"
+  },
+  {
+    "_id": {
+      "$oid": "66f3d3ef917991f9e31d50b8"
+    },
+    "englishName": "THANDHU",
+    "tamilName": "தண்டு",
+    "price": 7,
+    "buyingPrice": 5,
+    "images": [
+      {
+        "image": "https://jas-fruits.s3.ap-south-1.amazonaws.com/Product/1729742314485-thandhu.jpg",
+        "_id": {
+          "$oid": "6719c5ebb12ecacfed0fd7f4"
+        }
+      }
+    ],
+    "category": "Vegetables",
+    "stocks": "Stock",
+    "percentage": 40,
+    "measurement": "Kg"
+  },
+  {
+    "_id": {
+      "$oid": "66f3d3ef917991f9e31d50bf"
+    },
+    "englishName": "VADHUMANGA",
+    "tamilName": "வதுமாங்கா",
+    "price": 110,
+    "buyingPrice": 110,
+    "images": [
+      {
+        "image": "https://jas-fruits.s3.ap-south-1.amazonaws.com/Product/1729742707262-vadhumanga.jpg",
+        "_id": {
+          "$oid": "6719c774b12ecacfed0fe30c"
+        }
+      }
+    ],
+    "category": "Vegetables",
+    "stocks": "No Stock",
+    "percentage": 0,
+    "measurement": "Kg"
+  },
+  {
+    "_id": {
+      "$oid": "66f3d3ef917991f9e31d50c1"
+    },
+    "englishName": "ZUCCHINI GREEN",
+    "tamilName": "பச்சை சுக்கினி",
+    "price": 196,
+    "buyingPrice": 140,
+    "images": [
+      {
+        "image": "https://jas-fruits.s3.ap-south-1.amazonaws.com/Product/1729742867557-zucchini_green.jpg",
+        "_id": {
+          "$oid": "6719c814b12ecacfed0feb5e"
+        }
+      }
+    ],
+    "category": "Vegetables",
+    "stocks": "Stock",
+    "percentage": 40,
+    "measurement": "Kg"
+  },
+  {
+    "_id": {
+      "$oid": "66f3d3ef917991f9e31d50c5"
+    },
+    "englishName": "MANATHAKALI KEERAI",
+    "tamilName": "மணத்தக்காளி கீரை",
+    "price": 14,
+    "buyingPrice": 10,
+    "images": [
+      {
+        "image": "https://jas-fruits.s3.ap-south-1.amazonaws.com/Product/1729739979849-manthakali_keerai.jpg",
+        "_id": {
+          "$oid": "6719bcccb12ecacfed0f7dcd"
+        }
+      }
+    ],
+    "category": "Keerai",
+    "stocks": "Stock",
+    "percentage": 40,
+    "measurement": "Piece"
+  },
+  {
+    "_id": {
+      "$oid": "66f3d3ef917991f9e31d50ca"
+    },
+    "englishName": "PARUPU KEERAI",
+    "tamilName": "பருப்புக்கீரை",
+    "price": 14,
+    "buyingPrice": 10,
+    "images": [
+      {
+        "image": "https://jas-fruits.s3.ap-south-1.amazonaws.com/Product/1729740932688-parupu_keerai.jpg",
+        "_id": {
+          "$oid": "6719c085b12ecacfed0fa604"
+        }
+      }
+    ],
+    "category": "Keerai",
+    "stocks": "Stock",
+    "percentage": 40,
+    "measurement": "Piece"
+  },
+  {
+    "_id": {
+      "$oid": "66f3d3ef917991f9e31d50dd"
+    },
+    "englishName": "APPLE -WASHINGTON",
+    "tamilName": "ஆப்பிள் - வாஷிங்டன்",
+    "price": 280,
+    "buyingPrice": 280,
+    "images": [
+      {
+        "image": "https://jas-fruits.s3.ap-south-1.amazonaws.com/Product/1729737203648-apple_washington.jpg",
+        "_id": {
+          "$oid": "6719b1f4b12ecacfed0f0c32"
+        }
+      }
+    ],
+    "category": "Fruits",
+    "stocks": "No Stock",
+    "percentage": 0,
+    "measurement": "Kg"
+  },
+  {
+    "_id": {
+      "$oid": "66f3d3ef917991f9e31d50a5"
+    },
+    "englishName": "PARUVAL",
+    "tamilName": "பருவல்",
+    "price": 112,
+    "buyingPrice": 80,
+    "images": [
+      {
+        "image": "https://jas-fruits.s3.ap-south-1.amazonaws.com/Product/1729740953029-paruval.jpg",
+        "_id": {
+          "$oid": "6719c09ab12ecacfed0fa767"
+        }
+      }
+    ],
+    "category": "Vegetables",
+    "stocks": "Stock",
+    "percentage": 40,
+    "measurement": "Kg"
+  },
+  {
+    "_id": {
+      "$oid": "66f3d3ef917991f9e31d50ad"
+    },
+    "englishName": "RAW BANANA",
+    "tamilName": "வாழைக்காய்",
+    "price": 49,
+    "buyingPrice": 35,
+    "images": [
+      {
+        "image": "https://jas-fruits.s3.ap-south-1.amazonaws.com/Product/1729741726297-raw_banana.jpg",
+        "_id": {
+          "$oid": "6719c39eb12ecacfed0fc1c4"
+        }
+      }
+    ],
+    "category": "Vegetables",
+    "stocks": "Stock",
+    "percentage": 40,
+    "measurement": "Kg"
+  },
+  {
+    "_id": {
+      "$oid": "66f3d3ef917991f9e31d50af"
+    },
+    "englishName": "RIDGE GOURD",
+    "tamilName": "பீர்க்கங்காய்",
+    "price": 91,
+    "buyingPrice": 65,
+    "images": [
+      {
+        "image": "https://jas-fruits.s3.ap-south-1.amazonaws.com/Product/1729741791278-ridge_gourd.jpg",
+        "_id": {
+          "$oid": "6719c3e0b12ecacfed0fc5ed"
+        }
+      }
+    ],
+    "category": "Vegetables",
+    "stocks": "Stock",
+    "percentage": 40,
+    "measurement": "Kg"
+  },
+  {
+    "_id": {
+      "$oid": "66f3d3ef917991f9e31d50ba"
+    },
+    "englishName": "THINDA",
+    "tamilName": "திண்டா",
+    "price": 91,
+    "buyingPrice": 65,
+    "images": [
+      {
+        "image": "https://jas-fruits.s3.ap-south-1.amazonaws.com/Product/1729742361487-thinda.jpeg",
+        "_id": {
+          "$oid": "6719c61ab12ecacfed0fdaba"
+        }
+      }
+    ],
+    "category": "Vegetables",
+    "stocks": "Stock",
+    "percentage": 40,
+    "measurement": "Kg"
+  },
+  {
+    "_id": {
+      "$oid": "66f3d3ef917991f9e31d50c3"
+    },
+    "englishName": "AGATHI KEERAI",
+    "tamilName": "அகத்திக்கீரை",
+    "price": 11.2,
+    "buyingPrice": 8,
+    "images": [
+      {
+        "image": "https://jas-fruits.s3.ap-south-1.amazonaws.com/Product/1729737058592-agathi_keerai.jpg",
+        "_id": {
+          "$oid": "6719b164b12ecacfed0f028b"
+        }
+      }
+    ],
+    "category": "Keerai",
+    "stocks": "Stock",
+    "percentage": 40,
+    "measurement": "Piece"
+  },
+  {
+    "_id": {
+      "$oid": "66f3d3ef917991f9e31d50c4"
+    },
+    "englishName": "ARAI KEERAI",
+    "tamilName": "அரைக்கீரை",
+    "price": 21,
+    "buyingPrice": 15,
+    "images": [
+      {
+        "image": "https://jas-fruits.s3.ap-south-1.amazonaws.com/Product/1729737219434-arai_keerai.jpg",
+        "_id": {
+          "$oid": "6719b204b12ecacfed0f0d93"
+        }
+      }
+    ],
+    "category": "Keerai",
+    "stocks": "Stock",
+    "percentage": 40,
+    "measurement": "Piece"
+  },
+  {
+    "_id": {
+      "$oid": "66f3d3ef917991f9e31d50c7"
+    },
+    "englishName": "MULAIKEERAI",
+    "tamilName": "முளைக்கீரை",
+    "price": 21,
+    "buyingPrice": 15,
+    "images": [
+      {
+        "image": "https://jas-fruits.s3.ap-south-1.amazonaws.com/Product/1729740486383-mulaikeerai.jpg",
+        "_id": {
+          "$oid": "6719bec7b12ecacfed0f929a"
+        }
+      }
+    ],
+    "category": "Keerai",
+    "stocks": "Stock",
+    "percentage": 40,
+    "measurement": "Piece"
+  },
+  {
+    "_id": {
+      "$oid": "66f3d3ef917991f9e31d50d5"
+    },
+    "englishName": "VENTHAIYAKKERAI BIG",
+    "tamilName": "வெந்தையக்கீரை பெரியது",
+    "price": 21,
+    "buyingPrice": 15,
+    "images": [
+      {
+        "image": "https://jas-fruits.s3.ap-south-1.amazonaws.com/Product/1729742764647-venthayakkerai_big.jpg",
+        "_id": {
+          "$oid": "6719c7adb12ecacfed0fe5d2"
+        }
+      }
+    ],
+    "category": "Keerai",
+    "stocks": "Stock",
+    "percentage": 40,
+    "measurement": "Piece"
+  },
+  {
+    "_id": {
+      "$oid": "66f3d3ef917991f9e31d50d6"
+    },
+    "englishName": "VENTHAIYAKKERAI SMALL",
+    "tamilName": "வெந்தையக்கீரை சிறியது",
+    "price": 7,
+    "buyingPrice": 5,
+    "images": [
+      {
+        "image": "https://jas-fruits.s3.ap-south-1.amazonaws.com/Product/1729742799874-venthayakkerai_big.jpg",
+        "_id": {
+          "$oid": "6719c7d0b12ecacfed0fe735"
+        }
+      }
+    ],
+    "category": "Keerai",
+    "stocks": "Stock",
+    "percentage": 40,
+    "measurement": "Piece"
+  },
+  {
+    "_id": {
+      "$oid": "66f3d3ef917991f9e31d50da"
+    },
+    "englishName": "APPLE - GREEN",
+    "tamilName": "ஆப்பிள் - பச்சை",
+    "price": 280,
+    "buyingPrice": 280,
+    "images": [
+      {
+        "image": "https://jas-fruits.s3.ap-south-1.amazonaws.com/Product/1729737139237-apple_green.jpg",
+        "_id": {
+          "$oid": "6719b1b3b12ecacfed0f080f"
+        }
+      }
+    ],
+    "category": "Fruits",
+    "stocks": "No Stock",
+    "percentage": 0,
+    "measurement": "Kg"
+  },
+  {
+    "_id": {
+      "$oid": "66f3d3ef917991f9e31d50db"
+    },
+    "englishName": "APPLE - ROYAL GALA",
+    "tamilName": "ஆப்பிள் - ராயல் காலா",
+    "price": 300,
+    "buyingPrice": 300,
+    "images": [
+      {
+        "image": "https://jas-fruits.s3.ap-south-1.amazonaws.com/Product/1729737163656-Apple%20Royal%20gala.jpg",
+        "_id": {
+          "$oid": "6719b1ccb12ecacfed0f0970"
+        }
+      }
+    ],
+    "category": "Fruits",
+    "stocks": "No Stock",
+    "percentage": 0,
+    "measurement": "Kg"
+  },
+  {
+    "_id": {
+      "$oid": "66f3d3ef917991f9e31d50de"
+    },
+    "englishName": "AUSTRALIA ORANGE",
+    "tamilName": "ஆஸ்திரேலியா ஆரஞ்சு",
+    "price": 288.4,
+    "buyingPrice": 206,
+    "images": [
+      {
+        "image": "https://jas-fruits.s3.ap-south-1.amazonaws.com/Product/1729737277329-australia_orange.jpg",
+        "_id": {
+          "$oid": "6719b23eb12ecacfed0f11b6"
+        }
+      }
+    ],
+    "category": "Fruits",
+    "stocks": "Stock",
+    "percentage": 40,
+    "measurement": "Kg"
+  },
+  {
+    "_id": {
+      "$oid": "66f3d3ef917991f9e31d50b7"
+    },
+    "englishName": "SWEET POTATO",
+    "tamilName": "இனிப்பு உருளைக்கிழங்கு",
+    "price": 84,
+    "buyingPrice": 60,
+    "images": [
+      {
+        "image": "https://jas-fruits.s3.ap-south-1.amazonaws.com/Product/1729742285716-sweet_potato.jpg",
+        "_id": {
+          "$oid": "6719c5ceb12ecacfed0fd691"
+        }
+      }
+    ],
+    "category": "Vegetables",
+    "stocks": "Stock",
+    "percentage": 40,
+    "measurement": "Kg"
+  },
+  {
+    "_id": {
+      "$oid": "66f3d3ef917991f9e31d50c6"
+    },
+    "englishName": "MUDAKATHAN KEERAI",
+    "tamilName": "முடக்கத்தான்கீரை",
+    "price": 7,
+    "buyingPrice": 5,
+    "images": [
+      {
+        "image": "https://jas-fruits.s3.ap-south-1.amazonaws.com/Product/1729740455602-mudakathan_keerai.jpg",
+        "_id": {
+          "$oid": "6719bea9b12ecacfed0f9137"
+        }
+      }
+    ],
+    "category": "Keerai",
+    "stocks": "Stock",
+    "percentage": 40,
+    "measurement": "Piece"
+  },
+  {
+    "_id": {
+      "$oid": "66f3d3ef917991f9e31d50d4"
+    },
+    "englishName": "PASALAI KEERAI",
+    "tamilName": "பசலை கீரை",
+    "price": 10,
+    "buyingPrice": 10,
+    "images": [
+      {
+        "image": "https://jas-fruits.s3.ap-south-1.amazonaws.com/Product/1729740973752-pasalai_keerai.jpg",
+        "_id": {
+          "$oid": "6719c0aeb12ecacfed0fa8ca"
+        }
+      }
+    ],
+    "category": "Keerai",
+    "stocks": "No Stock",
+    "percentage": 0,
+    "measurement": "Piece"
+  },
+  {
+    "_id": {
+      "$oid": "66f3d3ef917991f9e31d50d8"
+    },
+    "englishName": "APPLE - BELGIUM",
+    "tamilName": "ஆப்பிள் - பெல்ஜியம்",
+    "price": 250,
+    "buyingPrice": 250,
+    "images": [
+      {
+        "image": "https://jas-fruits.s3.ap-south-1.amazonaws.com/Product/1729737090259-apple_belgium.jpg",
+        "_id": {
+          "$oid": "6719b183b12ecacfed0f054d"
+        }
+      }
+    ],
+    "category": "Fruits",
+    "stocks": "No Stock",
+    "percentage": 0,
+    "measurement": "Kg"
+  },
+  {
+    "_id": {
+      "$oid": "66f3d3ef917991f9e31d50dc"
+    },
+    "englishName": "APPLE - SHIMLA",
+    "tamilName": "ஆப்பிள் - ஷிம்லா",
+    "price": 196,
+    "buyingPrice": 140,
+    "images": [
+      {
+        "image": "https://jas-fruits.s3.ap-south-1.amazonaws.com/Product/1729737183892-apple_shimla.jpg",
+        "_id": {
+          "$oid": "6719b1e1b12ecacfed0f0ad1"
+        }
+      }
+    ],
+    "category": "Fruits",
+    "stocks": "Stock",
+    "percentage": 40,
+    "measurement": "Kg"
+  },
+  {
+    "_id": {
+      "$oid": "66f3d3ef917991f9e31d50df"
+    },
+    "englishName": "BANANA-ELAKKI",
+    "tamilName": "வாழைப்பழம்-ஏலக்கி",
+    "price": 77,
+    "buyingPrice": 55,
+    "images": [
+      {
+        "image": "https://jas-fruits.s3.ap-south-1.amazonaws.com/Product/1729737468397-banana_elakki.jpg",
+        "_id": {
+          "$oid": "6719b2fcb12ecacfed0f1cfa"
+        }
+      }
+    ],
+    "category": "Fruits",
+    "stocks": "Stock",
+    "percentage": 40,
+    "measurement": "Kg"
+  },
+  {
+    "_id": {
+      "$oid": "66f3d3ef917991f9e31d50a2"
+    },
+    "englishName": "ONION SMALL",
+    "tamilName": "சின்ன வெங்காயம்",
+    "price": 105,
+    "buyingPrice": 75,
+    "images": [
+      {
+        "image": "https://jas-fruits.s3.ap-south-1.amazonaws.com/Product/1729740837559-onion_small.jpg",
+        "_id": {
+          "$oid": "6719c026b12ecacfed0fa078"
+        }
+      }
+    ],
+    "category": "Vegetables",
+    "stocks": "Stock",
+    "percentage": 40,
+    "measurement": "Kg"
+  },
+  {
+    "_id": {
+      "$oid": "66f3d3ef917991f9e31d50b5"
+    },
+    "englishName": "SWEET CORN",
+    "tamilName": "இனிப்புச்சோளம்",
+    "price": 35,
+    "buyingPrice": 25,
+    "images": [
+      {
+        "image": "https://jas-fruits.s3.ap-south-1.amazonaws.com/Product/1729742260318-sweet_corn.jpg",
+        "_id": {
+          "$oid": "6719c5b5b12ecacfed0fd52e"
+        }
+      }
+    ],
+    "category": "Vegetables",
+    "stocks": "Stock",
+    "percentage": 40,
+    "measurement": "Kg"
+  },
+  {
+    "_id": {
+      "$oid": "66f3d3ef917991f9e31d50b9"
+    },
+    "englishName": "THIN BEANS",
+    "tamilName": "மெல்லிய பீன்ஸ்",
+    "price": 84,
+    "buyingPrice": 60,
+    "images": [
+      {
+        "image": "https://jas-fruits.s3.ap-south-1.amazonaws.com/Product/1729742338035-thin_beans.jpg",
+        "_id": {
+          "$oid": "6719c603b12ecacfed0fd957"
+        }
+      }
+    ],
+    "category": "Vegetables",
+    "stocks": "Stock",
+    "percentage": 40,
+    "measurement": "Kg"
+  },
+  {
+    "_id": {
+      "$oid": "66f3d3ef917991f9e31d50be"
+    },
+    "englishName": "TURNIP",
+    "tamilName": "சீமைக்கோல்",
+    "price": 77,
+    "buyingPrice": 55,
+    "images": [
+      {
+        "image": "https://jas-fruits.s3.ap-south-1.amazonaws.com/Product/1729742683952-turnip.jpg",
+        "_id": {
+          "$oid": "6719c75cb12ecacfed0fe1a9"
+        }
+      }
+    ],
+    "category": "Vegetables",
+    "stocks": "Stock",
+    "percentage": 40,
+    "measurement": "Kg"
+  },
+  {
+    "_id": {
+      "$oid": "66f3d3ef917991f9e31d50c8"
+    },
+    "englishName": "MURUGA KEERAI",
+    "tamilName": "முருங்கைக்கீரை",
+    "price": 35,
+    "buyingPrice": 25,
+    "images": [
+      {
+        "image": "https://jas-fruits.s3.ap-south-1.amazonaws.com/Product/1729740510488-muruga_keerai.jpg",
+        "_id": {
+          "$oid": "6719bee0b12ecacfed0f93fd"
+        }
+      }
+    ],
+    "category": "Keerai",
+    "stocks": "Stock",
+    "percentage": 40,
+    "measurement": "Piece"
+  },
+  {
+    "_id": {
+      "$oid": "66f3d3ef917991f9e31d50cb"
+    },
+    "englishName": "PONNANGANNI GREEN",
+    "tamilName": "பொன்னாங்கண்ணி பச்சை",
+    "price": 11.2,
+    "buyingPrice": 8,
+    "images": [
+      {
+        "image": "https://jas-fruits.s3.ap-south-1.amazonaws.com/Product/1729741203605-ponnanganni_green.jpg",
+        "_id": {
+          "$oid": "6719c194b12ecacfed0fb545"
+        }
+      }
+    ],
+    "category": "Keerai",
+    "stocks": "Stock",
+    "percentage": 40,
+    "measurement": "Piece"
+  },
+  {
+    "_id": {
+      "$oid": "66f3d3ef917991f9e31d50cf"
+    },
+    "englishName": "SPRING ONION",
+    "tamilName": "வெங்காயத் தாள்",
+    "price": 11.2,
+    "buyingPrice": 8,
+    "images": [
+      {
+        "image": "https://jas-fruits.s3.ap-south-1.amazonaws.com/Product/1729742114905-spring_onion.jpg",
+        "_id": {
+          "$oid": "6719c524b12ecacfed0fcfa2"
+        }
+      }
+    ],
+    "category": "Keerai",
+    "stocks": "Stock",
+    "percentage": 40,
+    "measurement": "Piece"
+  },
+  {
+    "_id": {
+      "$oid": "66f3d3ef917991f9e31d50e4"
+    },
+    "englishName": "BLUEBERRY",
+    "tamilName": "புளுபெர்ரி",
+    "price": 329,
+    "buyingPrice": 235,
+    "images": [
+      {
+        "image": "https://jas-fruits.s3.ap-south-1.amazonaws.com/Product/1729737688626-blueberry.jpg",
+        "_id": {
+          "$oid": "6719b3d9b12ecacfed0f2963"
+        }
+      }
+    ],
+    "category": "Fruits",
+    "stocks": "Stock",
+    "percentage": 40,
+    "measurement": "Box"
+  },
+  {
+    "_id": {
+      "$oid": "66f3d3ef917991f9e31d50e6"
+    },
+    "englishName": "CHERRY - (IMPORTED)",
+    "tamilName": "செர்ரி - (இறக்குமதி)",
+    "price": 180,
+    "buyingPrice": 180,
+    "images": [
+      {
+        "image": "https://jas-fruits.s3.ap-south-1.amazonaws.com/Product/1729738531083-cherry_imported.jpg",
+        "_id": {
+          "$oid": "6719b723b12ecacfed0f44f9"
+        }
+      }
+    ],
+    "category": "Fruits",
+    "stocks": "No Stock",
+    "percentage": 0,
+    "measurement": "Box"
+  },
+  {
+    "_id": {
+      "$oid": "66f3d3ef917991f9e31d50f3"
+    },
+    "englishName": "MALDA ORANGE",
+    "tamilName": "மால்டா ஆரஞ்சு",
+    "price": 308,
+    "buyingPrice": 220,
+    "images": [
+      {
+        "image": "https://jas-fruits.s3.ap-south-1.amazonaws.com/Product/1729739876214-malda_orange.jpg",
+        "_id": {
+          "$oid": "6719bc65b12ecacfed0f79a2"
+        }
+      }
+    ],
+    "category": "Fruits",
+    "stocks": "Stock",
+    "percentage": 40,
+    "measurement": "Kg"
+  },
+  {
+    "_id": {
+      "$oid": "66f3d3ef917991f9e31d50e3"
+    },
+    "englishName": "BLACK GRAPES SEED LESS",
+    "tamilName": "கருப்பு திராட்சை விதையற்ற",
+    "price": 150,
+    "buyingPrice": 150,
+    "images": [
+      {
+        "image": "https://jas-fruits.s3.ap-south-1.amazonaws.com/Product/1729737662717-black_grapes_seedless.jpg",
+        "_id": {
+          "$oid": "6719b3bfb12ecacfed0f2802"
+        }
+      }
+    ],
+    "category": "Fruits",
+    "stocks": "No Stock",
+    "percentage": 0,
+    "measurement": "Kg"
+  },
+  {
+    "_id": {
+      "$oid": "66f3d3ef917991f9e31d50ea"
+    },
+    "englishName": "GRAPES GREEN",
+    "tamilName": "பச்சை திராட்சை",
+    "price": 40,
+    "buyingPrice": 40,
+    "images": [
+      {
+        "image": "https://jas-fruits.s3.ap-south-1.amazonaws.com/Product/1729739272031-grapes_green.jpg",
+        "_id": {
+          "$oid": "6719ba09b12ecacfed0f5de6"
+        }
+      }
+    ],
+    "category": "Fruits",
+    "stocks": "No Stock",
+    "percentage": 0,
+    "measurement": "Kg"
+  },
+  {
+    "_id": {
+      "$oid": "66f3d3ef917991f9e31d50ef"
+    },
+    "englishName": "KARPURAVALLI",
+    "tamilName": "கற்பூரவள்ளி",
+    "price": 63,
+    "buyingPrice": 45,
+    "images": [
+      {
+        "image": "https://jas-fruits.s3.ap-south-1.amazonaws.com/Product/1729739480745-karpuravalli.jpg",
+        "_id": {
+          "$oid": "6719bad9b12ecacfed0f6bc4"
+        }
+      }
+    ],
+    "category": "Fruits",
+    "stocks": "Stock",
+    "percentage": 40,
+    "measurement": "Kg"
+  },
+  {
+    "_id": {
+      "$oid": "66f3d3ef917991f9e31d50fd"
+    },
+    "englishName": "MANGUSTAN",
+    "tamilName": "மங்கூஸ்டான்",
+    "price": 100,
+    "buyingPrice": 100,
+    "images": [
+      {
+        "image": "https://jas-fruits.s3.ap-south-1.amazonaws.com/Product/1729740310272-mangustan.jpg",
+        "_id": {
+          "$oid": "6719be17b12ecacfed0f8bab"
+        }
+      }
+    ],
+    "category": "Fruits",
+    "stocks": "No Stock",
+    "percentage": 0,
+    "measurement": "Kg"
+  },
+  {
+    "_id": {
+      "$oid": "66f3d3ef917991f9e31d5101"
+    },
+    "englishName": "MUSAMBI",
+    "tamilName": "முசம்பி",
+    "price": 103.6,
+    "buyingPrice": 74,
+    "images": [
+      {
+        "image": "https://jas-fruits.s3.ap-south-1.amazonaws.com/Product/1729740538852-MUSAMBI.jpg",
+        "_id": {
+          "$oid": "6719befbb12ecacfed0f9560"
+        }
+      }
+    ],
+    "category": "Fruits",
+    "stocks": "Stock",
+    "percentage": 40,
+    "measurement": "Kg"
+  },
+  {
+    "_id": {
+      "$oid": "66f3d3ef917991f9e31d510f"
+    },
+    "englishName": "STRAWBERRY ",
+    "tamilName": "ஸ்ட்ராபெர்ரி",
+    "price": 196,
+    "buyingPrice": 140,
+    "images": [
+      {
+        "image": "https://jas-fruits.s3.ap-south-1.amazonaws.com/Product/1729742156791-strawberry.jpg",
+        "_id": {
+          "$oid": "6719c54eb12ecacfed0fd105"
+        }
+      }
+    ],
+    "category": "Fruits",
+    "stocks": "Stock",
+    "percentage": 40,
+    "measurement": "Box"
+  },
+  {
+    "_id": {
+      "$oid": "66f3d3ef917991f9e31d5117"
+    },
+    "englishName": "CHERRY - INDIAN",
+    "tamilName": "செர்ரி - இந்தியன்",
+    "price": 120,
+    "buyingPrice": 120,
+    "images": [
+      {
+        "image": "https://jas-fruits.s3.ap-south-1.amazonaws.com/Product/1729738562819-indian_cherry.jpg",
+        "_id": {
+          "$oid": "6719b743b12ecacfed0f465a"
+        }
+      }
+    ],
+    "category": "Fruits",
+    "stocks": "No Stock",
+    "percentage": 0,
+    "measurement": "Box"
+  },
+  {
+    "_id": {
+      "$oid": "66f3d3ef917991f9e31d50e9"
+    },
+    "englishName": "FIG FRUIT",
+    "tamilName": "அத்தி பழம்",
+    "price": 49,
+    "buyingPrice": 35,
+    "images": [
+      {
+        "image": "https://jas-fruits.s3.ap-south-1.amazonaws.com/Product/1729739154540-fig_fruit.jpg",
+        "_id": {
+          "$oid": "6719b993b12ecacfed0f56f7"
+        }
+      }
+    ],
+    "category": "Fruits",
+    "stocks": "Stock",
+    "percentage": 40,
+    "measurement": "Kg"
+  },
+  {
+    "_id": {
+      "$oid": "66f3d3ef917991f9e31d50ed"
+    },
+    "englishName": "GUAVA RED",
+    "tamilName": "சிவப்பு கொய்யா",
+    "price": 98,
+    "buyingPrice": 70,
+    "images": [
+      {
+        "image": "https://jas-fruits.s3.ap-south-1.amazonaws.com/Product/1729739371690-guava_red.jpg",
+        "_id": {
+          "$oid": "6719ba6cb12ecacfed0f64d5"
+        }
+      }
+    ],
+    "category": "Fruits",
+    "stocks": "Stock",
+    "percentage": 40,
+    "measurement": "Kg"
+  },
+  {
+    "_id": {
+      "$oid": "66f3d3ef917991f9e31d50f1"
+    },
+    "englishName": "LITCHE THAILAND",
+    "tamilName": "லிட்சி தாய்லாந்து",
+    "price": 110,
+    "buyingPrice": 110,
+    "images": [
+      {
+        "image": "https://jas-fruits.s3.ap-south-1.amazonaws.com/Product/1729739745144-LITCHE%20THAILAND.jpg",
+        "_id": {
+          "$oid": "6719bbe2b12ecacfed0f7579"
+        }
+      }
+    ],
+    "category": "Fruits",
+    "stocks": "No Stock",
+    "percentage": 0,
+    "measurement": "Kg"
+  },
+  {
+    "_id": {
+      "$oid": "66f3d3ef917991f9e31d50f5"
+    },
+    "englishName": "MANGO - ALPHONSA",
+    "tamilName": "மாம்பழம் - அல்போன்சா",
+    "price": 100,
+    "buyingPrice": 100,
+    "images": [
+      {
+        "image": "https://jas-fruits.s3.ap-south-1.amazonaws.com/Product/1729740060003-mango_alphonsa.jpg",
+        "_id": {
+          "$oid": "6719bd1db12ecacfed0f8093"
+        }
+      }
+    ],
+    "category": "Fruits",
+    "stocks": "No Stock",
+    "percentage": 0,
+    "measurement": "Kg"
+  },
+  {
+    "_id": {
+      "$oid": "66f3d3ef917991f9e31d5102"
+    },
+    "englishName": "NENDRAM BANANA",
+    "tamilName": "நேந்திரம் வாழை",
+    "price": 77,
+    "buyingPrice": 55,
+    "images": [
+      {
+        "image": "https://jas-fruits.s3.ap-south-1.amazonaws.com/Product/1729740722263-NENDRAM.jpg",
+        "_id": {
+          "$oid": "6719bfb4b12ecacfed0f9c4f"
+        }
+      }
+    ],
+    "category": "Fruits",
+    "stocks": "Stock",
+    "percentage": 40,
+    "measurement": "Kg"
+  },
+  {
+    "_id": {
+      "$oid": "66f3d3ef917991f9e31d510a"
+    },
+    "englishName": "POOVAMPALAM",
+    "tamilName": "பூவம்பழம்",
+    "price": 63,
+    "buyingPrice": 45,
+    "images": [
+      {
+        "image": "https://jas-fruits.s3.ap-south-1.amazonaws.com/Product/1729741243268-poovampalam.jpg",
+        "_id": {
+          "$oid": "6719c1bcb12ecacfed0fb80b"
+        }
+      }
+    ],
+    "category": "Fruits",
+    "stocks": "Stock",
+    "percentage": 40,
+    "measurement": "Kg"
+  },
+  {
+    "_id": {
+      "$oid": "66f3d3ef917991f9e31d510c"
+    },
+    "englishName": "RED GLOAB GRAPE",
+    "tamilName": "சிவப்பு கிளோப் திராட்சை",
+    "price": 0,
+    "buyingPrice": 0,
+    "images": [
+      {
+        "image": "https://jas-fruits.s3.ap-south-1.amazonaws.com/Product/1729741768684-red_gloab_grape.jpg",
+        "_id": {
+          "$oid": "6719c3c9b12ecacfed0fc48a"
+        }
+      }
+    ],
+    "category": "Fruits",
+    "stocks": "Stock",
+    "percentage": 40,
+    "measurement": "Box"
+  },
+  {
+    "_id": {
+      "$oid": "66f3d3ef917991f9e31d5114"
+    },
+    "englishName": "GRAPES GREEN SEEDLESS",
+    "tamilName": "பச்சை திராட்சை விதையற்றது",
+    "price": 80,
+    "buyingPrice": 80,
+    "images": [
+      {
+        "image": "https://jas-fruits.s3.ap-south-1.amazonaws.com/Product/1729739294068-green_seedless_grapes.jpg",
+        "_id": {
+          "$oid": "6719ba1fb12ecacfed0f5f49"
+        }
+      }
+    ],
+    "category": "Fruits",
+    "stocks": "No Stock",
+    "percentage": 0,
+    "measurement": "Kg"
+  },
+  {
+    "_id": {
+      "$oid": "66f3d3ef917991f9e31d5115"
+    },
+    "englishName": "AUSTRALIA GRAPES",
+    "tamilName": "ஆஸ்திரேலியா திராட்சை",
+    "price": 150,
+    "buyingPrice": 150,
+    "images": [
+      {
+        "image": "https://jas-fruits.s3.ap-south-1.amazonaws.com/Product/1729737260031-australia_grapes.jpg",
+        "_id": {
+          "$oid": "6719b22cb12ecacfed0f1055"
+        }
+      }
+    ],
+    "category": "Fruits",
+    "stocks": "No Stock",
+    "percentage": 0,
+    "measurement": "Kg"
+  },
+  {
+    "_id": {
+      "$oid": "66f3d3ef917991f9e31d50fc"
+    },
+    "englishName": "MANGO - SENTHURA",
+    "tamilName": "மாம்பழம் - செந்துரா",
+    "price": 100,
+    "buyingPrice": 100,
+    "images": [
+      {
+        "image": "https://jas-fruits.s3.ap-south-1.amazonaws.com/Product/1729740269336-mango_senthura.jpg",
+        "_id": {
+          "$oid": "6719bdeeb12ecacfed0f88e5"
+        }
+      }
+    ],
+    "category": "Fruits",
+    "stocks": "No Stock",
+    "percentage": 0,
+    "measurement": "Kg"
+  },
+  {
+    "_id": {
+      "$oid": "66f3d3ef917991f9e31d5103"
+    },
+    "englishName": "PAPPAYA",
+    "tamilName": "பப்பாளி",
+    "price": 49,
+    "buyingPrice": 35,
+    "images": [
+      {
+        "image": "https://jas-fruits.s3.ap-south-1.amazonaws.com/Product/1729740911219-pappaya.jpg",
+        "_id": {
+          "$oid": "6719c06fb12ecacfed0fa4a1"
+        }
+      }
+    ],
+    "category": "Fruits",
+    "stocks": "Stock",
+    "percentage": 40,
+    "measurement": "Kg"
+  },
+  {
+    "_id": {
+      "$oid": "66f3d3ef917991f9e31d50e5"
+    },
+    "englishName": "BUTTER FRUIT",
+    "tamilName": "வெண்ணெய் பழம்",
+    "price": 420,
+    "buyingPrice": 300,
+    "images": [
+      {
+        "image": "https://jas-fruits.s3.ap-south-1.amazonaws.com/Product/1729738013310-butter_fruit.jpg",
+        "_id": {
+          "$oid": "6719b51eb12ecacfed0f35cc"
+        }
+      }
+    ],
+    "category": "Fruits",
+    "stocks": "Stock",
+    "percentage": 40,
+    "measurement": "Kg"
+  },
+  {
+    "_id": {
+      "$oid": "66f3d3ef917991f9e31d50eb"
+    },
+    "englishName": "GRAPES - PANNER",
+    "tamilName": "திராட்சை - பன்னீர்",
+    "price": 91,
+    "buyingPrice": 65,
+    "images": [
+      {
+        "image": "https://jas-fruits.s3.ap-south-1.amazonaws.com/Product/1729739247577-grapes_panner.jpg",
+        "_id": {
+          "$oid": "6719b9f0b12ecacfed0f5c83"
+        }
+      }
+    ],
+    "category": "Fruits",
+    "stocks": "Stock",
+    "percentage": 40,
+    "measurement": "Kg"
+  },
+  {
+    "_id": {
+      "$oid": "66f3d3ef917991f9e31d50f6"
+    },
+    "englishName": "MANGO - BANGANABALLI",
+    "tamilName": "மாம்பழம் - பங்கனபள்ளி",
+    "price": 100,
+    "buyingPrice": 100,
+    "images": [
+      {
+        "image": "https://jas-fruits.s3.ap-south-1.amazonaws.com/Product/1729740104263-mango_banganaballi.jpg",
+        "_id": {
+          "$oid": "6719bd49b12ecacfed0f81f6"
+        }
+      }
+    ],
+    "category": "Fruits",
+    "stocks": "No Stock",
+    "percentage": 0,
+    "measurement": "Kg"
+  },
+  {
+    "_id": {
+      "$oid": "66f3d3ef917991f9e31d50fa"
+    },
+    "englishName": "MANGO - MALGOVA",
+    "tamilName": "மாம்பழம் - மால்கோவா",
+    "price": 100,
+    "buyingPrice": 100,
+    "images": [
+      {
+        "image": "https://jas-fruits.s3.ap-south-1.amazonaws.com/Product/1729740174109-mango_malgova.jpg",
+        "_id": {
+          "$oid": "6719bd90b12ecacfed0f861f"
+        }
+      }
+    ],
+    "category": "Fruits",
+    "stocks": "No Stock",
+    "percentage": 0,
+    "measurement": "Kg"
+  },
+  {
+    "_id": {
+      "$oid": "66f3d3ef917991f9e31d50fb"
+    },
+    "englishName": "MANGO - RUMANI",
+    "tamilName": "மாம்பழம் - ருமானி",
+    "price": 100,
+    "buyingPrice": 100,
+    "images": [
+      {
+        "image": "https://jas-fruits.s3.ap-south-1.amazonaws.com/Product/1729740198066-mango_rumani.jpg",
+        "_id": {
+          "$oid": "6719bda7b12ecacfed0f8782"
+        }
+      }
+    ],
+    "category": "Fruits",
+    "stocks": "No Stock",
+    "percentage": 0,
+    "measurement": "Kg"
+  },
+  {
+    "_id": {
+      "$oid": "66f3d3ef917991f9e31d510e"
+    },
+    "englishName": "SOURSOP",
+    "tamilName": "முள்ளு சீதா",
+    "price": 100,
+    "buyingPrice": 100,
+    "images": [
+      {
+        "image": "https://jas-fruits.s3.ap-south-1.amazonaws.com/Product/1729742063095-soursop.jpg",
+        "_id": {
+          "$oid": "6719c4f0b12ecacfed0fce3f"
+        }
+      }
+    ],
+    "category": "Fruits",
+    "stocks": "No Stock",
+    "percentage": 0,
+    "measurement": "Kg"
+  },
+  {
+    "_id": {
+      "$oid": "66f3d3ef917991f9e31d50e7"
+    },
+    "englishName": "CHEVAZHAI",
+    "tamilName": "செவ்வாழை",
+    "price": 105,
+    "buyingPrice": 75,
+    "images": [
+      {
+        "image": "https://jas-fruits.s3.ap-south-1.amazonaws.com/Product/1729738668092-chevazhai.jpg",
+        "_id": {
+          "$oid": "6719b7adb12ecacfed0f47bd"
+        }
+      }
+    ],
+    "category": "Fruits",
+    "stocks": "Stock",
+    "percentage": 40,
+    "measurement": "Kg"
+  },
+  {
+    "_id": {
+      "$oid": "66f3d3ef917991f9e31d50f0"
+    },
+    "englishName": "KIWI FRUIT",
+    "tamilName": "கிவி பழம்",
+    "price": 175,
+    "buyingPrice": 125,
+    "images": [
+      {
+        "image": "https://jas-fruits.s3.ap-south-1.amazonaws.com/Product/1729739503173-kiwi_fruit.jpg",
+        "_id": {
+          "$oid": "6719baf0b12ecacfed0f6d27"
+        }
+      }
+    ],
+    "category": "Fruits",
+    "stocks": "Stock",
+    "percentage": 40,
+    "measurement": "Kg"
+  },
+  {
+    "_id": {
+      "$oid": "66f3d3ef917991f9e31d50e8"
+    },
+    "englishName": "DRAGON FRUITS",
+    "tamilName": "டிராகன் பழங்கள்",
+    "price": 119,
+    "buyingPrice": 85,
+    "images": [
+      {
+        "image": "https://jas-fruits.s3.ap-south-1.amazonaws.com/Product/1729739084357-DRAGON%20FRUITS.jpg",
+        "_id": {
+          "$oid": "6719b94db12ecacfed0f5431"
+        }
+      }
+    ],
+    "category": "Fruits",
+    "stocks": "Stock",
+    "percentage": 40,
+    "measurement": "Kg"
+  },
+  {
+    "_id": {
+      "$oid": "66f3d3ef917991f9e31d50ec"
+    },
+    "englishName": "GUAVA WHITE",
+    "tamilName": "வெள்ளை கொய்யா",
+    "price": 70,
+    "buyingPrice": 50,
+    "images": [
+      {
+        "image": "https://jas-fruits.s3.ap-south-1.amazonaws.com/Product/1729739390440-guava_white.jpg",
+        "_id": {
+          "$oid": "6719ba7fb12ecacfed0f6638"
+        }
+      }
+    ],
+    "category": "Fruits",
+    "stocks": "Stock",
+    "percentage": 40,
+    "measurement": "Kg"
+  },
+  {
+    "_id": {
+      "$oid": "66f3d3ef917991f9e31d50f8"
+    },
+    "englishName": "MANGO - JAWADU",
+    "tamilName": "மாம்பழம் - ஜவாது",
+    "price": 100,
+    "buyingPrice": 100,
+    "images": [
+      {
+        "image": "https://jas-fruits.s3.ap-south-1.amazonaws.com/Product/1729740150448-mango_jawadu.jpg",
+        "_id": {
+          "$oid": "6719bd77b12ecacfed0f84bc"
+        }
+      }
+    ],
+    "category": "Fruits",
+    "stocks": "No Stock",
+    "percentage": 0,
+    "measurement": "Kg"
+  },
+  {
+    "_id": {
+      "$oid": "66f3d3ef917991f9e31d50fe"
+    },
+    "englishName": "MORISH FRUIT",
+    "tamilName": "மொரிஷ் பழம்",
+    "price": 49,
+    "buyingPrice": 35,
+    "images": [
+      {
+        "image": "https://jas-fruits.s3.ap-south-1.amazonaws.com/Product/1729740431848-morris_fruit.jpg",
+        "_id": {
+          "$oid": "6719be91b12ecacfed0f8fd4"
+        }
+      }
+    ],
+    "category": "Fruits",
+    "stocks": "Stock",
+    "percentage": 40,
+    "measurement": "Kg"
+  },
+  {
+    "_id": {
+      "$oid": "66f3d3ef917991f9e31d5100"
+    },
+    "englishName": "MUSKMELON",
+    "tamilName": "முலாம்பழம்",
+    "price": 67.2,
+    "buyingPrice": 48,
+    "images": [
+      {
+        "image": "https://jas-fruits.s3.ap-south-1.amazonaws.com/Product/1729740668801-MUSKMELON.jpg",
+        "_id": {
+          "$oid": "6719bf7eb12ecacfed0f9989"
+        }
+      }
+    ],
+    "category": "Fruits",
+    "stocks": "Stock",
+    "percentage": 40,
+    "measurement": "Kg"
+  },
+  {
+    "_id": {
+      "$oid": "66f3d3ef917991f9e31d5107"
+    },
+    "englishName": "PINE APPLE",
+    "tamilName": "பைன் அப்பிள்",
+    "price": 91,
+    "buyingPrice": 65,
+    "images": [
+      {
+        "image": "https://jas-fruits.s3.ap-south-1.amazonaws.com/Product/1729741106716-PINE%20APPLE.jpg",
+        "_id": {
+          "$oid": "6719c133b12ecacfed0fafb9"
+        }
+      }
+    ],
+    "category": "Fruits",
+    "stocks": "Stock",
+    "percentage": 40,
+    "measurement": "Kg"
+  },
+  {
+    "_id": {
+      "$oid": "66f3d3ef917991f9e31d510b"
+    },
+    "englishName": "RASTHALI",
+    "tamilName": "ரஸ்தாளி",
+    "price": 56,
+    "buyingPrice": 40,
+    "images": [
+      {
+        "image": "https://jas-fruits.s3.ap-south-1.amazonaws.com/Product/1729741702806-RASTHALI.jpg",
+        "_id": {
+          "$oid": "6719c388b12ecacfed0fc061"
+        }
+      }
+    ],
+    "category": "Fruits",
+    "stocks": "Stock",
+    "percentage": 40,
+    "measurement": "Kg"
+  },
+  {
+    "_id": {
+      "$oid": "66f3d3ef917991f9e31d5112"
+    },
+    "englishName": "CHEETHA PALAM",
+    "tamilName": "சீத்தா பழம்",
+    "price": 126,
+    "buyingPrice": 90,
+    "images": [
+      {
+        "image": "https://jas-fruits.s3.ap-south-1.amazonaws.com/Product/1729738504967-cheetha_palam.jpg",
+        "_id": {
+          "$oid": "6719b70ab12ecacfed0f4398"
+        }
+      }
+    ],
+    "category": "Fruits",
+    "stocks": "Stock",
+    "percentage": 40,
+    "measurement": "Kg"
+  },
+  {
+    "_id": {
+      "$oid": "66f3d3ef917991f9e31d50f7"
+    },
+    "englishName": "MANGO - HIMAMPASAND",
+    "tamilName": "மாம்பழம் - ஹிமாம்பசந்த்",
+    "price": 100,
+    "buyingPrice": 100,
+    "images": [
+      {
+        "image": "https://jas-fruits.s3.ap-south-1.amazonaws.com/Product/1729740126386-mango_himampasand.jpg",
+        "_id": {
+          "$oid": "6719bd5fb12ecacfed0f8359"
+        }
+      }
+    ],
+    "category": "Fruits",
+    "stocks": "No Stock",
+    "percentage": 0,
+    "measurement": "Kg"
+  },
+  {
+    "_id": {
+      "$oid": "66f3d3ef917991f9e31d50f4"
+    },
+    "englishName": "MANDRINS ORANGE",
+    "tamilName": "மாண்டரின்ஸ் ஆரஞ்சு",
+    "price": 420,
+    "buyingPrice": 300,
+    "images": [
+      {
+        "image": "https://jas-fruits.s3.ap-south-1.amazonaws.com/Product/1729740030329-mandrins_orange.jpg",
+        "_id": {
+          "$oid": "6719bcffb12ecacfed0f7f30"
+        }
+      }
+    ],
+    "category": "Fruits",
+    "stocks": "Stock",
+    "percentage": 40,
+    "measurement": "Kg"
+  },
+  {
+    "_id": {
+      "$oid": "66f3d3ef917991f9e31d5104"
+    },
+    "englishName": "PASSION FRUIT",
+    "tamilName": "பேஷன் பழம்",
+    "price": 100,
+    "buyingPrice": 100,
+    "images": [
+      {
+        "image": "https://jas-fruits.s3.ap-south-1.amazonaws.com/Product/1729740998019-passion_fruit.jpg",
+        "_id": {
+          "$oid": "6719c0c6b12ecacfed0faa2d"
+        }
+      }
+    ],
+    "category": "Fruits",
+    "stocks": "No Stock",
+    "percentage": 0,
+    "measurement": "Kg"
+  },
+  {
+    "_id": {
+      "$oid": "66f3d3ef917991f9e31d5105"
+    },
+    "englishName": "PEAR FRUIT",
+    "tamilName": "பேர் பழம்",
+    "price": 100,
+    "buyingPrice": 100,
+    "images": [
+      {
+        "image": "https://jas-fruits.s3.ap-south-1.amazonaws.com/Product/1729741018757-pear_fruit.jpg",
+        "_id": {
+          "$oid": "6719c0dbb12ecacfed0fab90"
+        }
+      }
+    ],
+    "category": "Fruits",
+    "stocks": "No Stock",
+    "percentage": 0,
+    "measurement": "Kg"
+  },
+  {
+    "_id": {
+      "$oid": "66f3d3ef917991f9e31d5118"
+    },
+    "englishName": "RAMDAN FRUITS",
+    "tamilName": "ரமடான் பழங்கள்",
+    "price": 100,
+    "buyingPrice": 100,
+    "images": [
+      {
+        "image": "https://jas-fruits.s3.ap-south-1.amazonaws.com/Product/1729741676427-ramdan_fruits.jpg",
+        "_id": {
+          "$oid": "6719c36db12ecacfed0fbefe"
+        }
+      }
+    ],
+    "category": "Fruits",
+    "stocks": "No Stock",
+    "percentage": 0,
+    "measurement": "Kg"
+  },
+  {
+    "_id": {
+      "$oid": "66f3d3ef917991f9e31d50ee"
+    },
+    "englishName": "KAMALA ORANGE",
+    "tamilName": "கமலா ஆரஞ்சு",
+    "price": 67.2,
+    "buyingPrice": 48,
+    "images": [
+      {
+        "image": "https://jas-fruits.s3.ap-south-1.amazonaws.com/Product/1729739457485-kamala_orange.jpg",
+        "_id": {
+          "$oid": "6719bac2b12ecacfed0f6a61"
+        }
+      }
+    ],
+    "category": "Fruits",
+    "stocks": "Stock",
+    "percentage": 40,
+    "measurement": "Kg"
+  },
+  {
+    "_id": {
+      "$oid": "66f3d3ef917991f9e31d50f2"
+    },
+    "englishName": "MALAIVAZHAI",
+    "tamilName": "மலைவாழை",
+    "price": 168,
+    "buyingPrice": 120,
+    "images": [
+      {
+        "image": "https://jas-fruits.s3.ap-south-1.amazonaws.com/Product/1729739909609-MALAIVAZHAI.jpg",
+        "_id": {
+          "$oid": "6719bc87b12ecacfed0f7b07"
+        }
+      }
+    ],
+    "category": "Fruits",
+    "stocks": "Stock",
+    "percentage": 40,
+    "measurement": "Kg"
+  },
+  {
+    "_id": {
+      "$oid": "66f3d3ef917991f9e31d5108"
+    },
+    "englishName": "PLUMS FRUIT",
+    "tamilName": "ப்ளம்ஸ் பழம்",
+    "price": 100,
+    "buyingPrice": 100,
+    "images": [
+      {
+        "image": "https://jas-fruits.s3.ap-south-1.amazonaws.com/Product/1729741155717-plums_fruit.jpg",
+        "_id": {
+          "$oid": "6719c165b12ecacfed0fb27f"
+        }
+      }
+    ],
+    "category": "Fruits",
+    "stocks": "No Stock",
+    "percentage": 0,
+    "measurement": "Kg"
+  },
+  {
+    "_id": {
+      "$oid": "66f3d3ef917991f9e31d50ff"
+    },
+    "englishName": "MUSK MELON VARI",
+    "tamilName": "முலாம்பழம் வரி",
+    "price": 67.2,
+    "buyingPrice": 48,
+    "images": [
+      {
+        "image": "https://jas-fruits.s3.ap-south-1.amazonaws.com/Product/1729740599443-musk_melon_vari.jpg",
+        "_id": {
+          "$oid": "6719bf38b12ecacfed0f9826"
+        }
+      }
+    ],
+    "category": "Fruits",
+    "stocks": "Stock",
+    "percentage": 40,
+    "measurement": "Kg"
+  },
+  {
+    "_id": {
+      "$oid": "66f3d3ef917991f9e31d5106"
+    },
+    "englishName": "PEAR RED",
+    "tamilName": "சிவப்பு பேர்",
+    "price": 100,
+    "buyingPrice": 100,
+    "images": [
+      {
+        "image": "https://jas-fruits.s3.ap-south-1.amazonaws.com/Product/1729741042564-pear_red.jpg",
+        "_id": {
+          "$oid": "6719c0f3b12ecacfed0facf3"
+        }
+      }
+    ],
+    "category": "Fruits",
+    "stocks": "No Stock",
+    "percentage": 0,
+    "measurement": "Kg"
+  },
+  {
+    "_id": {
+      "$oid": "66f3d3ef917991f9e31d5109"
+    },
+    "englishName": "POMEGRANATE KABUL",
+    "tamilName": "மாதுளை காபூல்",
+    "price": 294,
+    "buyingPrice": 210,
+    "images": [
+      {
+        "image": "https://jas-fruits.s3.ap-south-1.amazonaws.com/Product/1729741178966-pomegranate_kabul.jpg",
+        "_id": {
+          "$oid": "6719c17cb12ecacfed0fb3e2"
+        }
+      }
+    ],
+    "category": "Fruits",
+    "stocks": "Stock",
+    "percentage": 40,
+    "measurement": "Kg"
+  },
+  {
+    "_id": {
+      "$oid": "66f3d3ef917991f9e31d510d"
+    },
+    "englishName": "SAPPOTA",
+    "tamilName": "சப்போட்டா",
+    "price": 112,
+    "buyingPrice": 80,
+    "images": [
+      {
+        "image": "https://jas-fruits.s3.ap-south-1.amazonaws.com/Product/1729741810779-sappota.jpg",
+        "_id": {
+          "$oid": "6719c3f3b12ecacfed0fc750"
+        }
+      }
+    ],
+    "category": "Fruits",
+    "stocks": "Stock",
+    "percentage": 40,
+    "measurement": "Kg"
+  },
+  {
+    "_id": {
+      "$oid": "66f3d3ef917991f9e31d5110"
+    },
+    "englishName": "WATER MELON",
+    "tamilName": "தண்ணீர் மெலன்",
+    "price": 32.2,
+    "buyingPrice": 23,
+    "images": [
+      {
+        "image": "https://jas-fruits.s3.ap-south-1.amazonaws.com/Product/1729742827314-watermelon.jpg",
+        "_id": {
+          "$oid": "6719c7ecb12ecacfed0fe898"
+        }
+      }
+    ],
+    "category": "Fruits",
+    "stocks": "Stock",
+    "percentage": 40,
+    "measurement": "Kg"
+  },
+  {
+    "_id": {
+      "$oid": "66f3d3ef917991f9e31d5111"
+    },
+    "englishName": "WATER MELON KIRAN",
+    "tamilName": "தண்ணீர் மெலன் கிரான்",
+    "price": 32.2,
+    "buyingPrice": 23,
+    "images": [
+      {
+        "image": "https://jas-fruits.s3.ap-south-1.amazonaws.com/Product/1729742846973-watermelon_kiran.jpg",
+        "_id": {
+          "$oid": "6719c800b12ecacfed0fe9fb"
+        }
+      }
+    ],
+    "category": "Fruits",
+    "stocks": "Stock",
+    "percentage": 40,
+    "measurement": "Kg"
+  },
+  {
+    "_id": {
+      "$oid": "6719c88fb12ecacfed0fee20"
+    },
+    "englishName": "LITCHE RED",
+    "tamilName": "லிச்சி சிவப்பு",
+    "buyingPrice": 110,
+    "price": 110,
+    "percentage": 0,
+    "images": [
+      {
+        "image": "https://jas-fruits.s3.ap-south-1.amazonaws.com/Product/1729742988287-litche%20RED.jpg",
+        "_id": {
+          "$oid": "6719c88fb12ecacfed0fee21"
+        }
+      }
+    ],
+    "category": "Fruits",
+    "measurement": "Kg",
+    "stocks": "No Stock",
+    "user": {
+      "$oid": "670f6180e701b6788d87d97d"
+    },
+    "createdAt": {
+      "$date": "2024-10-24T02:24:47.946Z"
+    },
+    "__v": 0
+  },
+  {
+    "_id": {
+      "$oid": "6719e4da273bb6dcd3741786"
+    },
+    "englishName": "POMEGRANATE WHITE",
+    "tamilName": "மாதுளை வெள்ளை",
+    "buyingPrice": 180,
+    "price": 252,
+    "percentage": 40,
+    "images": [
+      {
+        "image": "https://jas-fruits.s3.ap-south-1.amazonaws.com/Product/1729750234168-pomegranate_white.jpeg",
+        "_id": {
+          "$oid": "6719e4da273bb6dcd3741787"
+        }
+      }
+    ],
+    "category": "Fruits",
+    "measurement": "Kg",
+    "stocks": "Stock",
+    "user": {
+      "$oid": "670f6180e701b6788d87d97d"
+    },
+    "createdAt": {
+      "$date": "2024-10-24T05:19:02.912Z"
+    },
+    "__v": 0
+  }]

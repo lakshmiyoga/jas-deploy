@@ -6,7 +6,7 @@ const userSlice = createSlice({
     initialState: {
         loading: false,
         user: {},
-        users: [],
+        users:null,
         isUserUpdated: false,
         isUserDeleted: false
     },
@@ -34,20 +34,20 @@ const userSlice = createSlice({
         userRequest(state, action){
             return {
                 ...state,
-                loading: true
+                userloading: true
             }
         },
         userSuccess(state, action){
             return {
                 ...state,
-                loading: false,
+                userloading: false,
                 user: action.payload.user,
             }
         },
         userFail(state, action){
             return {
                 ...state,
-                loading: false,
+                userloading: false,
                 error:  action.payload
             }
         },
@@ -106,8 +106,9 @@ const userSlice = createSlice({
         },
         clearError(state, action){
             return {
-                ...state,
-                error:  null
+                loading:false,
+                error: null,
+                // user:null,
             }
         }
        

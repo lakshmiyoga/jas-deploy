@@ -33,6 +33,18 @@ const responseSchema = new mongoose.Schema({
         type: mongoose.Schema.Types.Mixed,
         required: true
     },
+    detailedTable:{
+        type: mongoose.Schema.Types.Mixed,
+        required: true
+    },
+    totalRefundableAmount:{
+        type: mongoose.Schema.Types.Mixed,
+        required: true
+    },
+    tracking_url:{
+        type: mongoose.Schema.Types.Mixed,
+        required: true
+    },
     createdAt: {
         type: Date,
         default: Date.now

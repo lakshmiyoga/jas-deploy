@@ -4,35 +4,36 @@ import { fetchUserSummary } from '../../actions/orderActions';
 import Loader from '../Layouts/Loader';
 import MetaData from '../Layouts/MetaData';
 import Sidebar from './Sidebar';
+import { useLocation } from 'react-router-dom';
 
-const SummaryUser = () => {
+const SummaryUser = ({isActive,setIsActive}) => {
     const dispatch = useDispatch();
-    const { loading, userSummary, error } = useSelector((state) => state.orderState);
-    console.log('User Summary:', userSummary);
-    const [date, setDate] = useState('');
-    console.log(date)
+    const location = useLocation();
+    // sessionStorage.setItem('redirectPath', location.pathname);
+    const { loading, userSummary=[], error } = useSelector((state) => state.orderState);
+
+    // Initialize the date with the current date
+    const currentDate = new Date().toISOString().split('T')[0];
+    const [date, setDate] = useState(currentDate);
 
     useEffect(() => {
-        if (date) {
-            dispatch(fetchUserSummary(date));
-        }
+        // Fetch data when the component mounts
+        dispatch(fetchUserSummary(date));
     }, [date, dispatch]);
 
-    // // Check if orderSummary is defined and is an array
-    const isUserSummaryArray = Array.isArray(userSummary);
-
-    // Calculate the total weight and total amount for all orders
     const totalWeight = userSummary.reduce((sum, order) => sum + (order.totalWeight || 0), 0);
     const totalAmount = userSummary.reduce((sum, order) => sum + (order.totalAmount || 0), 0);
 
     return (
-        <div className="row">
-            <MetaData title="Order Summary" />
+        <div className="row loader-parent">
+            <MetaData title={`Order Summary`} />
             <div className="col-12 col-md-2">
-                <Sidebar />
+            <div style={{display:'flex',flexDirection:'row',position:'fixed',top:'0px',zIndex:99999,backgroundColor:'#fff',minWidth:'100%'}}>
+                <Sidebar isActive={isActive} setIsActive={setIsActive}/>
+                </div>
             </div>
-            <div className="col-12 col-md-8">
-                <h1>User Summary for a Day</h1>
+            <div className="col-12 col-md-9 smalldevice-space-summary loader-parent">
+                <h1 className='mb-4 admin-dashboard-x'>User Summary for a Day</h1>
                 <input
                     type="date"
                     value={date}
@@ -40,61 +41,71 @@ const SummaryUser = () => {
                     className="form-control mb-3 date-input"
                 />
                 {loading ? (
-                    <Loader />
+                     <div className="container loader-loading-center">
+                     <Loader />
+                 </div>
                 ) : error ? (
                     <p className="text-danger">{error}</p>
                 ) : (
-                    <div className="product-table">
-                        {isUserSummaryArray && userSummary.length === 0 ? (
-                            <p>No user found for the selected date.</p>
+                    <div className="container cart-detail-container">
+                        {userSummary.length === 0 ? (
+                            <p>No user data found for the selected date.</p>
                         ) : (
-                            <table className="table table-bordered">
+                            <div className="updatetable-responsive">
+                            <table className="updatetable updatetable-bordered">
                                 <thead>
                                     <tr>
-                                        <th>S.No</th>
-                                        <th>Name</th>
-                                        <th>Email</th>
-                                        <th>Phone No</th>
-                                        <th>Address</th>
-                                        <th>Products</th>
-                                        <th>Total Weight</th>
-                                        <th>Total Amount</th>
+                                        <th className="s-no">S.No</th>
+                                        <th className="name">Name</th>
+                                        <th className="email">Email</th>
+                                        <th className="phone">Phone No</th>
+                                        <th className="address">Address</th>
+                                        <th className="products">Products</th>
+                                        {/* <th className="weight">Total Weight</th> */}
+                                        <th className="amount">Total Amount</th>
                                     </tr>
                                 </thead>
                                 <tbody>
                                     {userSummary && userSummary.map((order, index) => (
                                         <tr key={index}>
-                                            <td>{index + 1}</td>
-                                            <td>{order.user?.name || 'N/A'}</td>
-                                            <td>{order.user?.email || 'N/A'}</td>
-                                            <td>{order.shippingInfo?.phoneNo || 'N/A'}</td>
-                                            <td >
+                                            <td className="s-no">{index + 1}</td>
+                                            <td className="name">{order.user?.name || 'N/A'}</td>
+                                            <td className="email">{order.user?.email || 'N/A'}</td>
+                                            <td className="phone">{order.shippingInfo?.phoneNo || 'N/A'}</td>
+                                            <td className="address">
                                                 {order.shippingInfo?.address || 'N/A'},
+                                                <br />
                                                 {order.shippingInfo?.city || 'N/A'},
+                                                <br />
                                                 {order.shippingInfo?.country || 'N/A'},
+                                                <br />
                                                 {order.shippingInfo?.postalCode || 'N/A'}
                                             </td>
-                                            <td>
-                                                {order.products.map((product, idx) => (
-                                                    <div key={idx}>
-                                                        {product.name} - {product.weight} kg - Rs. {product.price}
-                                                    </div>
+                                            <td className="products">
+                                                {order.products?.map((product, idx) => (
+                                                    <>
+                                                     <span key={idx} className="product-item">
+                                                        {product.name} - {product.weight}  - Rs. {product.price}
+                                                       
+                                                    </span>
+                                                    <br/>
+                                                    </>
+
+                                                   
                                                 ))}
                                             </td>
-                                            <td>{(order.totalWeight || 0).toFixed(2)} kg</td>
-                                            <td>Rs.{(order.totalAmount || 0).toFixed(2)}</td>
-
+                                            {/* <td className="weight">{(order.totalWeight || 0).toFixed(2)} kg</td> */}
+                                            <td className="amount">Rs.{(order.totalAmount || 0).toFixed(2)}</td>
                                         </tr>
-
                                     ))}
                                     <tr>
-                                        <td colSpan="6" style={{ textAlign: 'right' }}><strong>Total</strong></td> 
-                                        <td><strong>{totalWeight.toFixed(2)} kg</strong></td>
-                                        <td><strong>Rs. {totalAmount.toFixed(2)}</strong></td>
+                                        <td colSpan="6" style={{ textAlign: 'right' }}><strong>Total</strong></td>
+                                        {/* <td className="weight"><strong>{totalWeight.toFixed(2)} kg</strong></td> */}
+                                        <td className="amount"><strong>Rs. {totalAmount.toFixed(2)}</strong></td>
                                     </tr>
-
                                 </tbody>
                             </table>
+                            </div>
                         )}
                     </div>
                 )}

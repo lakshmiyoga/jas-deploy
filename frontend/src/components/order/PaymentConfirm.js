@@ -1,20 +1,29 @@
 import React, { useEffect, useState } from 'react';
 import store from '../../store';
-import { Link, useParams } from 'react-router-dom';
+import { Link, useLocation, useParams } from 'react-router-dom';
 import { loadUser } from '../../actions/userActions';
 import { getProducts } from '../../actions/productsActions';
 import { orderCompleted } from "../../slices/cartSlice";
 import { useDispatch } from 'react-redux';
 import axios from 'axios';
+import MetaData from '../Layouts/MetaData';
+import { userOrders as userOrdersAction } from '../../actions/orderActions';
+
 
 const PaymentConfirm = () => {
-  
+
   const { id } = useParams();
+  const location = useLocation();
+  // sessionStorage.setItem('redirectPath', location.pathname);
   const [paymentStatus, setPaymentStatus] = useState('LOADING');
   const [paymentDetails, setPaymentDetails] = useState({});
   const dispatch = useDispatch();
 
- 
+  useEffect(()=>{
+    dispatch(userOrdersAction());
+  },[])
+
+
   useEffect(() => {
     async function fetchData() {
       try {
@@ -38,39 +47,46 @@ const PaymentConfirm = () => {
   const renderPaymentDetails = () => {
     const { amount, payment_method, order_id, txn_id, date_created } = paymentDetails;
     return (
-      <div className="payment-details">
-        <h1>{getTitle(paymentStatus)}</h1>
-        <img src={getIcon(paymentStatus)} alt={paymentStatus} />
-        <table>
-          <tbody>
-            <tr>
-              <td>Amount</td>
-              <td>{amount}</td>
-            </tr>
-            <tr>
-              <td>Payment method</td>
-              <td>{(payment_method ? payment_method : 'N/A')}</td>
-            </tr>
-            <tr>
-              <td>Status</td>
-              <td>{getStatusText(paymentStatus)}</td>
-            </tr>
-            <tr>
-              <td>order_id</td>
-              <td>{order_id}</td>
-            </tr>
-            <tr>
-              <td>Transaction_id</td>
-              <td>{(txn_id ? txn_id : 'N/A')}</td>
-            </tr>
-            <tr>
-              <td>Date</td>
-              <td>{new Date(date_created).toLocaleString()}</td>
-            </tr>
-          </tbody>
-        </table>
-        <div className="link-container">
-          <Link to="/orders" className="orders-link">Go to Orders</Link>
+      <div>
+        <MetaData
+          title="Payment Confirmation"
+          description="Your payment has been successfully processed. Review your payment confirmation details and proceed with your order tracking."
+        />
+
+        <div className="payment-details">
+          <h1>{getTitle(paymentStatus)}</h1>
+          <img src={getIcon(paymentStatus)} alt={paymentStatus} />
+          <table>
+            <tbody>
+              <tr>
+                <td>Amount</td>
+                <td>{amount}</td>
+              </tr>
+              <tr>
+                <td>Payment method</td>
+                <td>{(payment_method ? payment_method : 'N/A')}</td>
+              </tr>
+              <tr>
+                <td>Status</td>
+                <td>{getStatusText(paymentStatus)}</td>
+              </tr>
+              <tr>
+                <td>order_id</td>
+                <td>{order_id}</td>
+              </tr>
+              <tr>
+                <td>Transaction_id</td>
+                <td>{(txn_id ? txn_id : 'N/A')}</td>
+              </tr>
+              <tr>
+                <td>Date</td>
+                <td>{new Date(date_created).toLocaleString()}</td>
+              </tr>
+            </tbody>
+          </table>
+          <div className="link-container">
+            <Link to="/orders" className="orders-link">Go to Orders</Link>
+          </div>
         </div>
       </div>
     );
@@ -90,6 +106,8 @@ const PaymentConfirm = () => {
         return 'Transaction Failed';
       case 'NEW':
         return 'Transaction Cancelled';
+      case 'AUTHORIZING':
+        return 'Transaction Pending';
       default:
         return 'Transaction Status';
     }
@@ -109,8 +127,10 @@ const PaymentConfirm = () => {
         return 'https://img.icons8.com/color/48/000000/cancel.png';
       case 'NEW':
         return 'https://img.icons8.com/color/48/000000/cancel.png';
+      case 'AUTHORIZING':
+        return 'https://img.icons8.com/color/48/000000/hourglass-sand-bottom.png';
       default:
-        return '';
+        return '❌';
     }
   };
 
@@ -128,6 +148,8 @@ const PaymentConfirm = () => {
         return '❌ Failed';
       case 'NEW':
         return '❌ Cancelled';
+      case 'AUTHORIZING':
+        return '⌛ AUTHORIZING';
       default:
         return '❓ Unknown';
     }

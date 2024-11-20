@@ -1,6 +1,6 @@
 import React, { Fragment, useEffect } from 'react'
 import { useDispatch, useSelector } from 'react-redux'
-import {useParams} from 'react-router-dom'
+import {useLocation, useParams} from 'react-router-dom'
 import { getProduct } from '../../actions/productAction';
 import Loader from '../Layouts/Loader';
 import MetaData from '../Layouts/MetaData';
@@ -10,6 +10,8 @@ import AddCart from './AddCart';
 const ProductDetail = () => {
 
     const dispatch = useDispatch();
+    const location = useLocation();
+    // sessionStorage.setItem('redirectPath', location.pathname);
     const {id} = useParams();
     // console.log(id)
     const { product, loading} = useSelector((state) => state.productState)

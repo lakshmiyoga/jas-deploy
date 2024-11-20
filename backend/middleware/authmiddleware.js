@@ -29,7 +29,7 @@ const isAuthenticateUser = catchAsyncError(async (req, res, next) => {
   if (!token) {
     return next(new ErrorHandler('Login first to handle the resource', 401));
   }
-
+   
   try {
     const decoded = jwt.verify(token, process.env.JWT_SECRET);
     req.user = await User.findById(decoded.id);
@@ -68,13 +68,12 @@ const authorizeRoles = (...roles) => {
       httpOnly:true,
     }
   
-    res.status(statusCode)
+    return res.status(statusCode)
     .cookie('token',token,options)
     .json({
       success:true,
       token,
       user
-
     })
   }
   

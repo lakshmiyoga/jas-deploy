@@ -81,7 +81,7 @@ export const createNewProduct = createAsyncThunk('post/adminCreateproducts', asy
 })
 
 export const deleteProduct = createAsyncThunk('delete/adminDeleteproducts', async ({ id }, { dispatch }) => {
-
+  console.log("id",id)
   try {
     dispatch(deleteProductRequest())
     await axios.delete(`/api/v1/admin/product/${id}`);

@@ -91,14 +91,29 @@ const cartSlice = createSlice({
             }
         },
         orderCompleted(state, action) {
-            localStorage.removeItem('shippingInfo');
+            // localStorage.removeItem('shippingInfo');
             localStorage.removeItem('cartItems');
             sessionStorage.removeItem('orderInfo');
             return {
                 items: [],
                 loading: false,
-                shippingInfo: {}
+                // shippingInfo: {}
             }
+        },
+        updateCartItemWeight(state, action)  {
+            const { productId, newWeight } = action.payload;
+            const item = state.items.find(item => item.product === productId);
+            if (item) {
+                item.productWeight = newWeight;
+            }
+            localStorage.setItem('cartItems', JSON.stringify(state.items));
+        },
+       updateCartItemPrice (state, action) {
+        const { productId, newPrice } = action.payload;
+        const item = state.items.find(item => item.product === productId);
+        if (item) {
+            item.price = newPrice;
+        }
         }
         
     }
@@ -107,6 +122,6 @@ const cartSlice = createSlice({
 
 const {actions, reducer} = cartSlice;
 
-export const {addCartItemRequest,addCartItemSuccess, increaseCartItemQty, decreaseCartItemQty, removeItemFromCart, saveShippingInfo, orderCompleted } = actions;
+export const {addCartItemRequest,addCartItemSuccess, increaseCartItemQty, decreaseCartItemQty, removeItemFromCart, saveShippingInfo, orderCompleted ,updateCartItemWeight ,updateCartItemPrice} = actions;
 
 export default reducer;

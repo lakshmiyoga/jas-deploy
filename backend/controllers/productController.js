@@ -1,8 +1,11 @@
 const { query } = require("express");
-const Product = require("../models/productModel");
+// const Product = require("../models/productModel");
+const Product = require("../models/allProductModel");
 const APIFeatures = require("../utils/apiFeatures");
 const catchAsyncError = require("../middleware/catchAsyncError");
 const ErrorHandler = require("../utils/errorHandler");
+const s3 = require('../config/awsConfig');
+const { S3Client ,DeleteObjectCommand} = require('@aws-sdk/client-s3');
 
 // Create an item
 const createProducts = catchAsyncError(async (req, res, next) => {
@@ -14,11 +17,17 @@ const createProducts = catchAsyncError(async (req, res, next) => {
         BASE_URL = `${req.protocol}://${req.get('host')}`
     }
 
+    // if (req.files && req.files.length > 0) {
+    //     req.files.forEach(file => {
+    //         let url = `${BASE_URL}/uploads/Product/${file.filename}`;
+    //         images.push({ image: url })
+    //     })
+    // }
+
     if (req.files && req.files.length > 0) {
         req.files.forEach(file => {
-            let url = `${BASE_URL}/uploads/Product/${file.originalname}`;
-            images.push({ image: url })
-        })
+            images.push({ image: file.location });  // Use S3 file location (URL)
+        });
     }
 
     req.body.images = images;
@@ -28,8 +37,22 @@ const createProducts = catchAsyncError(async (req, res, next) => {
 
     // console.log(name);
 
-    const newItem = new Product(req.body);
-    // console.log(newItem);
+    const newItem = new Product({
+        englishName: req.body.englishName,
+        tamilName: req.body.tamilName,
+        buyingPrice:req.body.buyingPrice,
+        price: req.body.price,
+        category: req.body.category,
+        measurement: req.body.measurement,
+        maximumQuantity: req.body.maximumQuantity,
+        range:req.body.rangeForGrams,
+        percentage:req.body.percentage,
+        stocks:req.body.stocks,
+        images: req.body.images,
+        user: req.body.user
+    });
+    
+    console.log(newItem);
     await newItem.save();
     res.status(201).json({ success: true, newItem });
 
@@ -66,11 +89,89 @@ const getSingleProduct = catchAsyncError(async (req, res, next) => {
 
 //update the item
 
+// const updateProducts = async (req, res, next) => {
+//     console.log(req)
+
+//     let product = await Product.findByIdAndUpdate(req.params.id);
+//     // console.log(product)
+
+//     let images = [];
+
+//     let BASE_URL = process.env.BACKEND_URL;
+//     if(process.env.NODE_ENV === "production"){
+//         BASE_URL = `${req.protocol}://${req.get('host')}`
+//     }
+
+//     // if images not cleared we keep existing images
+//     // if(req.body.imagesCleared === 'false'){
+//     //     images = product.images;
+//     // }
+
+//     // if (req.files && req.files.length > 0) {
+//     //     req.files.forEach(file => {
+//     //         let url = `${BASE_URL}/uploads/Product/${file.filename}`;
+//     //         images.push({ image: url })
+//     //     })
+//     // }
+
+//     if (req.body.imagesCleared === 'true' && product.images.length > 0) {
+//         const deletePromises = product.images.map(async (img) => {
+//             const imageKey = img.image.split('/').pop();   // Extract the file key from the image URL
+
+//             const params = {
+//                 Bucket: process.env.S3_BUCKET_NAME,
+//                 Key: `Product/${imageKey}`  // Key is the path of the image in S3
+//             };
+
+//             try {
+//                 const command = new DeleteObjectCommand(params);
+//                 await s3.send(command);
+//                 console.log(`Deleted ${imageKey} from S3`);
+//             } catch (error) {
+//                 console.log(`Error deleting ${imageKey} from S3:`, error);
+//             }
+//         });
+
+//         // Wait for all delete promises to finish
+//         await Promise.all(deletePromises);
+//     } else {
+//         // If images not cleared, keep the existing images
+//         images = product.images;
+//     }
+
+//     // Upload new images to S3 (if any)
+//     if (req.files && req.files.length > 0) {
+//         req.files.forEach(file => {
+//             images.push({ image: file.location });  // Use S3 file location (URL)
+//         });
+//     }
+
+//     req.body.images = images;
+
+//     if(!product) {
+//         return res.status(404).json({
+//             success: false,
+//             message: "Product not found"
+//         });
+//     }
+
+//     product = await Product.findByIdAndUpdate(req.params.id, req.body, {
+//         new: true,
+//         runValidators: true
+//     })
+    
+
+//    return res.status(200).json({
+//         success: true,
+//         product
+//     })
+// }
+
 const updateProducts = async (req, res, next) => {
-    console.log(req)
+    // console.log(req)
 
     let product = await Product.findByIdAndUpdate(req.params.id);
-    console.log(product)
+    // console.log(product)
 
     let images = [];
 
@@ -80,15 +181,47 @@ const updateProducts = async (req, res, next) => {
     }
 
     // if images not cleared we keep existing images
-    if(req.body.imagesCleared === 'false'){
-        images = product.images;
+    // if(req.body.imagesCleared === 'false'){
+    //     images = product.images;
+    // }
+
+    // if (req.files && req.files.length > 0) {
+    //     req.files.forEach(file => {
+    //         let url = ${BASE_URL}/uploads/Product/${file.originalname};
+    //         images.push({ image: url })
+    //     })
+    // }
+
+    if (req.body.imagesCleared === 'true' && product.images.length > 0) {
+        const deletePromises = product.images.map(async (img) => {
+            const imageKey = img.image.split('/').pop();   // Extract the file key from the image URL
+
+            const params = {
+                Bucket: process.env.S3_BUCKET_NAME,
+                Key:`Product/${imageKey}` // Key is the path of the image in S3
+            };
+
+            try {
+                const command = new DeleteObjectCommand(params);
+                await s3.send(command);
+                console.log(`Deleted ${imageKey} from S3`);
+            } catch (error) {
+                console.log(`Error deleting ${imageKey} from S3:`, error);
+            }
+        });
+
+        // Wait for all delete promises to finish
+        await Promise.all(deletePromises);
+    } else {
+        // If images not cleared, keep the existing images
+        images = product && product.images;
     }
 
+    // Upload new images to S3 (if any)
     if (req.files && req.files.length > 0) {
         req.files.forEach(file => {
-            let url = `${BASE_URL}/uploads/Product/${file.originalname}`;
-            images.push({ image: url })
-        })
+            images.push({ image: file.location });  // Use S3 file location (URL)
+        });
     }
 
     req.body.images = images;
@@ -99,28 +232,59 @@ const updateProducts = async (req, res, next) => {
             message: "Product not found"
         });
     }
-
+  try{
     product = await Product.findByIdAndUpdate(req.params.id, req.body, {
         new: true,
         runValidators: true
     })
     
 
-    res.status(200).json({
+   return res.status(200).json({
         success: true,
         product
     })
+  }
+  catch (error) {
+    console.log("error",error)
+   return res.status(500).json({ message: 'Error Updating item' });
+}
+    
 }
 
 //delete the item
 
 const deleteProducts = async (req, res, next) => {
     const { id } = req.params;
+    let product = await Product.findById(id);
+    console.log("productdelete",product)
+
+    if ( product.images.length > 0) {
+        const deletePromises = product.images.map(async (img) => {
+            const imageKey = img.image.split('/').pop();   // Extract the file key from the image URL
+
+            const params = {
+                Bucket: process.env.S3_BUCKET_NAME,
+                Key: `Product/${imageKey}`  // Key is the path of the image in S3
+            };
+
+            try {
+                const command = new DeleteObjectCommand(params);
+                await s3.send(command);
+                console.log(`Deleted ${imageKey} from S3`);
+            } catch (error) {
+                console.log(`Error deleting ${imageKey} from S3:`, error);
+            }
+        });
+
+        // Wait for all delete promises to finish
+        await Promise.all(deletePromises);
+    }
+
     try {
         const deletedItem = await Product.findByIdAndDelete(id);
-        res.status(200).json({ msg: 'Item deleted successfully' });
+        return res.status(200).json({ msg: 'Item deleted successfully' });
     } catch (error) {
-        res.status(500).json({ message: 'Error deleting item' });
+        return res.status(500).json({ message: 'Error deleting item' });
     }
 }
 

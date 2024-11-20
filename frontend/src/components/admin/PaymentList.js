@@ -1,18 +1,29 @@
 import React, { useEffect, Fragment } from 'react';
 import { Button } from "react-bootstrap";
 import { useDispatch, useSelector } from 'react-redux';
-import { Link } from "react-router-dom";
+import { Link, useLocation } from "react-router-dom";
 import { deleteOrder, adminOrders as adminOrdersAction } from "../../actions/orderActions"
 import Loader from '../Layouts/Loader';
 import { MDBDataTable } from 'mdbreact';
-import { toast } from 'react-toastify';
+import { Slide,toast } from 'react-toastify';
 import Sidebar from "../admin/Sidebar";
 import { clearError } from '../../slices/productsSlice';
-import { clearOrderDeleted } from "../../slices/orderSlice";
+import { clearOrderDeleted, orderDetailClear } from "../../slices/orderSlice";
+import MetaData from '../Layouts/MetaData';
+import { porterClearData, porterClearResponse } from '../../slices/porterSlice';
 
-const PaymentList = () => {
-    const { adminOrders: orders = [], loading = true, error, isOrderDeleted }  = useSelector(state => state.orderState);
+const PaymentList = ({isActive,setIsActive}) => {
+    const location = useLocation();
+    // sessionStorage.setItem('redirectPath', location.pathname);
+    const { adminOrders: orders, loading = true, error, isOrderDeleted }  = useSelector(state => state.orderState);
     const dispatch = useDispatch();
+    useEffect(() => {
+        dispatch(orderDetailClear());
+        dispatch(porterClearData());
+        dispatch(porterClearResponse());
+    }, [])
+
+    // console.log("Orders",orders)
 
     const setOrders = () => {
         const data = {
@@ -20,38 +31,42 @@ const PaymentList = () => {
                 {
                     label: 'S.No',
                     field: 's_no',
-                    sort: 'asc'
+                    sort: 'disabled'
                 },
                 {
                     label: 'ID',
                     field: 'id',
-                    sort: 'asc'
+                    sort: 'disabled'
                 },
                 {
                     label: 'Number of Items',
                     field: 'noOfItems',
-                    sort: 'asc'
+                    sort: 'disabled'
                 },
                 {
                     label: 'Amount',
                     field: 'amount',
-                    sort: 'asc'
+                    sort: 'disabled'
                 },
                 {
                     label: 'PaymentStatus',
                     field: 'paymentstatus',
-                    sort: 'asc'
+                    sort: 'disabled'
                 },
                 {
                     label: 'Actions',
                     field: 'actions',
-                    sort: 'asc'
+                    sort: 'disabled'
                 }
             ],
             rows: []
         };
 
-        orders.forEach((order,index) => {
+        
+        // Sort orders by creation date (newest first)
+        const sortedOrders = orders && [...orders].sort((a, b) => new Date(b.createdAt) - new Date(a.createdAt));
+
+        sortedOrders && sortedOrders.forEach((order,index) => {
             data.rows.push({
                 s_no: index + 1,
                 id:order.order_id,
@@ -70,7 +85,7 @@ const PaymentList = () => {
                 //         </Button>
                 //     </Fragment>
                 // )
-                actions: <Link to={`/order/${order.order_id}`} className="btn btn-primary" >
+                actions: <Link to={`/admin/orderdetail/${order.order_id}`} className="btn btn-primary" >
                     <i className='fa fa-eye'></i>
                 </Link>
             });
@@ -86,34 +101,80 @@ const PaymentList = () => {
 
     useEffect(() => {
         if (error) {
-            toast(error, {
-                position: "bottom-center",
-                type: 'error',
-                onOpen: () => { dispatch(clearError()) }
+            // toast(error, {
+            //     position: "bottom-center",
+            //     type: 'error',
+            //     onOpen: () => { dispatch(clearError()) }
+            // });
+            toast.dismiss();
+            setTimeout(() => {
+            toast.error(error, {
+              position: 'bottom-center',
+              type: 'error',
+              autoClose: 700,
+              transition: Slide,
+              hideProgressBar: true,
+              className: 'small-toast',
+              onOpen: () => { dispatch(clearError()) }
             });
+          }, 300);
             return;
         }
         if (isOrderDeleted) {
-            toast('Order Deleted Successfully!', {
-                type: 'success',
-                position: "bottom-center",
-                onOpen: () => dispatch(clearOrderDeleted())
+            // toast('Order Deleted Successfully!', {
+            //     type: 'success',
+            //     position: "bottom-center",
+            //     onOpen: () => dispatch(clearOrderDeleted())
+            // });
+            toast.dismiss();
+            setTimeout(() => {
+            toast.success('Order Deleted Successfully!', {
+              position: 'bottom-center',
+              type: 'success',
+              autoClose: 700,
+              transition: Slide,
+              hideProgressBar: true,
+              className: 'small-toast',
+              onOpen: () => dispatch(clearOrderDeleted())
             });
+          }, 300);
             return;
         }
-
-        dispatch(adminOrdersAction());
     }, [dispatch, error, isOrderDeleted]);
 
+    useEffect(()=>{
+        if(!orders){
+            dispatch(adminOrdersAction());
+        }   
+    },[orders])
+
     return (
-        <div className="row">
+        <div>
+             {/* <MetaData title={`Payment List`} /> */}
+             <MetaData 
+  title="Payment List" 
+  description="Track all payments received from customers. View payment statuses and handle any pending or failed transactions." 
+/>
+
+       
+        <div className="row loader-parent">
             <div className="col-12 col-md-2">
-                <Sidebar />
+            <div style={{display:'flex',flexDirection:'row',position:'fixed',top:'0px',zIndex:99999,backgroundColor:'#fff',minWidth:'100%'}}>
+                <Sidebar isActive={isActive} setIsActive={setIsActive}/>
+                </div>
             </div>
-            <div className="col-12 col-md-10">
-                <h1 className="my-4">Payment List</h1>
+            <div className="col-12 col-md-10 smalldevice-space loader-parent" >
+                <h1 className="mb-4 admin-dashboard-x" >Payment List</h1>
+               
                 <Fragment>
-                    {loading ? <Loader /> :
+                    {loading ?  (
+                                <div className="container loader-loading-center">
+                                <Loader />
+                            </div>
+
+
+                            ) :
+                            <div className='mdb-table' style={{display:'flex',justifyContent:'center', alignItems:'center'}}>
                         <MDBDataTable
                             data={setOrders()}
                             bordered
@@ -121,9 +182,12 @@ const PaymentList = () => {
                             className="px-3 product-table"
                             noBottomColumns
                         />
+                         </div>
                     }
                 </Fragment>
+               
             </div>
+        </div>
         </div>
     );
 };

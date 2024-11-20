@@ -28,7 +28,7 @@ const orderSlice = createSlice({
             return {
                 ...state,
                 loading: false,
-                error: action.payload
+                portererror: action.payload
             }
         },
         porterOrderResponseRequest(state, action) {
@@ -93,6 +93,124 @@ const orderSlice = createSlice({
                 porterCancelResponse:null
             }
         },
+        packedOrderRequest(state, action) {
+            return {
+                ...state,
+                loading: true
+            }
+        },
+        packedOrderSuccess(state, action) {
+            return {
+                ...state,
+                loading: false,
+                packedOrderData: action.payload.packedOrderData
+            }
+        },
+        packedOrderFail(state, action) {
+            return {
+                ...state,
+                loading: false,
+                packedOrderError: action.payload
+            }
+        },
+        clearpackedUpdated(state, action) {
+            return {
+                ...state,
+                loading: false,
+                packedOrderData:null,
+                packedOrderError: null
+            }
+        },
+        getpackedOrderRequest(state, action) {
+            return {
+                ...state,
+                loading: true
+            }
+        },
+        getpackedOrderSuccess(state, action) {
+            return {
+                ...state,
+                loading: false,
+                getpackedOrderData: action.payload.getpackedOrderData
+            }
+        },
+        getpackedOrderFail(state, action) {
+            return {
+                ...state,
+                loading: false,
+                getpackedOrderError: action.payload
+            }
+        },
+        allpackedOrderRequest(state, action) {
+            return {
+                ...state,
+                loading: true
+            }
+        },
+        allpackedOrderSuccess(state, action) {
+            return {
+                ...state,
+                loading: false,
+                allpackedOrderData: action.payload.allpackedOrderData
+            }
+        },
+        allpackedOrderFail(state, action) {
+            return {
+                ...state,
+                loading: false,
+                allpackedOrderError: action.payload
+            }
+        },
+        updatepackedOrderRequest(state, action) {
+            return {
+                ...state,
+                loading: true
+            }
+        },
+        updatepackedOrderSuccess(state, action) {
+            return {
+                ...state,
+                loading: false,
+                updatepackedOrderData: action.payload.allpackedOrderData
+            }
+        },
+        updatepackedOrderFail(state, action) {
+            return {
+                ...state,
+                loading: false,
+                updatepackedOrderError: action.payload
+            }
+        },
+        refundRequest(state, action) {
+            return {
+                ...state,
+                loading: true
+            }
+        },
+        refundSuccess(state, action) {
+            return {
+                ...state,
+                loading: false,
+                refundData: action.payload.refundData
+            }
+        },
+        refundFail(state, action) {
+            return {
+                ...state,
+                loading: false,
+                refundError: action.payload
+            }
+        },
+        clearRefundError(state, action){
+            return{
+                loading: false,
+                refundError: null,
+                refundData:null
+            }
+             
+        }
+        
+        
 
     }
 });
@@ -111,7 +229,28 @@ export const {
     porterCancelRequest,
     porterCancelSuccess,
     porterCancelFail,
-    porterCancelClearError
+    porterCancelClearError,
+    porterRemoveRequest,
+    porterRemoveSuccess,
+    porterRemoveFail,
+    porterRemoveClearError,
+    packedOrderRequest,
+    packedOrderSuccess,
+    packedOrderFail,
+    getpackedOrderRequest,
+    getpackedOrderSuccess,
+    getpackedOrderFail,
+    allpackedOrderRequest,
+    allpackedOrderSuccess,
+    allpackedOrderFail,
+    refundRequest,
+    refundSuccess,
+    refundFail,
+    clearRefundError,
+    updatepackedOrderRequest, 
+    updatepackedOrderSuccess, 
+    updatepackedOrderFail,
+    clearpackedUpdated
  } = actions;
 
 export default reducer;

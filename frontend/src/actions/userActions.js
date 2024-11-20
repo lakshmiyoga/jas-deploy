@@ -23,7 +23,8 @@ import { loginFail,
     forgotPasswordFail,
     resetPasswordRequest,
     resetPasswordSuccess,
-    resetPasswordFail} from "../slices/authSlice";
+    resetPasswordFail,
+    logoutRequest} from "../slices/authSlice";
 
 
     import {
@@ -67,7 +68,7 @@ export const login = createAsyncThunk('post/login', async ({email,password},{dis
     try {
        
               dispatch(registerRequest());
-              console.log(userData)
+              // console.log(userData)
               const config = {
                 headers: {
                     'Content-type': 'multipart/form-data'
@@ -99,8 +100,11 @@ export const login = createAsyncThunk('post/login', async ({email,password},{dis
 export const logout =  async (dispatch) => {
 
   try {
-      await axios.get(`/api/v1/logout`);
-      dispatch(logoutSuccess())
+      dispatch(logoutRequest())
+      const {data} = await axios.get(`/api/v1/logout`);
+      // sessionStorage.removeItem('redirectPath');
+      console.log("data",data);
+      dispatch(logoutSuccess(data))
   } catch (error) {
       dispatch(logoutFail())
   }

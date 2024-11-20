@@ -9,7 +9,12 @@
 # /coverage
 
 # production
-# /build
+/build
+/uploads
+/logs
+/config/config.json
+/config/config.env
+
 
 # misc
 # .DS_Store

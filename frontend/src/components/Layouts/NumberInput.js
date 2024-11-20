@@ -23,6 +23,8 @@ const NumberInput = ({ value, onChange, ...rest }) => {
     <input
       type="number"
       ref={inputRef}
+      min="0"
+      
       value={value}
       onChange={onChange}
       className="no-arrow-input form-control"

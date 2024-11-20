@@ -5,13 +5,15 @@ import { useDispatch, useSelector } from 'react-redux'
 import Loader from '../Layouts/Loader'
 import Product from '.././Product/Product'
 import { toast } from 'react-toastify';
-import { useParams } from 'react-router-dom'
+import { useLocation, useParams } from 'react-router-dom'
 
 
 
 const ProductSearch = () => {
 
     const dispatch = useDispatch();
+    const location = useLocation();
+    // sessionStorage.setItem('redirectPath', location.pathname);
     const { products, loading, error } = useSelector((state) => state.productsState)
     const { keyword } = useParams();
     const [category, setCategory] = useState(null);

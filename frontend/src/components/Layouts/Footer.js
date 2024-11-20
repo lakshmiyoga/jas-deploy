@@ -1,7 +1,11 @@
 import React from 'react'
+import { useSelector } from 'react-redux';
 import { Link } from 'react-router-dom';
 
 const Footer = () => {
+
+  const { isAuthenticated, user } = useSelector(state => state.authState);
+
   return (
     <footer className="footer">
       <div className="footer-container">
@@ -9,70 +13,86 @@ const Footer = () => {
           <h4>Order Now</h4>
           <ul>
             <li>
-          <Link to ='/vegetables' className="unstyled-link">
-            Vegetables
-            </Link>
+              <Link to='/vegetables' className="unstyled-link">
+                Vegetables
+              </Link>
             </li>
             <li>
-            <Link to ='/fruits' className="unstyled-link">
-            Fruits
-            </Link>
+              <Link to='/fruits' className="unstyled-link">
+                Fruits
+              </Link>
             </li>
             <li>
-            <Link to ='/keerai' className="unstyled-link">
-            Keerai
-            </Link>
+              <Link to='/keerai' className="unstyled-link">
+                Keerai
+              </Link>
             </li>
-            
+
           </ul>
         </div>
         <div className="footer-section">
           <h4>Information</h4>
           <ul>
             <li>
-            <Link to ='/termsAndConditions' className="unstyled-link">
-            Terms & Condition
-            </Link>
+              <Link to='/termsAndConditions' className="unstyled-link">
+                Terms & Condition
+              </Link>
             </li>
             <li>
-              <Link to ='/privacyPolicy' className="unstyled-link">
+              <Link to='/privacyPolicy' className="unstyled-link">
                 Privacy Policy
-                </Link>
-                </li>
-                <li>
-              <Link to ='/refundPolicy' className="unstyled-link">
+              </Link>
+            </li>
+            <li>
+              <Link to='/refundPolicy' className="unstyled-link">
                 Refund Policy
-                </Link>
-                </li>
+              </Link>
+            </li>
           </ul>
         </div>
         <div className="footer-section">
           <h4>Other Links</h4>
           <ul>
+            {
+              !isAuthenticated && (
+                <>
+                  <li>
+                    <Link to='/login' className="unstyled-link">
+                      Login
+                    </Link>
+                  </li>
+                  <li>
+                    <Link to='/register' className="unstyled-link">
+                      Register
+                    </Link>
+                  </li>
+                </>
+              )
+            }
+
             <li>
-            <Link to ='/login' className="unstyled-link">
-            Login
-            </Link>
+              <Link to='/enquiry' className="unstyled-link">
+                Enquiry
+              </Link>
             </li>
-          <li>
-          <Link to ='/register' className="unstyled-link">
-            Register
-            </Link>
-          </li>
             <li>
-            <Link to ='/enquiry' className="unstyled-link">
-            Enquiry
-            </Link>
+              <Link to='/about' className="unstyled-link">
+                Aboutus
+              </Link>
             </li>
-            
+
           </ul>
         </div>
         <div className="footer-section">
           <h4>Get In Touch</h4>
           <ul>
             <li>29, Reddy St, Nerkundram, Chennai - 600107</li>
-            <li>+91 91767 20068</li>
-            <li>info@jasfruitsandvegetables.in</li>
+            <li>
+              <a href="tel:+919176720068" class="contact-link">+91 91767 20068</a>
+            </li>
+            <li>
+              <a href="mailto:jasfruitsandvegetables@gmail.com" class="contact-link">jasfruitsandvegetables@gmail.com</a>
+            </li>
           </ul>
         </div>
       </div>
