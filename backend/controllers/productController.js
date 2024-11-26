@@ -37,6 +37,13 @@ const createProducts = catchAsyncError(async (req, res, next) => {
 
     // console.log(name);
 
+     // Trim all string properties in req.body
+     for (let key in req.body) {
+        if (typeof req.body[key] === 'string') {
+            req.body[key] = req.body[key].trim();
+        }
+    }
+
     const newItem = new Product({
         englishName: req.body.englishName,
         tamilName: req.body.tamilName,
@@ -231,6 +238,13 @@ const updateProducts = async (req, res, next) => {
             success: false,
             message: "Product not found"
         });
+    }
+
+      // Trim all string properties in req.body
+      for (let key in req.body) {
+        if (typeof req.body[key] === 'string') {
+            req.body[key] = req.body[key].trim();
+        }
     }
   try{
     product = await Product.findByIdAndUpdate(req.params.id, req.body, {

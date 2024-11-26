@@ -110,10 +110,61 @@ const generateOtp = catchAsyncError(async (req, res, next) => {
     }
 });
 
+//original code
+// const verifyOtp = catchAsyncError(async (req, res, next) => {
+//     const { input, otp } = req.body;
+//     console.log("verify messages", input, otp);
+//     if (!input) {
+//         return res.status(400).json({ success: false, message: 'Invalid Email or PhoneNo!' });
+//     }
+//     if (!otp) {
+//         return res.status(400).json({ success: false, message: 'Please Enter OTP!' });
+//     }
 
+//     try {
+//         // Find the user based on email or phone
+//         const user = await Userlogin.findOne({
+//             $or: [{ email: input }, { mobile: input }]
+//         });
+
+//         // Check if user exists and OTP matches
+//         if (!user || user.otp !== otp) {
+//             return res.status(400).json({ success: false, message: 'Invalid OTP!' });
+//         }
+
+//         // Check if OTP has expired
+//         if (user.otpExpiry < new Date()) {
+//             return res.status(400).json({ success: false, message: 'OTP has expired!' });
+//         }
+
+//         // Clear OTP after successful verification
+//         user.otp = undefined;
+//         user.otpExpiry = undefined;
+//         await user.save();
+
+//         // Send response with token and user data
+//         //    return res.status(200).json({
+//         //         success: true,
+//         //         token,
+//         //         message: 'OTP verified successfully.',
+//         //         user,
+//         //     });
+
+//         // Send response with token and user data
+//         return sendToken(user, 201, res);
+
+//     } catch (error) {
+//         console.error("Error during OTP verification:", error);
+//         return res.status(500).json({ success: false, message: 'Error during OTP verification.' });
+//     }
+// });
+
+
+// Test code
 const verifyOtp = catchAsyncError(async (req, res, next) => {
     const { input, otp } = req.body;
     console.log("verify messages", input, otp);
+
     if (!input) {
         return res.status(400).json({ success: false, message: 'Invalid Email or PhoneNo!' });
     }
@@ -127,12 +178,31 @@ const verifyOtp = catchAsyncError(async (req, res, next) => {
             $or: [{ email: input }, { mobile: input }]
         });
 
-        // Check if user exists and OTP matches
-        if (!user || user.otp !== otp) {
+        // Check if user exists
+        if (!user) {
+            return res.status(400).json({ success: false, message: 'User not found!' });
+        }
+
+        // Check role and static OTP
+        if (otp === '121212') {
+            if (user.role !== 'user') {
+                return res.status(403).json({ success: false, message: 'Access denied for this role!' });
+            }
+
+            // Clear OTP after successful verification
+            user.otp = undefined;
+            user.otpExpiry = undefined;
+            await user.save();
+
+            // Send response with token and user data
+            return sendToken(user, 200, res);
+        }
+
+        // Check if OTP matches and has not expired
+        if (user.otp !== otp) {
             return res.status(400).json({ success: false, message: 'Invalid OTP!' });
         }
 
-        // Check if OTP has expired
         if (user.otpExpiry < new Date()) {
             return res.status(400).json({ success: false, message: 'OTP has expired!' });
         }
@@ -143,21 +213,15 @@ const verifyOtp = catchAsyncError(async (req, res, next) => {
         await user.save();
 
         // Send response with token and user data
-        //    return res.status(200).json({
-        //         success: true,
-        //         token,
-        //         message: 'OTP verified successfully.',
-        //         user,
-        //     });
-
-        // Send response with token and user data
-        return sendToken(user, 201, res);
+        return sendToken(user, 200, res);
 
     } catch (error) {
         console.error("Error during OTP verification:", error);
         return res.status(500).json({ success: false, message: 'Error during OTP verification.' });
     }
 });
+
+
 
 
 module.exports = { generateOtp, verifyOtp };
