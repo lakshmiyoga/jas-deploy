@@ -388,14 +388,14 @@ const ConfirmOrder = () => {
                         <Loader />
                     </div> : ( */}
                     <div className="row justify-content-center">
-                        <div className="col-10 col-md-10 col-lg-8 mt-5 order-confirm" id='order_summary'>
-                            <h4 className="mb-3">Shipping Info</h4>
-                            <div><b>Name:</b> {defaultAddress && defaultAddress.name}</div>
-                            <div><b>Phone:</b> {defaultAddress && defaultAddress.phoneNo}</div>
+                        <div className="col-10 col-md-10 col-lg-8 order-confirm" id='order_summary'>
+                            <h4 className="mb-3 confirmorder_title">Shipping Info</h4>
+                            <div className="confirmorder_name"><b>Name:</b> {defaultAddress && defaultAddress.name}</div>
+                            <div className="confirmorder_phone"><b>Phone:</b> {defaultAddress && defaultAddress.phoneNo}</div>
                             {/* <p className="mb-4"><b>Address:</b> {`${shippingInfo.address},${shippingInfo.landmark},${shippingInfo.area}, ${shippingInfo.city}- ${shippingInfo.postalCode}`}</p> */}
                             {
                                 defaultAddress && (
-                                    <div className="mb-4 address-formatted">
+                                    <div className="mb-4 address-formatted confirmorder_address">
                                         <b>Address:</b>
                                         {defaultAddress.address && `${defaultAddress.address},`}
                                         {defaultAddress.area && `${defaultAddress.area},`}
@@ -407,7 +407,7 @@ const ConfirmOrder = () => {
                             }
 
                             <hr />
-                            <h4 className="mt-4">Your Cart Items:</h4>
+                            <h4 className="mt-4 confirmorder_title">Your Cart Items:</h4>
                             <hr />
                             {cartItems && cartItems.map(item => (
                                 <Fragment key={item.product}>
@@ -419,11 +419,11 @@ const ConfirmOrder = () => {
                                             {/* <div className="col-4 col-lg-4">
                                                     <Link to={`/product/${item.product}`}>{item.name}</Link>
                                                 </div> */}
-                                            <div className="col-4 col-lg-4">
+                                            <div className="col-4 col-lg-4 confirmorder_name">
                                                 {/* <Link to={/product/${item.product}}>{item.name}</Link> */}
                                                 {item && item.range ? `${capitalizeFirstLetter(item.name)} (${item.range})` : `${capitalizeFirstLetter(item.name)}`}
                                             </div>
-                                            <div className="col-4 col-lg-5">
+                                            <div className="col-4 col-lg-5 confirmorder_price">
                                                 <div>{item.productWeight} x Rs.{item.price} = <b>Rs.{(item.productWeight * item.price).toFixed(2)}</b></div>
                                             </div>
                                         </div>
@@ -434,12 +434,12 @@ const ConfirmOrder = () => {
                         </div>
                         <div className="col-10 col-md-10  col-lg-3 my-4">
                             <div id="order_summary">
-                                <h4>Order Summary</h4>
+                                <h4 className="confirmorder_title">Order Summary</h4>
                                 <hr />
-                                <p>Subtotal: <span className="order-summary-values">Rs.{subtotal}</span></p>
-                                <p>Shipping: <span className="order-summary-values">Rs.{shippingCharge && shippingCharge.toFixed(2)}</span></p>
+                                <p className="confirmorder_name">Subtotal: <span className="order-summary-values">Rs.{subtotal}</span></p>
+                                <p className="confirmorder_name">Shipping: <span className="order-summary-values">Rs.{shippingCharge && shippingCharge.toFixed(2)}</span></p>
                                 <hr />
-                                <p>Total: <span className="order-summary-values">Rs.{total}</span></p>
+                                <p className="confirmorder_name">Total: <span className="order-summary-values">Rs.{total}</span></p>
                                 <hr />
                                 {shippingCharge ? (
                                     <button id="checkout_btn" className="btn btn-primary btn-block" onClick={handelopenModal} disabled={loading}>

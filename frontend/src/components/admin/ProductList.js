@@ -20,6 +20,9 @@ const ProductList = ({ isActive, setIsActive }) => {
     const dispatch = useDispatch();
     const [showModal, setShowModal] = useState(false);
     const [productToDelete, setProductToDelete] = useState(null);
+    const [category, setCategory] = useState("");
+    const { getcategory } = useSelector(state => state.categoryState)
+
     console.log("products", products)
 
     const setProducts = () => {
@@ -58,7 +61,16 @@ const ProductList = ({ isActive, setIsActive }) => {
             ],
             rows: []
         }
-        let allproducts = products && [...products].sort((a, b) => a.englishName.localeCompare(b.englishName))
+
+        // Filter products based on selected category
+        let filteredProducts = products;
+        if (category && category !== "All") {
+            filteredProducts = products.filter(product => product.category === category);
+        }
+
+        console.log("filteredProducts",filteredProducts)
+
+        let allproducts = [...filteredProducts]?.sort((a, b) => a.englishName.localeCompare(b.englishName))
         allproducts && allproducts.forEach((product, index) => {
             data.rows.push({
                 s_no: index + 1,
@@ -73,13 +85,13 @@ const ProductList = ({ isActive, setIsActive }) => {
                 name: product && product.range
                     ? `${(product.englishName)}/${(product.tamilName)} (${product.range})`
                     : `${(product.englishName)}/${(product.tamilName)}`,
-                
-            
+
+
                 // price: product.category === "Keerai"
                 //     ? `Rs.${product.buyingPrice} per(${product.measurement && product.measurement=='Grams'? 'Piece' :product.measurement})`
                 //     : `Rs.${product.buyingPrice} per(${product.measurement && product.measurement=='Grams'? 'Piece' :product.measurement})`,
-                price:`Rs.${product.buyingPrice} (per ${product.measurement})`,
-                sellprice:`Rs.${product.price} (per ${product.measurement})`,
+                price: `Rs.${product.buyingPrice} (per ${product.measurement})`,
+                sellprice: `Rs.${product.price} (per ${product.measurement})`,
                 // sellprice: product.category === "Keerai"
                 //  ? `Rs.${product.price} per(${product.measurement && product.measurement=='Grams'? 'Piece' :product.measurement})`
                 //     : `Rs.${product.price} per(${product.measurement && product.measurement=='Grams'? 'Piece' :product.measurement})`,
@@ -184,6 +196,16 @@ const ProductList = ({ isActive, setIsActive }) => {
                 </div>
                 <div className="col-12 col-md-10 smalldevice-space loader-parent">
                     <h1 className="mb-4 admin-dashboard-x">Product List</h1>
+                    <div className="mb-3">
+                        <label htmlFor="categoryFilter" className="form-label mr-3">Filter by Category</label>
+                        <select onChange={e => setCategory(e.target.value)} className="form-select" id="categoryFilter" required>
+                            <option value="">All</option>
+                            {getcategory?.map(categoryItem => (
+                                <option key={categoryItem._id} value={categoryItem.category}>{categoryItem.category}</option>
+                            ))}
+                        </select>
+                    </div>
+                 
 
                     <Fragment>
                         {loading ? (<div className="container loader-loading-center">

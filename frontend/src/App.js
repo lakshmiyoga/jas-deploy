@@ -385,12 +385,16 @@ function App() {
                                             user  && (user.role === "admin" || user.role === "subadmin")  ?
                                                 <Route path="/admin/dashboard" element={<ProtectedRoute isAdmin={true} isSubAdmin={true}><Dashboard isActive={isActive} setIsActive={setIsActive}/></ProtectedRoute>} />
                                                 :
-                                                <Route path="/" element={<LandingPage />} />
+                                                // <Route path="/" element={<LandingPage />} />
+                                                <Route path="/" element={<Home />} />
+                                                
                                         }
-                                       <Route path="/" element={<LandingPage />} />
+                                       {/* <Route path="/" element={<LandingPage />} /> */}
+                                       <Route path="/" element={<Home />} />
+                                       <Route path="/type/:category" element={<LandingPage />} />
                                         
                                         <Route path="/unauthorized" element={<Unauthorized />} />
-                                        {/* <Route path="/keerai" element={<Keerai />} /> */}
+                                        {/* <Route path="/types/:type" element={<Home/>} /> */}
                                         <Route path="/categories/:category" element={<Categories />} />
                                         <Route path="/carousel" element={<CarouselLayout />} />
                                         <Route path="/about" element={<About />} />
@@ -458,7 +462,7 @@ function App() {
                                       
 
                                     </Routes>
-                                    {!isAdminRoute && <Footer className='footer' />}
+                                    {!isAdminRoute && <Footer className='footer'  openSide={openSide} setOpenSide={setOpenSide} onLoginClick={handleLoginClick} setShowLoginModal={setShowLoginModal} />}
                                     <ToastContainer theme="dark" />
 
                                 </div>

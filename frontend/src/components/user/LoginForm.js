@@ -8,6 +8,7 @@ import 'react-toastify/dist/ReactToastify.css';
 import ArrowBackIcon from '@mui/icons-material/ArrowBack';
 import { clearSendOtp, clearVerifyError } from '../../slices/authSlice';
 import LoaderButton from '../Layouts/LoaderButton';
+import NumberInput from '../Layouts/NumberInput';
 
 const LoginForm = ({ showModal, onClose }) => {
     const [input, setInput] = useState('');
@@ -34,17 +35,17 @@ const LoginForm = ({ showModal, onClose }) => {
             setIsValidInput(true);
             return true;
         } else {
-            if(selectedInputType === 'phone'){
-                setInputError('Please enter a phone number.');
+            if (selectedInputType === 'phone') {
+                setInputError('Please enter a valid number.');
                 setIsValidInput(false);
                 return false;
             }
-            else{
+            else {
                 setInputError('Please enter a valid email.');
                 setIsValidInput(false);
                 return false;
             }
-           
+
         }
     };
 
@@ -73,7 +74,7 @@ const LoginForm = ({ showModal, onClose }) => {
             return;
         }
 
-        dispatch(sendOtp({input,inputType:selectedInputType}));
+        dispatch(sendOtp({ input, inputType: selectedInputType }));
         otpInputRefs.current[0]?.focus();
     };
 
@@ -94,7 +95,7 @@ const LoginForm = ({ showModal, onClose }) => {
             return;
         }
         dispatch(clearSendOtp());
-        dispatch(sendOtp({input,inputType:selectedInputType}));
+        dispatch(sendOtp({ input, inputType: selectedInputType }));
         setReSent(true);
         otpInputRefs.current[0]?.focus();
     };
@@ -347,7 +348,7 @@ const LoginForm = ({ showModal, onClose }) => {
     //         // handleFocus(e,index + 1)
     //     }
     //     };
-    const handelBack =()=>{
+    const handelBack = () => {
         setIsOtpSent(false);
         setOtp(Array(6).fill(''));
         setInputError('');
@@ -357,7 +358,7 @@ const LoginForm = ({ showModal, onClose }) => {
         setShowResendLink(false);
 
     }
-    const onCloseHandler = () =>{
+    const onCloseHandler = () => {
         setIsOtpSent(false);
         setOtp(Array(6).fill(''));
         setInputError('');
@@ -378,12 +379,12 @@ const LoginForm = ({ showModal, onClose }) => {
                             <div style={{ display: 'flex', flexDirection: 'row', justifyContent: 'space-between' }}>
                                 {
                                     isOtpSent && (
-                                        <div className="back-button" onClick={() =>handelBack()}>
-                                        <ArrowBackIcon fontSize="small" />
-                                    </div>
+                                        <div className="back-button" onClick={() => handelBack()}>
+                                            <ArrowBackIcon fontSize="small" />
+                                        </div>
                                     )
                                 }
-                               
+
                                 <h5 className="modal-title" style={{ color: '#02441E' }}>Login  to JAS</h5>
                                 <button type="button" className="close" onClick={onCloseHandler}>
                                     <span aria-hidden="true">&times;</span>
@@ -418,7 +419,10 @@ const LoginForm = ({ showModal, onClose }) => {
                     </div>
                     <div className="modal-body" >
 
-                        <form>
+                        <form onSubmit={(e) => {
+                            e.preventDefault(); // Prevent form's default submission
+                            handleSendOtp(); // Call the send OTP function
+                        }}>
                             {!isOtpSent ? (
                                 <div >
                                     {/* <h6>Login or Sign up to your account</h6> */}
@@ -455,8 +459,8 @@ const LoginForm = ({ showModal, onClose }) => {
                                                     backgroundColor: '#ccc',
                                                     marginLeft: '5px'
                                                 }} />
-                                                <input
-                                                    type="text"
+                                                <NumberInput
+                                                    type="number"
                                                     value={input}
                                                     onChange={handleInputChange}
                                                     placeholder="Enter phone number"
@@ -473,7 +477,7 @@ const LoginForm = ({ showModal, onClose }) => {
 
                                     {inputError && <p style={{ color: 'red' }}>{inputError}</p>}
                                     <button
-                                        type="button"
+                                        type="submit"
                                         className="otp-button"
                                         onClick={handleSendOtp}
                                         disabled={sendLoading || !isValidInput}

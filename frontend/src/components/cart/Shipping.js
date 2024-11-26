@@ -278,23 +278,23 @@ const Shipping = () => {
                         const { latitude, longitude, accuracy } = position.coords;
 
                         if (accuracy <= 50) {
-                        setLatitude(parseFloat(latitude.toFixed(6)));
-                        setLongitude(parseFloat(longitude.toFixed(6)));
-                        setAllowed(true);
-                        setIsChanged(true);
-                        setShowModal(false);
-                        setIsButtonDisabled(false);
-                        toast.dismiss();
-                        setTimeout(() => {
-                            toast.success(`Location accuracy is ${Math.round(accuracy)} meters.`, {
-                                position: 'bottom-center',
-                                type: 'success',
-                                autoClose: 700,
-                                transition: Slide,
-                                hideProgressBar: true,
-                                className: 'small-toast',
-                            });
-                        }, 300);
+                            setLatitude(parseFloat(latitude.toFixed(6)));
+                            setLongitude(parseFloat(longitude.toFixed(6)));
+                            setAllowed(true);
+                            setIsChanged(true);
+                            setShowModal(false);
+                            setIsButtonDisabled(false);
+                            toast.dismiss();
+                            setTimeout(() => {
+                                toast.success(`Location accuracy is ${Math.round(accuracy)} meters.`, {
+                                    position: 'bottom-center',
+                                    type: 'success',
+                                    autoClose: 700,
+                                    transition: Slide,
+                                    hideProgressBar: true,
+                                    className: 'small-toast',
+                                });
+                            }, 300);
                         }
                         else {
                             toast.dismiss();
@@ -986,16 +986,20 @@ const Shipping = () => {
                                 }
 
                             </div>
-                            <div className="modal-body d-flex justify-content-center">
+                            {isButtonDisabled ? (
+                                <div style={{ margin: '20px' }}>
+                                    <LoaderButton fullPage={false} size={20} />
+                                </div>) : (
+                                <><div className="modal-body d-flex justify-content-center">
+                                    <button type="button" className="btn btn-info" onClick={handleCurrentLocation} disabled={isButtonDisabled}><i className="fa fa-map-marker" style={{ marginRight: '30px' }}></i>Use Current Location</button>
+                                </div>
+                                    <div className="modal-body d-flex justify-content-center">
+                                        <button type="button" className="btn btn-success" onClick={handleMap} disabled={isButtonDisabled}><i className="fa fa-map-marker" style={{ marginRight: '30px' }}></i>Locate on the Map</button>
+                                    </div>
+                                </>
+                            )
+                            }
 
-                                <button type="button" className="btn btn-info" onClick={handleCurrentLocation} disabled={isButtonDisabled}><i className="fa fa-map-marker" style={{ marginRight: '30px' }}></i>Use Current Location</button>
-
-                            </div>
-                            <div className="modal-body d-flex justify-content-center">
-
-                                <button type="button" className="btn btn-success" onClick={handleMap} disabled={isButtonDisabled}><i className="fa fa-map-marker" style={{ marginRight: '30px' }}></i>Locate on the Map</button>
-
-                            </div>
 
                         </div>
                     </div>

@@ -4,6 +4,7 @@ import { Slide, toast } from 'react-toastify';
 import { addCartItem } from '../../actions/cartActions';
 import NumberInput from '../Layouts/NumberInput';
 import { useLocation } from 'react-router-dom';
+import WeightInput from '../Layouts/WeightInput';
 
 const Product = ({ products, category }) => {
     const [weight, setWeight] = useState({});
@@ -121,52 +122,107 @@ const Product = ({ products, category }) => {
     // };
 
 
-    const handleWeightChange = (productId, value, productCategory, productMeasurement, maximumQuantity) => {
-        // const weightValue = parseFloat(value);
+    // const handleWeightChange = (productId, value, productCategory, productMeasurement, maximumQuantity) => {
+    //     // const weightValue = parseFloat(value);
+    //     let validValue;
+    //     if (productMeasurement === 'Kg') {
+    //         // For non-"Keerai", allow up to two decimal places
+    //         validValue = value.match(/^\d*\.?\d{0,2}$/) ? value : weight[productId];
+    //     } else {
+    //         validValue = value.match(/^\d*$/) ? value : weight[productId]; // Only whole numbers allowed
+    //     }
+
+    //     // Allow empty value for resetting
+    //     if (value === '') {
+    //         setWeight(prevWeights => ({ ...prevWeights, [productId]: '' }));
+    //         return;
+    //     }
+
+    //     const weightValue = parseFloat(validValue);
+
+    //     if (weightValue < 0) {
+    //         return;
+    //     }
+    //     if (!weightvalue) {
+    //         if (productMeasurement) {
+    //             if (weightValue > maximumQuantity) {
+    //                 setweightvalue(true);
+    //                 if (!weightvalue) {
+    //                     toast.dismiss();
+    //                     setTimeout(() => {
+    //                         toast.error(`Cannot exceed ${maximumQuantity} ${productMeasurement}`, {
+    //                             position: 'bottom-center',
+    //                             type: 'error',
+    //                             autoClose: 700,
+    //                             transition: Slide,
+    //                             hideProgressBar: true,
+    //                             className: 'small-toast',
+    //                         });
+    //                         setweightvalue(false);
+    //                     }, 300);
+    //                     setWeight(prevWeights => ({ ...prevWeights, [productId]: '' }));
+    //                     return;
+    //                 }
+    //             }
+    //         }
+    //         setWeight(prevWeights => ({ ...prevWeights, [productId]: weightValue }));
+    //     }
+
+    // };
+
+    const handleWeightChange = (
+        productId,
+        value,
+        productCategory,
+        productMeasurement,
+        maximumQuantity
+    ) => {
         let validValue;
-        if (productMeasurement === 'Kg') {
-            // For non-"Keerai", allow up to two decimal places
-            validValue = value.match(/^\d*\.?\d{0,2}$/) ? value : weight[productId];
+        if (productMeasurement === "Kg") {
+            // Allow leading zero, optional decimal, and up to two decimal places
+            validValue = value.match(/^(0|[1-9]\d*)?(\.\d{0,2})?$/) ? value : weight[productId];
         } else {
-            validValue = value.match(/^\d*$/) ? value : weight[productId]; // Only whole numbers allowed
+            // Only whole numbers allowed
+            validValue = value.match(/^\d*$/) ? value : weight[productId];
         }
 
         // Allow empty value for resetting
-        if (value === '') {
-            setWeight(prevWeights => ({ ...prevWeights, [productId]: '' }));
+        if (value === "") {
+            setWeight((prevWeights) => ({ ...prevWeights, [productId]: "" }));
             return;
         }
 
         const weightValue = parseFloat(validValue);
 
-        if (weightValue < 0) {
+        // Prevent invalid values
+        if (isNaN(weightValue) || weightValue < 0) {
             return;
         }
-        if (!weightvalue) {
-            if (productMeasurement) {
-                if (weightValue > maximumQuantity) {
-                    setweightvalue(true);
-                    if (!weightvalue) {
-                        toast.dismiss();
-                        setTimeout(() => {
-                            toast.error(`Cannot exceed ${maximumQuantity} ${productMeasurement}`, {
-                                position: 'bottom-center',
-                                type: 'error',
-                                autoClose: 700,
-                                transition: Slide,
-                                hideProgressBar: true,
-                                className: 'small-toast',
-                            });
-                            setweightvalue(false);
-                        }, 300);
-                        setWeight(prevWeights => ({ ...prevWeights, [productId]: '' }));
-                        return;
-                    }
+
+        if (productMeasurement) {
+            if (weightValue > maximumQuantity) {
+                setweightvalue(true);
+                toast.dismiss();
+                if (!weightvalue) {
+                    setTimeout(() => {
+                        toast.error(`Cannot exceed ${maximumQuantity} ${productMeasurement}`, {
+                            position: 'bottom-center',
+                            type: 'error',
+                            autoClose: 700,
+                            transition: Slide,
+                            hideProgressBar: true,
+                            className: 'small-toast',
+                        });
+                        setweightvalue(false);
+                    }, 300);
                 }
+
+                setWeight((prevWeights) => ({ ...prevWeights, [productId]: "" }));
+                return;
             }
-            setWeight(prevWeights => ({ ...prevWeights, [productId]: weightValue }));
         }
 
+        setWeight((prevWeights) => ({ ...prevWeights, [productId]: validValue }));
     };
     const calculateRate = (price, weight) => {
         return (price * weight).toFixed(2);
@@ -403,7 +459,7 @@ const Product = ({ products, category }) => {
             if (!correctWeight) {
                 toast.dismiss();
                 setTimeout(() => {
-                    toast.error('Please select weight for the correct item', {
+                    toast.error('Weight should be atleast 0.25kg!', {
                         position: 'bottom-center',
                         type: 'error',
                         autoClose: 700,
@@ -526,10 +582,9 @@ const Product = ({ products, category }) => {
                                             ))}
                                     </datalist>
                                 </td> */}
-                                <td className="Weight">
+                                {/* <td className="Weight">
                                     <NumberInput
-                                        // list={weight-options-${product._id}}
-                                        // list={`weight-options-${product._id}`} // Keep this static
+    
                                         value={weight[product._id]}
                                         onChange={(e) => handleWeightChange(product && product._id, e.target.value, product && product.category, product && product.measurement, product && product.maximumQuantity)}
                                         onFocus={(e) => {
@@ -539,21 +594,12 @@ const Product = ({ products, category }) => {
                                             setTimeout(() => e.target.removeAttribute('list'), 100);
                                         }}
                                         className="form-select no-arrow-input form-control custom-placeholder"
-                                        // placeholder={product && product.category === 'Keerai'?"Select/type Piece":"Select/type weight in Kg"}
-                                        // placeholder={
-                                        //     product
-                                        //         ? product.measurement === 'Piece'
-                                        //             ? "Select/type Piece"
-                                        //             : product.measurement === 'Box'
-                                        //                 ? "Select/type Box"
-                                        //                 : "Select/type weight in Kg"
-                                        //         : "Select/type weight in Kg"
-                                        // }
+                                        
                                         placeholder={`Select/type`}
-                                        // step="0.01"
+                                        
                                         min="0.25"
                                         type="number"
-                                        // min="0"
+                                       
                                     />
                                                                         
                                     <datalist id={`weight-options-${product._id}`}>
@@ -565,33 +611,14 @@ const Product = ({ products, category }) => {
                                                     <option key={i} value={i + 1}>{i + 1}</option>
                                                 ))}
                                     </datalist>
-                                    {/* <select
-                                        value={weight[product._id]}
-                                        onChange={(e) =>
-                                            handleWeightChange(
-                                                product && product._id,
-                                                e.target.value,
-                                                product && product.category,
-                                                product && product.measurement,
-                                                product && product.maximumQuantity
-                                            )
-                                        }
-                                        className="form-select no-arrow-input form-control custom-placeholder"
-                                    >
-                                        {product && product.measurement === 'Kg'
-                                            ? [...Array(6).keys()].map((i) => (
-                                                <option key={i} value={(i + 1) * 0.5}>
-                                                    {(i + 1) * 0.5}
-                                                </option>
-                                            ))
-                                            : [...Array(3).keys()].map((i) => (
-                                                <option key={i} value={i + 1}>
-                                                    {i + 1}
-                                                </option>
-                                            ))}
-                                    </select> */}
+                                    
                                   
-                                </td>
+                                </td> */}
+                                <WeightInput
+                                    product={product}
+                                    weight={weight}
+                                    handleWeightChange={handleWeightChange}
+                                />
                                 <td className="Rate (As Per Weight)">
                                     {weight[product._id] ? `Rs.${calculateRate(product.price, weight[product._id])}` : 'Rs.0.00'}
                                 </td>

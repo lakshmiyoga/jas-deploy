@@ -389,6 +389,7 @@ import { userOrdersClear } from '../../slices/orderSlice';
 import { clearUser, clearlogout, reset } from '../../slices/authSlice';
 import { Slide, toast } from 'react-toastify';
 import { clearProducts } from '../../slices/productsSlice';
+import { getCategories } from '../../actions/categoryAction';
 
 
 const theme = createTheme({
@@ -446,7 +447,7 @@ const StyledInputBase = styled(InputBase)(({ theme }) => ({
 const Header = ({ openSide, setOpenSide, onLoginClick }) => {
   const [searchOpen, setSearchOpen] = useState(false);
   const [bottomNavValue, setBottomNavValue] = useState(0);
-  const [anchorEl, setAnchorEl] = useState(null);
+  const [loginanchorEl, setloginanchorEl] = useState(null);
   const [categoryAnchorEl, setCategoryAnchorEl] = useState(null);
   const [searchQuery, setSearchQuery] = useState('');
   const [lastNonSearchRoute, setLastNonSearchRoute] = useState(null);
@@ -649,13 +650,27 @@ const Header = ({ openSide, setOpenSide, onLoginClick }) => {
     }
   };
 
-
+  // useEffect(()=>{
+  //   if (!getcategory) {
+  //     dispatch(getCategories());
+  // }
+  // })
 
   const handleSearchOpen = () => setSearchOpen(true);
   // const handleSearchClose = () => {setSearchOpen(false);}
 
-  const handleAvatarClick = (event) => setAnchorEl(event.currentTarget);
-  const handleMenuClose = () => setAnchorEl(null);
+  const handleAvatarClick = (event) => {
+    console.log("Avatar clicked", event.currentTarget);
+    setloginanchorEl(event.currentTarget);
+  };
+  const handleMenuClose = () => {
+    console.log("Menu closed");
+    setloginanchorEl(null);
+  };
+
+  useEffect(() => {
+    handleMenuClose();
+  }, [])
 
   const handleCategoryClick = (event) => setCategoryAnchorEl(event.currentTarget);
   const handleCategoryClose = () => setCategoryAnchorEl(null);
@@ -751,23 +766,47 @@ const Header = ({ openSide, setOpenSide, onLoginClick }) => {
                   }}
                 >
                   <div>
-                    <Typography variant="button" color="inherit" style={{ color: 'black', fontWeight: '700px' }}>
-                      OrderNow
+                    <Typography variant="button" color="inherit" style={{ color: '#006400', fontWeight: '700px', textTransform: 'none' }}>
+                      Order Here
                     </Typography>
                     <ArrowDropDownIcon />
                   </div>
-                  <Typography
-                    variant="caption" // Smaller text size
-                    color="inherit"
-                    sx={{
+                 <Typography
+  variant="caption"
+  color="inherit"
+  sx={{
+    marginTop: '-4px',
+    fontSize: '10px',
+    color: 'lightcoral', // Start with lightcoral color
+    fontWeight: 'bold',
+    animation: 'smoothZoom 1.5s infinite ease-in-out',
+    transition: 'color 1.5s ease-in-out', // Smooth color transition
+  }}
+>
+  Fruits & Vegetables
+  <style>
+    {`
+      @keyframes smoothZoom {
+        0% {
+          color: lightcoral;
+          fontWeight: 'bold',
+          transform: scale(1);
+        }
+        50% {
+          color: red;
+          transform: scale(1.2);
+        }
+        100% {
+          color: lightcoral;
+          transform: scale(1);
+        }
+      }
+    `}
+  </style>
+</Typography>
 
-                      marginTop: '-4px', // Slightly move text closer to the "OrderNow" text
-                      fontSize: '10px', // Very small font size
-                      color: '#757575', // Optional: Set a lighter color for contrast
-                    }}
-                  >
-                    Fruits & Vegetables
-                  </Typography>
+
+
                 </IconButton>
 
 
@@ -795,7 +834,7 @@ const Header = ({ openSide, setOpenSide, onLoginClick }) => {
                   }}
                 >
                   {/* Display categories in rows of 3 columns, each with 10 items */}
-                  <Box
+                  {/* <Box
                     sx={{
                       display: 'grid',
                       gridTemplateColumns: `repeat(${Math.min(Math.ceil(getcategory?.filter(cat => cat.type === 'Fresh').length / 10), 4)}, 1fr)`, // Adjust columns dynamically based on item count, max 4 columns
@@ -805,30 +844,38 @@ const Header = ({ openSide, setOpenSide, onLoginClick }) => {
                       // marginTop: 2,
                       justifyContent: 'center',
                     }}
-                  >
-                    {Array.from({ length: Math.ceil(getcategory?.filter(cat => cat.type === 'Fresh').length / 10) }).map((_, columnIndex) => (
-                      <Box key={columnIndex} sx={{ display: 'flex', flexDirection: 'column' }}>
-                        {/* Create a column with up to 10 "Fresh" categories */}
-                        {getcategory?.filter(category => category.type === 'Fresh') // Filter for "Fresh" type
-                          .slice(columnIndex * 10, columnIndex * 10 + 10) // Slice for pagination
-                          .map((category) => (
-                            <MenuItem
-                              key={category._id}
+                  > */}
+                  {Array.from({ length: Math.ceil(getcategory?.filter(cat => cat.type === 'Fresh').length / 10) }).map((_, columnIndex) => (
+                    <Box key={columnIndex} sx={{
+                      display: 'grid',
+                      gridTemplateColumns: `repeat(${Math.min(Math.ceil(getcategory?.filter(cat => cat.type === 'Fresh').length / 10), 4)}, 1fr)`, // Adjust columns dynamically based on item count, max 4 columns
+                      // gap: 2,
+                      maxHeight: 'calc(50vh)', // Limit the max height of the grid
+                      overflowY: 'hidden', // Allow vertical scrolling if categories exceed the height
+                      // marginTop: 2,
+                      justifyContent: 'center',
+                    }}>
+                      {/* Create a column with up to 10 "Fresh" categories */}
+                      {getcategory?.filter(category => category.type === 'Fresh') // Filter for "Fresh" type
+                        .slice(columnIndex * 10, columnIndex * 10 + 10) // Slice for pagination
+                        .map((category) => (
+                          <MenuItem
+                            key={category._id}
 
-                              onClick={() => {
-                                navigate(`/categories/${category.category.toLowerCase()}`, {
-                                  state: { category: category.category },
-                                });
-                                handleCategoryClose();
-                              }}
-                              sx={{ py: 1 }}
-                            >
-                              {category.category}
-                            </MenuItem>
-                          ))}
-                      </Box>
-                    ))}
-                  </Box>
+                            onClick={() => {
+                              navigate(`/categories/${category.category}`, {
+                                state: { category: category.category, type: category.type },
+                              });
+                              handleCategoryClose();
+                            }}
+                            sx={{ py: 1 }}
+                          >
+                            {category.category}
+                          </MenuItem>
+                        ))}
+                    </Box>
+                  ))}
+                  {/* </Box> */}
                 </Menu>
                 <IconButton
                   onClick={handleMonthlyGroceriesClick}
@@ -857,7 +904,7 @@ const Header = ({ openSide, setOpenSide, onLoginClick }) => {
                   }}
                 >
                   <div>
-                    <Typography variant="button" color="inherit" style={{ color: 'black', fontWeight: '700px' }}>
+                    <Typography variant="button" color="inherit" style={{ color: '#006400', fontWeight: '700px', textTransform: 'none' }}>
                       Monthly Groceries
                     </Typography>
                     <ArrowDropDownIcon />
@@ -898,7 +945,7 @@ const Header = ({ openSide, setOpenSide, onLoginClick }) => {
                     horizontal: 'center', // Center the menu horizontally relative to the button
                   }}
                 >
-                  <Box
+                  {/* <Box
                     sx={{
                       display: 'grid',
                       minWidth: '100px',
@@ -908,8 +955,8 @@ const Header = ({ openSide, setOpenSide, onLoginClick }) => {
                       overflowY: 'auto', // Allow vertical scrolling if categories exceed the height
                       // marginTop: 2,
                     }}
-                  >
-                    {/* {['Rice', 'Pulses', 'Spices', 'Cooking Oil', 'dols', 'waters',].map((item) => (
+                  > */}
+                  {/* {['Rice', 'Pulses', 'Spices', 'Cooking Oil', 'dols', 'waters',].map((item) => (
                       <MenuItem
                         key={item}
                         onClick={handleMonthlyGroceriesClose}
@@ -918,29 +965,37 @@ const Header = ({ openSide, setOpenSide, onLoginClick }) => {
                         {item}
                       </MenuItem>
                     ))} */}
-                    {Array.from({ length: Math.ceil(getcategory?.filter(cat => cat.type === 'Groceries').length / 10) }).map((_, columnIndex) => (
-                      <Box sx={{ display: 'flex', flexDirection: 'column' }}>
-                        {/* Create a column with up to 10 "Fresh" categories */}
-                        {getcategory?.filter(category => category.type === 'Groceries') // Filter for "Fresh" type
-                          // .slice(columnIndex * 10, columnIndex * 10 + 10) // Slice for pagination
-                          .map((category) => (
-                            <MenuItem
-                              key={category._id}
-                              // onClick={handleCategoryClose}
-                              onClick={() => {
-                                navigate(`/categories/${category.category.toLowerCase()}`, {
-                                  state: { category: category.category },
-                                });
-                                handleMonthlyGroceriesClose();
-                              }}
-                              sx={{ py: 1 }}
-                            >
-                              {category.category}
-                            </MenuItem>
-                          ))}
-                      </Box>
-                    ))}
-                  </Box>
+                  {Array.from({ length: Math.ceil(getcategory?.filter(cat => cat.type === 'Groceries').length / 10) }).map((_, columnIndex) => (
+                    <Box key={columnIndex} sx={{
+                      display: 'grid',
+                      minWidth: '100px',
+                      gridTemplateColumns: `repeat(${Math.min(Math.ceil(getcategory?.filter(cat => cat.type === 'Groceries').length / 10), 4)}, 1fr)`, // Adjust columns dynamically based on item count, max 4 columns
+                      // gap: 2,
+                      maxHeight: 'calc(50vh)', // Limit the max height of the grid
+                      overflowY: 'hidden', // Allow vertical scrolling if categories exceed the height
+                      // marginTop: 2,
+                    }}>
+                      {/* Create a column with up to 10 "Fresh" categories */}
+                      {getcategory?.filter(category => category.type === 'Groceries') // Filter for "Fresh" type
+                        // .slice(columnIndex * 10, columnIndex * 10 + 10) // Slice for pagination
+                        .map((category) => (
+                          <MenuItem
+                            key={category._id}
+                            // onClick={handleCategoryClose}
+                            onClick={() => {
+                              navigate(`/categories/${category.category}`, {
+                                state: { category: category.category, type: category.type },
+                              });
+                              handleMonthlyGroceriesClose();
+                            }}
+                            sx={{ py: 1 }}
+                          >
+                            {category.category}
+                          </MenuItem>
+                        ))}
+                    </Box>
+                  ))}
+                  {/* </Box> */}
                 </Menu>
 
                 {/* <IconButton onClick={handleAvatarClick} sx={{
@@ -1005,33 +1060,48 @@ const Header = ({ openSide, setOpenSide, onLoginClick }) => {
                   <>
                     <IconButton
                       onClick={handleAvatarClick}
+                      className='navbar-link'
                       sx={{
-                        display: {
-                          xs: 'none', md: 'flex', mr: 2, backgroundColor: 'transparent',
-                          border: 'none', outline: 'none', boxShadow: 'none',
-                          '&:hover': { backgroundColor: 'transparent' },
-                          '&:focus': { outline: 'none' },
-                          '&:active': { backgroundColor: 'transparent', boxShadow: 'none' },
-                          transition: 'none',
-                        }
-                      }}>
+                        display: { xs: 'none', md: 'flex' },
+                        flexDirection: 'column',
+                        alignItems: 'center',
+                        justifyContent: 'center',
+                        mr: 1,
+                        backgroundColor: 'transparent',
+                        border: 'none',
+                        outline: 'none',
+                        boxShadow: 'none',
+                        '&:hover': {
+                          backgroundColor: 'transparent',
+                        },
+                        '&:focus': {
+                          outline: 'none',
+                        },
+                        '&:active': {
+                          backgroundColor: 'transparent',
+                          boxShadow: 'none',
+                        },
+                        transition: 'none',
+                      }}
+                    >
                       {/* <Avatar alt="" src={user?.profilePicture || "/static/images/avatar/2.jpg"} /> */}
                       <div style={{ display: 'flex', flexDirection: 'column', position: 'relative' }}>
                         {user && user.name ? (
-                          <>
+                          <div style={{ display: 'flex', flexDirection: 'row' }}>
                             <div className="avatar-initials">{getInitials(user.name)}</div>
-                          </>
+                            <div><ArrowDropDownIcon /></div>
+                          </div>
                         ) : (
-                          <div className="text-dark dropdown-display">Welcome  <ArrowDropDownIcon /></div>
+                          <div className="welcome-text ">Welcome  <ArrowDropDownIcon className='navbar-link' /></div>
                         )}
 
                       </div>
                     </IconButton>
                     <Menu
-                      sx={{ ml: 3, mt: 6 }}
+                      sx={{ mt: 6 }}
                       id="menu-appbar"
-                      anchorEl={anchorEl}
-                      open={Boolean(anchorEl)}
+                      anchorEl={loginanchorEl}
+                      open={Boolean(loginanchorEl)}
                       onClose={handleMenuClose}
                       anchorOrigin={{
                         vertical: 'top',
@@ -1083,7 +1153,11 @@ const Header = ({ openSide, setOpenSide, onLoginClick }) => {
                   //   LOGIN <i className="fa fa-sign-out" style={{ marginLeft: '3px' }}></i>
                   // </Link>
                   <IconButton
-                    onClick={handleAvatarClick}
+                    // onClick={handleAvatarClick}
+                    onClick={(e) => {
+                      handleAvatarClick(e);
+                      handleMenuClose();
+                    }}
                     sx={{
                       display: {
                         xs: 'none', md: 'flex', mr: 2, backgroundColor: 'transparent',
@@ -1096,7 +1170,10 @@ const Header = ({ openSide, setOpenSide, onLoginClick }) => {
                     }}>
                     {/* <Avatar alt="" src={user?.profilePicture || "/static/images/avatar/2.jpg"} /> */}
                     <div style={{ display: 'flex', flexDirection: 'column', position: 'relative', fontSize: '18px' }}>
-                      <Link onClick={onLoginClick} className="navbar-link" id="login_btn">
+                      <Link onClick={(e) => {
+                        onLoginClick();
+                        handleMenuClose();
+                      }} className="navbar-link" id="login_btn">
                         LOGIN <i className="fa fa-sign-out" style={{ marginLeft: '3px' }}></i>
                       </Link>
                     </div>
@@ -1129,33 +1206,33 @@ const Header = ({ openSide, setOpenSide, onLoginClick }) => {
                   >
                     {cartItems.length > 0 ? (
                       <i
-                      className="fa fa-shopping-cart cart-icon"
-                      style={{
-                        marginRight: '7px', // Spacing between icon and text
-                      }}
-                    ></i>
-                    ):(
-                      <>
-                       <i
-                      className="fa fa-shopping-cart cart-icon"
-                      style={{
-                        marginRight: '7px', // Spacing between icon and text
-                      }}
-                    ></i>
-                   <span
-                        className="text-white cart-text"
+                        className="fa fa-shopping-cart cart-icon"
                         style={{
-                          // top:'1px',
-                          margin: '2px',
-                          fontSize: '13px', // Adjust text size for smaller screens
+                          marginRight: '7px', // Spacing between icon and text
                         }}
-                      >
-                        My Cart
-                      </span>
+                      ></i>
+                    ) : (
+                      <>
+                        <i
+                          className="fa fa-shopping-cart cart-icon"
+                          style={{
+                            marginRight: '7px', // Spacing between icon and text
+                          }}
+                        ></i>
+                        <span
+                          className="text-white cart-text"
+                          style={{
+                            // top:'1px',
+                            margin: '2px',
+                            fontSize: '13px', // Adjust text size for smaller screens
+                          }}
+                        >
+                          My Cart
+                        </span>
                       </>
-                     
+
                     )}
-                    
+
                     {cartItems.length > 0 && (
                       <span
                         id="cart_count"
@@ -1211,7 +1288,7 @@ const Header = ({ openSide, setOpenSide, onLoginClick }) => {
           outline: 'none', // Remove outline
           boxShadow: 'none', // Remove any box shadow that may appear on click/focus
           '&:hover': {
-            color:'#FED235'
+            color: '#FED235'
           },
           '&:focus': {
             outline: 'none', // Remove the outline when the button is focused
@@ -1231,7 +1308,7 @@ const Header = ({ openSide, setOpenSide, onLoginClick }) => {
           outline: 'none', // Remove outline
           boxShadow: 'none', // Remove any box shadow that may appear on click/focus
           '&:hover': {
-            color:'#FED235'
+            color: '#FED235'
           },
           '&:focus': {
             outline: 'none', // Remove the outline when the button is focused
@@ -1254,7 +1331,7 @@ const Header = ({ openSide, setOpenSide, onLoginClick }) => {
           outline: 'none', // Remove outline
           boxShadow: 'none', // Remove any box shadow that may appear on click/focus
           '&:hover': {
-            color:'#FED235'
+            color: '#FED235'
           },
           '&:focus': {
             outline: 'none', // Remove the outline when the button is focused
@@ -1264,7 +1341,7 @@ const Header = ({ openSide, setOpenSide, onLoginClick }) => {
             boxShadow: 'none', // Remove box shadow on active state
           },
           transition: 'none',
-        }} label="Fresh"
+        }} label="Fruits & Vegetables"
           onClick={() => handleNavigation('/fresh')} icon={
             <img
               src="/healthy-food.png"
@@ -1279,7 +1356,7 @@ const Header = ({ openSide, setOpenSide, onLoginClick }) => {
           outline: 'none', // Remove outline
           boxShadow: 'none', // Remove any box shadow that may appear on click/focus
           '&:hover': {
-            color:'#FED235'
+            color: '#FED235'
           },
           '&:focus': {
             outline: 'none', // Remove the outline when the button is focused
@@ -1304,7 +1381,7 @@ const Header = ({ openSide, setOpenSide, onLoginClick }) => {
           outline: 'none', // Remove outline
           boxShadow: 'none', // Remove any box shadow that may appear on click/focus
           '&:hover': {
-            color:'#FED235'
+            color: '#FED235'
           },
           '&:focus': {
             outline: 'none', // Remove the outline when the button is focused

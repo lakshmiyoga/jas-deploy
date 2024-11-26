@@ -1,18 +1,34 @@
-import React from 'react'
+import React, { useEffect } from 'react'
 import { useSelector } from 'react-redux';
 import { Link } from 'react-router-dom';
 
-const Footer = () => {
+const Footer = ({ openSide, setOpenSide, onLoginClick}) => {
 
   const { isAuthenticated, user } = useSelector(state => state.authState);
+  const { getcategory } = useSelector((state) => state.categoryState);
+
+  const freshCategories = getcategory.filter((fresh)=> fresh.type === 'Fresh')
+  const groceriesCategories = getcategory.filter((fresh)=> fresh.type === 'Groceries')
 
   return (
     <footer className="footer">
       <div className="footer-container">
         <div className="footer-section">
-          <h4>Order Now</h4>
+          <h4>Order Here</h4>
           <ul>
-            <li>
+            {freshCategories?.map((categoryItem) => (
+              <li key={categoryItem._id}>
+                <Link
+                  to={`/categories/${categoryItem.category}`}
+                  className="unstyled-link"
+                  state={{ category: categoryItem.category, type: categoryItem.type }}
+                >
+                  {categoryItem.category}
+                </Link>
+              </li>
+            ))}
+            {/* <li>
+              
               <Link to='/vegetables' className="unstyled-link">
                 Vegetables
               </Link>
@@ -26,8 +42,24 @@ const Footer = () => {
               <Link to='/keerai' className="unstyled-link">
                 Keerai
               </Link>
-            </li>
+            </li> */}
 
+          </ul>
+        </div>
+        <div className="footer-section">
+          <h4>Monthly Groceries</h4>
+          <ul>
+            {groceriesCategories?.map((categoryItem) => (
+              <li key={categoryItem._id}>
+                <Link
+                  to={`/categories/${categoryItem.category}`}
+                  className="unstyled-link"
+                  state={{ category: categoryItem.category, type: categoryItem.type }}
+                >
+                  {categoryItem.category}
+                </Link>
+              </li>
+            ))}
           </ul>
         </div>
         <div className="footer-section">
@@ -57,15 +89,15 @@ const Footer = () => {
               !isAuthenticated && (
                 <>
                   <li>
-                    <Link to='/login' className="unstyled-link">
+                    <Link className="unstyled-link" onClick={onLoginClick}>
                       Login
                     </Link>
                   </li>
-                  <li>
+                  {/* <li>
                     <Link to='/register' className="unstyled-link">
                       Register
                     </Link>
-                  </li>
+                  </li> */}
                 </>
               )
             }

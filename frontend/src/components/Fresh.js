@@ -22,7 +22,7 @@ const Fresh = () => {
         title="Jas Fresh fruits&vegetables"
         description="Discover a wide variety of fresh fruits, vegetables, and keerai at our store. Search, filter, and explore organic and high-quality products."
       />
-      <div className="products_heading">Fresh</div>
+      <div className="products_heading">Fruits & Vegetables</div>
       <div className="container " style={{ marginTop: '60px' }}>
         {loading ? (
           <Loader />
@@ -37,7 +37,7 @@ const Fresh = () => {
                 >
                   <Link
                     to={`/categories/${categoryItem.category}`} // Dynamic link based on category name
-                    state={{ category: categoryItem.category }}
+                    state={{ category: categoryItem.category,type: categoryItem.type  }}
                     style={{ textDecoration: 'none' }}
                   >
                     <div className="card p-1 rounded">

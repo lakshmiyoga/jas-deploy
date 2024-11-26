@@ -180,7 +180,7 @@ const Enquiry = () => {
                             />
                         </div>
 
-                        <div className="form-group">
+                        {/* <div className="form-group">
                             <label htmlFor="message_field">Message <span style={{ color: 'red' }}>*</span></label>
                             <textarea
                                 id="message_field"
@@ -190,7 +190,30 @@ const Enquiry = () => {
                                 value={formData.message}
                                 onChange={handleChange}
                             />
+                        </div> */}
+
+                        <div className="form-group">
+                            <label htmlFor="message_field">
+                                Message <span style={{ color: 'red' }}>*</span>
+                            </label>
+                            <textarea
+                                id="message_field"
+                                name="message"
+                                className="form-control"
+                                style={{ height: "20vh" }}
+                                maxLength="1000"
+                                value={formData.message}
+                                onChange={(e) => {
+                                    if (e.target.value.length <= 300) {
+                                        handleChange(e); // Update form data
+                                    }
+                                }}
+                            />
+                            <small className="text-muted">
+                                {300 - formData.message.length} characters remaining
+                            </small>
                         </div>
+
                         {/* <div className="form-group">
                             <label htmlFor="files_field">Upload Files (JPEG, JPG, PNG, PDF) - Max total size: 10MB</label>
                             <input

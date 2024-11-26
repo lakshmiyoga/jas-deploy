@@ -826,7 +826,7 @@ const UpdateAddress = () => {
                                 }
 
                             </div>
-                            <div className="modal-body d-flex justify-content-center">
+                            {/* <div className="modal-body d-flex justify-content-center">
 
                                 <button type="button" className="btn btn-info" onClick={handleCurrentLocation} disabled={isButtonDisabled}><i className="fa fa-map-marker" style={{ marginRight: '30px' }}></i>Use Current Location</button>
 
@@ -835,7 +835,20 @@ const UpdateAddress = () => {
 
                                 <button type="button" className="btn btn-success" onClick={handleMap} disabled={isButtonDisabled}><i className="fa fa-map-marker" style={{ marginRight: '30px' }}></i>Locate on the Map</button>
 
-                            </div>
+                            </div> */}
+                             {isButtonDisabled ? (
+                                <div style={{ margin: '20px' }}>
+                                    <LoaderButton fullPage={false} size={20} />
+                                </div>) : (
+                                <><div className="modal-body d-flex justify-content-center">
+                                    <button type="button" className="btn btn-info" onClick={handleCurrentLocation} disabled={isButtonDisabled}><i className="fa fa-map-marker" style={{ marginRight: '30px' }}></i>Use Current Location</button>
+                                </div>
+                                    <div className="modal-body d-flex justify-content-center">
+                                        <button type="button" className="btn btn-success" onClick={handleMap} disabled={isButtonDisabled}><i className="fa fa-map-marker" style={{ marginRight: '30px' }}></i>Locate on the Map</button>
+                                    </div>
+                                </>
+                            )
+                            }
 
                         </div>
                     </div>

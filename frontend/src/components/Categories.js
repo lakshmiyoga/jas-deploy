@@ -11,18 +11,21 @@ import { useLocation } from 'react-router-dom';
 import { Link } from 'react-router-dom'
 import Card from 'react-bootstrap/Card';
 import CarouselLayout from './Layouts/CarouselLayout'
+import { getCategories } from '../actions/categoryAction'
 
 
 
 const Categories = () => {
   const location = useLocation();
-//   sessionStorage.setItem('redirectPath', location.pathname);
-  const { category } = location.state || {} ;
+  //   sessionStorage.setItem('redirectPath', location.pathname);
+  const { category, type } = location.state || {};
   // const dispatch = useDispatch();
   const { products, loading, error } = useSelector((state) => state.productsState);
   console.log(products);
-  console.log("category",category);
+  console.log("category", category);
   const [keyword, setKeyword] = useState("")
+  const { getcategory } = useSelector((state) => state.categoryState);
+  const dispatch = useDispatch();
 
   const filterCategories = products ? products.filter((product) => product.category === category) : [];
   // console.log(vegetables);
@@ -33,6 +36,12 @@ const Categories = () => {
   // Sort the filtered vegetables in ascending order by name
   //  const sortedVegetables = filteredVegetable.sort();
   const sortedCategories = searchCategory.sort((a, b) => a.englishName.localeCompare(b.englishName));
+
+// useEffect(()=>{
+//   if (!getcategory) {
+//     dispatch(getCategories());
+// }
+// })
 
   return (
     <Fragment>
@@ -46,11 +55,11 @@ const Categories = () => {
           />
 
           <div className="products_heading">{category}</div>
-          <div className="search-responsive col-12 col-md-6 mt-2 mt-md-0" style={{ display: 'flex', alignItems: 'center', justifyContent: 'center', position: 'relative', minWidth: '100%', height: 'auto', flexDirection: 'column',margin:'0px',padding:'0px',overflowX:'hidden' }}>
+          <div className="search-responsive col-12 col-md-6 mt-2 mt-md-0" style={{ display: 'flex', alignItems: 'center', justifyContent: 'center', position: 'relative', minWidth: '100%', height: 'auto', flexDirection: 'column', margin: '0px', padding: '0px', overflowX: 'hidden' }}>
             <div style={{ display: 'flex', flexDirection: 'row', position: 'relative', width: '100%', justifyContent: 'center', alignItems: 'center' }}>
               <Search keyword={keyword} setKeyword={setKeyword} />
             </div>
-            
+
             {/* <div style={{ display: 'flex', flexDirection: 'row', position: 'relative', width: '100%', justifyContent: 'center', alignItems: 'center', marginTop: '20px' }}>
               <div className="card card-vegetbles  col-sm-2 col-md-2 col-lg-2 my-2 landingpage-card-vegetables">
                 <Link to="/fruits" state={{ category: 'Fruits' }} style={{ textDecoration: 'none' }}>
@@ -82,13 +91,18 @@ const Categories = () => {
                 </Link>
               </div>
             </div> */}
-            <div style={{display:'flex',justifyContent:'center',alignItems:'center',position:'relative',maxWidth:'100vw',height:'auto',marginTop:'30px',overflowX:'hidden'}}>
-            <CarouselLayout category={category}/>
+            <div style={{ display: 'flex', justifyContent: 'center', alignItems: 'center', position: 'relative', maxWidth: '100vw', height: 'auto', marginTop: '30px', overflowX: 'hidden' }}>
+              <CarouselLayout category={category} type={type} />
             </div>
           </div>
           {
             sortedCategories.length === 0 ? (
-              <h2 style={{ textAlign: 'center' }}>Product not found</h2>
+              // <h2 style={{ textAlign: 'center' }}>Product not found</h2>
+              <div className="product-not-found">
+                <img src="../images/not-found.jpg" alt="No Products Found" />
+                <p>Product Not Found</p>
+              </div>
+
             ) : (
               <section id="products" className="container">
                 <div className="row">

@@ -22,7 +22,7 @@ const Groceries = () => {
         title="Jas Groceries"
         description="Discover a wide variety of Groceries at our store. Search, filter, and explore and high-quality products."
       />
-      <div className="products_heading">Groceries</div>
+      <div className="products_heading"> Monthly Groceries</div>
       <div className="container " style={{ marginTop: '60px' }}>
         {loading ? (
           <Loader />
@@ -37,7 +37,7 @@ const Groceries = () => {
                 >
                   <Link
                     to={`/categories/${categoryItem.category}`} // Dynamic link based on category name
-                    state={{ category: categoryItem.category }}
+                    state={{ category: categoryItem.category, type: categoryItem.type }}
                     style={{ textDecoration: 'none' }}
                   >
                     <div className="card p-1 rounded">

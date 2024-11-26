@@ -16,7 +16,7 @@ const SearchProduct = ({ products, category }) => {
     const [searchResults, setSearchResults] = useState([]);
     const queryParams = new URLSearchParams(location.search);
     const query = queryParams.get('query') || '';
-    console.log("searchResults",searchResults);
+    console.log("searchResults", searchResults);
     // sessionStorage.setItem('redirectPath', location.pathname);
 
     console.log("products", products)
@@ -187,85 +187,85 @@ const SearchProduct = ({ products, category }) => {
     return (
         <div className="container mt-2  table-product">
             <div className="table-responsive">
-            {searchResults && searchResults.length >0 ? (
-                 <table className="table table-bordered">
-                 <thead>
-                     <tr>
-                         <th>S.No</th>
-                         <th>Products Image</th>
-                         <th>Products Name</th>
-                         <th>Price</th>
-                         {/* {category === 'Keerai' ? <th>Weight(Piece)</th>:<th>Weight(KG)</th>}    */}
-                         <th>Quantity</th>
-                         <th>Rate (As Per Weight)</th>
-                         <th>Stock</th>
-                         <th>Add to Cart</th>
-                     </tr>
-                 </thead>
-                 <tbody>
-                     {searchResults && searchResults.length >0 ? ( searchResults.map((product, index) => (
-                         <tr key={product._id}>
-                             <td className="serial-number">{index + 1}</td>
-                             <td className="products-image" >
-                                 {product.images[0] && product.images[0].image && (
-                                     <img
-                                         className="img-size"
-                                         src={product.images[0].image}
-                                         alt={capitalizeFirstLetter(product.englishName)}
-                                     />
-                                 )}
-                             </td>
-                             {/* <td className="Products Name" style={{fontSize:'17px'}}>
+                {searchResults && searchResults.length > 0 ? (
+                    <table className="table table-bordered">
+                        <thead>
+                            <tr>
+                                <th>S.No</th>
+                                <th>Products Image</th>
+                                <th>Products Name</th>
+                                <th>Price</th>
+                                {/* {category === 'Keerai' ? <th>Weight(Piece)</th>:<th>Weight(KG)</th>}    */}
+                                <th>Quantity</th>
+                                <th>Rate (As Per Weight)</th>
+                                <th>Stock</th>
+                                <th>Add to Cart</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            {searchResults && searchResults.length > 0 ? (searchResults.map((product, index) => (
+                                <tr key={product._id}>
+                                    <td className="serial-number">{index + 1}</td>
+                                    <td className="products-image" >
+                                        {product.images[0] && product.images[0].image && (
+                                            <img
+                                                className="img-size"
+                                                src={product.images[0].image}
+                                                alt={capitalizeFirstLetter(product.englishName)}
+                                            />
+                                        )}
+                                    </td>
+                                    {/* <td className="Products Name" style={{fontSize:'17px'}}>
                                  {capitalizeFirstLetter(product.englishName)}/{capitalizeFirstLetter(product.tamilName)}
                              </td> */}
-                             <td className="Products Name" style={{ fontSize: '17px' }}>
-                                 {product && product.range
-                                     ? `${capitalizeFirstLetter(product.englishName)}/${capitalizeFirstLetter(product.tamilName)} (${product.range})`
-                                     // : `${capitalizeFirstLetter(product.englishName)}/${capitalizeFirstLetter(product.tamilName)}`
-                                     : `${capitalizeFirstLetter(product.englishName)}/${capitalizeFirstLetter(product.tamilName)}`
-                                 }
-                             </td>
-                             {/* <td className="Price" style={{whiteSpace:'nowrap'}}>
+                                    <td className="Products Name" style={{ fontSize: '17px' }}>
+                                        {product && product.range
+                                            ? `${capitalizeFirstLetter(product.englishName)}/${capitalizeFirstLetter(product.tamilName)} (${product.range})`
+                                            // : `${capitalizeFirstLetter(product.englishName)}/${capitalizeFirstLetter(product.tamilName)}`
+                                            : `${capitalizeFirstLetter(product.englishName)}/${capitalizeFirstLetter(product.tamilName)}`
+                                        }
+                                    </td>
+                                    {/* <td className="Price" style={{whiteSpace:'nowrap'}}>
                                  Rs.{product.price}(per {product.measurement})
                                  </td> */}
-                             <td className="Price" style={{ whiteSpace: 'nowrap' }}>
-                                 Rs.{product.price}(per{" "} {product && product.measurement}
+                                    <td className="Price" style={{ whiteSpace: 'nowrap' }}>
+                                        Rs.{product.price}(per{" "} {product && product.measurement}
 
-                                 )
-                             </td>
+                                        )
+                                    </td>
 
 
-                             <td className="Weight">
-                                 <NumberInput
-                                     // list={weight-options-${product._id}}
-                                     // list={`weight-options-${product._id}`} // Keep this static
-                                     value={weight[product._id]}
-                                     onChange={(e) => handleWeightChange(product && product._id, e.target.value, product && product.category, product && product.measurement, product && product.maximumQuantity)}
-                                     onFocus={(e) => {
-                                         e.target.setAttribute('list', `weight-options-${product._id}`);
-                                     }}
-                                     onBlur={(e) => {
-                                         setTimeout(() => e.target.removeAttribute('list'), 100);
-                                     }}
-                                     className="form-select no-arrow-input form-control custom-placeholder"
+                                    <td className="Weight">
+                                        <NumberInput
+                                            // list={weight-options-${product._id}}
+                                            // list={`weight-options-${product._id}`} // Keep this static
+                                            value={weight[product._id]}
+                                            onChange={(e) => handleWeightChange(product && product._id, e.target.value, product && product.category, product && product.measurement, product && product.maximumQuantity)}
+                                            onFocus={(e) => {
+                                                e.target.setAttribute('list', `weight-options-${product._id}`);
+                                            }}
+                                            onBlur={(e) => {
+                                                setTimeout(() => e.target.removeAttribute('list'), 100);
+                                            }}
+                                            className="form-select no-arrow-input form-control custom-placeholder"
 
-                                     placeholder={`Select/type weight in ${product && product.measurement}`}
-                                     // step="0.01"
-                                     min="0.25"
-                                     type="number"
-                                 // min="0"
-                                 />
+                                            placeholder={`Select/type weight in ${product && product.measurement}`}
+                                            // step="0.01"
+                                            min="0.25"
+                                            type="number"
+                                        // min="0"
+                                        />
 
-                                 <datalist id={`weight-options-${product._id}`}>
-                                     {product && product.measurement === 'Kg'
-                                         ? [...Array(6).keys()].map(i => (
-                                             <option key={i} value={(i + 1) * 0.5}></option>
-                                         ))
-                                         : [...Array(3).keys()].map(i => (
-                                             <option key={i} value={i + 1}>{i + 1}</option>
-                                         ))}
-                                 </datalist>
-                                 {/* <select
+                                        <datalist id={`weight-options-${product._id}`}>
+                                            {product && product.measurement === 'Kg'
+                                                ? [...Array(6).keys()].map(i => (
+                                                    <option key={i} value={(i + 1) * 0.5}></option>
+                                                ))
+                                                : [...Array(3).keys()].map(i => (
+                                                    <option key={i} value={i + 1}>{i + 1}</option>
+                                                ))}
+                                        </datalist>
+                                        {/* <select
                                      value={weight[product._id]}
                                      onChange={(e) =>
                                          handleWeightChange(
@@ -291,44 +291,51 @@ const SearchProduct = ({ products, category }) => {
                                          ))}
                                  </select> */}
 
-                             </td>
-                             <td className="Rate (As Per Weight)">
-                                 {weight[product._id] ? `Rs.${calculateRate(product.price, weight[product._id])}` : 'Rs.0.00'}
-                             </td>
-                             <td className="Stock">{product.stocks}</td>
-                             <td className="Add to Cart">
+                                    </td>
+                                    <td className="Rate (As Per Weight)">
+                                        {weight[product._id] ? `Rs.${calculateRate(product.price, weight[product._id])}` : 'Rs.0.00'}
+                                    </td>
+                                    <td className="Stock">{product.stocks}</td>
+                                    <td className="Add to Cart">
 
-                                 <button
-                                     className={product.stocks === 'Stock' ? "btn-add" : "btn-add-no"}
-                                     onClick={() => handleAddToCart(product)}
-                                     style={{
-                                         backgroundColor: product.stocks === 'Stock' ? "#02441E" : "",
-                                         color: "white",
-                                         borderRadius: "40px",
-                                         cursor: product.stocks === 'Stock' ? 'pointer' : 'not-allowed'
-                                     }}
-                                     disabled={product.stocks === 'No Stock'}
-                                 >
-                                     Add
-                                 </button>
-                             </td>
-                         </tr>
-                     ))) : (
-                         <div>
-                             Product Not Found
-                         </div>
-                     )
-                     
-                 }
-                 </tbody>
-             </table>
-            ):(
-                <div style={{display:'flex',justifyContent:'center',alignItems:'center',marginTop:'40px'}}>
-                <h3>Product Not Found</h3>
-                </div>
-                
-            )}
-               
+                                        <button
+                                            className={product.stocks === 'Stock' ? "btn-add" : "btn-add-no"}
+                                            onClick={() => handleAddToCart(product)}
+                                            style={{
+                                                backgroundColor: product.stocks === 'Stock' ? "#02441E" : "",
+                                                color: "white",
+                                                borderRadius: "40px",
+                                                cursor: product.stocks === 'Stock' ? 'pointer' : 'not-allowed'
+                                            }}
+                                            disabled={product.stocks === 'No Stock'}
+                                        >
+                                            Add
+                                        </button>
+                                    </td>
+                                </tr>
+                            ))) : (
+                                <div>
+                                    <div className="product-not-found">
+                                        <img src="../images/not-found.jpg" alt="No Products Found" />
+                                        <p>Product Not Found</p>
+                                    </div>
+                                </div>
+                            )
+
+                            }
+                        </tbody>
+                    </table>
+                ) : (
+                    <div style={{ display: 'flex', justifyContent: 'center', alignItems: 'center', marginTop: '40px' }}>
+                        {/* <h3>Product Not Found</h3> */}
+                        <div className="product-not-found">
+                            <img src="../images/not-found.jpg" alt="No Products Found" />
+                            <p>Product Not Found</p>
+                        </div>
+                    </div>
+
+                )}
+
             </div>
         </div>
     );
