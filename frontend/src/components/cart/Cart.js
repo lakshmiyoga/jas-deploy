@@ -12,6 +12,7 @@ import { getProduct } from '../../actions/productAction';
 import axios from 'axios';
 import LoaderButton from '../Layouts/LoaderButton';
 import NumberInput from '../Layouts/NumberInput';
+import { addCartItem } from '../../actions/cartActions';
 
 const Cart = ({ openSide, setOpenSide, onLoginClick }) => {
     // const [items, setItems] = useState(() => {
@@ -460,6 +461,7 @@ const Cart = ({ openSide, setOpenSide, onLoginClick }) => {
         );
         setItems(updatedItems);
         localStorage.setItem("cartItems", JSON.stringify(updatedItems));
+        dispatch(addCartItem({ productId, quantity:'', productWeight: weightValue }));
         setItems(JSON.parse(localStorage.getItem("cartItems")) || []);
     };
 
@@ -567,7 +569,7 @@ const Cart = ({ openSide, setOpenSide, onLoginClick }) => {
                             // <h2 className="cart_text mt-5 " style={{ display: 'flex', alignItems: 'center', justifyContent: 'center', postion: 'relative', height: '20vh' }}>
                             //     Your Cart is Empty
                             // </h2>
-                            <div className="product-not-found">
+                            <div className="Cartproduct-not-found">
                                 <img src="../images/empty-cart.jpg" alt="No Products Found" />
                                 <p>Your Cart is Empty</p>
                                 <Link to="/"> <button className="btn ms-2" style={{ backgroundColor: '#02441E', color: 'white' }}> Add Items</button> </Link>

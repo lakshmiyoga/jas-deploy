@@ -392,6 +392,7 @@ import { clearProducts } from '../../slices/productsSlice';
 import { getCategories } from '../../actions/categoryAction';
 
 
+
 const theme = createTheme({
   components: {
     MuiAppBar: {
@@ -455,7 +456,6 @@ const Header = ({ openSide, setOpenSide, onLoginClick }) => {
   const { getcategory } = useSelector((state) => state.categoryState);
   console.log("getcategory", getcategory);
 
-
   const useWindowWidth = () => {
     const [windowWidth, setWindowWidth] = useState(window.innerWidth);
 
@@ -478,7 +478,9 @@ const Header = ({ openSide, setOpenSide, onLoginClick }) => {
   const [refresh, setRefresh] = useState(false);
   const { loading, userOrders, error } = useSelector(state => state.orderState)
 
-  console.log('loggedout message', loggedoutmessage, isloggedout)
+  
+console.log("cartItems",cartItems)
+
 
   const logoutHandler = (e) => {
     // e.preventDefault();
@@ -784,7 +786,7 @@ const Header = ({ openSide, setOpenSide, onLoginClick }) => {
   }}
 >
   Fruits & Vegetables
-  <style>
+  {/* <style>
     {`
       @keyframes smoothZoom {
         0% {
@@ -802,7 +804,7 @@ const Header = ({ openSide, setOpenSide, onLoginClick }) => {
         }
       }
     `}
-  </style>
+  </style> */}
 </Typography>
 
 

@@ -22,7 +22,10 @@ const SidebarButtons = () => {
 
   const buttons = [
     { name: 'Profile', icon: <PersonIcon />, onClick: () =>  navigate('/myprofile') },
-    { name: 'Dashboard', icon: <DashboardIcon />, onClick: () =>navigate('/admin/dashboard') },
+    // { name: 'Dashboard', icon: <DashboardIcon />, onClick: () =>navigate('/admin/dashboard') },
+    ...(user.role === 'admin' || user.role === 'subadmin'
+    ? [{ name: 'Dashboard', icon: <DashboardIcon />, onClick: () => navigate('/admin/dashboard') }]
+    : []),
     { name: 'My Orders', icon: <ShoppingCartIcon />, onClick: () =>  navigate('/orders') },
     { name: 'Logout', icon: <LogoutIcon />, onClick: (e) =>  logoutHandler(e) },
   ];

@@ -1,3 +1,4 @@
+
 // import React, { useEffect, useState } from 'react';
 // import { useDispatch, useSelector } from 'react-redux';
 // import { Carousel } from 'primereact/carousel';
@@ -7,7 +8,7 @@
 // import 'primeicons/primeicons.css';
 // import { getCategories } from '../../actions/categoryAction';
 
-// export default function CarouselLayout({ category, type }) {
+// export default function CarouselLayout({ category , type}) {
 //     const { getcategory } = useSelector((state) => state.categoryState);
 //     const dispatch = useDispatch();
 //     const [cardWidth, setCardWidth] = useState(0); // Initial width
@@ -22,12 +23,25 @@
 //         { breakpoint: '480.5px', numVisible: 3, numScroll: 1 },
 //     ];
 
+//     // const carouselElement = document.querySelector('.carosel-content');
 //     useEffect(() => {
 //         if (!getcategory) {
 //             dispatch(getCategories());
 //         }
 
 //         // Calculate card width based on screen width and numVisible value
+//         const updateCardWidth = () => {
+//             const carouselElement = document.querySelector('.carosel-content'); // Get carousel container
+//             if (!carouselElement) return;
+
+//             const innerWidth = window.innerWidth;
+//             const width = innerWidth * 0.97;
+//             // const width = carouselElement.offsetWidth;
+//             const option = responsiveOptions.find(opt => width <= parseInt(opt.breakpoint)) || responsiveOptions[0];
+//             const calculatedWidth = width / option.numVisible; // Calculate the card width based on visible items
+//             setCardWidth(calculatedWidth); // Update the state with the calculated width
+//         };
+
 //         // const updateCardWidth = () => {
 //         //     const width = window.innerWidth;
 //         //     // Find the matching responsive option based on current screen size
@@ -35,16 +49,6 @@
 //         //     const calculatedWidth = (width) / option.numVisible; // Calculate based on screen width and number of visible items
 //         //     setCardWidth(calculatedWidth); // Set the new card width
 //         // };
-//         const updateCardWidth = () => {
-//             const carouselElement = document.querySelector('.carosel-content'); // Get carousel container
-//             if (!carouselElement) return;
-
-//             const width = carouselElement.offsetWidth; // Actual width of the carousel container
-//             const option = responsiveOptions.find(opt => width <= parseInt(opt.breakpoint)) || responsiveOptions[0];
-//             const calculatedWidth = width / option.numVisible; // Calculate the card width based on visible items
-//             setCardWidth(calculatedWidth); // Update the state with the calculated width
-//         };
-
 //         // Call it initially
 //         updateCardWidth();
 
@@ -55,19 +59,18 @@
 //         return () => window.removeEventListener('resize', updateCardWidth);
 
 //     }, [getcategory, dispatch]);
-//     console.log("getcategory", getcategory)
+    
 
 //     const filteredCategories = getcategory?.filter((item) => item.category !== category && item.type === type);
-//     console.log("filteredCategories", filteredCategories)
 
 //     const productTemplate = (product) => (
 //         <div style={{
-//             // maxWidth: `${cardWidth}px`,
-//             // minWidth: `${cardWidth}px`,
-//             // minHeight: `${cardWidth}px`,
-//             // maxHeight: `${cardWidth}px`,
-//             width: `${cardWidth}px`,
-//             height: `${cardWidth}px`,
+//             maxWidth: `${cardWidth}px`,
+//             // width:`${cardWidth}px`,
+//             // height:`${cardWidth}px`,
+//             minWidth: `${cardWidth}px`,
+//             minHeight: `${cardWidth}px`,
+//             maxHeight: `${cardWidth}px`,
 //             margin: '5px',
 //             display: 'flex',
 //             flexDirection: 'column',
@@ -77,14 +80,15 @@
 //             boxSizing: 'border-box',
 //             // backgroundColor: '#fff',
 //         }}>
-//             <Link to={`/categories/${product.category}`} state={{ category: product.category, type: product.type }} style={{ textDecoration: 'none', padding: '0px', margin: '0px' }}>
+//             <Link to={`/categories/${product.category}`} state={{ category: product.category , type:product.type}} style={{ textDecoration: 'none', padding: '0px', margin: '0px' }}>
 //                 <div className="carosel-card" style={{
-//                     // maxWidth: `${cardWidth}px`,
-//                     // minWidth: `${cardWidth}px`,
-//                     width: `${cardWidth}px`,
+//                     maxWidth: `${cardWidth}px`,
+//                     // width:`${cardWidth}px`,
+//                     // height:`${cardWidth}px`,
+//                     minWidth: `${cardWidth}px`,
 //                     height: `${cardWidth}px`,
 //                     border: '1px solid #ddd',
-//                     borderRadius: '8px',
+//                     borderRadius: '5px',
 //                     padding: '0px',
 //                     margin: '0px',
 //                     overflow: 'hidden',
@@ -92,7 +96,7 @@
 //                     flexDirection: 'column',
 //                     justifyContent: 'center',
 //                     alignItems: 'center',
-//                     backgroundColor: '#fff',
+//                      backgroundColor: '#fff',
 //                 }}>
 //                     {product.images && product.images.length > 0 ? (
 //                         <img src={product.images[0].image} alt={product.name} style={{
@@ -107,7 +111,7 @@
 //                     <div style={{
 //                         color: 'black',
 //                         fontWeight: 'bold'
-//                     }} className="card-title-vegetable">{product.name}
+//                     }} className="card-title-carousel">{product.name}
 //                     </div>
 //                 </div>
 //             </Link>
@@ -115,13 +119,14 @@
 //     );
 
 //     return (
-//         <div style={{ display: 'flex', justifyContent: 'center', alignItems: 'center', maxWidth: '97vw', width: 'auto', overflow: 'hidden', position: 'relative', backgroundColor: '#f5f5f5', padding: '15px' }}>
+//         <div style={{ display: 'flex', justifyContent: 'center', alignItems: 'center',maxWidth:'97vw', width: 'auto', overflow: 'hidden', position: 'relative', backgroundColor: '#f5f5f5', padding: '15px' }}>
 //             {
 //                 filteredCategories && (
 //                     <Carousel
 //                         value={filteredCategories || []}
 //                         numScroll={1}
-//                         numVisible={responsiveOptions[0].numVisible} // First option is used for the initial visible count
+//                         numVisible={ responsiveOptions[0].numVisible} // Dynamically set based on card width
+//                         // responsiveOptions={responsiveOptions}
 //                         responsiveOptions={responsiveOptions}
 //                         circular
 //                         autoplay // Enable autoplay
@@ -130,7 +135,7 @@
 //                         showIndicators={true}
 //                         showNavigators={true}
 //                         className='carosel-content'
-//                         style={{ maxWidth: '100%', width: 'auto', padding: '0px', margin: '3px', boxSizing: 'border-box', height: 'auto' }}
+//                         style={{maxWidth: '100%', width: 'auto', padding: '0px', margin: '3px', boxSizing: 'border-box', height: 'auto' }}
 //                     />
 //                 )
 //             }
@@ -148,11 +153,29 @@ import 'primereact/resources/primereact.min.css';
 import 'primeicons/primeicons.css';
 import { getCategories } from '../../actions/categoryAction';
 
-export default function CarouselLayout({ category , type}) {
+const useWindowWidth = () => {
+    const [windowWidth, setWindowWidth] = useState(window.innerWidth);
+
+    useEffect(() => {
+      const handleResize = () => setWindowWidth(window.innerWidth);
+
+      window.addEventListener('resize', handleResize);
+
+      // Cleanup event listener on component unmount
+      return () => window.removeEventListener('resize', handleResize);
+    }, []);
+
+    return windowWidth;
+  };
+
+export default function CarouselLayout({ category,type }) {
     const { getcategory } = useSelector((state) => state.categoryState);
     const dispatch = useDispatch();
-    const [cardWidth, setCardWidth] = useState(0); // Initial width
+    const windowWidth = useWindowWidth();
+    console.log("windowWidth",windowWidth)
     // console.log("cardwidth",cardWidth)
+
+  
 
     const responsiveOptions = [
         { breakpoint: '2000.5px', numVisible: 8, numScroll: 1 },
@@ -163,80 +186,84 @@ export default function CarouselLayout({ category , type}) {
         { breakpoint: '480.5px', numVisible: 3, numScroll: 1 },
     ];
 
-    // const carouselElement = document.querySelector('.carosel-content');
-    useEffect(() => {
-        if (!getcategory) {
-            dispatch(getCategories());
+    const [cardHeight, setCardHeight] = useState(0);
+    const cardRef = React.useRef();
+
+    const handleCardSize = () =>{
+        // if (!getcategory) {
+        //     dispatch(getCategories());
+        // }
+        if (cardRef.current) {
+            setCardHeight(cardRef.current.offsetWidth);
         }
 
-        // Calculate card width based on screen width and numVisible value
-        const updateCardWidth = () => {
-            const carouselElement = document.querySelector('.carosel-content'); // Get carousel container
-            if (!carouselElement) return;
-
-            const innerWidth = window.innerWidth;
-            const width = innerWidth * 0.97;
-            // const width = carouselElement.offsetWidth;
-            const option = responsiveOptions.find(opt => width <= parseInt(opt.breakpoint)) || responsiveOptions[0];
-            const calculatedWidth = width / option.numVisible; // Calculate the card width based on visible items
-            setCardWidth(calculatedWidth); // Update the state with the calculated width
+        const handleResize = () => {
+            if (cardRef.current) {
+                setCardHeight(cardRef.current.offsetWidth);
+            }
         };
 
-        // const updateCardWidth = () => {
-        //     const width = window.innerWidth;
-        //     // Find the matching responsive option based on current screen size
-        //     const option = responsiveOptions.find(opt => width <= parseInt(opt.breakpoint)) || responsiveOptions[0];
-        //     const calculatedWidth = (width) / option.numVisible; // Calculate based on screen width and number of visible items
-        //     setCardWidth(calculatedWidth); // Set the new card width
-        // };
-        // Call it initially
-        updateCardWidth();
+        window.addEventListener('resize', handleResize);
+        return () => window.removeEventListener('resize', handleResize);
 
-        // Add event listener to update card width on window resize
-        window.addEventListener('resize', updateCardWidth);
+    }
 
-        // Cleanup event listener on component unmount
-        return () => window.removeEventListener('resize', updateCardWidth);
-
-    }, [getcategory, dispatch]);
+    useEffect(() => {
+        
+        if(windowWidth < 480.5 && cardHeight < 118 ){
+            handleCardSize();
+        }
+        if(windowWidth < 767.5 && windowWidth > 480.5 && cardHeight < 152 ){
+            handleCardSize();
+        }
+        if(windowWidth < 992.5 && windowWidth > 767.5 && cardHeight < 165 ){
+            handleCardSize();
+        }
+        if(windowWidth < 1199.5 && windowWidth > 992.5 && cardHeight < 168 ){
+            handleCardSize();
+        }
+        if(windowWidth < 1600.5 && windowWidth > 1199.5 && cardHeight < 198 ){
+            handleCardSize();
+        }
+        if( windowWidth > 1600.5 && cardHeight < 199 ){
+            handleCardSize();
+        }
+       
+    }, [cardRef,cardHeight,getcategory]);
     
+
 
     const filteredCategories = getcategory?.filter((item) => item.category !== category && item.type === type);
 
     const productTemplate = (product) => (
-        <div style={{
-            maxWidth: `${cardWidth}px`,
-            // width:`${cardWidth}px`,
-            // height:`${cardWidth}px`,
-            minWidth: `${cardWidth}px`,
-            minHeight: `${cardWidth}px`,
-            maxHeight: `${cardWidth}px`,
-            margin: '5px',
-            display: 'flex',
-            flexDirection: 'column',
-            alignItems: 'center',
-            justifyContent: 'center',
-            // padding: '5px',
-            boxSizing: 'border-box',
-            // backgroundColor: '#fff',
-        }}>
-            <Link to={`/categories/${product.category}`} state={{ category: product.category , type:product.type}} style={{ textDecoration: 'none', padding: '0px', margin: '0px' }}>
+        <div ref={cardRef}
+            style={{
+                width: '95%',
+                minHeight: `${cardHeight}px`,
+                height: `${cardHeight}px`,
+                margin: '3px',
+                display: 'flex',
+                flexDirection: 'column',
+                alignItems: 'center',
+                justifyContent: 'center',
+                boxSizing: 'border-box',
+            }}>
+            <Link to={`/categories/${product.category}`} state={{ category: product.category }} style={{ textDecoration: 'none', padding: '0px', margin: '0px' }}>
                 <div className="carosel-card" style={{
-                    maxWidth: `${cardWidth}px`,
-                    // width:`${cardWidth}px`,
-                    // height:`${cardWidth}px`,
-                    minWidth: `${cardWidth}px`,
-                    height: `${cardWidth}px`,
                     border: '1px solid #ddd',
                     borderRadius: '8px',
                     padding: '0px',
+                    width: '100%',
+                    minWidth:`${cardHeight}px`,
+                    minHeight: `${cardHeight}px`,
+                    height: `${cardHeight}px`,
                     margin: '0px',
                     overflow: 'hidden',
                     display: 'flex',
                     flexDirection: 'column',
                     justifyContent: 'center',
                     alignItems: 'center',
-                     backgroundColor: '#fff',
+                    backgroundColor: '#fff',
                 }}>
                     {product.images && product.images.length > 0 ? (
                         <img src={product.images[0].image} alt={product.name} style={{
@@ -251,7 +278,7 @@ export default function CarouselLayout({ category , type}) {
                     <div style={{
                         color: 'black',
                         fontWeight: 'bold'
-                    }} className="card-title-vegetable">{product.name}
+                    }} className="card-title-carousel">{product.name}
                     </div>
                 </div>
             </Link>
@@ -259,23 +286,23 @@ export default function CarouselLayout({ category , type}) {
     );
 
     return (
-        <div style={{ display: 'flex', justifyContent: 'center', alignItems: 'center',maxWidth:'97vw', width: 'auto', overflow: 'hidden', position: 'relative', backgroundColor: '#f5f5f5', padding: '15px' }}>
+        <div style={{ display: 'flex', justifyContent: 'center', alignItems: 'center', maxWidth:'97vw', width: 'auto',height:'auto', overflow: 'hidden', position: 'relative', backgroundColor: '#f5f5f5', padding: '15px' }}>
             {
                 filteredCategories && (
                     <Carousel
                         value={filteredCategories || []}
                         numScroll={1}
-                        numVisible={ responsiveOptions[0].numVisible} // Dynamically set based on card width
+                        numVisible={responsiveOptions[0].numVisible} // Dynamically set based on card width
                         // responsiveOptions={responsiveOptions}
                         responsiveOptions={responsiveOptions}
                         circular
-                        // autoplay // Enable autoplay
-                        // autoplayInterval={3000}
+                        autoplay // Enable autoplay
+                        autoplayInterval={3000}
                         itemTemplate={productTemplate}
                         showIndicators={true}
                         showNavigators={true}
                         className='carosel-content'
-                        style={{maxWidth: '100%', width: 'auto', padding: '0px', margin: '3px', boxSizing: 'border-box', height: 'auto' }}
+                        style={{ maxWidth: '100%', width: 'auto',height:'auto', padding: '0px', margin: '3px', boxSizing: 'border-box', height: 'auto' }}
                     />
                 )
             }

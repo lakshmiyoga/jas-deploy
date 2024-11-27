@@ -51,7 +51,7 @@ const WeightInput = ({ product, weight, handleWeightChange }) => {
 
   useEffect(() => {
     const handleScroll = () => {
-      setShowDropdown(false); // Close the dropdown when user starts scrolling
+      setShowDropdown(false); 
     };
 
     if (showDropdown) {
@@ -79,12 +79,14 @@ const WeightInput = ({ product, weight, handleWeightChange }) => {
           )
         }
         onFocus={() => setShowDropdown(true)}
+        onClick={() => setShowDropdown(true)}
         onBlur={() => setTimeout(() => setShowDropdown(false), 150)}
         onKeyDown={handleKeyDown}
         className="form-select no-arrow-input form-control custom-placeholder"
         placeholder={`Select/type`}
         min="0.25"
         type="number"
+        
       />
 
       {showDropdown && (

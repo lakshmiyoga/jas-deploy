@@ -440,6 +440,9 @@ const ConfirmOrder = () => {
                                 <p className="confirmorder_name">Shipping: <span className="order-summary-values">Rs.{shippingCharge && shippingCharge.toFixed(2)}</span></p>
                                 <hr />
                                 <p className="confirmorder_name">Total: <span className="order-summary-values">Rs.{total}</span></p>
+                                <p className="confirmorder_name" style={{ fontSize: '0.8rem', color: '#6c757d' }}>
+                                            (Inclusive of all taxes)
+                                        </p>
                                 <hr />
                                 {shippingCharge ? (
                                     <button id="checkout_btn" className="btn btn-primary btn-block" onClick={handelopenModal} disabled={loading}>
