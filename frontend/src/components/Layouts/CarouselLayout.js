@@ -229,7 +229,7 @@ export default function CarouselLayout({ category,type }) {
             handleCardSize();
         }
        
-    }, [cardRef,cardHeight,getcategory]);
+    }, [cardRef,cardHeight,getcategory,windowWidth]);
     
 
 
@@ -248,7 +248,7 @@ export default function CarouselLayout({ category,type }) {
                 justifyContent: 'center',
                 boxSizing: 'border-box',
             }}>
-            <Link to={`/categories/${product.category}`} state={{ category: product.category }} style={{ textDecoration: 'none', padding: '0px', margin: '0px' }}>
+            <Link to={`/categories/${product.category}`} state={{ category: product.category, type: product.type }} style={{ textDecoration: 'none', padding: '0px', margin: '0px' }}>
                 <div className="carosel-card" style={{
                     border: '1px solid #ddd',
                     borderRadius: '8px',
