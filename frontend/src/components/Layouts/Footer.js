@@ -52,7 +52,7 @@ const Footer = ({ openSide, setOpenSide, onLoginClick}) => {
             {groceriesCategories?.map((categoryItem) => (
               <li key={categoryItem._id}>
                 <Link
-                  to={`/categories/${categoryItem.category}`}
+                  to={`/categories/${categoryItem.category}/type/${categoryItem.type}`}
                   className="unstyled-link"
                   state={{ category: categoryItem.category, type: categoryItem.type }}
                 >

@@ -865,7 +865,7 @@ const Header = ({ openSide, setOpenSide, onLoginClick }) => {
                             key={category._id}
 
                             onClick={() => {
-                              navigate(`/categories/${category.category}`, {
+                              navigate(`/categories/${category.category}/type/${category.type}`, {
                                 state: { category: category.category, type: category.type },
                               });
                               handleCategoryClose();
@@ -985,7 +985,7 @@ const Header = ({ openSide, setOpenSide, onLoginClick }) => {
                             key={category._id}
                             // onClick={handleCategoryClose}
                             onClick={() => {
-                              navigate(`/categories/${category.category}`, {
+                              navigate(`/categories/${category.category}/type/${category.type}`, {
                                 state: { category: category.category, type: category.type },
                               });
                               handleMonthlyGroceriesClose();

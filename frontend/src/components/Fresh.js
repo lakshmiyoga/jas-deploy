@@ -36,7 +36,7 @@ const Fresh = () => {
                   className="col-6 col-xs-5 col-sm-6 col-md-4 col-lg-3 my-3 landingpage-category-card "
                 >
                   <Link
-                    to={`/categories/${categoryItem.category}`} // Dynamic link based on category name
+                    to={`/categories/${categoryItem.category}/type/${categoryItem.type}`} // Dynamic link based on category name
                     state={{ category: categoryItem.category,type: categoryItem.type  }}
                     style={{ textDecoration: 'none' }}
                   >

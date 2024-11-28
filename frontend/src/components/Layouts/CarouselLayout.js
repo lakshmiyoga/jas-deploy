@@ -230,6 +230,12 @@ export default function CarouselLayout({ category,type }) {
         }
        
     }, [cardRef,cardHeight,getcategory,windowWidth]);
+
+    useEffect(()=>{
+         if (!getcategory) {
+            dispatch(getCategories());
+        }
+    },[])
     
 
 
@@ -248,7 +254,7 @@ export default function CarouselLayout({ category,type }) {
                 justifyContent: 'center',
                 boxSizing: 'border-box',
             }}>
-            <Link to={`/categories/${product.category}`} state={{ category: product.category, type: product.type }} style={{ textDecoration: 'none', padding: '0px', margin: '0px' }}>
+            <Link to={`/categories/${product.category}/type/${product.type}`} state={{ category: product.category, type: product.type }} style={{ textDecoration: 'none', padding: '0px', margin: '0px' }}>
                 <div className="carosel-card" style={{
                     border: '1px solid #ddd',
                     borderRadius: '8px',

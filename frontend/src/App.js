@@ -391,11 +391,11 @@ function App() {
                                         }
                                        {/* <Route path="/" element={<LandingPage />} /> */}
                                        <Route path="/" element={<Home />} />
-                                       <Route path="/type/:category" element={<LandingPage />} />
+                                       <Route path="/categories/:category" element={<LandingPage />} />
                                         
                                         <Route path="/unauthorized" element={<Unauthorized />} />
                                         {/* <Route path="/types/:type" element={<Home/>} /> */}
-                                        <Route path="/categories/:category" element={<Categories />} />
+                                        <Route path="/categories/:category/type/:type" element={<Categories />} />
                                         <Route path="/carousel" element={<CarouselLayout />} />
                                         <Route path="/about" element={<About />} />
                                         <Route path="/enquiry" element={<Enquiry />} />

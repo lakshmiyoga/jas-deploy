@@ -7,7 +7,7 @@ import Product from './Product/Product'
 import { toast } from 'react-toastify';
 import Search from './Layouts/Search'
 import Header from './Layouts/Header'
-import { useLocation } from 'react-router-dom';
+import { useLocation, useParams } from 'react-router-dom';
 import { Link } from 'react-router-dom'
 import Card from 'react-bootstrap/Card';
 import CarouselLayout from './Layouts/CarouselLayout'
@@ -18,7 +18,8 @@ import { getCategories } from '../actions/categoryAction'
 const Categories = () => {
   const location = useLocation();
   //   sessionStorage.setItem('redirectPath', location.pathname);
-  const { category, type } = location.state || {};
+  // const { category, type } = location.state || {};
+  const { category,type } = useParams();
   // const dispatch = useDispatch();
   const { products, loading, error } = useSelector((state) => state.productsState);
   console.log(products);
@@ -54,7 +55,7 @@ const Categories = () => {
             description="Discover a wide variety of fresh vegetables at our store. Search, filter, and explore organic and high-quality vegetables to add to your shopping cart."
           />
 
-          <div className="products_heading">{category}</div>
+          <div className="products_heading">{category && category}</div>
           <div className="search-responsive col-12 col-md-6 mt-2 mt-md-0" style={{ display: 'flex', alignItems: 'center', justifyContent: 'center', position: 'relative', minWidth: '100%', height: 'auto', flexDirection: 'column', margin: '0px', padding: '0px', overflowX: 'hidden' }}>
             <div style={{ display: 'flex', flexDirection: 'row', position: 'relative', width: '100%', justifyContent: 'center', alignItems: 'center' }}>
               <Search keyword={keyword} setKeyword={setKeyword} />
@@ -99,7 +100,7 @@ const Categories = () => {
             sortedCategories.length === 0 ? (
               // <h2 style={{ textAlign: 'center' }}>Product not found</h2>
               <div className="product-not-found">
-                <img src="../images/not-found.jpg" alt="No Products Found" />
+                <img src="/images/not-found.jpg" alt="No Products Found" />
                 <p>Product Not Found</p>
               </div>
 
