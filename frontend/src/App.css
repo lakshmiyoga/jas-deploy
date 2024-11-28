@@ -2135,8 +2135,7 @@ ul.CTAs a {
 .terms_container p,
 .privacy_container p,
 .refund-policy-container p {
-  font-weight: 100;
-  color: grey;
+  color:#000;
 }
 
 .refund-policy-container h6 {
@@ -2144,7 +2143,8 @@ ul.CTAs a {
 }
 
 .refund-policy-container li {
-  color: grey;
+  /* color: grey; */
+  /* color: #000; */
 }
 
 /* @media (max-width: 768px) {

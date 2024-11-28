@@ -478,8 +478,8 @@ const Header = ({ openSide, setOpenSide, onLoginClick }) => {
   const [refresh, setRefresh] = useState(false);
   const { loading, userOrders, error } = useSelector(state => state.orderState)
 
-  
-console.log("cartItems",cartItems)
+
+  console.log("cartItems", cartItems)
 
 
   const logoutHandler = (e) => {
@@ -773,20 +773,20 @@ console.log("cartItems",cartItems)
                     </Typography>
                     <ArrowDropDownIcon />
                   </div>
-                 <Typography
-  variant="caption"
-  color="inherit"
-  sx={{
-    marginTop: '-4px',
-    fontSize: '10px',
-    color: 'lightcoral', // Start with lightcoral color
-    fontWeight: 'bold',
-    animation: 'smoothZoom 1.5s infinite ease-in-out',
-    transition: 'color 1.5s ease-in-out', // Smooth color transition
-  }}
->
-  Fruits & Vegetables
-  {/* <style>
+                  <Typography
+                    variant="caption"
+                    color="inherit"
+                    sx={{
+                      marginTop: '-4px',
+                      fontSize: '10px',
+                      color: 'lightcoral', // Start with lightcoral color
+                      fontWeight: 'bold',
+                      animation: 'smoothZoom 1.5s infinite ease-in-out',
+                      transition: 'color 1.5s ease-in-out', // Smooth color transition
+                    }}
+                  >
+                    Fruits & Vegetables
+                    <style>
     {`
       @keyframes smoothZoom {
         0% {
@@ -804,8 +804,8 @@ console.log("cartItems",cartItems)
         }
       }
     `}
-  </style> */}
-</Typography>
+  </style>
+                  </Typography>
 
 
 
