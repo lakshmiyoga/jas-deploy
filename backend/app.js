@@ -128,7 +128,8 @@ const otp = require("./routes/otpRoutes");
 const address = require("./routes/address");
 const categories = require("./routes/categoryRoutes");
 const measurement = require("./routes/measurement");
-const loginOtp = require("./routes/loginOtp")
+const loginOtp = require("./routes/loginOtp");
+const announcement = require("./routes/announcement")
 
 app.use('/api/v1', products);
 app.use('/api/v1', user);
@@ -143,6 +144,7 @@ app.use('/api/v1', address);
 app.use('/api/v1', categories);
 app.use('/api/v1', measurement);
 app.use('/api/v1', loginOtp);
+app.use('/api/v1', announcement);
 
 
 if (process.env.NODE_ENV === "production") {
