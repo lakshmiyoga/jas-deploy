@@ -14,6 +14,7 @@ import AddressReducer from "./slices/AddressSlice"
 import CategoryReducer from "./slices/categorySlice"
 import MeasurementReducer from "./slices/measurementSlice"
 import loginOtpReducer from "./slices/loginOtpSlice"
+import announcementReducer from "./slices/announcementSlice"
 
 
 const reducer = combineReducers({
@@ -31,6 +32,7 @@ const reducer = combineReducers({
     categoryState:CategoryReducer,
     measurementState:MeasurementReducer,
     loginOtpState: loginOtpReducer,
+    announcementState: announcementReducer,
 })
 
 // const store = configureStore({

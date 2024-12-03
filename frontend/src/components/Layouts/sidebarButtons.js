@@ -13,23 +13,14 @@ import { logout } from '../../actions/userActions';
 import { useDispatch, useSelector } from 'react-redux';
 
 const SidebarButtons = () => {
+    
     const navigate = useNavigate();
     const { isAuthenticated, user, loggedoutmessage, isloggedout } = useSelector(state => state.authState);
     const [refresh, setRefresh] = useState(false);
 
     const dispatch = useDispatch();
-    const { loading, userOrders, error } = useSelector(state => state.orderState)
-
-  const buttons = [
-    { name: 'Profile', icon: <PersonIcon />, onClick: () =>  navigate('/myprofile') },
-    // { name: 'Dashboard', icon: <DashboardIcon />, onClick: () =>navigate('/admin/dashboard') },
-    ...(user.role === 'admin' || user.role === 'subadmin'
-    ? [{ name: 'Dashboard', icon: <DashboardIcon />, onClick: () => navigate('/admin/dashboard') }]
-    : []),
-    { name: 'My Orders', icon: <ShoppingCartIcon />, onClick: () =>  navigate('/orders') },
-    { name: 'Logout', icon: <LogoutIcon />, onClick: (e) =>  logoutHandler(e) },
-  ];
-
+    const { loading, userOrders, error } = useSelector(state => state.orderState);
+    
   const logoutHandler = (e) => {
     // e.preventDefault();
     // setOpenSide(!openSide);
@@ -115,6 +106,17 @@ const SidebarButtons = () => {
       // return
     }
   }, [isloggedout, dispatch, refresh])
+
+  const buttons = [
+    { name: 'Profile', icon: <PersonIcon />, onClick: () =>  navigate('/myprofile') },
+    // { name: 'Dashboard', icon: <DashboardIcon />, onClick: () =>navigate('/admin/dashboard') },
+    ...(user && user.role === 'admin' || user && user.role === 'subadmin'
+    ? [{ name: 'Dashboard', icon: <DashboardIcon />, onClick: () => navigate('/admin/dashboard') }]
+    : []),
+    { name: 'My Orders', icon: <ShoppingCartIcon />, onClick: () =>  navigate('/orders') },
+    { name: 'Logout', icon: <LogoutIcon />, onClick: (e) =>  logoutHandler(e) },
+  ];
+
 
   return (
     <div style={styles.container}>

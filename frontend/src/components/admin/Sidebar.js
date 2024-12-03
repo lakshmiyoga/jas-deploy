@@ -332,6 +332,13 @@ const Sidebar = ({ isActive, setIsActive }) => {
                             </li>
                         )}
 
+                            <li>
+                                <Link to="/admin/announcement" onClick={closeSidebar}>
+                                <i className="fa fa-bullhorn"></i>
+                                 Announcement
+                                </Link>
+                            </li>
+
                         {user && user.role === 'admin' && (
                             <li>
                                 <Link to="/admin/refund" onClick={closeSidebar}><i className="fa fa-reply"></i> Refund</Link>

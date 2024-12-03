@@ -787,7 +787,7 @@ const Header = ({ openSide, setOpenSide, onLoginClick }) => {
                   >
                     Fruits & Vegetables
                     <style>
-    {`
+                      {`
       @keyframes smoothZoom {
         0% {
           color: lightcoral;
@@ -804,7 +804,7 @@ const Header = ({ openSide, setOpenSide, onLoginClick }) => {
         }
       }
     `}
-  </style>
+                    </style>
                   </Typography>
 
 

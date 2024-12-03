@@ -87,6 +87,9 @@ import Fresh from './components/Fresh';
 import Groceries from './components/Groceries';
 import SidebarButtons from './components/Layouts/sidebarButtons';
 import { getCategories } from './actions/categoryAction';
+import AnnouncementList from './components/admin/AnnouncementList';
+import NewAnnouncement from './components/admin/NewAnnouncement';
+import UpdateAnnouncement from './components/admin/UpdateAnnouncement';
 
 
 function App() {
@@ -427,6 +430,9 @@ function App() {
                                         <Route path='/payment/:id' element={<ProtectedRoute isAdmin={false}><PaymentDetails /></ProtectedRoute>} />
                                         <Route path="/order/confirm" element={<ProtectedRoute isAdmin={false}><ConfirmOrder /></ProtectedRoute>} />
                                         <Route path="/payment/confirm/:id" element={<PaymentConfirm />} />
+                                        <Route path="/admin/announcement" element={<ProtectedRoute isAdmin={true} isSubAdmin={true}><AnnouncementList isActive={isActive} setIsActive={setIsActive} /></ProtectedRoute>} />
+                                        <Route path="/admin/add-announcement" element={<ProtectedRoute isAdmin={true} isSubAdmin={true}><NewAnnouncement isActive={isActive} setIsActive={setIsActive} /></ProtectedRoute>} />
+                                        <Route path="/admin/update-announcement/:id" element={<ProtectedRoute isAdmin={true} isSubAdmin={true}><UpdateAnnouncement isActive={isActive} setIsActive={setIsActive} /></ProtectedRoute>} />
                                         {/* {
                                     user && (
                                         <> */}

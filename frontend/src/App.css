@@ -2174,10 +2174,9 @@ ul.CTAs a {
   width: 40px;
   height: 40px;
   background-color: #02441E;
-  ;
   /* Change this color as needed */
   color: white;
-  border-radius: 50%;
+  border-radius: 99%;
   display: flex;
   align-items: center;
   justify-content: center;
@@ -3382,13 +3381,12 @@ body.no-scroll {
 
 @media (min-width: 576px) and (max-width: 992px) {
   .avatar-initials {
-    width: 25px;
-    height: 25px;
+    width: 40px;
+    height: 40px;
     background-color: #02441E;
-    ;
     /* Change this color as needed */
     color: white;
-    border-radius: 50%;
+    border-radius: 99%;
     display: flex;
     align-items: center;
     justify-content: center;
@@ -4601,7 +4599,7 @@ top: '55px',
 input[type="text"] {
   width: 100%;
   padding: 8px;
-  margin: 8px 0;
+  margin: 0px 0;
   border-radius: 5px;
   border: 1px solid #ccc;
 }
