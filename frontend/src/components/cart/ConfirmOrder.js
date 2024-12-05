@@ -15,6 +15,7 @@ import store from '../../store';
 import { getProducts } from '../../actions/productsActions';
 import CryptoJS from 'crypto-js';
 import LoaderButton from '../Layouts/LoaderButton';
+import { getAnnouncements } from '../../actions/announcementAction';
 
 
 const ConfirmOrder = () => {
@@ -36,137 +37,29 @@ const ConfirmOrder = () => {
     console.log("user", user)
     const navigate = useNavigate();
     const [loading, setLoading] = useState(false);
-    // const [dummyUser, setDummyUser] = useState(false);
+    const [OrderedDateUF, setOrderedDateUF] = useState(null);
+    const [OrderedDate, setOrderedDate] = useState(null);
+    console.log("OrderedDateOrderedDate",OrderedDate)
     // const [shippingAmount, setShippingAmount] = useState(null);
     const queryParams = new URLSearchParams(location.search);
     const message = queryParams.get('message');
     const [showModal, setShowModal] = useState(false);
     const [orderDescription, setOrderDescription] = useState('');
+    const {
+        getAnnouncement,
+        getAnnouncementLoading
+    } = useSelector(state => state.announcementState);
 
-    // useEffect(()=>{
-    //     store.dispatch(loadUser());
-    // },[])
+    useEffect(() => {
+        if (!getAnnouncement) {
+            dispatch(getAnnouncements())
+        }
+    }, [])
 
-    // const shippingCharge = shippingAmount / 100;
-    // const shippingCharge = 1.00;
-    // console.log("shippingInfo", shippingInfo)
-    // const subtotal = cartItems.reduce((acc, item) => acc + item.price * item.productWeight, 0).toFixed(2);
-    // const total = (parseFloat(subtotal) + shippingCharge).toFixed(2);
-
-    // const [pickupDetails, setPickupDetails] = useState({
-    //     lat: 13.0671844,
-    //     lng: 80.1775087
-    // });
-
-    // const [dropDetails, setDropDetails] = useState({
-    //     lat: shippingInfo && shippingInfo.latitude && shippingInfo.latitude,
-    //     lng: shippingInfo && shippingInfo.longitude && shippingInfo.longitude
-    //     // lat: 12.947146336879577,
-    //     // lng: 77.62102993895199
-    // });
-
-    // const [customerDetails, setCustomerDetails] = useState({
-    //     name: user && user.name && user.name,
-    //     countryCode: '+91',
-    //     phoneNumber: shippingInfo.phoneNo
-    // });
-    // console.log(latitude,longitude)
-    // useEffect(() => {
-    //     setCustomerDetails({
-    //         name: user && user.name && user.name,
-    //         countryCode: '+91',
-    //         phoneNumber: shippingInfo.phoneNo
-    //     })
-    // }, [user])
-
-    // useEffect(() => {
-    //     const fetchdata = async () => {
-
-    //         const requestData = {
-    //             pickup_details: pickupDetails,
-    //             drop_details: dropDetails,
-    //             customer: {
-    //                 name: customerDetails.name,
-    //                 mobile: {
-    //                     country_code: customerDetails.countryCode,
-    //                     number: customerDetails.phoneNumber
-    //                 }
-    //             }
-    //         };
-    //         // console.log(requestData)
-    //         try {
-    //             const response = await axios.post('/api/v1/get-quote', requestData);
-    //             // console.log("getQuote Response", response.data)
-    //             // if (response && response.data && response.data.vehicles[3] && response.data.vehicles[3].fare) {
-    //             //     setShippingAmount(response.data.vehicles[3].fare.minor_amount);
-    //             //     setDummyUser(false);
-    //             // }
-    //             const twoWheelerVehicle = response.data.vehicles.find(vehicle =>
-    //                 vehicle.type && vehicle.type.includes("2 Wheeler")
-    //             );
-
-    //             if (twoWheelerVehicle && twoWheelerVehicle.fare) {
-    //                 // Set the shipping amount for "2 Wheeler"
-    //                 setShippingAmount(twoWheelerVehicle.fare.minor_amount);
-    //                 setDummyUser(false);
-    //             }
-    //             else {
-
-    //                 // toast.error(`No 2 Wheeler found in the vehicle list.`, {
-    //                 //     position: "bottom-center",
-    //                 // });
-    //                 toast.dismiss();
-    //                 setTimeout(() => {
-    //                     toast.error('No 2 Wheeler found in the vehicle list', {
-    //                         position: 'bottom-center',
-    //                         type: 'error',
-    //                         autoClose: 700,
-    //                         transition: Slide,
-    //                         hideProgressBar: true,
-    //                         className: 'small-toast',
-    //                     });
-    //                 }, 300);
-    //                 navigate("/shipping")
-    //             }
-
-    //             //    toast.error('Response:', response.data);
-    //             // Handle response as needed
-    //         } catch (error) {
-    //             // console.log(error)
-    //             navigate("/shipping")
-    //             // toast.error(error.response.data.message);
-    //             toast.dismiss();
-    //             setTimeout(() => {
-    //                 toast.error(error.response.data.message, {
-    //                     position: 'bottom-center',
-    //                     type: 'error',
-    //                     autoClose: 700,
-    //                     transition: Slide,
-    //                     hideProgressBar: true,
-    //                     className: 'small-toast',
-    //                 });
-    //             }, 300);
-    //             // Handle error as needed
-    //         }
-    //     }
-    //     if (dummyUser) {
-    //         fetchdata()
-    //     }
-
-    // }, [dummyUser])
+   
     useEffect(() => {
         if (!defaultAddress && !shippingCharge) {
-            // toast.dismiss();
-            // setTimeout(() => {
-            //     toast.error('Shipping information is missing. Please complete these steps to proceed!', {
-            //         position: 'bottom-center',
-            //         type: 'error',
-            //         autoClose: 700,
-            //         transition: Slide,
-            //         hideProgressBar: true,
-            //         className: 'small-toast',
-            //     });
-            // }, 300);
+           
             navigate('/cart');
         }
         if (!cartItems.length) {
@@ -239,6 +132,8 @@ const ConfirmOrder = () => {
             totalPrice: encryptedTotalPrice,
             signature,
             plainText,
+            OrderedDate,
+            orderDescription,
         };
 
         sessionStorage.setItem('orderInfo', JSON.stringify(reqdata));
@@ -319,23 +214,167 @@ const ConfirmOrder = () => {
             setShowModal(false);
         }
     };
-    const handelopenModal = () => {
+    // const handelopenModal = () => {
+    //     const currentDate = new Date();
+    //     const currentHour = currentDate.getHours();
+    //     let orderDate;
+    //     let orderDescription;
+    //     if (currentHour < 21) { // Before 9 PM
+    //         orderDate = new Date(currentDate);
+    //         orderDate.setDate(orderDate.getDate() + 1); // Next day
+    //         setOrderDescription(`The order will be delivered on : ${orderDate.toDateString()}`);
+    //     } else { // After 9 PM
+    //         orderDate = new Date(currentDate);
+    //         orderDate.setDate(orderDate.getDate() + 2); // Day after tomorrow
+    //         setOrderDescription(`The order will be delivered on : ${orderDate.toDateString()}`);
+    //     }
+
+    //     setShowModal(true);
+    // };
+
+    // const handelopenModal = (getAnnouncement) => {
+    //     const currentDate = new Date();
+    //     const currentHour = currentDate.getHours();
+    //     let orderDate;
+    
+    //     // Determine initial delivery date
+    //     if (currentHour < 21) {
+    //         orderDate = new Date(currentDate);
+    //         orderDate.setDate(orderDate.getDate() + 1); // Next day
+    //     } else {
+    //         orderDate = new Date(currentDate);
+    //         orderDate.setDate(orderDate.getDate() + 2); // Day after tomorrow
+    //     }
+    
+    //     // Function to check if the date falls within a leave period
+    //     const isWithinLeaveDate = (date) => {
+    //         return getAnnouncement.some(({ startDate, endDate }) => {
+    //             const leaveStart = new Date(startDate);
+    //             const leaveEnd = new Date(endDate);
+    //             return date >= leaveStart && date <= leaveEnd;
+    //         });
+    //     };
+    
+    //     // Adjust delivery date if it falls within leave dates
+    //     while (isWithinLeaveDate(orderDate)) {
+    //         orderDate.setDate(orderDate.getDate() + 1); // Move to next day
+    //     }
+    
+    //     // Set the description with the adjusted date
+    //     setOrderDescription(`The order will be delivered on: ${orderDate.toDateString()}`);
+    //     setShowModal(true);
+    // };
+
+ 
+
+    useEffect(()=>{
+        const formatDateToCustomFormat = (OrderedDateUF) => {
+            // e.preventDefault();
+            const isoString = OrderedDateUF.toISOString(); // Converts to "2024-12-09T00:00:00.000Z"
+            
+            // Replace the 'Z' with the required offset (you can manually set it to "+00:00")
+            const formattedDate = isoString.replace('Z', '+00:00');
+            
+            return formattedDate;
+        };
+        if(OrderedDateUF){
+            setOrderedDate(formatDateToCustomFormat(OrderedDateUF))
+        }
+    },[OrderedDateUF])
+
+    const handelopenModal = (getAnnouncement) => {
         const currentDate = new Date();
         const currentHour = currentDate.getHours();
         let orderDate;
-        let orderDescription;
-        if (currentHour < 21) { // Before 9 PM
+    
+        // Determine initial delivery date
+        if (currentHour < 21) {
             orderDate = new Date(currentDate);
             orderDate.setDate(orderDate.getDate() + 1); // Next day
-            setOrderDescription(`The order will be delivered on : ${orderDate.toDateString()}`);
-        } else { // After 9 PM
+        } else {
             orderDate = new Date(currentDate);
             orderDate.setDate(orderDate.getDate() + 2); // Day after tomorrow
-            setOrderDescription(`The order will be delivered on : ${orderDate.toDateString()}`);
+        }
+    
+        console.log(`Initial orderDate: ${orderDate.toDateString()}`);
+    
+        // Function to reset the time to 00:00:00 for accurate date comparison
+        const resetTime = (date) => {
+            const resetDate = new Date(date);
+            resetDate.setHours(0, 0, 0, 0); // Set time to midnight
+            return resetDate;
+        };
+    
+        // Function to check if the date falls within a leave period
+        const isWithinLeaveDate = (date) => {
+            let isLeave = false;
+            getAnnouncement &&  getAnnouncement.forEach(({ startDate, endDate }) => {
+                const leaveStart = resetTime(new Date(startDate));
+                const leaveEnd = resetTime(new Date(endDate));
+                const checkDate = resetTime(date); // Reset the time of the check date
+    
+                console.log(`Checking date ${checkDate.toDateString()} against leave period: ${leaveStart.toDateString()} to ${leaveEnd.toDateString()}`);
+    
+                if (checkDate >= leaveStart && checkDate <= leaveEnd) {
+                    isLeave = true;
+                }
+            });
+            return isLeave;
+        };
+    
+        // Check if orderDate is within leave periods and log the result
+        console.log(`Is the initial orderDate (${orderDate.toDateString()}) within leave date? ${isWithinLeaveDate(orderDate)}`);
+    
+        // Adjust delivery date if it falls within leave periods
+        while (isWithinLeaveDate(orderDate)) {
+            console.log(`Order date ${orderDate.toDateString()} is within a leave period.`);
+    
+            const conflictingLeave =getAnnouncement && getAnnouncement.find(({ startDate, endDate }) => {
+                const leaveStart = resetTime(new Date(startDate));
+                const leaveEnd = resetTime(new Date(endDate));
+                const checkDate = resetTime(orderDate);
+    
+                return checkDate >= leaveStart && checkDate <= leaveEnd;
+            });
+    
+            if (conflictingLeave) {
+                const leaveEnd = new Date(conflictingLeave.endDate);
+                leaveEnd.setHours(0, 0, 0, 0); // Set leaveEnd time to midnight for consistency
+    
+                console.log(`Conflicting leave period ends on: ${leaveEnd.toDateString()}`);
+    
+                // Skip to the day after the conflicting leave's `endDate`
+                if (orderDate.getDate() === leaveEnd.getDate() && orderDate.getMonth() === leaveEnd.getMonth() && orderDate.getFullYear() === leaveEnd.getFullYear()) {
+                    // If the orderDate is the same as leaveEnd, move it to the next day
+                    orderDate = new Date(leaveEnd);
+                    orderDate.setDate(orderDate.getDate() + 1); // Skip to the day after
+    
+                    console.log(`Adjusted orderDate due to same date as leaveEnd: ${orderDate.toDateString()}`);
+                } else {
+                    // Regular case: just skip to the day after leaveEnd
+                    orderDate = new Date(leaveEnd);
+                    orderDate.setDate(orderDate.getDate() + 1); // Skip to the day after
+                }
+            }
         }
 
+        
+    
+        console.log(`Final orderDate: ${orderDate.toDateString()}`);
+        // const formattedOrderDate = formatDateToCustomFormat(orderDate);
+        setOrderedDateUF(orderDate);
+    
+        // Set the description with the adjusted date
+        setOrderDescription(`The order will be delivered on: ${orderDate.toDateString()}`);
         setShowModal(true);
     };
+    
+    
+    
+    
+    
+    
+
     const handleCancelModal = () => {
         setShowModal(false);
     }
@@ -369,6 +408,10 @@ const ConfirmOrder = () => {
             .split(' ')
             .map(word => word.charAt(0).toUpperCase() + word.slice(1))
             .join(' ');
+    };
+
+    const openModalWithValidation = () => {
+        handelopenModal(getAnnouncement && getAnnouncement);
     };
 
     return (
@@ -445,7 +488,7 @@ const ConfirmOrder = () => {
                                         </p>
                                 <hr />
                                 {shippingCharge ? (
-                                    <button id="checkout_btn" className="btn btn-primary btn-block" onClick={handelopenModal} disabled={loading}>
+                                    <button id="checkout_btn" className="btn btn-primary btn-block" onClick={openModalWithValidation} disabled={loading}>
                                         {loading ? <LoaderButton fullPage={false} size={20} /> : (
                                             <span>  Proceed to Payment</span>
                                         )

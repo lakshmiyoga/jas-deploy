@@ -90,6 +90,7 @@ import { getCategories } from './actions/categoryAction';
 import AnnouncementList from './components/admin/AnnouncementList';
 import NewAnnouncement from './components/admin/NewAnnouncement';
 import UpdateAnnouncement from './components/admin/UpdateAnnouncement';
+import { getAnnouncements } from './actions/announcementAction';
 
 
 function App() {
@@ -112,28 +113,82 @@ function App() {
 
     const { isAuthenticated, loading, user } = useSelector(state => state.authState);
     const { products, loading: productLoading } = useSelector((state) => state.productsState);
-    const { getdata,geterror } = useSelector(state => state.addressState);
+    const { getdata, geterror } = useSelector(state => state.addressState);
     const { userOrders, error } = useSelector(state => state.orderState)
     const [openSide, setOpenSide] = useState(false);
     const [isActive, setIsActive] = useState(false);
     const { getcategory } = useSelector((state) => state.categoryState);
+    const {
+        getAnnouncement,
+        getAnnouncementLoading
+    } = useSelector(state => state.announcementState);
+    const [announcements, setAnnouncements] = useState([]);
+    const [filteredAnnouncements, setFilteredAnnouncements] = useState([]);
     const dispatch = useDispatch();
     const [userLoaded, setUserLoaded] = useState(false);
-    console.log("isAuthenticated",isAuthenticated,user);
-    console.log("userLoaded",userLoaded)
+    console.log("isAuthenticated", isAuthenticated, user);
+    console.log("userLoaded", userLoaded)
 
     const [showLoginModal, setShowLoginModal] = useState(false);
-    console.log("showLoginModal",showLoginModal)
+    console.log("showLoginModal", showLoginModal)
 
     const handleLoginClick = () => {
-        console.log("before",showLoginModal)
-      setShowLoginModal(true);
-      console.log("after",showLoginModal)
+        console.log("before", showLoginModal)
+        setShowLoginModal(true);
+        console.log("after", showLoginModal)
     };
-  
+
     const closeLoginModal = () => {
-      setShowLoginModal(false);
+        setShowLoginModal(false);
     };
+
+    useEffect(() => {
+        // Fetch announcements on component mount
+        const fetchAnnouncements = async () => {
+            try {
+                const now = new Date();  // Current date and time
+                // Remove time from current date for comparison
+                now.setHours(0, 0, 0, 0);
+    
+                console.log("Current date: ", now);
+    
+                const filtered =getAnnouncement &&  getAnnouncement?.filter((announcement) => {
+                    const startDate = new Date(announcement.startDate);
+                    const endDate = new Date(announcement.endDate);
+    
+                    // Normalize the dates (removing time)
+                    startDate.setHours(0, 0, 0, 0);
+                    endDate.setHours(0, 0, 0, 0);
+    
+                    // Calculate 7 days before the start date
+                    const sevenDaysBeforeStart = new Date(startDate);
+                    sevenDaysBeforeStart.setDate(startDate.getDate() - 7);
+                    
+                    console.log(`Announcement: ${announcement._id}`);
+                    console.log("Start date: ", startDate);
+                    console.log("End date: ", endDate);
+                    console.log("Seven days before start: ", sevenDaysBeforeStart);
+    
+                    // Check if the current date is between sevenDaysBeforeStart and endDate (inclusive)
+                    const isActive = now >= sevenDaysBeforeStart && now <= endDate;
+                    console.log("Is announcement active: ", isActive);
+    
+                    return isActive;
+                });
+    
+                setAnnouncements(getAnnouncement && getAnnouncement);
+                setFilteredAnnouncements(filtered);
+            } catch (error) {
+                console.error("Failed to fetch announcements:", error);
+            }
+    
+        };
+
+        if (getAnnouncement) {
+            fetchAnnouncements();
+        }
+
+    }, [getAnnouncement]);
 
     useEffect(() => {
         const loadInitialData = async () => {
@@ -144,12 +199,12 @@ function App() {
         loadInitialData();
     }, [])
 
-    useEffect(()=>{
-        if(user){
-            dispatch(userOrdersAction()); 
+    useEffect(() => {
+        if (user) {
+            dispatch(userOrdersAction());
         }
 
-    },[user])
+    }, [user])
 
     useEffect(() => {
         dispatch(orderDetailClear());
@@ -157,12 +212,12 @@ function App() {
         dispatch(porterClearResponse());
     }, [])
 
-    useEffect(()=>{
-          if(user && user.role === 'admin'){
-                  dispatch(getAdminProducts());
-          }
+    useEffect(() => {
+        if (user && user.role === 'admin') {
+            dispatch(getAdminProducts());
+        }
 
-    },[user])
+    }, [user])
 
     // const validRoutes = [
     //     '/', '/login', '/register', '/vegetables', '/fruits', '/unauthorized', '/keerai', '/about', 
@@ -199,35 +254,35 @@ function App() {
     //         store.dispatch(getProducts());
     //     }
     // }, [isAuthenticated, products, userLoaded]);
-    
 
-    
+
+
     useEffect(() => {
         if (!isAuthenticated || !user && userLoaded) {
-            
-                 store.dispatch(loadUser());
-                // setUserLoaded(true); // Set the flag once the user data is loaded
-         
+
+            store.dispatch(loadUser());
+            // setUserLoaded(true); // Set the flag once the user data is loaded
+
         }
         if (!products) {
             store.dispatch(getProducts());
         }
     }, [isAuthenticated, products, userLoaded]);
 
-    useEffect(()=>{
+    useEffect(() => {
         dispatch(cleargetAddress());
-    },[])
+    }, [])
 
     useEffect(() => {
         if (!getcategory) {
-          dispatch(getCategories())
+            dispatch(getCategories())
         }
-    
-      }, [])
+
+    }, [])
 
     useEffect(() => {
         if (isAuthenticated && user && !getdata) {
-            dispatch(getUserAddresses({userId:user && user._id})); // Fetch user addresses when the component mounts
+            dispatch(getUserAddresses({ userId: user && user._id })); // Fetch user addresses when the component mounts
         }
     }, [isAuthenticated, dispatch]);
 
@@ -266,13 +321,13 @@ function App() {
     //     // store.dispatch(getProducts());
     // }, [ navigate, userLoaded]);
 
-    
+
     // useEffect(() => {
     //     // const redirectPath = sessionStorage.getItem('redirectPath') || ;
     //     // console.log("redirectPath before navigation:", redirectPath);
     //     // console.log("location.pathname:", location.pathname);
     //     // const isPasswordResetRoute = location.pathname.includes("/password/reset");
-        
+
     //     if (
     //         // isAuthenticated && 
     //         // user && 
@@ -287,7 +342,7 @@ function App() {
     //         }
     //     }
     // }, [isAuthenticated, navigate, userLoaded, user, location.pathname]);
-    
+
 
     // useEffect(() => {
     //     if (!product) {
@@ -325,58 +380,85 @@ function App() {
     useEffect(() => {
         // Detect if page is loaded from BFCache
         window.addEventListener('pageshow', (event) => {
-          if (event.persisted) {
-            window.location.reload(); // Reload if coming from BFCache
-          }
+            if (event.persisted) {
+                window.location.reload(); // Reload if coming from BFCache
+            }
         });
-    
+
         // Cleanup the event listener on component unmount
         return () => {
-          window.removeEventListener('pageshow', () => {});
+            window.removeEventListener('pageshow', () => { });
         };
-      }, []);
+    }, []);
 
-      // In App.js or main layout
-// useEffect(() => {
-//     const verifySession = async () => {
-//       try {
-//         const response = await fetch('/api/verify-session', { credentials: 'include' });
-//         if (!response.ok) {
-//           // Handle invalid session (e.g., redirect to login)
-//         }
-//       } catch (error) {
-//         toast.error("Session verification failed", error);
-//         // Redirect to login
-//       }
-//     };
-  
-//     verifySession();
-//   }, []);
-  
+    // In App.js or main layout
+    // useEffect(() => {
+    //     const verifySession = async () => {
+    //       try {
+    //         const response = await fetch('/api/verify-session', { credentials: 'include' });
+    //         if (!response.ok) {
+    //           // Handle invalid session (e.g., redirect to login)
+    //         }
+    //       } catch (error) {
+    //         toast.error("Session verification failed", error);
+    //         // Redirect to login
+    //       }
+    //     };
+
+    //     verifySession();
+    //   }, []);
+
+
+    useEffect(() => {
+        if (!getAnnouncement) {
+            dispatch(getAnnouncements())
+        }
+    }, [])
+
+    // useEffect(() => {
+
+    //     console.log("Filtered Announcements:", filteredAnnouncements);
+    // }, [filteredAnnouncements]);
+
 
 
     return (
         <div className={`${openSide ? "App-blure page-container" : isActive ? "App-blure page-container" : "page-container"}`}>
-        {/* <div className='page-container'> */}
+            {/* <div className='page-container'> */}
             <HelmetProvider>
                 {
                     productLoading || !userLoaded ? (
-                        <div style={{minHeight:'100vh',minWidth:'100vw',position:'absolute',display:'flex',justifyContent:'center',alignItems:'center'}}>
+                        <div style={{ minHeight: '100vh', minWidth: '100vw', position: 'absolute', display: 'flex', justifyContent: 'center', alignItems: 'center' }}>
                             <Loader />
                         </div>
 
                     )
 
                         : (
-                            <div style={{ display: 'flex', flexDirection: 'column', position: 'relative',width:'100%' }}>
+                            <div style={{ display: 'flex', flexDirection: 'column', position: 'relative', width: '100%' }}>
                                 {/* <Header /> */}
 
+                                {filteredAnnouncements && filteredAnnouncements.length>0 && 
+                                    
+                                    <div className="announcement-marquee">
+                                           { filteredAnnouncements && filteredAnnouncements?.map((announcement) => (
+                                        <div key={announcement._id}  className="announcement-marquee-content">
+                                            <span>{announcement.content}</span>
+                                        </div>
+                                           ))}
+                                    </div>
+                                   
+                                }
+
+
+
+
                                 {/* <div className="header"> */}
-                                <div className='main-header'>
-                                    {!isAdminRoute && <Header openSide={openSide} setOpenSide={setOpenSide} onLoginClick={handleLoginClick} setShowLoginModal={setShowLoginModal}/>}
+                                <div className={filteredAnnouncements && filteredAnnouncements.length > 0 ? 'main-header-marquee' : 'main-header'}>
+                                    {!isAdminRoute && <Header openSide={openSide} setOpenSide={setOpenSide} onLoginClick={handleLoginClick} setShowLoginModal={setShowLoginModal} filteredAnnouncements={filteredAnnouncements} />}
                                     {showLoginModal && <LoginForm showModal={showLoginModal} onClose={closeLoginModal} />}
                                 </div>
-                                
+
                                 <ScrollToTop />
                                 {/* <div className={isAdminRoute ? "" : openSide ? "content-blure" : isActive ? "content-blure" : "content"}> */}
                                 <div className='page-content'>
@@ -385,17 +467,17 @@ function App() {
                                         <Route path="/login" element={<Login email={email} setEmail={setEmail} />} />
                                         <Route path="/register" element={<Register />} />
                                         {
-                                            user  && (user.role === "admin" || user.role === "subadmin")  ?
-                                                <Route path="/admin/dashboard" element={<ProtectedRoute isAdmin={true} isSubAdmin={true}><Dashboard isActive={isActive} setIsActive={setIsActive}/></ProtectedRoute>} />
+                                            user && (user.role === "admin" || user.role === "subadmin") ?
+                                                <Route path="/admin/dashboard" element={<ProtectedRoute isAdmin={true} isSubAdmin={true}><Dashboard isActive={isActive} setIsActive={setIsActive} /></ProtectedRoute>} />
                                                 :
                                                 // <Route path="/" element={<LandingPage />} />
                                                 <Route path="/" element={<Home />} />
-                                                
+
                                         }
-                                       {/* <Route path="/" element={<LandingPage />} /> */}
-                                       <Route path="/" element={<Home />} />
-                                       <Route path="/categories/:category" element={<LandingPage />} />
-                                        
+                                        {/* <Route path="/" element={<LandingPage />} /> */}
+                                        <Route path="/" element={<Home />} />
+                                        <Route path="/categories/:category" element={<LandingPage />} />
+
                                         <Route path="/unauthorized" element={<Unauthorized />} />
                                         {/* <Route path="/types/:type" element={<Home/>} /> */}
                                         <Route path="/categories/:category/type/:type" element={<Categories />} />
@@ -413,9 +495,9 @@ function App() {
                                         <Route path="/product/search" element={<SearchProduct products={products} />} />
                                         <Route path="/product/:id" element={<ProductDetail />} />
                                         <Route path="/address/update/:id" element={<UpdateAddress />} />
-                                        <Route path="/cart" element={<Cart openSide={openSide} setOpenSide={setOpenSide} onLoginClick={handleLoginClick} setShowLoginModal={setShowLoginModal}/>} />
+                                        <Route path="/cart" element={<Cart openSide={openSide} setOpenSide={setOpenSide} onLoginClick={handleLoginClick} setShowLoginModal={setShowLoginModal} />} />
                                         <Route path="/password/forgot" element={<ForgotPassword email={email} setEmail={setEmail} />} />
-                                           <Route path="/password/reset/:token" element={<ResetPassword />} />
+                                        <Route path="/password/reset/:token" element={<ResetPassword />} />
 
                                         <Route path="/myProfile" element={<ProtectedRoute isAdmin={false}><Profile /></ProtectedRoute>} />
                                         <Route path="/myProfile/update" element={<ProtectedRoute isAdmin={false}><UpdateProfile /></ProtectedRoute>} />
@@ -465,15 +547,15 @@ function App() {
                                         <Route path='/admin/orderdetail/:id' element={<ProtectedRoute isAdmin={true} isSubAdmin={true}><AdminOrderDetail isActive={isActive} setIsActive={setIsActive} /></ProtectedRoute>} />
                                         <Route path="*" element={<Navigate to="/page-not-found" replace />} />
                                         <Route path="/page-not-found" element={<PageNotFound />} />
-                                      
+
 
                                     </Routes>
-                                    {!isAdminRoute && <Footer className='footer'  openSide={openSide} setOpenSide={setOpenSide} onLoginClick={handleLoginClick} setShowLoginModal={setShowLoginModal} />}
+                                    {!isAdminRoute && <Footer className='footer' openSide={openSide} setOpenSide={setOpenSide} onLoginClick={handleLoginClick} setShowLoginModal={setShowLoginModal} />}
                                     <ToastContainer theme="dark" />
 
                                 </div>
 
-                               
+
                             </div>
                         )
                 }

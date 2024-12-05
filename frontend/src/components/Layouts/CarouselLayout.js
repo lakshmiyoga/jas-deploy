@@ -256,6 +256,7 @@ export default function CarouselLayout({ category,type }) {
             style={{
                 minWidth: '95%',
                 // minWidth:`${cardHeight}px`,
+                maxWidth:`${cardHeight}px`,
                 minHeight: `${cardHeight}px`,
                 height: `${cardHeight}px`,
                 margin: '3px',
@@ -271,6 +272,7 @@ export default function CarouselLayout({ category,type }) {
                     borderRadius: '8px',
                     padding: '0px',
                     width: '100%',
+                    maxWidth:`${cardHeight}px`,
                     minWidth:`${cardHeight}px`,
                     minHeight: `${cardHeight}px`,
                     height: `${cardHeight}px`,

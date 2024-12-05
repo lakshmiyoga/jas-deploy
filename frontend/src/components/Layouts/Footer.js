@@ -2,13 +2,13 @@ import React, { useEffect } from 'react'
 import { useSelector } from 'react-redux';
 import { Link } from 'react-router-dom';
 
-const Footer = ({ openSide, setOpenSide, onLoginClick}) => {
+const Footer = ({ openSide, setOpenSide, onLoginClick }) => {
 
   const { isAuthenticated, user } = useSelector(state => state.authState);
   const { getcategory } = useSelector((state) => state.categoryState);
 
-  const freshCategories = getcategory.filter((fresh)=> fresh.type === 'Fresh')
-  const groceriesCategories = getcategory.filter((fresh)=> fresh.type === 'Groceries')
+  const freshCategories = getcategory.filter((fresh) => fresh.type === 'Fresh')
+  const groceriesCategories = getcategory.filter((fresh) => fresh.type === 'Groceries')
 
   return (
     <footer className="footer">
@@ -46,22 +46,26 @@ const Footer = ({ openSide, setOpenSide, onLoginClick}) => {
 
           </ul>
         </div>
-        <div className="footer-section">
-          <h4>Monthly Groceries</h4>
-          <ul>
-            {groceriesCategories?.map((categoryItem) => (
-              <li key={categoryItem._id}>
-                <Link
-                  to={`/categories/${categoryItem.category}/type/${categoryItem.type}`}
-                  className="unstyled-link"
-                  state={{ category: categoryItem.category, type: categoryItem.type }}
-                >
-                  {categoryItem.category}
-                </Link>
-              </li>
-            ))}
-          </ul>
-        </div>
+        {
+          user && (user.role === 'admin' || user.role === 'subadmin') && (
+            <div className="footer-section">
+              <h4>Monthly Groceries</h4>
+              <ul>
+                {groceriesCategories?.map((categoryItem) => (
+                  <li key={categoryItem._id}>
+                    <Link
+                      to={`/categories/${categoryItem.category}/type/${categoryItem.type}`}
+                      className="unstyled-link"
+                      state={{ category: categoryItem.category, type: categoryItem.type }}
+                    >
+                      {categoryItem.category}
+                    </Link>
+                  </li>
+                ))}
+              </ul>
+            </div>
+          )}
+
         <div className="footer-section">
           <h4>Information</h4>
           <ul>

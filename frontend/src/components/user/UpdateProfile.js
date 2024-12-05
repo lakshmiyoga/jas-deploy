@@ -12,12 +12,13 @@ const UpdateProfile = () => {
 
     const { profileupdateloading, error, user, isUpdated } = useSelector(state => state.authState);
     const [name, setName] = useState("");
+    const [Update,setUpdate] = useState(false);
     // const [email, setEmail] = useState("");
     // const [mobile, setMobile] = useState("");
     const [avatar, setAvatar] = useState("");
     const [avatarName, setAvatarName] = useState('');
     const [avatarPreview, setAvatarPreview] = useState("/images/default_avatar.png");
-    const navigate = useNavigate()
+    const navigate = useNavigate();
     const dispatch = useDispatch();
     const location = useLocation();
     console.log("avatar",avatar);
@@ -88,6 +89,7 @@ const UpdateProfile = () => {
 
     const submitHandler = (e) => {
         e.preventDefault();
+        setUpdate(true);
         const formData = new FormData();
         formData.append('name', name);
         // formData.append('email', email);
@@ -107,7 +109,7 @@ const UpdateProfile = () => {
             }
         }
 
-        if (isUpdated) {
+        if (isUpdated && Update) {
             // toast('Profile updated successfully', {
             //     type: 'success',
             //     position: "bottom-center",
@@ -123,15 +125,16 @@ const UpdateProfile = () => {
                     transition: Slide,
                     hideProgressBar: true,
                     className: 'small-toast',
-                    onOpen: () => { dispatch(clearUpdateProfile()) }
+                    onOpen: () => { navigate('/myProfile');dispatch(clearUpdateProfile()) },
+                    onClose:()=>{setUpdate(false)}
                 });
                 // Navigate after the toast has been shown
-                setTimeout(() => {
-                    navigate('/myProfile');
-                }, 300); // This delay should match the toast duration
+                // setTimeout(() => {
+                    
+                // }, 300); // This delay should match the toast duration
             }, 300);
             // navigate('/myProfile')
-            return;
+            // return;
         }
 
         if (error) {

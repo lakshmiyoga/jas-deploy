@@ -445,7 +445,7 @@ const StyledInputBase = styled(InputBase)(({ theme }) => ({
   },
 }));
 
-const Header = ({ openSide, setOpenSide, onLoginClick }) => {
+const Header = ({ openSide, setOpenSide, onLoginClick,filteredAnnouncements }) => {
   const [searchOpen, setSearchOpen] = useState(false);
   const [bottomNavValue, setBottomNavValue] = useState(0);
   const [loginanchorEl, setloginanchorEl] = useState(null);
@@ -680,7 +680,7 @@ const Header = ({ openSide, setOpenSide, onLoginClick }) => {
   const categories = Array.from({ length: 100 }, (_, index) => `Category ${index + 1}`);
 
   return (
-    <header className="main-header">
+    <header className={filteredAnnouncements && filteredAnnouncements.length > 0 ? 'main-header-marquee':"main-header"}>
       <AppBar
         position="sticky"
         sx={{
@@ -879,7 +879,10 @@ const Header = ({ openSide, setOpenSide, onLoginClick }) => {
                   ))}
                   {/* </Box> */}
                 </Menu>
-                <IconButton
+                {
+                  user && (user.role === 'admin' || user.role === 'subadmin') && (
+                        <>
+                         <IconButton
                   onClick={handleMonthlyGroceriesClick}
                   className='navbar-link'
                   sx={{
@@ -999,6 +1002,10 @@ const Header = ({ openSide, setOpenSide, onLoginClick }) => {
                   ))}
                   {/* </Box> */}
                 </Menu>
+                        </>
+                  )
+                }
+               
 
                 {/* <IconButton onClick={handleAvatarClick} sx={{
                   display: {

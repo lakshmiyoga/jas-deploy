@@ -4104,7 +4104,7 @@ top: '55px',
 
 .cart_text {
   font-size: 24px;
-  margin-top: 100px;
+  /* margin-top: 100px; */
 }
 
 .missed_somethingTxt{
@@ -4118,7 +4118,7 @@ top: '55px',
 @media (max-width: 768px) {
   .cart_text {
     font-size: 20px;
-    margin-top: 110px;
+    /* margin-top: 110px; */
   }
   .confirmorder_name,
   .confirmorder_price,
@@ -4142,7 +4142,7 @@ top: '55px',
 @media (max-width: 576px) {
   .cart_text {
     font-size: 18px;
-    margin-top: 100px;
+    /* margin-top: 100px; */
     
   }
 }
@@ -4151,7 +4151,7 @@ top: '55px',
 @media (max-width: 480px) {
   .cart_text {
     font-size: 14px;
-    margin-top: 130px;
+    /* margin-top: 130px; */
   }
  .confirmorder_name,
  .confirmorder_price,
@@ -4174,7 +4174,7 @@ top: '55px',
 @media (max-width: 200px) {
   .cart_text {
     font-size: 12px;
-    margin-top: 100px;
+    /* margin-top: 100px; */
   }
 }
 
@@ -4876,6 +4876,14 @@ input[type="text"] {
   /* color: white; */
 }
 
+.main-header-marquee {
+  position: sticky;
+  top: 20px; /* 30px below the top to accommodate announcements */
+  width: 100%;
+  z-index: 998;
+}
+
+
 .page-container {
   display: flex;
   flex-direction: column;
@@ -4980,7 +4988,7 @@ input[type="text"] {
 
 .Cartproduct-not-found{
   text-align: center;
-  margin-top: 80px;
+  /* margin-top: 80px; */
 }
 
 /* Extra Small Devices (Portrait phones, less than 576px) */
@@ -5078,4 +5086,48 @@ button, input, optgroup, select, textarea {
 p.confirmorder_name {
   margin-top: 0;
   margin-bottom: 0px !important;
+}
+
+.announcement-marquee {
+  height: 20px; /* Increased height for better visibility */
+  line-height: 20px; /* Vertically center the text */
+  background-color: #FFEBEE; /* Light red background */
+  color: #D32F2F; /* Dark red text */
+  display: flex;
+  align-items: center;
+  overflow: hidden;
+  position: fixed;
+  top: 0;
+  width: 100%;
+  z-index: 1000;
+  border-bottom: 1px solid #D32F2F; /* Optional border for separation */
+}
+
+.announcement-marquee-content {
+  display: inline-block; /* Ensure it's inline for scrolling */
+  animation: scrollText 15s linear infinite; /* Smooth scrolling effect */
+  white-space: nowrap;
+  min-width: 100vw;
+  font-size: 16px;
+  font-weight: bold;
+}
+
+@media (max-width:720px){
+  .announcement-marquee-content {
+    display: inline-block; /* Ensure it's inline for scrolling */
+    animation: scrollText 15s linear infinite; /* Smooth scrolling effect */
+    white-space: nowrap;
+    min-width: 100vw;
+    font-size: 12px;
+    font-weight: bold;
+  }
+}
+
+@keyframes scrollText {
+  from {
+    transform: translateX(100%);
+  }
+  to {
+    transform: translateX(-100%);
+  }
 }

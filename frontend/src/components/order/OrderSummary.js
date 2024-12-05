@@ -115,6 +115,7 @@ import Loader from '../Layouts/Loader';
 import MetaData from '../Layouts/MetaData';
 import Sidebar from '../admin/Sidebar';
 import { useLocation } from 'react-router-dom';
+import { getMeasurements } from '../../actions/measurementActions';
 
 const OrderSummary = ({ isActive, setIsActive }) => {
     const dispatch = useDispatch();
@@ -131,6 +132,13 @@ const OrderSummary = ({ isActive, setIsActive }) => {
     }, [date, dispatch]);
 
     const isOrderSummaryArray = Array.isArray(orderSummary);
+
+    useEffect(() => {
+        if (!getmeasurement) {
+            dispatch(getMeasurements())
+        }
+    }, [getmeasurement])
+
 
     // Separate items by measurement type and calculate total weight
     // const totalByMeasurement = {
@@ -150,7 +158,7 @@ const OrderSummary = ({ isActive, setIsActive }) => {
     const totalByMeasurement = {};
     const groupedOrderSummary = {};
 
-    getmeasurement.forEach((measurement) => {
+    getmeasurement && getmeasurement.forEach((measurement) => {
         totalByMeasurement[measurement.measurement] = 0;
         groupedOrderSummary[measurement.measurement] = [];
     });
@@ -179,7 +187,7 @@ const OrderSummary = ({ isActive, setIsActive }) => {
     // }
 
     if (isOrderSummaryArray) {
-        orderSummary.forEach((item) => {
+        orderSummary && orderSummary.forEach((item) => {
             const { productName, totalWeight, totalPrice } = item;
             if (totalWeight) {
                 const [weightValue, unit] = totalWeight.trim().split(/\s+/);
