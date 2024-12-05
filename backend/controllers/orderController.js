@@ -27,7 +27,7 @@ const paymentPageClientId = config.PAYMENT_PAGE_CLIENT_ID; // used in orderSessi
 
 const juspay = new Juspay({
     merchantId: config.MERCHANT_ID,
-    baseUrl: PRODUCTION_BASE_URL, // Using sandbox base URL for testing
+    baseUrl: SANDBOX_BASE_URL, // Using sandbox base URL for testing
     jweAuth: {
         keyId: config.KEY_UUID,
         publicKey,
@@ -735,12 +735,13 @@ const getOrderSummaryByDate = catchAsyncError(async (req, res) => {
         // })
         const orders = await Payment.find({
             paymentStatus: 'CHARGED',
-            $expr: {
-                $eq: [
-                    { $dateToString: { format: "%Y-%m-%d", date: "$orderDate" } },
-                    formattedDate
-                ]
-            }
+            orderDate: { $regex: `^${formattedDate}` },
+            // $expr: {
+            //     $eq: [
+            //         { $dateToString: { format: "%Y-%m-%d", date: "$orderDate" } },
+            //         formattedDate
+            //     ]
+            // }
         }).select('orderItems shippingInfo user user_id itemsPrice taxPrice shippingPrice totalPrice order_id paymentStatus orderStatus createdAt').exec();
         console.log("Fetched orders:", orders);
 
@@ -954,10 +955,10 @@ const sendEmaildata = async (orderSummary) => {
 //     }
 // });
 
-nodeCron.schedule('0 21 * * *', async () => {
+nodeCron.schedule('26 15 * * *', async () => {
     const date = new Date();
     date.setDate(date.getDate() + 1);
-    const formattedDate = date.toISOString().split('T')[0]; // Get YYYY-MM-DD format
+    const formattedDate = new Date(date).toISOString().split('T')[0];; // Get YYYY-MM-DD format
 
     let BASE_URL;
     if (process.env.NODE_ENV === 'production') {
@@ -1077,12 +1078,13 @@ const getUserSummaryByDate = catchAsyncError(async (req, res) => {
         // });
         const orders = await Payment.find({
             paymentStatus: 'CHARGED',
-            $expr: {
-                $eq: [
-                    { $dateToString: { format: "%Y-%m-%d", date: "$orderDate" } },
-                    formattedDate
-                ]
-            }
+             orderDate: { $regex: `^${formattedDate}` },
+            // $expr: {
+            //     $eq: [
+            //         { $dateToString: { format: "%Y-%m-%d", date: "$orderDate" } },
+            //         formattedDate
+            //     ]
+            // }
         }).select('orderItems shippingInfo user user_id itemsPrice taxPrice shippingPrice totalPrice order_id paymentStatus orderStatus createdAt').exec();
         console.log("Fetched orders:", orders);
 
@@ -1093,8 +1095,8 @@ const getUserSummaryByDate = catchAsyncError(async (req, res) => {
             const totalPrice = order.orderItems.reduce((sum, item) => sum + (item.productWeight * item.price), 0);
             const products = order.orderItems.map(item => ({
                 name: item.name,
-                // weight: item.productWeight,
-                weight: `${item.productWeight} ${item.measurement && item.measurement=='Grams'? 'Piece' :item.measurement}`,
+                weight: item.productWeight,
+                // weight: `${item.productWeight} ${item.measurement && item.measurement=='Grams'? 'Piece' :item.measurement}`,
                 price: parseFloat(item.price * item.productWeight).toFixed(2)
             }));
 
@@ -1249,7 +1251,7 @@ const sendEmail = async (userSummary) => {
 // });
 
 
-nodeCron.schedule('0 21  * * *', async () => {
+nodeCron.schedule('29 15  * * *', async () => {
     const date = new Date();
     date.setDate(date.getDate() + 1);
     const formattedDate = date.toISOString().split('T')[0]; // Get YYYY-MM-DD format

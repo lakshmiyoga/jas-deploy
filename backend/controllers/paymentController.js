@@ -48,7 +48,7 @@ const transporter = nodemailer.createTransport({
 
 const juspay = new Juspay({
 	merchantId: config.MERCHANT_ID,
-	baseUrl: PRODUCTION_BASE_URL, // Using sandbox base URL for testing
+	baseUrl: SANDBOX_BASE_URL, // Using sandbox base URL for testing
 	jweAuth: {
 		keyId: config.KEY_UUID,
 		publicKey,
@@ -86,8 +86,10 @@ const payment = catchAsyncError(async (req, res, next) => {
 		totalPrice: encryptedTotalPrice,
 		signature,
 		plainText,
+		OrderedDate,
+        orderDescription,
 	} = req.body;
-// console.log("shippingInfo",shippingInfo)
+console.log("req.body",req.body)
 	const decryptedKey = decryptData(plainText, encryptionKey);
 	if (!decryptedKey) {
 		return next(new ErrorHandler('Failed to decrypt the key', 400));
@@ -136,26 +138,26 @@ const payment = catchAsyncError(async (req, res, next) => {
 			return next(new ErrorHandler('Your order is already exist Please Try Again!', 400));
 		}
 		else {
-			const currentDate = new Date();
-			const currentHour = currentDate.getHours();
+			// const currentDate = new Date();
+			// const currentHour = currentDate.getHours();
 
-			// Initialize orderDate and orderDescription
-			let orderDate;
-			let orderDescription;
+			// // Initialize orderDate and orderDescription
+			// let orderDate;
+			// let orderDescription;
 
-			if (currentHour < 21) { // Before 9 PM
-				orderDate = new Date(currentDate);
-				orderDate.setDate(orderDate.getDate() + 1); // Next day
-				orderDateDelivery = new Date(currentDate);
-				orderDateDelivery.setDate(orderDateDelivery.getDate() + 1); // Next day
-				orderDescription = `The order will be delivered on this day: ${orderDateDelivery.toDateString()}`;
-			} else { // After 9 PM
-				orderDate = new Date(currentDate);
-				orderDate.setDate(orderDate.getDate() + 2); // Day after tomorrow
-				orderDateDelivery = new Date(currentDate);
-				orderDateDelivery.setDate(orderDateDelivery.getDate() + 2); // Next day
-				orderDescription = `The order will be delivered on this day: ${orderDateDelivery.toDateString()}`;
-			}
+			// if (currentHour < 21) { // Before 9 PM
+			// 	orderDate = new Date(currentDate);
+			// 	orderDate.setDate(orderDate.getDate() + 1); // Next day
+			// 	orderDateDelivery = new Date(currentDate);
+			// 	orderDateDelivery.setDate(orderDateDelivery.getDate() + 1); // Next day
+			// 	orderDescription = `The order will be delivered on this day: ${orderDateDelivery.toDateString()}`;
+			// } else { // After 9 PM
+			// 	orderDate = new Date(currentDate);
+			// 	orderDate.setDate(orderDate.getDate() + 2); // Day after tomorrow
+			// 	orderDateDelivery = new Date(currentDate);
+			// 	orderDateDelivery.setDate(orderDateDelivery.getDate() + 2); // Next day
+			// 	orderDescription = `The order will be delivered on this day: ${orderDateDelivery.toDateString()}`;
+			// }
 			const payment = new Payment({
 				order_id: orderId,
 				user_id: user_id,
@@ -167,7 +169,7 @@ const payment = catchAsyncError(async (req, res, next) => {
 				shippingPrice,
 				totalPrice: amount,
 				paymentStatus: 'initiated',
-				orderDate: orderDate, // Add the calculated orderDate
+				orderDate: OrderedDate, // Add the calculated orderDate
 				// orderDateDelivery:orderDateDelivery,
 				orderDescription: orderDescription // Add the calculated orderDescription
 			});
