@@ -1,6 +1,7 @@
 import React, { useEffect } from 'react'
 import { useSelector } from 'react-redux';
 import { Link } from 'react-router-dom';
+import WhatsAppChat from '../Layouts/WhatsAppChat'
 
 const Footer = ({ openSide, setOpenSide, onLoginClick }) => {
 
@@ -9,6 +10,11 @@ const Footer = ({ openSide, setOpenSide, onLoginClick }) => {
 
   const freshCategories = getcategory.filter((fresh) => fresh.type === 'Fresh')
   const groceriesCategories = getcategory.filter((fresh) => fresh.type === 'Groceries')
+
+  const phoneNumber = "919150396223";
+  const message = "Hello, I need help with my order.";
+
+  const whatsappUrl = `https://wa.me/${phoneNumber}?text=${encodeURIComponent(message)}`;
 
   return (
     <footer className="footer">
@@ -124,10 +130,20 @@ const Footer = ({ openSide, setOpenSide, onLoginClick }) => {
           <ul>
             <li>29, Reddy St, Nerkundram, Chennai - 600107</li>
             <li>
-              <a href="tel:+919176720068" class="contact-link">+91 91767 20068</a>
+              <a href="tel:+919176720068" className="contact-link">+91 91767 20068</a>
             </li>
             <li>
-              <a href="mailto:jasfruitsandvegetables@gmail.com" class="contact-link">jasfruitsandvegetables@gmail.com</a>
+              <a href="mailto:jasfruitsandvegetables@gmail.com" className="contact-link">jasfruitsandvegetables@gmail.com</a>
+            </li>
+            <li>
+              <a href={whatsappUrl} target="_blank" rel="noopener noreferrer">
+                <img
+                  src="whatsapp-icon.png"
+                  alt="WhatsApp Chat"
+                  style={{ width: '50px', height: '50px', cursor: 'pointer' }}
+                />
+              </a>
+
             </li>
           </ul>
         </div>

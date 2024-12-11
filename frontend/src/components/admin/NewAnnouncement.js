@@ -21,6 +21,7 @@ const NewAnnouncement = ({ isActive, setIsActive }) => {
     const [images, setImages] = useState([]);
     const [imagesPreview, setImagesPreview] = useState([]);
     const [imagesCleared, setImagesCleared] = useState(false);
+    const [type, setType] = useState("Announcement"); // Added state for dropdown
 
 
     // const { postloading, postcategory, posterror } = useSelector(state => state.categoryState);
@@ -28,6 +29,35 @@ const NewAnnouncement = ({ isActive, setIsActive }) => {
 
     const navigate = useNavigate();
     const dispatch = useDispatch();
+    const [videos, setVideos] = useState([]);
+const [videosPreview, setVideosPreview] = useState([]);
+
+const onVideosChange = (e) => {
+  const files = Array.from(e.target.files);
+  const maxSize = 50 * 1024 * 1024; // 50 MB
+
+  files.forEach(file => {
+    if (file.size > maxSize) {
+      toast.error(`File ${file.name} exceeds the 50MB limit.`);
+      return;
+    }
+
+    const reader = new FileReader();
+    reader.onload = () => {
+      if (reader.readyState === 2) {
+        setVideosPreview(oldArray => [...oldArray, reader.result]);
+        setVideos(oldArray => [...oldArray, file]);
+      }
+    };
+    reader.readAsDataURL(file);
+  });
+};
+
+const clearVideosHandler = () => {
+  setVideos([]);
+  setVideosPreview([]);
+};
+
 
     const onImagesChange = (e) => {
         const files = Array.from(e.target.files);
@@ -67,8 +97,10 @@ const NewAnnouncement = ({ isActive, setIsActive }) => {
         const formData = new FormData();
         formData.append('startDate', startDate);
         formData.append('endDate', endDate);
+        formData.append('type', type);
         formData.append('content', content);
         images.forEach(image => formData.append('images', image));
+        videos.forEach(video => formData.append('videos', video));
         formData.append('imagesCleared', imagesCleared);
         dispatch(createAnnouncement(formData));
     };
@@ -108,7 +140,7 @@ const NewAnnouncement = ({ isActive, setIsActive }) => {
         }
     }, [postAnnouncement, postAnnouncementError, dispatch, navigate]);
 
- 
+
 
     return (
         <div>
@@ -136,7 +168,7 @@ const NewAnnouncement = ({ isActive, setIsActive }) => {
                                             dateFormat="dd/MM/yyyy"
                                             className="form-control date-input"
                                             placeholderText="dd/mm/yyyy"
-                                            
+
                                         />
                                     </div>
 
@@ -151,34 +183,20 @@ const NewAnnouncement = ({ isActive, setIsActive }) => {
                                         />
                                     </div>
                                 </div>
-                                {/* <div className="filter-row">
-                                    <div style={{ display: 'flex', flexDirection: 'row', marginRight: '20px' }}>
-                                        <label>StartDate : </label>
-                                        <input
-                                            type="date"
-                                            value={startDate}
-                                            onChange={(e) => setStartDate(e.target.value)}
-                                            className="form-control mb-3 date-input"
-                                            placeholder="Start Date"
-
-                                        />
-                                    </div>
-                                    <div style={{ display: 'flex', flexDirection: 'row', marginRight: '20px' }}>
-                                        <label>EndDate : </label>
-                                        <input
-                                            type="date"
-                                            value={endDate}
-                                            onChange={(e) => setEndDate(e.target.value)}
-                                            className="form-control mb-3 date-input"
-                                            placeholder="End Date"
-
-                                        />
-                                    </div>
-
-                                </div> */}
-
                                 <div className="form-group">
-                                    <label htmlFor="description">Content <span style={{ color: 'red' }}>*</span></label>
+                                    <label htmlFor="type">Type <span style={{ color: 'red' }}>*</span></label>
+                                    <select
+                                        id="type"
+                                        className="form-control"
+                                        value={type}
+                                        onChange={e => setType(e.target.value)}
+                                    >
+                                        <option value="Announcement">Announcement</option>
+                                        <option value="Offer">Offer</option>
+                                    </select>
+                                </div>
+                                <div className="form-group">
+                                    <label htmlFor="description">Content</label>
                                     <textarea
                                         type="text"
                                         id="description"
@@ -198,7 +216,8 @@ const NewAnnouncement = ({ isActive, setIsActive }) => {
                                             accept=".jpg, .jpeg, .png, .webp"
                                             id="customFile"
                                             onChange={onImagesChange}
-                                            required
+                                            disabled={type === 'Announcement' ? true : false}
+                                        // required
                                         />
                                         <label className="custom-file-label" htmlFor="customFile">
                                             Choose Images
@@ -222,6 +241,41 @@ const NewAnnouncement = ({ isActive, setIsActive }) => {
                                         </Fragment>
                                     )}
                                 </div>
+
+                                {/* <div className="form-group">
+                                    <label>Videos (Max Size: 50MB) <span style={{ color: 'red' }}></span></label>
+                                    <div className="custom-file">
+                                        <input
+                                            type="file"
+                                            name="videos"
+                                            className="custom-file-input"
+                                            accept=".mp4, .mkv, .webm"
+                                            id="customVideoFile"
+                                            onChange={onVideosChange}
+                                            disabled={type === 'Announcement' ? true : false}
+                                        />
+                                        <label className="custom-file-label" htmlFor="customVideoFile">
+                                            Choose Videos
+                                        </label>
+                                    </div>
+                                    {videosPreview.length > 0 && (
+                                        <Fragment>
+                                            <span className="mr-2" onClick={clearVideosHandler} style={{ cursor: "pointer" }}>
+                                                <i className="fa fa-trash"></i>
+                                            </span>
+                                            {videosPreview.map(video => (
+                                                <video
+                                                    className="mt-3 mr-2"
+                                                    key={video}
+                                                    src={video}
+                                                    controls
+                                                    width="100"
+                                                    height="80"
+                                                />
+                                            ))}
+                                        </Fragment>
+                                    )}
+                                </div> */}
 
                                 <button
                                     id="login_button"

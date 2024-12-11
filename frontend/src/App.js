@@ -91,6 +91,7 @@ import AnnouncementList from './components/admin/AnnouncementList';
 import NewAnnouncement from './components/admin/NewAnnouncement';
 import UpdateAnnouncement from './components/admin/UpdateAnnouncement';
 import { getAnnouncements } from './actions/announcementAction';
+import AnnouncementBanner from './components/Layouts/AnnouncemetBanner';
 
 
 function App() {
@@ -122,20 +123,22 @@ function App() {
         getAnnouncement,
         getAnnouncementLoading
     } = useSelector(state => state.announcementState);
+    const [showAnnouncement, setShowAnnouncement] = useState(false);
     const [announcements, setAnnouncements] = useState([]);
     const [filteredAnnouncements, setFilteredAnnouncements] = useState([]);
     const dispatch = useDispatch();
     const [userLoaded, setUserLoaded] = useState(false);
-    console.log("isAuthenticated", isAuthenticated, user);
-    console.log("userLoaded", userLoaded)
+    const [bannerAnnouncement,setBannerAnnouncement] = useState(null);
+    console.log("bannerAnnouncement", bannerAnnouncement);
+    // console.log("userLoaded", userLoaded)
 
     const [showLoginModal, setShowLoginModal] = useState(false);
-    console.log("showLoginModal", showLoginModal)
+    // console.log("showLoginModal", showLoginModal)
 
     const handleLoginClick = () => {
-        console.log("before", showLoginModal)
+        // console.log("before", showLoginModal)
         setShowLoginModal(true);
-        console.log("after", showLoginModal)
+        // console.log("after", showLoginModal)
     };
 
     const closeLoginModal = () => {
@@ -149,39 +152,66 @@ function App() {
                 const now = new Date();  // Current date and time
                 // Remove time from current date for comparison
                 now.setHours(0, 0, 0, 0);
-    
+
                 console.log("Current date: ", now);
+
+                const filtered = getAnnouncement && getAnnouncement?.filter((announcement) => {
+                    if(announcement && announcement.type === 'Announcement'){
+                        const startDate = new Date(announcement.startDate);
+                        const endDate = new Date(announcement.endDate);
     
-                const filtered =getAnnouncement &&  getAnnouncement?.filter((announcement) => {
-                    const startDate = new Date(announcement.startDate);
-                    const endDate = new Date(announcement.endDate);
+                        // Normalize the dates (removing time)
+                        startDate.setHours(0, 0, 0, 0);
+                        endDate.setHours(0, 0, 0, 0);
     
-                    // Normalize the dates (removing time)
-                    startDate.setHours(0, 0, 0, 0);
-                    endDate.setHours(0, 0, 0, 0);
+                        // Calculate 7 days before the start date
+                        const sevenDaysBeforeStart = new Date(startDate);
+                        sevenDaysBeforeStart.setDate(startDate.getDate() - 7);
     
-                    // Calculate 7 days before the start date
-                    const sevenDaysBeforeStart = new Date(startDate);
-                    sevenDaysBeforeStart.setDate(startDate.getDate() - 7);
-                    
-                    console.log(`Announcement: ${announcement._id}`);
-                    console.log("Start date: ", startDate);
-                    console.log("End date: ", endDate);
-                    console.log("Seven days before start: ", sevenDaysBeforeStart);
+                        // console.log(Announcement: ${announcement._id});
+                        console.log("Start date: ", startDate);
+                        console.log("End date: ", endDate);
+                        console.log("Seven days before start: ", sevenDaysBeforeStart);
     
-                    // Check if the current date is between sevenDaysBeforeStart and endDate (inclusive)
-                    const isActive = now >= sevenDaysBeforeStart && now <= endDate;
-                    console.log("Is announcement active: ", isActive);
+                        // Check if the current date is between sevenDaysBeforeStart and endDate (inclusive)
+                        const isActive = now >= sevenDaysBeforeStart && now <= endDate;
+                        console.log("Is announcement active: ", isActive);
     
-                    return isActive;
+                        return isActive;
+                    }
+
+                    else{
+                        const startDate = new Date(announcement.startDate);
+                        const endDate = new Date(announcement.endDate);
+    
+                        // Normalize the dates (removing time)
+                        startDate.setHours(0, 0, 0, 0);
+                        endDate.setHours(0, 0, 0, 0);
+    
+                        // Calculate 7 days before the start date
+                        const sevenDaysBeforeStart = new Date(startDate);
+                        sevenDaysBeforeStart.setDate(startDate.getDate());
+    
+                        // console.log(Announcement: ${announcement._id});
+                        console.log("Start date: ", startDate);
+                        console.log("End date: ", endDate);
+                        console.log("Seven days before start: ", sevenDaysBeforeStart);
+    
+                        // Check if the current date is between sevenDaysBeforeStart and endDate (inclusive)
+                        const isActive = now >= sevenDaysBeforeStart && now <= endDate;
+                        console.log("Is announcement active: ", isActive);
+    
+                        return isActive; 
+                    }
+                   
                 });
-    
+
                 setAnnouncements(getAnnouncement && getAnnouncement);
                 setFilteredAnnouncements(filtered);
             } catch (error) {
                 console.error("Failed to fetch announcements:", error);
             }
-    
+
         };
 
         if (getAnnouncement) {
@@ -203,7 +233,6 @@ function App() {
         if (user) {
             dispatch(userOrdersAction());
         }
-
     }, [user])
 
     useEffect(() => {
@@ -255,14 +284,11 @@ function App() {
     //     }
     // }, [isAuthenticated, products, userLoaded]);
 
-
-
     useEffect(() => {
         if (!isAuthenticated || !user && userLoaded) {
 
             store.dispatch(loadUser());
             // setUserLoaded(true); // Set the flag once the user data is loaded
-
         }
         if (!products) {
             store.dispatch(getProducts());
@@ -420,6 +446,20 @@ function App() {
     //     console.log("Filtered Announcements:", filteredAnnouncements);
     // }, [filteredAnnouncements]);
 
+    useEffect(()=>{
+        if(filteredAnnouncements && filteredAnnouncements.length > 0 && !bannerAnnouncement){
+           const banner = filteredAnnouncements && filteredAnnouncements?.filter((announcement) => {
+           return announcement && announcement.type === 'Offer';
+           });
+           setBannerAnnouncement(banner);
+        }
+        if(bannerAnnouncement && bannerAnnouncement.length>0 ){
+            setShowAnnouncement(true);
+        }
+
+    },[filteredAnnouncements,bannerAnnouncement])
+
+
 
 
     return (
@@ -438,18 +478,28 @@ function App() {
                             <div style={{ display: 'flex', flexDirection: 'column', position: 'relative', width: '100%' }}>
                                 {/* <Header /> */}
 
-                                {filteredAnnouncements && filteredAnnouncements.length>0 && 
-                                    
+                                {filteredAnnouncements && filteredAnnouncements.length > 0 && !isAdminRoute &&
+
                                     <div className="announcement-marquee">
-                                           { filteredAnnouncements && filteredAnnouncements?.map((announcement) => (
-                                        <div key={announcement._id}  className="announcement-marquee-content">
-                                            <span>{announcement.content}</span>
-                                        </div>
-                                           ))}
+                                       
+                                            <div className="announcement-marquee-content" >
+                                            {filteredAnnouncements && filteredAnnouncements?.map((announcement) => (
+                                                <span key={announcement._id}  style={{ marginRight: '10vw' }}>{announcement.content}</span>
+                                            ))}
+                                            </div>
+                                       
                                     </div>
-                                   
+
                                 }
 
+                                {
+                                    showAnnouncement && !isAdminRoute ? (
+                                        <AnnouncementBanner bannerAnnouncement={bannerAnnouncement} setShowAnnouncement={setShowAnnouncement}/>
+                                    ) :(
+                                        <>
+                                        </>
+                                    )
+                                }
 
 
 
@@ -458,6 +508,8 @@ function App() {
                                     {!isAdminRoute && <Header openSide={openSide} setOpenSide={setOpenSide} onLoginClick={handleLoginClick} setShowLoginModal={setShowLoginModal} filteredAnnouncements={filteredAnnouncements} />}
                                     {showLoginModal && <LoginForm showModal={showLoginModal} onClose={closeLoginModal} />}
                                 </div>
+
+
 
                                 <ScrollToTop />
                                 {/* <div className={isAdminRoute ? "" : openSide ? "content-blure" : isActive ? "content-blure" : "content"}> */}

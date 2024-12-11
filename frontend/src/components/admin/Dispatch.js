@@ -58,6 +58,7 @@ const Dispatch = ({ isActive, setIsActive }) => {
         onAfterPrint: () => {
             console.log("Invoice downloaded successfully.");
         },
+
     });
 
     useEffect(() => {
@@ -434,12 +435,12 @@ const Dispatch = ({ isActive, setIsActive }) => {
                     onOpen: () => dispatch(clearOrderUpdated())
                 });
                 // setTimeout(() => {
-                    dispatch(adminOrders());
-            //    }, 700);
-                
+                dispatch(adminOrders());
+                //    }, 700);
+
             }, 300);
             setShowModal(false);
-           
+
         }
     }, [isOrderUpdated])
 
@@ -681,6 +682,7 @@ const Dispatch = ({ isActive, setIsActive }) => {
                                                     <tr>
                                                         {getpackedOrderData && getpackedOrderData.dispatchedTable && (
                                                             <>
+                                                                <th>S.No</th>
                                                                 <th>Image</th>
                                                                 <th>Name</th>
                                                                 <th>Price</th>
@@ -693,10 +695,11 @@ const Dispatch = ({ isActive, setIsActive }) => {
                                                     </tr>
                                                 </thead>
                                                 <tbody>
-                                                    
+
                                                     {getpackedOrderData && getpackedOrderData.dispatchedTable && (
                                                         getpackedOrderData.dispatchedTable.map((item, index) => (
                                                             <tr key={index}>
+                                                                <td>{index + 1}</td>
                                                                 <td>
                                                                     <img src={item.image} alt={item.name} className="updateTableproduct-image" />
                                                                 </td>
@@ -714,7 +717,7 @@ const Dispatch = ({ isActive, setIsActive }) => {
 
                                                     )}
                                                     <tr>
-                                                        <td colSpan="5" style={{ textAlign: 'right' }}><strong>Total Dispatched Amount</strong></td>
+                                                        <td colSpan="6" style={{ textAlign: 'right' }}><strong>Total Dispatched Amount</strong></td>
                                                         {/* <td className="amount"><strong>Rs. {getpackedOrderData && getpackedOrderData.totalDispatchedAmount && getpackedOrderData.totalDispatchedAmount}</strong></td> */}
                                                         <td className="amount">
                                                             <strong>
@@ -780,7 +783,7 @@ const Dispatch = ({ isActive, setIsActive }) => {
                                                                         .filter(item => item.pricePerKg * item.dispatchedWeight > 0) // Filter items with total amount > 0
                                                                         .map((item, index) => (
                                                                             <li key={index} style={{ paddingBottom: '10px' }}>
-                                                                                <strong>{item.name}</strong> - {item.dispatchedWeight} {item.measurement && item.measurement=='Grams'? 'Piece' :item.measurement}
+                                                                                <strong>{item.name}</strong> - {item.dispatchedWeight} {item.measurement && item.measurement == 'Grams' ? 'Piece' : item.measurement}
                                                                             </li>
                                                                         ))}
                                                                 </ul>

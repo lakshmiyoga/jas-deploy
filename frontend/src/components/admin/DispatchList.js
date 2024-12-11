@@ -123,7 +123,10 @@ const DispatchList = ({ isActive, setIsActive }) => {
                     <div className={order.orderStatus && order.orderStatus.includes('Delivered') ? 'greenColor' : 'redColor'} >{order.orderStatus}</div>
                 ),
                 paymentstatus: (
-                    <div className='greenColor'>{order.paymentStatus}</div>
+                    // <div className='greenColor'>{order.paymentStatus}</div>
+                    <div style={{ color: order && order.paymentStatus === 'CHARGED' ? 'green' : 'red' }}>
+                         {order && order.paymentStatus === 'CHARGED' ? 'Successful':order ? order.paymentStatus : 'Pending'}
+                    </div>
                 ),
                 actions: (
                     <Fragment>

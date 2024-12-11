@@ -23,10 +23,14 @@ const UpdateAnnouncement = ({ isActive, setIsActive }) => {
     const [formData, setFormData] = useState({
         startDate: "",
         endDate: "",
+        type: "",
         content: "",
         images: [],
         imagesPreview: [],
-        imagesCleared: false
+        imagesCleared: false,
+        videos: [],
+        videosPreview: [],
+        videosCleared: false
     });
 
     console.log("formData", formData)
@@ -64,8 +68,10 @@ const UpdateAnnouncement = ({ isActive, setIsActive }) => {
                 ...formData,
                 startDate: product.startDate,
                 endDate: product.endDate,
+                type: product.type,
                 content: product.content,
-                imagesPreview: product.images?.map(image => image.image)
+                imagesPreview: product.images?.map(image => image.image),
+                videosPreview: product.videos?.map(video => video.video)
             });
         }
         else if (!product && singleAnnouncement && singleAnnouncement.announcement && singleAnnouncement.announcement._id) {
@@ -73,8 +79,10 @@ const UpdateAnnouncement = ({ isActive, setIsActive }) => {
                 ...formData,
                 startDate: singleAnnouncement.announcement.startDate,
                 endDate: singleAnnouncement.announcement.endDate || '',
+                type: singleAnnouncement.announcement.type,
                 content: singleAnnouncement.announcement.content,
-                imagesPreview: singleAnnouncement.announcement.images.map(image => image.image)
+                imagesPreview: singleAnnouncement.announcement.images?.map(image => image.image),
+                videosPreview: singleAnnouncement.announcement.videos?.map(video => video.video)
             });
         }
 
@@ -129,7 +137,9 @@ const UpdateAnnouncement = ({ isActive, setIsActive }) => {
                     setFormData(prevState => ({
                         ...prevState,
                         imagesPreview: [...prevState.imagesPreview, reader.result],
-                        images: [...prevState.images, file]
+                        images: [...prevState.images, file],
+                        videosPreview: [...prevState.videosPreview, reader.result],
+                        videos: [...prevState.videos, file]
                     }));
                 }
             };
@@ -144,7 +154,7 @@ const UpdateAnnouncement = ({ isActive, setIsActive }) => {
             ...formData,
             images: [],
             imagesPreview: [],
-            imagesCleared: true
+            imagesCleared: true,
         });
     };
 
@@ -155,9 +165,12 @@ const UpdateAnnouncement = ({ isActive, setIsActive }) => {
         const formDataToSend = new FormData();
         formDataToSend.append('startDate', formData.startDate);
         formDataToSend.append('endDate', formData.endDate);
+        formDataToSend.append('type', formData.type);
         formDataToSend.append('content', formData.content);
         formData.images.forEach(image => formDataToSend.append('images', image));
         formDataToSend.append('imagesCleared', formData.imagesCleared);
+        // formData.videos.forEach(video => formDataToSend.append('videos', video));
+        // formDataToSend.append('videosCleared', formData.videosCleared);
         // console.log(formDataToSend)
         dispatch(updateAnnouncement({ id, formDataToSend }));
         console.log('formDataToSend', id, formDataToSend);
@@ -214,8 +227,8 @@ const UpdateAnnouncement = ({ isActive, setIsActive }) => {
         }
     }, [dispatch, isAnnouncementUpdated, updateAnnouncementError, navigate]);
 
-     // Handle changes for the date pickers
-     const handleStartDateChange = (date) => {
+    // Handle changes for the date pickers
+    const handleStartDateChange = (date) => {
         setFormData({
             ...formData,
             startDate: setHours(setMinutes(date, 0), 12) // Set the time to 12 PM to standardize
@@ -282,7 +295,7 @@ const UpdateAnnouncement = ({ isActive, setIsActive }) => {
                                                 />
                                             </div>
                                             <div style={{ display: 'flex', flexDirection: 'row', marginRight: '20px' }}>
-                                            <label>End Date : </label>
+                                                <label>End Date : </label>
                                                 <DatePicker
                                                     selected={formData.endDate}
                                                     onChange={handleEndDateChange}
@@ -296,6 +309,22 @@ const UpdateAnnouncement = ({ isActive, setIsActive }) => {
                                         </div>
 
                                         <div className="form-group">
+                                            <label htmlFor="type">Type <span style={{ color: 'red' }}>*</span></label>
+                                            <select
+                                                id="type"
+                                                name="type"
+                                                className="form-control"
+                                                value={formData.type}
+                                                onChange={handleChange}
+                                                required
+                                            >
+                                                <option value="" disabled>Select Type</option>
+                                                <option value="Announcement">Announcement</option>
+                                                <option value="Offer">Offer</option>
+                                            </select>
+                                        </div>
+
+                                        <div className="form-group">
                                             <label htmlFor="description">Content</label>
                                             <textarea
                                                 type="text"
@@ -305,7 +334,7 @@ const UpdateAnnouncement = ({ isActive, setIsActive }) => {
                                                 value={formData.content}
                                                 onChange={handleChange}
                                                 style={{ height: "20vh" }}
-                                                required
+                                                
                                             />
                                         </div>
                                         <div className='form-group'>
@@ -319,6 +348,7 @@ const UpdateAnnouncement = ({ isActive, setIsActive }) => {
                                                     id='images'
                                                     multiple
                                                     onChange={handleImagesChange}
+                                                    disabled={formData && formData.type === 'Announcement' ? true : false}
                                                 // required
                                                 />
                                                 <label className='custom-file-label' htmlFor='images'>
@@ -343,6 +373,41 @@ const UpdateAnnouncement = ({ isActive, setIsActive }) => {
                                                 </Fragment>
                                             }
                                         </div>
+
+                                        {/* <div className="form-group">
+                                    <label>Videos (Max Size: 50MB) <span style={{ color: 'red' }}></span></label>
+                                    <div className="custom-file">
+                                        <input
+                                            type="file"
+                                            name="videos"
+                                            className="custom-file-input"
+                                            accept=".mp4, .mkv, .webm"
+                                            id="customVideoFile"
+                                            onChange={onVideosChange}
+                                            disabled={type === 'Announcement' ? true : false}
+                                        />
+                                        <label className="custom-file-label" htmlFor="customVideoFile">
+                                            Choose Videos
+                                        </label>
+                                    </div>
+                                    {videosPreview.length > 0 && (
+                                        <Fragment>
+                                            <span className="mr-2" onClick={clearVideosHandler} style={{ cursor: "pointer" }}>
+                                                <i className="fa fa-trash"></i>
+                                            </span>
+                                            {videosPreview.map(video => (
+                                                <video
+                                                    className="mt-3 mr-2"
+                                                    key={video}
+                                                    src={video}
+                                                    controls
+                                                    width="100"
+                                                    height="80"
+                                                />
+                                            ))}
+                                        </Fragment>
+                                    )}
+                                </div> */}
 
 
                                         <button

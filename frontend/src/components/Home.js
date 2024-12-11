@@ -162,7 +162,7 @@ const Home = () => {
       />
       <div className="container" style={{ marginTop: '60px' }}>
         <div className="row d-flex justify-content-center">
-          {categories.map((categoryItem) => {
+          {categories && categories.map((categoryItem) => {
             // Display the Groceries card only if user exists and is admin
             if (
               categoryItem.category === "Groceries" &&

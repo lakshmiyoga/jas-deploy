@@ -1,12 +1,14 @@
 import React, { Fragment } from 'react'
-import { Link, useLocation } from 'react-router-dom'
+import { Link, useLocation, useNavigate } from 'react-router-dom'
 import { useSelector } from 'react-redux'
 import MetaData from '../Layouts/MetaData';
+import ArrowBackIcon from '@mui/icons-material/ArrowBack';
+
 
 const Profile = () => {
     const location = useLocation();
     // sessionStorage.setItem('redirectPath', location.pathname);
-
+    const navigate = useNavigate();
     const { user } = useSelector(state => state.authState);
     console.log("user", user)
 
@@ -17,9 +19,13 @@ const Profile = () => {
                 title="Profile"
                 description="View and edit your profile information, manage addresses, and update your account preferences for a personalized shopping experience."
             />
-  
+
 
             <div className="products_heading">Profile</div>
+            <div className="back-button" onClick={() => navigate(-1)}>
+                <ArrowBackIcon fontSize="small" />
+                <span>Back</span>
+            </div>
 
             <div className="row justify-content-around mt-5 user-info">
 
@@ -33,7 +39,7 @@ const Profile = () => {
                 </div>
 
                 <div className="col-12  col-md-5" style={{ display: 'flex', flexDirection: 'column', alignItems: 'center', justifyContent: 'center' }} >
-                    <h5>Full Name: {user?.name? user.name :"Not Provided" }</h5>
+                    <h5>Full Name: {user?.name ? user.name : "Not Provided"}</h5>
 
                     {user?.mobile ? (
                         <div>

@@ -16,6 +16,11 @@ import { getProducts } from '../../actions/productsActions';
 import CryptoJS from 'crypto-js';
 import LoaderButton from '../Layouts/LoaderButton';
 import { getAnnouncements } from '../../actions/announcementAction';
+import DatePicker from "react-datepicker";
+import "react-datepicker/dist/react-datepicker.css";
+import { setHours, setMinutes, addDays, isWithinInterval, startOfDay, endOfDay } from 'date-fns';
+import ArrowBackIcon from '@mui/icons-material/ArrowBack';
+
 
 
 const ConfirmOrder = () => {
@@ -37,9 +42,13 @@ const ConfirmOrder = () => {
     console.log("user", user)
     const navigate = useNavigate();
     const [loading, setLoading] = useState(false);
+    const [deliveryDate, setDeliveryDate] = useState(null);
     const [OrderedDateUF, setOrderedDateUF] = useState(null);
     const [OrderedDate, setOrderedDate] = useState(null);
-    console.log("OrderedDateOrderedDate",OrderedDate)
+    console.log("OrderedDate", OrderedDate)
+    console.log("OrderedDateUF", OrderedDateUF)
+    console.log("deliveryDate", deliveryDate)
+
     // const [shippingAmount, setShippingAmount] = useState(null);
     const queryParams = new URLSearchParams(location.search);
     const message = queryParams.get('message');
@@ -49,17 +58,19 @@ const ConfirmOrder = () => {
         getAnnouncement,
         getAnnouncementLoading
     } = useSelector(state => state.announcementState);
-
+    console.log("getAnnouncement", getAnnouncement)
+    console.log("orderDescription", orderDescription)
+    const [disabledDates, setDisabledDates] = useState([]);
     useEffect(() => {
         if (!getAnnouncement) {
             dispatch(getAnnouncements())
         }
     }, [])
 
-   
+
     useEffect(() => {
         if (!defaultAddress && !shippingCharge) {
-           
+
             navigate('/cart');
         }
         if (!cartItems.length) {
@@ -236,7 +247,7 @@ const ConfirmOrder = () => {
     //     const currentDate = new Date();
     //     const currentHour = currentDate.getHours();
     //     let orderDate;
-    
+
     //     // Determine initial delivery date
     //     if (currentHour < 21) {
     //         orderDate = new Date(currentDate);
@@ -245,7 +256,7 @@ const ConfirmOrder = () => {
     //         orderDate = new Date(currentDate);
     //         orderDate.setDate(orderDate.getDate() + 2); // Day after tomorrow
     //     }
-    
+
     //     // Function to check if the date falls within a leave period
     //     const isWithinLeaveDate = (date) => {
     //         return getAnnouncement.some(({ startDate, endDate }) => {
@@ -254,39 +265,48 @@ const ConfirmOrder = () => {
     //             return date >= leaveStart && date <= leaveEnd;
     //         });
     //     };
-    
+
     //     // Adjust delivery date if it falls within leave dates
     //     while (isWithinLeaveDate(orderDate)) {
     //         orderDate.setDate(orderDate.getDate() + 1); // Move to next day
     //     }
-    
+
     //     // Set the description with the adjusted date
     //     setOrderDescription(`The order will be delivered on: ${orderDate.toDateString()}`);
     //     setShowModal(true);
     // };
 
- 
 
-    useEffect(()=>{
+
+    useEffect(() => {
         const formatDateToCustomFormat = (OrderedDateUF) => {
-            // e.preventDefault();
-            const isoString = OrderedDateUF.toISOString(); // Converts to "2024-12-09T00:00:00.000Z"
-            
-            // Replace the 'Z' with the required offset (you can manually set it to "+00:00")
-            const formattedDate = isoString.replace('Z', '+00:00');
-            
-            return formattedDate;
+            // // e.preventDefault();
+            // const isoString = OrderedDateUF.toISOString(); // Converts to "2024-12-09T00:00:00.000Z"
+
+            // // Replace the 'Z' with the required offset (you can manually set it to "+00:00")
+            // const formattedDate = isoString.replace('Z', '+00:00');
+
+            // return formattedDate;
+            const year = OrderedDateUF.getFullYear();
+        const month = String(OrderedDateUF.getMonth() + 1).padStart(2, '0'); // Months are 0-based
+        const day = String(OrderedDateUF.getDate()).padStart(2, '0');
+        const hours = String(OrderedDateUF.getHours()).padStart(2, '0');
+        const minutes = String(OrderedDateUF.getMinutes()).padStart(2, '0');
+        const seconds = String(OrderedDateUF.getSeconds()).padStart(2, '0');
+
+        // Create a custom format similar to ISO without altering timezone
+        return `${year}-${month}-${day}T${hours}:${minutes}:${seconds}+00:00`;
         };
-        if(OrderedDateUF){
+        if (OrderedDateUF) {
             setOrderedDate(formatDateToCustomFormat(OrderedDateUF))
         }
-    },[OrderedDateUF])
+    }, [OrderedDateUF])
 
     const handelopenModal = (getAnnouncement) => {
         const currentDate = new Date();
         const currentHour = currentDate.getHours();
         let orderDate;
-    
+
         // Determine initial delivery date
         if (currentHour < 21) {
             orderDate = new Date(currentDate);
@@ -295,60 +315,64 @@ const ConfirmOrder = () => {
             orderDate = new Date(currentDate);
             orderDate.setDate(orderDate.getDate() + 2); // Day after tomorrow
         }
-    
+
         console.log(`Initial orderDate: ${orderDate.toDateString()}`);
-    
+
         // Function to reset the time to 00:00:00 for accurate date comparison
         const resetTime = (date) => {
             const resetDate = new Date(date);
             resetDate.setHours(0, 0, 0, 0); // Set time to midnight
             return resetDate;
         };
-    
+
         // Function to check if the date falls within a leave period
         const isWithinLeaveDate = (date) => {
             let isLeave = false;
-            getAnnouncement &&  getAnnouncement.forEach(({ startDate, endDate }) => {
-                const leaveStart = resetTime(new Date(startDate));
-                const leaveEnd = resetTime(new Date(endDate));
-                const checkDate = resetTime(date); // Reset the time of the check date
+            getAnnouncement && getAnnouncement.forEach(({ startDate, endDate,type }) => {
+                if(type ==='Announcement'){
+                    const leaveStart = resetTime(new Date(startDate));
+                    const leaveEnd = resetTime(new Date(endDate));
+                    const checkDate = resetTime(date); // Reset the time of the check date
     
-                console.log(`Checking date ${checkDate.toDateString()} against leave period: ${leaveStart.toDateString()} to ${leaveEnd.toDateString()}`);
+                    console.log(`Checking date ${checkDate.toDateString()} against leave period: ${leaveStart.toDateString()} to ${leaveEnd.toDateString()}`);
     
-                if (checkDate >= leaveStart && checkDate <= leaveEnd) {
-                    isLeave = true;
+                    if (checkDate >= leaveStart && checkDate <= leaveEnd) {
+                        isLeave = true;
+                    }
                 }
+
+                
             });
             return isLeave;
         };
-    
+
         // Check if orderDate is within leave periods and log the result
         console.log(`Is the initial orderDate (${orderDate.toDateString()}) within leave date? ${isWithinLeaveDate(orderDate)}`);
-    
+
         // Adjust delivery date if it falls within leave periods
         while (isWithinLeaveDate(orderDate)) {
             console.log(`Order date ${orderDate.toDateString()} is within a leave period.`);
-    
-            const conflictingLeave =getAnnouncement && getAnnouncement.find(({ startDate, endDate }) => {
+
+            const conflictingLeave = getAnnouncement && getAnnouncement.find(({ startDate, endDate }) => {
                 const leaveStart = resetTime(new Date(startDate));
                 const leaveEnd = resetTime(new Date(endDate));
                 const checkDate = resetTime(orderDate);
-    
+
                 return checkDate >= leaveStart && checkDate <= leaveEnd;
             });
-    
+
             if (conflictingLeave) {
                 const leaveEnd = new Date(conflictingLeave.endDate);
                 leaveEnd.setHours(0, 0, 0, 0); // Set leaveEnd time to midnight for consistency
-    
+
                 console.log(`Conflicting leave period ends on: ${leaveEnd.toDateString()}`);
-    
+
                 // Skip to the day after the conflicting leave's `endDate`
                 if (orderDate.getDate() === leaveEnd.getDate() && orderDate.getMonth() === leaveEnd.getMonth() && orderDate.getFullYear() === leaveEnd.getFullYear()) {
                     // If the orderDate is the same as leaveEnd, move it to the next day
                     orderDate = new Date(leaveEnd);
                     orderDate.setDate(orderDate.getDate() + 1); // Skip to the day after
-    
+
                     console.log(`Adjusted orderDate due to same date as leaveEnd: ${orderDate.toDateString()}`);
                 } else {
                     // Regular case: just skip to the day after leaveEnd
@@ -358,22 +382,22 @@ const ConfirmOrder = () => {
             }
         }
 
-        
-    
+
+
         console.log(`Final orderDate: ${orderDate.toDateString()}`);
         // const formattedOrderDate = formatDateToCustomFormat(orderDate);
         setOrderedDateUF(orderDate);
-    
+
         // Set the description with the adjusted date
         setOrderDescription(`The order will be delivered on: ${orderDate.toDateString()}`);
         setShowModal(true);
     };
-    
-    
-    
-    
-    
-    
+
+
+
+
+
+
 
     const handleCancelModal = () => {
         setShowModal(false);
@@ -414,6 +438,56 @@ const ConfirmOrder = () => {
         handelopenModal(getAnnouncement && getAnnouncement);
     };
 
+
+    // Dynamically calculate disabled date intervals
+    // useEffect(() => {
+    //     const disabled = getAnnouncement && getAnnouncement.map((announcement) => ({
+    //         start: startOfDay(new Date(announcement.startDate)), // Start of the day for startDate
+    //         end: endOfDay(new Date(announcement.endDate)), // End of the day for endDate
+    //     }));
+    //     setDisabledDates(disabled);
+    // }, []);
+    useEffect(() => {
+        const disabled = getAnnouncement && getAnnouncement.map((announcement) => {
+            if (announcement.type === 'Announcement') {
+                return {
+                    start: startOfDay(new Date(announcement.startDate)), // Start of the day for startDate
+                    end: endOfDay(new Date(announcement.endDate)), // End of the day for endDate
+                };
+            }
+            return null; // Optional, if you want to filter out non-matching announcements
+        }).filter(item => item !== null); // Optional: to remove `null` values
+    
+        setDisabledDates(disabled);
+    }, []);
+    
+
+    // Calculate tomorrow's date and 14 days from tomorrow
+    const tomorrow = new Date();
+    tomorrow.setDate(tomorrow.getDate() + 1); // Tomorrow
+
+    const maxDate = addDays(tomorrow, 13); // 14 days from tomorrow
+
+    // Disable dates between announcement's start and end date (inclusive)
+    const isDisabledDate = (date) => {
+        const currentDate = startOfDay(date); // Strip time for comparison
+        return disabledDates.some(({ start, end }) =>
+            isWithinInterval(currentDate, { start, end })
+        );
+    };
+
+    // Separate handler for delivery date changes
+    const handleDeliveryDate = (date) => {
+        // Adjust the time for 12:00 PM
+        const adjustedDate = setHours(setMinutes(date, 0), 12);
+        console.log("adjustedDate", adjustedDate)
+        setDeliveryDate(adjustedDate);
+        setOrderedDateUF(adjustedDate);
+        const formattedDate = adjustedDate.toDateString();
+        setOrderDescription(`The order will be delivered on: ${formattedDate}`);
+
+    };
+
     return (
         <Fragment>
             {/* { shippingAmount ? ( */}
@@ -425,6 +499,10 @@ const ConfirmOrder = () => {
                 />
 
                 <div className="products_heading">Confirm Order</div>
+                <div className="back-button" onClick={() => navigate(-1)}>
+                    <ArrowBackIcon fontSize="small" />
+                    <span>Back</span>
+                </div>
                 <StepsCheckOut shipping confirmOrder />
                 <div className="container confirm-order-container">
                     {/* {!shippingAmount ? <div style={{ marginTop: '4rem' }}>
@@ -484,8 +562,8 @@ const ConfirmOrder = () => {
                                 <hr />
                                 <p className="confirmorder_name">Total: <span className="order-summary-values">Rs.{total}</span></p>
                                 <p className="confirmorder_name" style={{ fontSize: '0.8rem', color: '#6c757d' }}>
-                                            (Inclusive of all taxes)
-                                        </p>
+                                    (Inclusive of all taxes)
+                                </p>
                                 <hr />
                                 {shippingCharge ? (
                                     <button id="checkout_btn" className="btn btn-primary btn-block" onClick={openModalWithValidation} disabled={loading}>
@@ -518,6 +596,20 @@ const ConfirmOrder = () => {
                                                 </div>
                                                 <div className="modal-body">
                                                     <p>{orderDescription && orderDescription}</p>
+                                                    <div style={{ display: 'flex', flexDirection: 'row', marginRight: '20px' }}>
+                                                        <label htmlFor="deliveryDate" style={{ marginRight: '10px' }}> Select Delivery Date:</label>
+                                                        <DatePicker
+                                                            selected={deliveryDate}
+                                                            onChange={handleDeliveryDate}
+                                                            dateFormat="dd/MM/yyyy"
+                                                            className="form-control date-input"
+                                                            placeholderText="dd/mm/yyyy"
+                                                            minDate={tomorrow}
+                                                            maxDate={maxDate}
+                                                            filterDate={(date) => !isDisabledDate(date)}
+
+                                                        />
+                                                    </div>
                                                 </div>
                                                 <div className="modal-footer">
                                                     <button type="button" className="btn btn-secondary" onClick={handleCancelModal} disabled={loading}>Cancel</button>

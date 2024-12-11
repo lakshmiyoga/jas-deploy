@@ -396,7 +396,7 @@ import { porterClearData } from '../../slices/porterSlice';
 import { Slide, toast } from 'react-toastify';
 import { clearError } from '../../slices/orderSlice';
 import MetaData from '../Layouts/MetaData';
-
+import ArrowBackIcon from '@mui/icons-material/ArrowBack';
 
 
 export default function OrderDetail() {
@@ -501,6 +501,10 @@ export default function OrderDetail() {
 
             <Fragment>
                 <div className="products_heading">Order Details</div>
+                <div className="back-button" onClick={() => navigate(-1)}>
+                    <ArrowBackIcon fontSize="small" />
+                    <span>Back</span>
+                </div>
                 {loading ?
                     <div style={{ marginTop: '4rem' }}>
                         <Loader />
@@ -548,7 +552,12 @@ export default function OrderDetail() {
                                     <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', flexWrap: 'wrap' }}>
                                         <div style={{ display: 'flex', alignItems: 'center', margin: '10px' }}>
                                             <p><b>Payment Status:</b></p>
-                                            <p className={orderDetail && orderDetail.paymentStatus && orderDetail.paymentStatus === 'CHARGED' ? 'greenColor' : 'redColor'} style={{ marginLeft: '10px' }}><b>{orderDetail ? orderDetail.paymentStatus : 'Pending'}</b></p>
+                                            <p className='greenColor'>
+                                               <b> {orderDetail && orderDetail.paymentStatus === 'CHARGED' ? 'Successful' : orderDetail ? orderDetail.paymentStatus : 'Pending'}</b>
+                                            </p>
+                                            {/* <p className={orderDetail && orderDetail.paymentStatus && orderDetail.paymentStatus === 'CHARGED' ? 'greenColor' : 'redColor'} style={{ marginLeft: '10px' }}><b>{orderDetail ? orderDetail.paymentStatus : 'Pending'}</b></p> */}
+                                           
+
                                         </div>
 
                                         <div style={{ display: 'flex', alignItems: 'center', margin: '10px' }}>
@@ -650,7 +659,7 @@ export default function OrderDetail() {
                                                                     <td>
                                                                         <img src={item.image} alt={item.name} className="updateTableproduct-image" />
                                                                     </td>
-                                                                    <td>{item && item.range? `${capitalizeFirstLetter(item.name)} (${item.range})` : `${capitalizeFirstLetter(item.name)}`}</td>
+                                                                    <td>{item && item.range ? `${capitalizeFirstLetter(item.name)} (${item.range})` : `${capitalizeFirstLetter(item.name)}`}</td>
                                                                     <td>Rs. {(item.price).toFixed(2)}</td>
                                                                     <td>{item.productWeight} {item.measurement}</td>
                                                                     <td>Rs.{(item.productWeight * item.price).toFixed(2)}</td>

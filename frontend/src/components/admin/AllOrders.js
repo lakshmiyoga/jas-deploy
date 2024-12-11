@@ -242,14 +242,17 @@ const AllOrders = ({ isActive, setIsActive }) => {
                 email: order.user.email,
                 amount: `Rs.${order.totalPrice}`,
                 orderstatus: (
-                    <p className={order.orderStatus.includes('Delivered') ? 'greenColor' : 'redColor'}>
+                    <div className={order.orderStatus.includes('Delivered') ? 'greenColor' : 'redColor'}>
                         {order.orderStatus}
-                    </p>
+                    </div>
                 ),
                 paymentstatus: (
-                    <p style={{ color: order && order.paymentStatus === 'CHARGED' ? 'green' : 'red' }}>
-                        {order && order.paymentStatus}
-                    </p>
+                    <div style={{ color: order && order.paymentStatus === 'CHARGED' ? 'green' : 'red' }}>
+                         {order && order.paymentStatus === 'CHARGED' ? 'Successful':order ? order.paymentStatus : 'Pending'}
+                    </div>
+                    // <div className='greenColor'>
+                    //     {order && order.paymentStatus === 'CHARGED' ? 'Successful':order ? order.paymentStatus : 'Pending'}
+                    // </div>
                 ),
                 actions: (
                     <Fragment>

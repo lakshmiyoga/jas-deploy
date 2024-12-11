@@ -199,7 +199,7 @@ import { Link, useLocation } from "react-router-dom";
 import { adminOrders as adminOrdersAction } from "../../actions/orderActions";
 import Loader from '../Layouts/Loader';
 import { MDBDataTable } from 'mdbreact';
-import { Slide,toast } from 'react-toastify';
+import { Slide, toast } from 'react-toastify';
 import Sidebar from "../admin/Sidebar";
 import { clearError } from '../../slices/productsSlice';
 import { clearOrderDeleted, orderDetailClear } from "../../slices/orderSlice";
@@ -315,8 +315,8 @@ const OrderList = ({ isActive, setIsActive }) => {
                     </div>
                 ),
                 paymentstatus: (
-                    <div className='greenColor'>
-                        {order.paymentStatus}
+                    <div style={{ color: order && order.paymentStatus === 'CHARGED' ? 'green' : 'red'}}>
+                         {order && order.paymentStatus === 'CHARGED' ? 'Successful':order ? order.paymentStatus : 'Pending'}
                     </div>
                 ),
                 actions: (
@@ -341,17 +341,17 @@ const OrderList = ({ isActive, setIsActive }) => {
             // });
             toast.dismiss();
             setTimeout(() => {
-            toast.error(error, {
-              position: 'bottom-center',
-              type: 'error',
-              autoClose: 700,
-              transition: Slide,
-              hideProgressBar: true,
-              className: 'small-toast',
-              onOpen: () => { dispatch(clearError()) }
-            });
-          }, 300);
-          setIserror(true)
+                toast.error(error, {
+                    position: 'bottom-center',
+                    type: 'error',
+                    autoClose: 700,
+                    transition: Slide,
+                    hideProgressBar: true,
+                    className: 'small-toast',
+                    onOpen: () => { dispatch(clearError()) }
+                });
+            }, 300);
+            setIserror(true)
         }
 
         if (isOrderDeleted) {
@@ -361,16 +361,16 @@ const OrderList = ({ isActive, setIsActive }) => {
             // });
             toast.dismiss();
             setTimeout(() => {
-            toast.success('Order Deleted Successfully!', {
-              position: 'bottom-center',
-              type: 'success',
-              autoClose: 700,
-              transition: Slide,
-              hideProgressBar: true,
-              className: 'small-toast',
-              onOpen: () => dispatch(clearOrderDeleted())
-            });
-          }, 300);
+                toast.success('Order Deleted Successfully!', {
+                    position: 'bottom-center',
+                    type: 'success',
+                    autoClose: 700,
+                    transition: Slide,
+                    hideProgressBar: true,
+                    className: 'small-toast',
+                    onOpen: () => dispatch(clearOrderDeleted())
+                });
+            }, 300);
         }
 
         // dispatch(adminOrdersAction());
@@ -381,15 +381,15 @@ const OrderList = ({ isActive, setIsActive }) => {
         if (!orders && !iserror) {
             dispatch(adminOrdersAction());
         }
-    }, [orders,iserror])
+    }, [orders, iserror])
 
     return (
         <div>
             {/* <MetaData title={`Order list`} /> */}
-            <MetaData 
-  title="Order List" 
-  description="Access a comprehensive list of all customer orders. View, filter, and manage orders to ensure smooth order fulfillment." 
-/>
+            <MetaData
+                title="Order List"
+                description="Access a comprehensive list of all customer orders. View, filter, and manage orders to ensure smooth order fulfillment."
+            />
 
 
             <div className="row loader-parent">

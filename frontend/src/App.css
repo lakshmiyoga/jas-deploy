@@ -2265,7 +2265,7 @@ ul.CTAs a {
 .modal-dialog {
   background: #fff;
   border-radius: 5px;
-  overflow: hidden;
+  overflow: visible;
   max-width: 500px;
   width: 100%;
 }
@@ -2694,28 +2694,29 @@ h5 {
 
 /* jsainvoice css  */
 
+
 .invoice-container {
-  width: 100%;
-  height: 100vh;
+  width: 90%;
+  height: 95vh;
   margin: auto;
-  /* font-family: Arial, sans-serif; */
   font-family: 'Times New Roman', Times, serif;
-  /* border: 1px solid #000; */
-  padding: 100px;
-  font-size: 12px;
+  padding: 20px;
+  font-size: 15px;
+  font-weight:bold
 }
 
 .invoice-header {
   display: flex;
   flex-direction: column;
-  margin-bottom: 20px;
-  padding: 0 20px;
+  margin-bottom: 10px;
+  /* padding: 0 20px; */
 }
+
 
 .invoice-header .top-info {
   display: flex;
   justify-content: flex-end;
-  margin-bottom: 20px;
+  margin-bottom: 10px;
 }
 
 .invoice-header .top-info div {
@@ -2732,7 +2733,7 @@ h5 {
   margin: 0 10px;
 }
 
-.invoice-header .middle-info h3 {
+.invoice-header .middle-info h4 {
 
   margin-bottom: 10px;
 }
@@ -2744,7 +2745,7 @@ h5 {
 
 .invoice-header .bottom-info div {
   flex: 1;
-  margin: 20px 10px;
+  margin: 10px 10px;
 
 }
 
@@ -2759,6 +2760,7 @@ h5 {
 .bottom-data p {
   border-bottom: 1px solid black;
   text-align: center;
+  font-weight:bolder;
 }
 
 .bottom-data p:last-child {
@@ -2766,33 +2768,47 @@ h5 {
   /* Remove the border for the last paragraph */
 }
 
-.invoice-header h2,
-.invoice-header h3,
+.invoice-header h4,
+.invoice-header h5,
 .invoice-header p {
   margin: 0;
 }
 
 .invoice-header p {
-  margin-bottom: 5px;
+  /* margin-bottom: 5px; */
 }
 
 
 
 .invoice-body {
-  margin-bottom: 20px;
+  /* margin-bottom: 20px; */
 
 }
 
 .invoice-table {
   width: 100%;
-  border-collapse: collapse;
+  /* border-collapse: collapse; */
+  page-break-inside: auto; 
 }
 
 .invoice-table th,
 .invoice-table td {
   border: 1px solid #000;
-  padding: 8px;
+  /* padding: 8px; */
   text-align: center;
+}
+
+.invoice-table td {
+  font-weight: 800px;
+}
+
+.invoice-table tbody tr {
+  page-break-inside: avoid; /* Prevent row splitting */
+}
+
+/* Footer should always appear at the end of the table */
+.invoice-table tfoot {
+  display: table-footer-group; /* Ensure footer is part of the table's final rendering */
 }
 
 
@@ -5105,9 +5121,9 @@ p.confirmorder_name {
 
 .announcement-marquee-content {
   display: inline-block; /* Ensure it's inline for scrolling */
-  animation: scrollText 15s linear infinite; /* Smooth scrolling effect */
+  animation: scrollText 20s linear infinite; /* Smooth scrolling effect */
   white-space: nowrap;
-  min-width: 100vw;
+  min-width: 100%;
   font-size: 16px;
   font-weight: bold;
 }
@@ -5117,7 +5133,7 @@ p.confirmorder_name {
     display: inline-block; /* Ensure it's inline for scrolling */
     animation: scrollText 15s linear infinite; /* Smooth scrolling effect */
     white-space: nowrap;
-    min-width: 100vw;
+    min-width: 100%;
     font-size: 12px;
     font-weight: bold;
   }
@@ -5128,6 +5144,33 @@ p.confirmorder_name {
     transform: translateX(100%);
   }
   to {
-    transform: translateX(-100%);
+    transform: translateX(-150%);
   }
+}
+
+.modal-image-container-banner{
+  min-width: 85vw;
+  max-width: 85vw;
+  max-height: 85vh;
+  /* min-height: 85vh; */
+  height: auto;
+  display: 'flex';
+  justify-content: 'center';
+  align-items: 'center';
+  overflow: 'hidden';
+  position: 'relative';
+  background-color: '#fff';
+}
+
+.bannerimg{
+  height: auto;
+  max-height: 85vh;
+  min-width: 100%;
+  max-width: 85vw;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  position: relative;
+  overflow: hidden;
+  object-fit: contain;
 }

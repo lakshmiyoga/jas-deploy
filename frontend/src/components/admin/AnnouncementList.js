@@ -79,6 +79,15 @@ const AnnouncementList = ({ isActive, setIsActive }) => {
 
                 },
                 {
+                    label: 'Type',
+                    field: 'type',
+                    sort: 'disabled',
+                    attributes: {
+                        'className': 'actions-column'
+                      }
+
+                },
+                {
                     label: 'Actions',
                     field: 'actions',
                     sort: 'disabled',
@@ -107,17 +116,24 @@ const AnnouncementList = ({ isActive, setIsActive }) => {
                 // name: ${product.englishName} / ${product.tamilName},
                 startDate: formattedStartDate,
                 endDate: formattedEndDate,
-                image: (
+                image:  product && product.images[0] && product.images[0].image ? (
                     <img
                         src={product.images[0].image}
                         alt={product.name}
                         style={{ width: '50px', height: '50px', objectFit: 'cover' }}
                     />
+                ) : (
+                    <p>-</p>
                 ),
                 // content: product.content,
                 content: (
                     <div style={{ position:'relative',maxWidth: 'auto', wordBreak: 'break-word'}}>
                      {product.content}
+                    </div>
+                  ),
+                type: (
+                    <div style={{ position:'relative',maxWidth: 'auto', wordBreak: 'break-word'}}>
+                     {product.type ? product.type : '-' }
                     </div>
                   ),
                 actions: (

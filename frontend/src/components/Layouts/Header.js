@@ -1357,6 +1357,8 @@ const Header = ({ openSide, setOpenSide, onLoginClick,filteredAnnouncements }) =
               alt="Fresh"
               style={{ width: '24px', height: '24px' }} // Adjust the size as needed
             />} className='navbar-link' />
+            {
+          user && (user.role === 'admin' || user.role === 'subadmin') && (
         <BottomNavigationAction sx={{
           '&.Mui-selected': {
             color: '#FED235', // Set label color to yellow when active
@@ -1382,6 +1384,7 @@ const Header = ({ openSide, setOpenSide, onLoginClick,filteredAnnouncements }) =
             style={{ width: '24px', height: '24px' }} // Adjust the size as needed
           />}
           onClick={() => handleNavigation('/groceries')} className='navbar-link' />
+          )}
         <BottomNavigationAction sx={{
           '&.Mui-selected': {
             color: '#FED235', // Set label color to yellow when active

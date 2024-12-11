@@ -4,7 +4,7 @@ import { Link, useLocation, useParams } from 'react-router-dom';
 import { loadUser } from '../../actions/userActions';
 import { getProducts } from '../../actions/productsActions';
 import { orderCompleted } from "../../slices/cartSlice";
-import { useDispatch } from 'react-redux';
+import { useDispatch, useSelector } from 'react-redux';
 import axios from 'axios';
 import MetaData from '../Layouts/MetaData';
 import { userOrders as userOrdersAction } from '../../actions/orderActions';
@@ -18,10 +18,12 @@ const PaymentConfirm = () => {
   const [paymentStatus, setPaymentStatus] = useState('LOADING');
   const [paymentDetails, setPaymentDetails] = useState({});
   const dispatch = useDispatch();
+  const { userOrders } = useSelector(state => state.orderState)
+  console.log("userOrders", userOrders)
 
-  useEffect(()=>{
+  useEffect(() => {
     dispatch(userOrdersAction());
-  },[])
+  }, [])
 
 
   useEffect(() => {
@@ -32,6 +34,7 @@ const PaymentConfirm = () => {
         if (data && data.sessionResponse) {
           setPaymentStatus(data.sessionResponse.status);
           setPaymentDetails(data.sessionResponse);
+          console.log("data", data)
         } else {
           setPaymentStatus('UNKNOWN');
         }
@@ -43,6 +46,17 @@ const PaymentConfirm = () => {
     fetchData();
     dispatch(orderCompleted())
   }, [id]);
+
+
+  const lastOrder = userOrders?.reduce((latestOrder, currentOrder) => {
+    return new Date(currentOrder.createdAt) > new Date(latestOrder.createdAt) ? currentOrder : latestOrder;
+  }, userOrders[0]);
+
+  const lastOrderDate = lastOrder ? lastOrder.orderDate : null;
+
+  console.log("Last Order Date:", lastOrderDate);
+
+
 
   const renderPaymentDetails = () => {
     const { amount, payment_method, order_id, txn_id, date_created } = paymentDetails;
@@ -79,8 +93,25 @@ const PaymentConfirm = () => {
                 <td>{(txn_id ? txn_id : 'N/A')}</td>
               </tr>
               <tr>
-                <td>Date</td>
-                <td>{new Date(date_created).toLocaleString()}</td>
+                <td>Order Date</td>
+                {/* <td>{new Date(date_created).toDateString()}</td> */}
+                <td>
+                  {new Date(date_created).toLocaleDateString('en-US', {
+                    weekday: 'short',
+                    year: 'numeric',
+                    month: 'short',
+                    day: '2-digit',
+                  })}
+                </td>
+              </tr>
+              <tr>
+                <td>Delivery Date</td>
+                <td>{new Date(lastOrderDate).toLocaleDateString('en-US', {
+                  weekday: 'short',
+                  year: 'numeric',
+                  month: 'short',
+                  day: '2-digit',
+                })}</td>
               </tr>
             </tbody>
           </table>
