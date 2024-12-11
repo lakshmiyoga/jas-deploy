@@ -16,7 +16,17 @@ const createAnnouncement = catchAsyncError(async (req, res, next) => {
             req.files.forEach(file => {
                 images.push({ image: file.location }); // Store S3 URL
             });
+
+            // req.files.forEach(file => {
+            //     if (file.fieldname.startsWith('images')) {
+            //       images.push({ image: file.location }); // Store S3 URL for images
+            //     } else if (file.fieldname.startsWith('videos')) {
+            //       videos.push({ video: file.location }); // Store S3 URL for videos
+            //     }
+            //   });
         }
+
+
     
          // Ensure only the date part is stored
          const startDate = new Date(req.body.startDate).toISOString().split('T')[0]; // Extract date only
@@ -26,8 +36,10 @@ const createAnnouncement = catchAsyncError(async (req, res, next) => {
         const newAnnouncement = new Announcement({
             startDate,
             endDate,
+            type:req.body.type,
             content:req.body.content,
             images: images,
+            // videos: videos ,
         });
     
         await newAnnouncement.save();
@@ -85,7 +97,7 @@ const updateAnnouncement = catchAsyncError(async (req, res, next) => {
 
             const params = {
                 Bucket: process.env.S3_BUCKET_NAME,
-                Key: `announcement/${imageKey}`,
+                Key: `announcement/images/${imageKey}`,
             };
 
             try {
@@ -136,7 +148,7 @@ const deleteAnnouncement = catchAsyncError(async (req, res, next) => {
 
             const params = {
                 Bucket: process.env.S3_BUCKET_NAME,
-                Key: `announcement/${imageKey}`,
+                Key: `announcement/images/s${imageKey}`,
             };
 
             try {

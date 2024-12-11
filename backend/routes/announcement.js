@@ -23,12 +23,38 @@ const fileFilter = (req, file, cb) => {
       bucket: process.env.S3_BUCKET_NAME,
       contentType: multerS3.AUTO_CONTENT_TYPE,
       key: function (req, file, cb) {
-        cb(null, `announcement/${Date.now().toString()}-${file.originalname}`);
+        cb(null, `announcement/images/${Date.now().toString()}-${file.originalname}`);
       },
     }),
     fileFilter: fileFilter,
     limits: { fileSize: 5 * 1024 * 1024 }, // Limit the file size to 5 MB
   });
+
+
+  // File filter for allowed video types
+// const videoFileFilter = (req, file, cb) => {
+//     const allowedTypes = ['video/mp4', 'video/mkv', 'video/webm'];
+//     if (allowedTypes.includes(file.mimetype)) {
+//       cb(null, true); // Accept the file
+//     } else {
+//       cb(new Error('Invalid file type. Only MP4, MKV, and WEBM are allowed!'), false);
+//     }
+//   };
+  
+//   // Configure multer for video uploads
+//   const videoUpload = multer({
+//     storage: multerS3({
+//       s3: s3,
+//       bucket: process.env.S3_BUCKET_NAME,
+//       contentType: multerS3.AUTO_CONTENT_TYPE,
+//       key: function (req, file, cb) {
+//         cb(null, announcement/videos/${Date.now().toString()}-${file.originalname});
+//       },
+//     }),
+//     fileFilter: videoFileFilter,
+//     limits: { fileSize: 50 * 1024 * 1024 }, // Limit the file size to 50 MB
+//   });
+
 
 
 // Route to get all categories

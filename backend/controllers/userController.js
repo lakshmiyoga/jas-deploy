@@ -342,6 +342,100 @@ const getUserProfile = catchAsyncError(async (req, res, next) => {
 
 //update user profile
 
+// const updateUserProfile = catchAsyncError(async (req, res, next) => {
+//   let newUserData = {
+//     name: req.body.name,
+//     // email: req.body.email,
+//     // mobile: req.body.mobile,
+//   };
+
+//   let avatar;
+
+//   const user = await User.findById(req.user._id);
+
+//   if (!user) {
+//     return next(new ErrorHandler('User not found', 404));
+//   }
+
+//   if (req.file) {
+//     // Same logic for handling file upload
+//     avatar = req.file.location;
+//     if (user.avatar && user.avatar !== 'default_avatar.png') {
+//       await deleteOldAvatarFromS3(user.avatar);
+//     }
+//   } else if (req.body.avatar === 'null') {
+//     // Remove previous avatar from S3 if user removes it
+//     if (user.avatar && user.avatar !== 'default_avatar.png') {
+//       await deleteOldAvatarFromS3(user.avatar);
+//     }
+//     avatar = 'default_avatar.png'; // Set to default avatar
+//   }
+
+//   // Add the new avatar to the update data
+//   if (avatar) {
+//     newUserData.avatar = avatar;
+//   }
+
+//   const updatedUser = await User.findByIdAndUpdate(req.user._id, {
+//     $set: newUserData
+//   }, { new: true, runValidators: true }).select('-password');
+
+//   if (!updatedUser) {
+//     return next(new ErrorHandler('Error updating user profile', 500));
+//   }
+
+//   return res.status(200).json({
+//     success: true,
+//     user: updatedUser,
+//   });
+// });
+
+// // Helper function to delete old avatar from S3
+// const deleteOldAvatarFromS3 = async (avatarUrl) => {
+//   const key = avatarUrl.split('https://')[1].split('/').slice(1).join('/');
+//   const params = {
+//     Bucket: process.env.S3_BUCKET_NAME,
+//     Key: key,
+//   };
+//   const command = new DeleteObjectCommand(params);
+//   try {
+//     const result = await s3.send(command);
+//     console.log('Successfully deleted old image from S3:', result);
+//   } catch (error) {
+//     console.log('Error deleting old image from S3:', error);
+//   }
+// };
+
+
+// Helper function to delete old avatar from S3
+const deleteOldAvatarFromS3 = async (avatarUrl) => {
+  if (!avatarUrl || typeof avatarUrl !== 'string') {
+    console.log('Invalid avatar URL provided, skipping deletion.');
+    return;
+  }
+
+  try {
+    // Validate and parse the URL
+    const key = avatarUrl.split('https://')[1]?.split('/')?.slice(1)?.join('/');
+    if (!key) {
+      console.log('Unable to extract key from avatar URL, skipping deletion.');
+      return;
+    }
+
+    const params = {
+      Bucket: process.env.S3_BUCKET_NAME,
+      Key: key,
+    };
+    const command = new DeleteObjectCommand(params);
+
+    const result = await s3.send(command);
+    console.log('Successfully deleted old image from S3:', result);
+  } catch (error) {
+    console.log('Error deleting old image from S3:', error);
+  }
+};
+
+// Main function
 const updateUserProfile = catchAsyncError(async (req, res, next) => {
   let newUserData = {
     name: req.body.name,
@@ -358,7 +452,7 @@ const updateUserProfile = catchAsyncError(async (req, res, next) => {
   }
 
   if (req.file) {
-    // Same logic for handling file upload
+    // Handling file upload
     avatar = req.file.location;
     if (user.avatar && user.avatar !== 'default_avatar.png') {
       await deleteOldAvatarFromS3(user.avatar);
@@ -377,7 +471,7 @@ const updateUserProfile = catchAsyncError(async (req, res, next) => {
   }
 
   const updatedUser = await User.findByIdAndUpdate(req.user._id, {
-    $set: newUserData
+    $set: newUserData,
   }, { new: true, runValidators: true }).select('-password');
 
   if (!updatedUser) {
@@ -390,21 +484,6 @@ const updateUserProfile = catchAsyncError(async (req, res, next) => {
   });
 });
 
-// Helper function to delete old avatar from S3
-const deleteOldAvatarFromS3 = async (avatarUrl) => {
-  const key = avatarUrl.split('https://')[1].split('/').slice(1).join('/');
-  const params = {
-    Bucket: process.env.S3_BUCKET_NAME,
-    Key: key,
-  };
-  const command = new DeleteObjectCommand(params);
-  try {
-    const result = await s3.send(command);
-    console.log('Successfully deleted old image from S3:', result);
-  } catch (error) {
-    console.log('Error deleting old image from S3:', error);
-  }
-};
 
 // const updateUserProfile = catchAsyncError(async (req, res, next) => {
 //   let newUserData = {

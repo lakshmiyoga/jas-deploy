@@ -7,14 +7,19 @@ const announcementSchema = new mongoose.Schema({
   endDate: { 
     type: Date, required: true
   },
-  content: { type: String, required: true },
+  type: { type: String, required: true },
+  content: { type: String },
   images:[
     {
         image:{
             type:String,
-            required:true
         }
     }
+],
+videos: [
+  {
+    video: { type: String },
+  },
 ],
 }, { timestamps: true });
 
