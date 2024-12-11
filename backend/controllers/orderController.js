@@ -12,6 +12,7 @@ const fs = require('fs');
 const PorterModel = require('../models/porterModel');
 const { Juspay, APIError } = require('expresscheckout-nodejs');
 const config = require('../config/config.json');
+const Measurement = require('../models/measurementModel');
 
 const SANDBOX_BASE_URL = "https://smartgatewayuat.hdfcbank.com"
 const PRODUCTION_BASE_URL = "https://smartgateway.hdfcbank.com";
@@ -776,7 +777,7 @@ const getOrderSummaryByDate = catchAsyncError(async (req, res) => {
                         //         : "measurement"
                         // } `,
                         totalWeight: productWeight,  // Start with numeric weight
-                        measurement: item.measurement && item.measurement=='Grams'? 'Piece' :item.measurement,
+                        measurement: item.measurement && item.measurement,
                         totalPrice: productWeight * item.price,
                     });
                 }
@@ -864,25 +865,51 @@ const sendEmaildata = async (orderSummary) => {
     let summaryHtml = '<h1>Order Summary for Today</h1>';
 
     // Grouping by unit type
-    const units = ["Kg", "Piece", "Box", "Grams"];
-    const groupedOrderSummary = {
-        Kg: [],
-        Piece: [],
-        Box: [],
-        Grams: [],
-    };
-    const totalByMeasurement = {
-        Kg: 0,
-        Piece: 0,
-        Box: 0,
-        Grams: 0,
-    };
+    // const units = ["Kg", "Piece", "Box", "Grams"];
+    // const groupedOrderSummary = {
+    //     Kg: [],
+    //     Piece: [],
+    //     Box: [],
+    //     Grams: [],
+    // };
+    // const totalByMeasurement = {
+    //     Kg: 0,
+    //     Piece: 0,
+    //     Box: 0,
+    //     Grams: 0,
+    // };
 
+    // orderSummary.forEach(({ productName, totalWeight, totalPrice }) => {
+    //     if (totalWeight) {
+    //         const [weightValue, unit] = totalWeight.trim().split(/\s+/);
+    //         const weight = parseFloat(weightValue) || 0;
+
+    //         if (units.includes(unit)) {
+    //             groupedOrderSummary[unit].push({ productName, totalWeight, totalPrice });
+    //             totalByMeasurement[unit] += weight;
+    //         }
+    //     }
+    // });
+
+    const measurements = await Measurement.find();
+
+    const units = measurements.map(m => m.measurement);
+
+    // Initialize grouping and total structures dynamically based on units
+    const groupedOrderSummary = {};
+    const totalByMeasurement = {};
+    
+    units.forEach(unit => {
+        groupedOrderSummary[unit] = [];
+        totalByMeasurement[unit] = 0;
+    });
+    
+    // Process the order summary
     orderSummary.forEach(({ productName, totalWeight, totalPrice }) => {
         if (totalWeight) {
             const [weightValue, unit] = totalWeight.trim().split(/\s+/);
             const weight = parseFloat(weightValue) || 0;
-
+    
             if (units.includes(unit)) {
                 groupedOrderSummary[unit].push({ productName, totalWeight, totalPrice });
                 totalByMeasurement[unit] += weight;
@@ -955,7 +982,7 @@ const sendEmaildata = async (orderSummary) => {
 //     }
 // });
 
-nodeCron.schedule('26 15 * * *', async () => {
+nodeCron.schedule('00 21 * * *', async () => {
     const date = new Date();
     date.setDate(date.getDate() + 1);
     const formattedDate = new Date(date).toISOString().split('T')[0];; // Get YYYY-MM-DD format
@@ -1251,7 +1278,7 @@ const sendEmail = async (userSummary) => {
 // });
 
 
-nodeCron.schedule('29 15  * * *', async () => {
+nodeCron.schedule('00 21  * * *', async () => {
     const date = new Date();
     date.setDate(date.getDate() + 1);
     const formattedDate = date.toISOString().split('T')[0]; // Get YYYY-MM-DD format
