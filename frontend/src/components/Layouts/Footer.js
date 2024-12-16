@@ -135,7 +135,7 @@ const Footer = ({ openSide, setOpenSide, onLoginClick }) => {
             <li>
               <a href="mailto:jasfruitsandvegetables@gmail.com" className="contact-link">jasfruitsandvegetables@gmail.com</a>
             </li>
-            <li>
+            {/* <li>
               <a href={whatsappUrl} target="_blank" rel="noopener noreferrer">
                 <img
                   src="whatsapp-icon.png"
@@ -144,7 +144,7 @@ const Footer = ({ openSide, setOpenSide, onLoginClick }) => {
                 />
               </a>
 
-            </li>
+            </li> */}
           </ul>
         </div>
       </div>
